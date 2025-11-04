@@ -1,0 +1,169 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+@model ReportData
+@{
+	var structure = Model.structure;
+	var modalKey = structure.ConfigId;
+
+	var calendar = ProjectDefinition.Project.DefaultCalendar;
+}
+<script language="javascript">
+	if (!window.top.modalObjects)
+		window.top.modalObjects = {};
+	window.top.modalObjects["@modalKey"] = {
+		NamespaceId: "@structure.NamespaceId",
+		EntityId: "@structure.EntityId",
+		ReportId: "@structure.Form_ReportId",
+		ConfigId: "@structure.ConfigId"
+	};
+	var formulaAggrId = "@(eAggregationFunctions.Formula)";
+	var inputsCount = @(structure.Levels != null ? structure.Levels.Count : 0);
+</script>
+
+
+<form id="report-settings-form" method="post" asp-action="ApplyProperties">
+	<div class="reportSettingsModal modal fade" id="reportSettingsModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="reportSettingsModal-label">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="reportSettingsModal-label-@modalKey">@ViewTexts.Settings</h4>
+					<button type="button" class="close" data-dismiss="modal" data-target="#reportSettingsModal-@modalKey" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					@Html.Hidden("NamespaceId", structure.NamespaceId)
+					@Html.Hidden("EntityId", structure.EntityId)
+					@Html.Hidden("ReportId", structure.Form_ReportId)
+					@Html.Hidden("ConfigId", structure.ConfigId)
+
+					<div class="row">
+						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.MetricBox)
+						{
+							<div class="col-md-12">
+								<h4>Metric Box</h4>
+							</div>
+							<div class="col-sm-6">
+								<input type="hidden" name="Properties[0].PropertyId" value="@((long) ReportConfigProperty.IconClass)">
+								<label for="iconClass">@ViewTexts.Icon:</label>
+								<input type="text" class="form-control" id="iconClass" name="Properties[0].Value"
+								       value="@structure.GetReportProperty((long) ReportConfigProperty.IconClass)">
+							</div>
+							<div class="col-sm-12 pt-2">
+								<input type="hidden" name="Properties[1].PropertyId" value="@((long) ReportConfigProperty.BackgroundColor)">
+								<label for="backgroundColor">@ViewTexts.BackgroundColor:</label>
+								<input type="color" id="backgroundColor" name="Properties[1].Value"
+								       value="@structure.GetReportProperty((long) ReportConfigProperty.BackgroundColor)">
+
+								<input type="hidden" name="Properties[2].PropertyId" value="@((long) ReportConfigProperty.TextColor)">
+								<label for="textColor">@ViewTexts.TextColor:</label>
+								<input type="color" id="textColor" name="Properties[2].Value"
+								       value="@structure.GetReportProperty((long) ReportConfigProperty.TextColor)">
+							</div>
+						}
+						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.Gauge)
+						{
+							<div class="col-sm-12">
+								<h4>Gauge</h4>
+							</div>
+							<div class="col-md-6">
+
+								<input type="hidden" name="Properties[0].PropertyId" value="@((long) ReportConfigProperty.Unit)">
+								<label for="unit">@ViewTexts.Unit:</label>
+								<input type="text" class="form-control" id="unit" name="Properties[0].Value"
+								       value="@structure.GetReportProperty((long) ReportConfigProperty.Unit)">
+							</div>
+							<div class="col-sm-6">
+								<fieldset>
+									<input type="hidden" name="range.MinType" value="Fixed">
+									<div class="form-group">
+										<label for="usr1">@ViewTexts.ConstantMinValue:</label>
+										<input type="number" step="any" step="any" class="form-control" id="usr1" name="range.MinFixedValue" value="@(structure.ValueRange == null ? "" : structure.ValueRange.MinValue)">
+									</div>
+								</fieldset>
+							</div>
+							<div class="col-sm-6">
+								<fieldset>
+									<input type="hidden" name="range.MaxType" value="Fixed">
+									<div class="form-group">
+										<label for="usr2">@ViewTexts.ConstantMaxValue:</label>
+										<input type="number" step="any" class="form-control" id="usr2" name="range.MaxFixedValue" value="@(structure.ValueRange == null ? "" : structure.ValueRange.MaxValue)">
+									</div>
+								</fieldset>
+							</div>
+						}
+					</div>
+					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.Gauge)
+					{
+						<div id="range-levels">
+							<i class="fa fa-plus" onclick="addLevelInputs()"></i>
+
+							<h4>@ViewTexts.Levels:</h4>
+							@if (structure.Levels != null)
+							{
+								var levelIndex = 0;
+								foreach (var level in structure.Levels)
+								{
+									<div class="row">
+										<div class="col-sm-6">
+											<fieldset>
+												<input type="hidden" name="levels[@levelIndex].MinType" value="@ValueRange.ValueType.Fixed">
+												<div class="form-group">
+													<label for="usr01">@ViewTexts.ConstantMinValue:</label>
+													<input type="number" step="any" class="form-control" id="usr01" name="levels[@levelIndex].MinFixedValue" value="@structure.Levels[levelIndex].MinValue">
+												</div>
+
+											</fieldset>
+										</div>
+										<div class="col-sm-6">
+											<fieldset>
+												<input type="hidden" name="levels[@levelIndex].MaxType" value="@ValueRange.ValueType.Fixed">
+												<div class="form-group">
+													<label for="usr02">@ViewTexts.ConstantMaxValue:</label>
+													<input type="number" step="any" class="form-control" id="usr02" name="levels[@levelIndex].MaxFixedValue" value="@structure.Levels[levelIndex].MaxValue">
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="clr0">@ViewTexts.Color:</label>
+												<input type="color" class="form-control" id="clr0" name="levels[@levelIndex].Color" value="@structure.Levels[levelIndex].Color">
+											</div>
+										</div>
+									</div>
+
+									levelIndex++;
+								}
+							}
+						</div>
+					}
+				</div>
+				<div class="modal-footer">
+					<div class="float-right">
+						<a class="btn btn-secondary" data-dismiss="modal" data-target="#reportSettingsModal-@modalKey">@ViewTexts.Cancel</a>
+						<button type="submit" class="btn btn-primary">@ViewTexts.Apply</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+@if (Model.Rows.Count != 0)
+{
+	var row = Model.Rows[0];
+	if (row.SubReports != null)
+	{
+		foreach (var subReport in row.SubReports)
+		{
+			@Html.Partial("_reportSettingsModal", subReport)
+		}
+	}
+}
+
+
+<script src="~/Scripts/common-assets-includes/features/report/report-reportSettings.js?v01"></script>

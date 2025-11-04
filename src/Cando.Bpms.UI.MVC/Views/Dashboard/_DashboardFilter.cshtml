@@ -1,0 +1,26 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controls
+@inject IFormLogicHelper formLogicHelper
+@inject IControlsRenderer controlsRenderer
+
+@{
+    var structure = ViewBag.Structure as DashboardConfigViewModel;
+    var controlsRendererData = ViewBag.ControlsRendererData as ControlsRendererData;
+}
+
+@if (structure?.Fields != null && structure.Fields.Count > 0)
+{
+    <div class="row filter-row" style="" id="DashboardFilter">
+        <div class="col-md-12 filterDiv" id="filterDiv">
+            @controlsRenderer.Render(controlsRendererData)
+            <br />
+            <div class="col-md-12 filter-buttons">
+                <partial name="Common/FilterEraseButton" />
+                <partial name="Filter/ApplyButton" />
+                <input type="submit" id="submitBtn" class="hidden" />
+            </div>
+        </div>
+    </div>
+}
+

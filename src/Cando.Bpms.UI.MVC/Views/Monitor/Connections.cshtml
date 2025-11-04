@@ -1,0 +1,242 @@
+﻿@using Neo.Bpms.UI.MVC
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@model ConnectionsInformationViewModel
+@{
+	ViewBag.Title = "اتصالات پایگاه داده";
+	var pageName = ViewBag.PagePackId as string;
+	var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+}
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css"/>
+<partial name="Common/TopBar" model="new TopBarModel {Title = ViewBag.Title, PageIcon = pageIcon}"/>
+
+<h5>Performance Counters</h5>
+<table class="table" style="width: 50%;" dir="ltr">
+	<thead>
+	<tr>
+	@*            <th>Instance Name</th>*@
+	<th>Counter Name</th>
+	<th nowrap="nowrap">Counter Value</th>
+	<tr/>
+	</thead>
+	<tbody>
+	@for (var iCounter = 0; iCounter < Model.PerformanceCounters.Length; iCounter++)
+	{
+		if (Model.PerformanceCounters[iCounter] == null)
+		{
+			continue;
+		}
+		<tr>
+			@*                <th>@(Model.PerformanceCounters[iCounter].InstanceName)</th>*@
+			<th>@(Model.PerformanceCounters[iCounter].CounterName)</th>
+			<td>@(Model.PerformanceCountersValues[iCounter])</td>
+		</tr>
+	}
+	</tbody>
+</table>
+<br/>
+@foreach (var item in Model.List)
+{
+	<table class="table" style="width: 50%">
+		<tbody>
+		<tr>
+			<th>عنوان</th>
+			<td>@item.Name</td>
+			<th>تعداد ارتباط هم زمان ممکن</th>
+			<td>@item.Max</td>
+		</tr>
+		<tr>
+			<th>نوع اتصال</th>
+			<td>@item.ConnectionType</td>
+			<th>تعداد ارتباط هم زمان</th>
+			<td>@item.Connections.Count</td>
+		</tr>
+		<tr>
+			<th>متصل به</th>
+			<td>@item.DataSource</td>
+			<th>تعداد جداول متصل شده از وب</th>
+			<td>@item.Tables.Count</td>
+		</tr>
+		<tr>
+			<th>کاربر</th>
+			<td>@item.UserName</td>
+			<th>تعداد کل درخواست ارتباط وب</th>
+			<td>@item.ConnectionsCounter</td>
+		</tr>
+		</tbody>
+	</table>
+	<br/>
+	<table class="table" style="width: 100%">
+		<thead>
+		<tr>
+			<th>ردیف</th>
+			<th>Host</th>
+			<th>Program</th>
+			<th>تعداد</th>
+			<th>Memory</th>
+			<th>CPU</th>
+			<th>Physical IO</th>
+		</tr>
+		</thead>
+		<tbody>
+		@{
+			var index = 1;
+			var categoryConnections = item.Connections.GroupBy(g => new {g.Host, g.Program});
+			foreach (var grouping in categoryConnections.OrderByDescending(g => g.Count()))
+			{
+				<tr>
+					<td>@(index++)</td>
+					<td>@grouping.Key.Host</td>
+					<td>@grouping.Key.Program</td>
+					<td>@grouping.Count()</td>
+					<td>@grouping.Sum(c => c.MemoryUsage)</td>
+					<td>@grouping.Sum(c => c.CpuUsage)</td>
+					<td>@grouping.Sum(c => c.PhysicalUsage)</td>
+				</tr>
+			}
+		}
+		</tbody>
+
+	</table>
+	<table class="table" style="width: 100%">
+		<thead>
+		<tr>
+			<th>ردیف</th>
+			<th>شناسه</th>
+			<th>Host</th>
+			<th>Program</th>
+			<th>وضعیت</th>
+			<th>تعداد</th>
+			<th>Memory</th>
+			<th>CPU</th>
+			<th>Physical IO</th>
+		</tr>
+		</thead>
+		<tbody>
+		@{
+			index = 1;
+			var groupConnections = item.Connections.GroupBy(g => new {g.Id, g.Host, g.Program, g.State});
+			foreach (var grouping in groupConnections.OrderByDescending(g => g.Count()))
+			{
+				if (grouping.Count() == 1)
+				{
+					continue;
+				}
+				<tr>
+					<td>@(index++)</td>
+					<td>
+						<img src="~/Content/common-assets-includes/icons/forbidden.svg" onclick="KillConnection(@grouping.Key.Id)" style="width: 12px; height: 12px; cursor: pointer" title="Kill"/>
+						@grouping.Key.Id
+					</td>
+					<td>@grouping.Key.Host</td>
+					<td>@grouping.Key.Program</td>
+					<td>@grouping.Key.State</td>
+					<td>@grouping.Count()</td>
+					<td>@grouping.Sum(c => c.MemoryUsage)</td>
+					<td>@grouping.Sum(c => c.CpuUsage)</td>
+					<td>@grouping.Sum(c => c.PhysicalUsage)</td>
+				</tr>
+			}
+		}
+		</tbody>
+
+	</table>
+	<table class="table" style="width: 100%">
+		<thead>
+		<tr>
+			<th>ردیف</th>
+			<th>شناسه</th>
+			<th>Host</th>
+			<th>Program</th>
+			<th>وضعیت</th>
+			<th>کاربر</th>
+			<th>Memory</th>
+			<th>CPU</th>
+			<th>Physical IO</th>
+			<th>Login Time</th>
+			<th>Last Batch</th>
+			<th>دستور</th>
+		</tr>
+		</thead>
+		<tbody>
+		@{
+			index = 1;
+			foreach (var connectionViewModel in item.Connections.OrderByDescending(c => c.LastBatch))
+			{
+				if (connectionViewModel.State.StartsWith("sleeping") || connectionViewModel.State.StartsWith("suspended"))
+				{
+					continue;
+				}
+				<tr>
+					<td>@(index++)</td>
+					<td>
+						<img src="~/Content/common-assets-includes/icons/forbidden.svg" onclick="KillConnection(@connectionViewModel.Id)" style="width: 12px; height: 12px; cursor: pointer" title="Kill"/>
+						@connectionViewModel.Id
+					</td>
+					<td>@connectionViewModel.Host</td>
+					<td>@connectionViewModel.Program</td>
+					<td>@connectionViewModel.State</td>
+					<td>@connectionViewModel.Login</td>
+					<td>@connectionViewModel.MemoryUsage</td>
+					<td>@connectionViewModel.CpuUsage</td>
+					<td>@connectionViewModel.PhysicalUsage</td>
+					<td>@connectionViewModel.LoginTime</td>
+					<td>@connectionViewModel.LastBatch</td>
+					<td nowrap="nowrap" style="text-align: right !important;">@connectionViewModel.Command</td>
+				</tr>
+			}
+		}
+		</tbody>
+	</table>
+	<br/>
+	<div>جداول استفاده شده : </div>
+	<br/>
+	<table class="table" style="width: 100%">
+		<thead>
+		<tr>
+			<th>ردیف</th>
+			<th>عنوان</th>
+			<th>تعداد درخواست</th>
+			<th>زمان آخرین دستور</th>
+			<th>مدت زمان آخرین دستور</th>
+			<th>آخرین دستور</th>
+			<th>ClientConnectionId</th>
+		</tr>
+		</thead>
+		<tbody>
+		@{
+			index = 1;
+			foreach (var table in item.Tables.Where(t => t != null).OrderByDescending(t => t.LastDateTime).ThenByDescending(t => t.Counter) ?? Enumerable.Empty<ConnectionsTableViewModel>())
+			{
+				<tr>
+					<td>@(index++)</td>
+					<td style="text-align: left !important;">@table.Name</td>
+					<td>@table.Counter</td>
+					<td>@table.LastDateTime</td>
+					<td>@table.LastDuration</td>
+					<td nowrap="nowrap" style="text-align: right !important;">@table.LastCommand</td>
+					<td>@table.ClientConnectionId</td>
+				</tr>
+			}
+		}
+		</tbody>
+	</table>
+}
+<script>
+	function KillConnection(id) {
+		var result = confirm("متوقف شود؟");
+		if (!result) return;
+		$.ajax({
+			type: "POST",
+			url: window.top.rootUrl + 'Monitor/KillConnection?connectionId='+id,
+			headers: AddAntiForgeryToken(),
+			success: function(res) {
+				console.log(res);
+			},
+			error: function() {
+				alert('خطا');
+			}
+		});
+	}
+</script>

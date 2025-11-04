@@ -1,0 +1,92 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.Resources.Resources
+@model PageLinksModel
+
+@{
+	var pageLinkNumber = Model.pageNo - (Model.maxPageLinksToShow - 1) / 2;
+	if (pageLinkNumber < 1)
+	{
+		pageLinkNumber = 1;
+	}
+
+	var beforeFirstPageLink = pageLinkNumber - 1;
+	var previousPage = Model.pageNo - 1;
+	var nextPage = Model.pageNo + 1;
+	var lastPage = Model.pagesCount;
+}
+
+@* <div class="col-md-8 col-sm-8"> *@
+	<nav aria-label="Page navigation">
+		<ul class="pagination pagination-sm pageUL" id="pages-info-ul">
+			@if (previousPage > 0)
+			{
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="1">@ViewTexts.FirstPage</span>
+					</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="@previousPage">@ViewTexts.PreviousPage</span>
+					</a>
+				</li>
+			}
+
+			@if (beforeFirstPageLink > 0)
+			{
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="@beforeFirstPageLink">...</span>
+					</a>
+				</li>
+			}
+
+			@for (var i = 0; i < Model.maxPageLinksToShow && pageLinkNumber <= Model.pagesCount; pageLinkNumber++, i++)
+			{
+				if (Model.pageNo == pageLinkNumber)
+				{
+					<li class="active page-number page-item">
+						<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+							<span>@pageLinkNumber</span>
+						</a>
+					</li>
+				}
+				else
+				{
+					<li class="page-number page-item">
+						<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+							<span>@pageLinkNumber</span>
+						</a>
+					</li>
+				}
+			}
+
+			@if (pageLinkNumber < Model.pagesCount)
+			{
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="@pageLinkNumber">...</span>
+					</a>
+				</li>
+			}
+
+			@if (Model.pagesCount > 1 && Model.pageNo != Model.pagesCount)
+			{
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="@nextPage">@ViewTexts.NextPage</span>
+					</a>
+				</li>
+			}
+
+			@if (Model.pagesCount > Model.maxPageLinksToShow)
+			{
+				<li class="page-item">
+					<a class="page-link mouse-pointer" onclick="PaginationManager.pageChanged(this);">
+						<span page="@lastPage">@ViewTexts.LastPage</span>
+					</a>
+				</li>
+			}
+		</ul>
+	</nav>
+@* </div> *@

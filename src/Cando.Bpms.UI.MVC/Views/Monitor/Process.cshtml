@@ -1,0 +1,357 @@
+﻿
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto
+@using Neo.Bpms.UI.MVC
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@model List<ProcessViewModel>
+
+@{
+	ViewBag.Title = "فرآیندها";
+	var pageName = ViewBag.PagePackId as string;
+	var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+}
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css"/>
+@if (Model.Count > 1)
+{
+	<partial name="Common/TopBar" model="new TopBarModel {Title = ViewBag.Title, PageIcon = pageIcon}"/>
+}
+@foreach (var process in Model)
+{
+	<br/>
+	<a class="btn btn-success" href="~/Monitor/Process?processId=@process.Id">
+		<h3>@process.Name</h3>
+	</a>
+	<a class="btn btn-info" href="~/Process/WorkItems?ProcessId=@process.Id">کارتابل</a>
+	<a class="btn btn-primary" href="~/Process/Design?ProcessId=@process.Id">طراحی</a>
+	<a class="btn btn-warning" href="~/Process/DownloadProcess?ProcessId=@process.Id">BPMN2.XML</a>
+	<table class="table" style="width: 50%">
+		<tbody>
+		<tr>
+			<th>شناسه فرآیند :</th>
+			<td>@process.Id</td>
+			<th>موجودیت : </th>
+			<td>@process.EntityId</td>
+		</tr>
+
+		@foreach (var manager in process.Managers)
+		{
+			<tr>
+				<th>مدیر فرآیند</th>
+				@{
+					RenderNameColumn(manager);
+				}
+				<td>@(manager.Type)</td>
+				<td>@(manager.Code)</td>
+				<td>@(manager.Claim)</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+	<table class="table" style="width: 50%">
+		<tbody>
+		@if (process.InputParams.Count > 0)
+		{
+			<tr>
+				<th>پارامترهای ورودی</th>
+				@foreach (var param in process.InputParams)
+				{
+					<td>@param</td>
+				}
+			</tr>
+		}
+		@if (process.OuputParams.Count > 0)
+		{
+			<tr>
+				<th>پارامترهای خروجی</th>
+				@foreach (var param in process.OuputParams)
+				{
+					<td>@param</td>
+				}
+			</tr>
+		}
+		@if (process.Properties.Count > 0)
+		{
+			<tr>
+				<th>فیلدهای فرآیند</th>
+				@foreach (var param in process.Properties)
+				{
+					<td>@param</td>
+				}
+			</tr>
+		}
+		</tbody>
+
+	</table>
+	<table class="table" style="width: 100%">
+		<thead>
+		<tr>
+			<th></th>
+			<th>انجام دهنده</th>
+			<th colspan="@(1 + process.Lanes.Max(lane => lane.Colspan))">جریان کار</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var lane in process.Lanes)
+		{
+			<tr>
+				<td rowspan="5">@lane.Name</td>
+				@{
+					RenderNameColumn(lane.Performer);
+				}
+				<td>ورودی ها :</td>
+				@foreach (var element in lane.Elements)
+				{
+					<td></td>
+					RenderFlowElements(element.Inputs, element.Colspan);
+				}
+			</tr>
+			<tr>
+				<td>@lane.Performer.Type</td>
+				<td rowspan="3">المان ها :</td>
+				@foreach (var element in lane.Elements)
+				{
+					<td></td>
+					await RenderElement(element, element.Id);
+				}
+			</tr>
+			<tr>
+				<td>@lane.Performer.Code</td>
+				@foreach (var element in lane.Elements)
+				{
+					<td></td>
+                    await RenderElement(element, element.Name);
+                }
+			</tr>
+			<tr>
+				<td>@lane.Performer.Claim</td>
+				@foreach (var element in lane.Elements)
+				{
+					<td></td>
+                    await RenderElement(element, element.Type);
+                }
+			</tr>
+			<tr>
+				<td>@lane.ParentId</td>
+				<td>خروجی ها :</td>
+				@foreach (var element in lane.Elements)
+				{
+					<td></td>
+					RenderFlowElements(element.Outputs, element.Colspan);
+				}
+			</tr>
+			<tr>
+				<td colspan="@(3 + lane.Colspan)"></td>
+			</tr>
+		}
+		</tbody>
+	</table>
+}
+
+
+<style>
+	@{
+		var colors = new[]
+		{
+			new
+			{
+				BackgroundColor = "#e6194b",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#3cb44b",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#ffe119",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#0082c8",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#f58231",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#911eb4",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#46f0f0",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#f032e6",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#d2f53c",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#fabebe",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#008080",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#e6beff",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#aa6e28",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#fffac8",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#800000",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#aaffc3",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#808000",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#ffd8b1",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#000080",
+				TextColor = "white"
+			},
+			new
+			{
+				BackgroundColor = "#808080",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#FFFFFF",
+				TextColor = "black"
+			},
+			new
+			{
+				BackgroundColor = "#808080",
+				TextColor = "white"
+			}
+		};
+		for (var i = 0; i < colors.Length; i++)
+		{
+			<text>
+.id-@i {
+		background-color: @(colors[i].BackgroundColor);
+		color: @(colors[i].TextColor);
+	}
+
+	</text>
+		}
+	} 
+</style>
+
+
+@functions
+{
+	void RenderNameColumn(ResourceViewModel resource)
+	{
+		var reousrceName = resource.Name;
+		if (reousrceName == null)
+		{
+			<td class="table-danger">تعریف نشده</td>
+		}
+		else
+		{
+			<td>
+				@(reousrceName)
+			</td>
+		}
+	}
+
+	void ColorIndexClass(ElementViewModel element)
+	{
+		@:class="id-@element.ColorIndex"
+	}
+
+	void RenderFlowElements(List<FlowElementViewModel> flowElements, int max)
+	{
+		var index = 0;
+		foreach (var flowElement in flowElements)
+		{
+			var colspan = "";
+			if (flowElements.Count < max && ((flowElements.Count - 1) == index))
+			{
+				colspan = "colspan=" + (max - flowElements.Count + 1) + "";
+			}
+			index++;
+			<td @colspan @{ColorIndexClass(flowElement.Element);}>
+				@flowElement.Element.Name @(flowElement.StateId > 0 ? ("(" + flowElement.StateId + ")") : "")
+				@flowElement.Condition
+			</td>
+		}
+		if (flowElements.Count == 0)
+		{
+			if (max == 0)
+			{
+				<td class="table-danger">ایزوله</td>
+			}
+			else
+			{
+				var colspan = "";
+				if (max > 1)
+				{
+					colspan = "colspan=" + max + "";
+				}
+				<td @colspan></td>
+			}
+		}
+	}
+
+	async Task RenderElement(ElementViewModel element, string title)
+	{
+		var colspan = "";
+		if (element.Colspan > 1)
+		{
+			colspan = "colspan=" + element.Colspan + "";
+		}
+		<td @{ColorIndexClass(element);} @colspan>
+			@if (!string.IsNullOrEmpty(element.ProcessLink))
+			{
+				<a class="btn btn-info" href="~/Monitor/Process?processId=@element.ProcessLink">
+					@title
+				</a>
+			}
+			else
+			{
+				@title
+			}
+		</td>
+	}
+}

@@ -1,0 +1,41 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Helpers
+
+@inject IFormLogicHelper formLogicHelper;
+
+@model CommonFormStructure
+
+@{
+    var __parentIds = ViewBag.__parentIds ?? 0;
+
+    <script>
+        window.top.logicParentIds = '@__parentIds';
+
+        function pageLoaded(This) {
+            @{
+                var str = formLogicHelper.HtmlLogicController(Model, "onPageLoad");
+            }
+            @str
+
+            window.OnloadUiRulesManager.rulesAreDone();
+        }
+
+        function inputClicked(This, source, scope) {
+            @{
+            var Clickstr = formLogicHelper.HtmlLogicController(Model, "onClick");
+            }
+            @Clickstr
+        }
+
+        function inputChanged(This, source, scope) {
+            $(This).removeAttr("initvalue");
+            @{
+            var ChangeStr = formLogicHelper.HtmlLogicController(Model, "onUserChange");
+            }
+            @ChangeStr
+        }
+    </script>
+    <link href="@CommonBundles.LogicCssBundle" asp-append-version="true" rel="stylesheet" />
+    <script src="@CommonBundles.LogicJsBundle" asp-append-version="true"></script>
+}

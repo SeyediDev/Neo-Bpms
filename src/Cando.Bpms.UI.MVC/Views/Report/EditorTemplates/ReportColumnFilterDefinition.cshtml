@@ -1,0 +1,18 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@model             ReportColumnFilterDefinition
+
+@{
+    Layout = null;
+}
+
+<tr>
+    <td class='tableHeader'>
+        @Html.TextBoxFor(y => y.Operator, new {@Class = "filterInput"})
+    </td>
+    <td class='tableHeader'> @Html.TextBoxFor(y => y.Operand, new {@Class = "filterInput"})</td>
+    <td class="tableHeader">
+        <span onclick="removeRow(this)" class="text-danger" title="@ViewTexts.Delete">
+            <i class="fa fa-2x fa-times"></i>
+        </span>
+    </td>
+</tr>

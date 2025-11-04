@@ -1,0 +1,359 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@model ReportData
+
+@{
+    var structure = Model.structure;
+}
+
+<script>
+    // Toggle design settings tooltip
+    function toggleDesignSettings(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const panel = document.getElementById('designSettingsPanel');
+        const toggle = event.target.closest('a');
+
+        if (panel && toggle) {
+            // Hide all other tooltips first
+            const allPanels = document.querySelectorAll('.design-settings-panel');
+            allPanels.forEach(p => {
+                if (p !== panel) {
+                    p.classList.remove('show');
+                }
+            });
+
+            // Toggle current panel
+            if (!panel.classList.contains('show')) {
+                panel.classList.add('show');
+                toggle.classList.add('active');
+                
+                // Position tooltip relative to toggle button (left-aligned)
+                const toggleRect = toggle.getBoundingClientRect();
+                panel.style.position = 'fixed';
+                panel.style.top = (toggleRect.bottom + 8) + 'px';
+                panel.style.left = toggleRect.left + 'px';
+                panel.style.right = 'auto';
+                panel.style.zIndex = '10000';
+                
+                // Ensure tooltip doesn't go off-screen to the right
+                const panelWidth = 380; // max-width from CSS
+                const rightEdge = toggleRect.left + panelWidth;
+                if (rightEdge > window.innerWidth) {
+                    panel.style.left = (window.innerWidth - panelWidth - 16) + 'px';
+                }
+                
+                // Design settings tooltip shown
+            } else {
+                panel.classList.remove('show');
+                toggle.classList.remove('active');
+                // Design settings tooltip hidden
+            }
+        }
+    }
+
+    // Hide design settings tooltip
+    function hideDesignSettingsTooltip() {
+        const panel = document.getElementById('designSettingsPanel');
+        const toggle = document.querySelector('[onclick*="toggleDesignSettings"]');
+        
+        if (panel && panel.classList.contains('show')) {
+            panel.classList.remove('show');
+            if (toggle) {
+                toggle.classList.remove('active');
+            }
+            // Design settings tooltip hidden after link click
+        }
+    }
+</script>
+
+<style>
+    /* Design Settings Panel - Modern UI/UX */
+    .design-settings-panel {
+        position: fixed !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+        padding: 0 !important;
+        z-index: 10000 !important;
+        min-width: 320px !important;
+        max-width: 380px !important;
+        backdrop-filter: blur(20px) !important;
+        animation: slideDown 0.3s ease-out !important;
+        display: none !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    .design-settings-panel.show {
+        display: flex !important;
+    }
+
+    /* Header */
+    .design-settings-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        padding: 20px !important;
+        color: white !important;
+        text-align: center !important;
+    }
+
+    .design-settings-title {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+
+    .design-settings-subtitle {
+        font-size: 13px !important;
+        opacity: 0.9 !important;
+        font-weight: 400 !important;
+    }
+
+    /* Content */
+    .design-settings-content {
+        padding: 16px !important;
+        max-height: 400px !important;
+        overflow-y: auto !important;
+    }
+
+    /* Sections */
+    .design-settings-section {
+        margin-bottom: 20px !important;
+    }
+
+    .design-settings-section:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .design-settings-section-title {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* Links */
+    .design-settings-link {
+        display: flex !important;
+        align-items: center !important;
+        padding: 12px 16px !important;
+        margin-bottom: 8px !important;
+        background: white !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+
+    .design-settings-link:hover {
+        background: #f8fafc !important;
+        border-color: #3b82f6 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+    }
+
+    .design-settings-link:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2) !important;
+    }
+
+    .design-settings-link-icon {
+        width: 40px !important;
+        height: 40px !important;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-left: 12px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .design-settings-link:hover .design-settings-link-icon {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    }
+
+    .design-settings-link-icon svg,
+    .design-settings-link-icon i {
+        color: #6b7280 !important;
+        transition: color 0.2s ease !important;
+    }
+
+    .design-settings-link:hover .design-settings-link-icon svg,
+    .design-settings-link:hover .design-settings-link-icon i {
+        color: #3b82f6 !important;
+    }
+
+    .design-settings-link-content {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .design-settings-link-title {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #1f2937 !important;
+        margin-bottom: 2px !important;
+        line-height: 1.3 !important;
+    }
+
+    .design-settings-link-desc {
+        font-size: 12px !important;
+        color: #6b7280 !important;
+        line-height: 1.4 !important;
+    }
+
+    .design-settings-link-arrow {
+        font-size: 16px !important;
+        color: #9ca3af !important;
+        margin-right: 8px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .design-settings-link:hover .design-settings-link-arrow {
+        color: #3b82f6 !important;
+        transform: translateX(2px) !important;
+    }
+
+    /* Scrollbar */
+    .design-settings-content::-webkit-scrollbar {
+        width: 6px !important;
+    }
+
+    .design-settings-content::-webkit-scrollbar-track {
+        background: #f1f5f9 !important;
+        border-radius: 3px !important;
+    }
+
+    .design-settings-content::-webkit-scrollbar-thumb {
+        background: #cbd5e1 !important;
+        border-radius: 3px !important;
+    }
+
+    .design-settings-content::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8 !important;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Design Settings Panel (مخفی) -->
+<div class="design-settings-panel" id="designSettingsPanel">
+    <div class="design-settings-header">
+        <span class="design-settings-title">تنظیمات گزارش</span>
+    </div>
+    
+    <div class="design-settings-content">
+        <div class="design-settings-section">
+            <div class="design-settings-section-title">تنظیمات اصلی</div>
+            
+            <a class="design-settings-link" data-toggle="modal" href="" data-target="#columnsSettingsModal-@structure.ConfigId" onclick="hideDesignSettingsTooltip()">
+                <div class="design-settings-link-icon">
+                    <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-row-icon" />
+                    </svg>
+                </div>
+                <div class="design-settings-link-content">
+                    <div class="design-settings-link-title">تنظیمات ستون‌ها</div>
+                    <div class="design-settings-link-desc">مدیریت نمایش ستون‌ها</div>
+                </div>
+                <div class="design-settings-link-arrow">→</div>
+            </a>
+            
+            <a class="design-settings-link" data-toggle="modal" href="" data-target="#ordersSettingsModal-@structure.ConfigId" onclick="hideDesignSettingsTooltip()">
+                <div class="design-settings-link-icon">
+                    <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-order-icon" />
+                    </svg>
+                </div>
+                <div class="design-settings-link-content">
+                    <div class="design-settings-link-title">تنظیمات ترتیب</div>
+                    <div class="design-settings-link-desc">مدیریت مرتب‌سازی داده‌ها</div>
+                </div>
+                <div class="design-settings-link-arrow">→</div>
+            </a>
+            
+            @if (structure.ReportViewType.In(ReportViewType.List, ReportViewType.GroupByList))
+            {
+                <a class="design-settings-link" data-toggle="modal" href="" data-target="#colorsSettingsModal-@structure.ConfigId" onclick="hideDesignSettingsTooltip()">
+                    <div class="design-settings-link-icon">
+                        <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
+                            <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-color-icon" />
+                        </svg>
+                    </div>
+                    <div class="design-settings-link-content">
+                        <div class="design-settings-link-title">تنظیمات رنگ</div>
+                        <div class="design-settings-link-desc">مدیریت رنگ‌بندی سطرهای گزارش</div>
+                    </div>
+                    <div class="design-settings-link-arrow">→</div>
+                </a>
+            }
+            
+            @if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType.In(Report.ChartType.Gauge, Report.ChartType.MetricBox))
+            {
+                <a class="design-settings-link" data-toggle="modal" href="" data-target="#reportSettingsModal-@structure.ConfigId" onclick="hideDesignSettingsTooltip()">
+                    <div class="design-settings-link-icon">
+                        <i class="fa fa-area-chart"></i>
+                    </div>
+                    <div class="design-settings-link-content">
+                        <div class="design-settings-link-title">تنظیمات چارت</div>
+                        <div class="design-settings-link-desc">مدیریت نمودارها</div>
+                    </div>
+                    <div class="design-settings-link-arrow">→</div>
+                </a>
+            }
+        </div>
+        
+        <div class="design-settings-section">
+            <div class="design-settings-section-title">گزارشات فرعی</div>
+            
+            @if (structure.ReportViewType.In(ReportViewType.List, ReportViewType.GroupByList))
+            {
+                <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addInline('@structure.NamespaceId', '@structure.EntityId', '@structure.Form_ReportId', '@structure.ConfigId'); hideDesignSettingsTooltip();">
+                    <div class="design-settings-link-icon">
+                        <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
+                            <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-internal-icon" />
+                        </svg>
+                    </div>
+                    <div class="design-settings-link-content">
+                        <div class="design-settings-link-title">گزارش فرعی داخلی</div>
+                        <div class="design-settings-link-desc">افزودن گزارش فرعی درون صفحه</div>
+                    </div>
+                    <div class="design-settings-link-arrow">→</div>
+                </a>
+            }
+            
+            <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addLinked('@structure.NamespaceId', '@structure.EntityId', '@structure.Form_ReportId', '@structure.ConfigId'); hideDesignSettingsTooltip();">
+                <div class="design-settings-link-icon">
+                    <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-link-icon" />
+                    </svg>
+                </div>
+                <div class="design-settings-link-content">
+                    <div class="design-settings-link-title">گزارش فرعی پیوندی</div>
+                    <div class="design-settings-link-desc">افزودن گزارش فرعی پیوندی</div>
+                </div>
+                <div class="design-settings-link-arrow">→</div>
+            </a>
+        </div>
+    </div>
+</div>

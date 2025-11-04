@@ -1,0 +1,84 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@{
+    Layout = null;
+}
+
+<html>
+
+<head>
+    <title>Teta Dmn Designer</title>
+
+    <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/fonts/pfont/yekan-persian-digits.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/fonts/font-awesome420/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bs4-toast/toast.min.css">
+    <script>
+        window.top.rootUrl = '@Context.Request.GetBaseUrl()/';
+    </script>
+</head>
+
+<body>
+
+    @Html.AntiForgeryToken()
+
+    <div class="row file-panel" style="background-color: #4c94ca; padding: 10px;">
+        <div class="col-sm-4" dir="ltr">
+            <button class="btn btn-success" id="saveProcessButton">
+                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+            </button>
+            @* <a class="upload btn btn-default step"> *@
+            @*     <i class="fa fa-upload" aria-hidden="true"></i>&nbsp; *@
+            @*     <span> Import </span> *@
+            @* </a> *@
+            @* <input type="file" id="btnOpenFileDialog" class="noBlockDisplay hide " name="files" /> *@
+            @* *@
+            @* <div class="btn-group"> *@
+            @*     <button type="button" class="btn btn-default dropdown-toggle" *@
+            @*             data-toggle="dropdown" *@
+            @*             aria-haspopup="true" *@
+            @*             aria-expanded="false"> *@
+            @*         <i class="fa fa-download"></i> *@
+            @*         <span> *@
+            @*             Export *@
+            @*         </span> *@
+            @*         <span class="caret"> *@
+            @*         </span> *@
+            @*     </button> *@
+            @*     <ul class="dropdown-menu"> *@
+            @*         <li> *@
+            @*             <a href="#" id="js-download-diagram">DMN XML</a> *@
+            @*         </li> *@
+            @*         <li> *@
+            @*             <a href="#" id="js-download-svg">Image</a> *@
+            @*         </li> *@
+            @*     </ul> *@
+            @* </div> *@
+            <button type="button" class="btn btn-secondary" onclick="location.reload()" title="Reload Diagram">
+                <i class="fa fa-refresh" style="margin: 3px;"></i>
+            </button>
+        </div>
+
+        <div class="col-sm-8 form-inline" style="direction: rtl;">
+            <button class="btn btn-secondary" onclick="openNav()" style="cursor: pointer">
+                Design Explorer
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <div class="editor-parent">
+            <div class="editor-container"></div>
+            <div class="editor-tabs"></div>
+        </div>
+    </div>
+
+    <script src="@CommonBundles.DmnModelerJsBundle" asp-append-version="true"></script>
+    <link href="@CommonBundles.DmnModelerCssBundle" asp-append-version="true" rel="stylesheet" />
+    <link href="~/Content/common-assets-includes/features/design/dmn/css/dmn.css"
+          rel="stylesheet" />
+    @Html.Partial("_DesignList")
+
+</body>
+
+</html>

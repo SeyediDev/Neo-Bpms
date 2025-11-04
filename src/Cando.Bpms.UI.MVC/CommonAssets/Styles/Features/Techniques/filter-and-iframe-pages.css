@@ -1,0 +1,8 @@
+﻿.loading {
+        background:url(../../images/loading.gif) center center no-repeat;
+    }
+    .loading iframe {
+        opacity: 0.1;
+        position: relative;
+        z-index: -1;
+    }

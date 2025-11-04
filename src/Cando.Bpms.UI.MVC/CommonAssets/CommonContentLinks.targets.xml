@@ -1,0 +1,2154 @@
+﻿<Project>
+	<ItemGroup>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shim\ES6\Array.from.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shim\es6\Array.from.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Global\AddAntiForgeryToken.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\global\AddAntiForgeryToken.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Filter\FilterParameters.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\filter\FilterParameters.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Modern\modern-multi-select.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\modern\modern-multi-select.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\report-modern-multi-select.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\report-modern-multi-select.js</Link>
+		</Content>
+
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\flaticon.css">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\flaticon.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Modern\modern-multi-select.css">
+			<Link>wwwroot\Content\common-assets-includes\features\modern\modern-multi-select.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Report\report-menu.css">
+			<Link>wwwroot\Content\common-assets-includes\features\report\report-menu.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\Flaticon.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\Flaticon.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\Flaticon.eot">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\Flaticon.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\Flaticon.ttf">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\Flaticon.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\Flaticon.woff">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\Flaticon.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\Bpms Flaticon\Flaticon.woff2">
+			<Link>wwwroot\Content\common-assets-includes\icons\bpms-flaticon\Flaticon.woff2</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\abkhazia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\abkhazia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\afghanistan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\afghanistan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\aland-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\aland-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\albania.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\albania.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\algeria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\algeria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\american-samoa.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\american-samoa.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\andorra.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\andorra.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\angola.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\angola.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\anguilla.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\anguilla.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\antigua-and-barbuda.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\antigua-and-barbuda.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\argentina.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\argentina.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\armenia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\armenia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\aruba.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\aruba.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\australia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\australia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\austria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\austria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\azerbaijan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\azerbaijan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\azores-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\azores-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bahamas.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bahamas.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bahrain.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bahrain.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\balearic-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\balearic-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bangladesh.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bangladesh.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\barbados.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\barbados.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\basque-country.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\basque-country.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\belarus.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\belarus.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\belgium.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\belgium.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\belize.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\belize.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\benin.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\benin.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bermuda.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bermuda.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bhutan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bhutan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bolivia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bolivia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bonaire.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bonaire.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bosnia-and-herzegovina.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bosnia-and-herzegovina.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\botswana.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\botswana.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\brazil.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\brazil.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\british-columbia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\british-columbia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\british-indian-ocean-territory.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\british-indian-ocean-territory.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\british-virgin-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\british-virgin-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\brunei.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\brunei.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\bulgaria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\bulgaria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\burkina-faso.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\burkina-faso.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\burundi.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\burundi.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cambodia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cambodia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cameroon.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cameroon.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\canada.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\canada.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\canary-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\canary-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cape-verde.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cape-verde.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cayman-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cayman-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\central-african-republic.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\central-african-republic.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ceuta.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ceuta.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\chad.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\chad.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\chile.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\chile.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\china.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\china.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\christmas-island.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\christmas-island.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cocos-island.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cocos-island.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\colombia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\colombia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\comoros.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\comoros.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cook-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cook-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\corsica.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\corsica.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\costa-rica.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\costa-rica.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\croatia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\croatia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cuba.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cuba.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\curacao.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\curacao.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\cyprus.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\cyprus.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\czech-republic.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\czech-republic.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\democratic-republic-of-congo.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\democratic-republic-of-congo.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\denmark.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\denmark.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\djibouti.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\djibouti.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\dominica.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\dominica.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\dominican-republic.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\dominican-republic.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\east-timor.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\east-timor.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ecuador.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ecuador.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\egypt.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\egypt.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\el-salvador.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\el-salvador.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\england.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\england.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\equatorial-guinea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\equatorial-guinea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\eritrea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\eritrea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\estonia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\estonia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ethiopia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ethiopia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\european-union.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\european-union.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\falkland-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\falkland-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\faroe-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\faroe-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\fiji.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\fiji.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\finland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\finland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\france.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\france.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\french-polynesia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\french-polynesia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\French-Southern-and-Antarctic-Lands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\French-Southern-and-Antarctic-Lands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\gabon.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\gabon.svg</Link>
+		</Content>
+
+		<Content Include="$(MSBuildThisFileDirectory)Flags\galapagos-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\galapagos-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\gambia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\gambia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\georgia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\georgia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\germany.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\germany.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ghana.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ghana.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\gibraltar.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\gibraltar.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\greece.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\greece.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\greenland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\greenland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\grenada.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\grenada.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\guam.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\guam.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\guatemala.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\guatemala.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\guernsey.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\guernsey.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\guinea-bissau.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\guinea-bissau.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\guinea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\guinea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\Guyana.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\Guyana.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\haiti.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\haiti.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\hawaii.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\hawaii.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\honduras.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\honduras.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\hong-kong.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\hong-kong.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\hungary.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\hungary.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\iceland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\iceland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\india.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\india.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\indonesia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\indonesia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\Inmarsat.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\Inmarsat.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\iran.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\iran.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\iraq.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\iraq.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ireland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ireland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\isle-of-man.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\isle-of-man.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\israel.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\israel.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\italy.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\italy.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ivory-coast.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ivory-coast.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\jamaica.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\jamaica.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\japan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\japan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\jersey.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\jersey.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\jordan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\jordan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kazakhstan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kazakhstan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kenya.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kenya.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kiribati.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kiribati.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kosovo.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kosovo.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kwait.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kwait.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\kyrgyzstan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\kyrgyzstan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\laos.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\laos.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\latvia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\latvia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\lebanon.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\lebanon.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\lesotho.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\lesotho.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\liberia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\liberia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\libya.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\libya.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\liechtenstein.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\liechtenstein.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\lithuania.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\lithuania.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\luxembourg.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\luxembourg.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\macao.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\macao.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\madagascar.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\madagascar.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\madeira.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\madeira.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\malasya.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\malasya.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\malawi.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\malawi.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\Malaysia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\Malaysia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\maldives.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\maldives.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mali.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mali.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\malta.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\malta.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\marshall-island.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\marshall-island.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\martinique.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\martinique.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mauritania.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mauritania.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mauritius.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mauritius.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\melilla.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\melilla.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mexico.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mexico.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\micronesia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\micronesia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\moldova.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\moldova.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\monaco.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\monaco.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mongolia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mongolia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\montenegro.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\montenegro.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\montserrat.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\montserrat.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\morocco.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\morocco.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\mozambique.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\mozambique.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\myanmar.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\myanmar.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\names.js">
+			<Link>wwwroot\Content\common-assets-includes\flags\names.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\namibia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\namibia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\nato.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\nato.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\nauru.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\nauru.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\nepal.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\nepal.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\netherlands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\netherlands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\new-zealand.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\new-zealand.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\nicaragua.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\nicaragua.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\niger.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\niger.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\nigeria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\nigeria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\niue.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\niue.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\norfolk-island.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\norfolk-island.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\north-korea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\north-korea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\northern-cyprus.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\northern-cyprus.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\northern-marianas-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\northern-marianas-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\norway.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\norway.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\oman.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\oman.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ossetia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ossetia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\pakistan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\pakistan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\palau.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\palau.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\palestine.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\palestine.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\panama.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\panama.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\papua-new-guinea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\papua-new-guinea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\paraguay.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\paraguay.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\peru.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\peru.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\philippines.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\philippines.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\pitcairn-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\pitcairn-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\poland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\poland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\portugal.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\portugal.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\puerto-rico.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\puerto-rico.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\qatar.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\qatar.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\rapa-nui.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\rapa-nui.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\republic-of-macedonia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\republic-of-macedonia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\republic-of-the-congo.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\republic-of-the-congo.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\romania.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\romania.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\russia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\russia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\rwanda.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\rwanda.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\saba-island.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\saba-island.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sahrawi-arab-democratic-republic.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sahrawi-arab-democratic-republic.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\saint-kitts-and-nevis.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\saint-kitts-and-nevis.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\samoa.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\samoa.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\san-marino.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\san-marino.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sao-tome-and-prince.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sao-tome-and-prince.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sardinia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sardinia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\satellite.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\satellite.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\saudi-arabia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\saudi-arabia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\scotland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\scotland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\senegal.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\senegal.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\serbia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\serbia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\seychelles.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\seychelles.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sicily.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sicily.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sierra-leone.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sierra-leone.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\singapore.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\singapore.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sint-eustatius.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sint-eustatius.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sint-maarten.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sint-maarten.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\slovakia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\slovakia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\slovenia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\slovenia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\solomon-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\solomon-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\somalia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\somalia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\somaliland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\somaliland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\south-africa.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\south-africa.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\south-korea.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\south-korea.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\south-sudan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\south-sudan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\spain.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\spain.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sri-lanka.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sri-lanka.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\st-barts.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\st-barts.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\st-lucia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\st-lucia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\st-vincent-and-the-grenadines.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\st-vincent-and-the-grenadines.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sudan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sudan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\suriname.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\suriname.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\swaziland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\swaziland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\sweden.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\sweden.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\switzerland.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\switzerland.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\syria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\syria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\taiwan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\taiwan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tajikistan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tajikistan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tanzania.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tanzania.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\thailand.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\thailand.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\THURAYA SATELLITE.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\THURAYA SATELLITE.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tibet.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tibet.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\togo.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\togo.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tokelau.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tokelau.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tonga.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tonga.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\transnistria.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\transnistria.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\trinidad-and-tobago.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\trinidad-and-tobago.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tunisia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tunisia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\turkey.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\turkey.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\turkmenistan.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\turkmenistan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\turks-and-caicos.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\turks-and-caicos.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tuvalu-1.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tuvalu-1.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\tuvalu.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\tuvalu.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\uganda.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\uganda.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\ukraine.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\ukraine.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\united-arab-emirates.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\united-arab-emirates.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\united-kingdom.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\united-kingdom.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\united-nations.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\united-nations.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\united-states.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\united-states.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\uruguay.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\uruguay.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\uzbekistn.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\uzbekistn.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\vanuatu.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\vanuatu.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\vatican-city.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\vatican-city.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\venezuela.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\venezuela.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\vietnam.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\vietnam.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\virgin-islands.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\virgin-islands.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\wales.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\wales.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\Western-sahara.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\Western-sahara.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\yemen.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\yemen.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\zambia.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\zambia.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Flags\zimbabwe.svg">
+			<Link>wwwroot\Content\common-assets-includes\flags\zimbabwe.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\css\font-awesome-animation.css">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\css\font-awesome-animation.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\css\font-awesome.css">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\css\font-awesome.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\css\font-awesome.min.css">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\css\font-awesome.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\fontawesome-webfont.svg">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\fontawesome-webfont.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\digitalgraphic.ir\Yekan.svg">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\digitalgraphic.ir\Yekan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\wpthm\Yekan.svg">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\wpthm\Yekan.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\yekan.css">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\yekan.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\yekan-persian-digits.css">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\yekan-persian-digits.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\analysis.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\analysis.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\day.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\day.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\delete.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\delete.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\edit.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\edit.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\flow-chart.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\flow-chart.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\flow-chart4.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\flow-chart4.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\folder.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\folder.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\forbidden.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\forbidden.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\hour.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\hour.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\interface.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\interface.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\interface2.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\interface2.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\layer.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\layer.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\layers.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\layers.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\man-machine-circuit-symbol.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\man-machine-circuit-symbol.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\maximize.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\maximize.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\past.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\past.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\plus.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\plus.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\svgSprite.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\svgSprite.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Errors\403Error.png">
+			<Link>wwwroot\Content\common-assets-includes\images\errors\403Error.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Errors\404Error.gif">
+			<Link>wwwroot\Content\common-assets-includes\images\errors\404Error.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Errors\500Error.gif">
+			<Link>wwwroot\Content\common-assets-includes\images\errors\500Error.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Global\loading.gif">
+			<Link>wwwroot\Content\common-assets-includes\images\global\loading.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Global\can-do-english.svg">
+			<Link>wwwroot\Content\common-assets-includes\images\global\can-do-english.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\dai.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\dai.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\freewheel.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\freewheel.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\gapro.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\gapro.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\googima.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\googima.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.controls.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.controls.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.core.controls.html5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.core.controls.html5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.core.controls.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.core.controls.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.core.controls.polyfills.html5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.core.controls.polyfills.html5.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.core.controls.polyfills.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.core.controls.polyfills.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.core.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.core.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwplayer.vr.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwplayer.vr.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\jwpsrv.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\jwpsrv.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\polyfills.intersection-observer.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\polyfills.intersection-observer.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\polyfills.webvtt.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\polyfills.webvtt.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.airplay.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.airplay.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.cast.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.cast.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.flash.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.flash.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.hlsjs.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.hlsjs.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.html5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.html5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\provider.shaka.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\provider.shaka.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\related.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\related.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\vast.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\vast.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\8\vttparser.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\8\vttparser.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\jwplayer.flash.swf">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\jwplayer.flash.swf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\jwplayer.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\jwplayer.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\JW Player\jwplayer.loader.swf">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\jw-player\jwplayer.loader.swf</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Are You Sure\ays-beforeunload-shim.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-are-you-sure\ays-beforeunload-shim.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Are You Sure\jquery.are-you-sure.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-are-you-sure\jquery.are-you-sure.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shim\ie-emulation-modes-warning.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shim\ie-emulation-modes-warning.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shim\ie10-viewport-bug-workaround.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shim\ie10-viewport-bug-workaround.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shim\ie8-responsive-file-warning.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shim\ie8-responsive-file-warning.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Common Features\sorting.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\common-features\sorting.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Common Features\table-row-selection.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\common-features\table-row-selection.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Common Features\timespan-manager.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\common-features\timespan-manager.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Form Design\form-columns-settings.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\form-design\form-columns-settings.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Form Design\form-design-saver.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\form-design\form-design-saver.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Form Design\main.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\form-design\main.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\runtime-es2015.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\runtime-es2015.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\runtime-es5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\runtime-es5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\polyfills-es2015.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\polyfills-es2015.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\polyfills-es5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\polyfills-es5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\main-es2015.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\main-es2015.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Meta Design\main-es5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\meta-design\main-es5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\ControlsIO\FineUploaderIO.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\controls-io\FineUploaderIO.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Global\Layout.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\global\Layout.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\Bpmn Diagram\index.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\bpmn-diagram\index.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Work Items\bulk-activity.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\work-items\bulk-activity.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Work Items\filter.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\work-items\filter.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Work Items\progress.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\work-items\progress.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Work Items\restoration.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\work-items\restoration.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Work Items\work-assignment.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\work-items\work-assignment.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\continue.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\continue.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\edit.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\edit.gif</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\fine-uploader-new.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\fine-uploader-new.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\loading.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\loading.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\pause.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\pause.gif</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\placeholders\not_available-generic.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\placeholders\not_available-generic.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\placeholders\waiting-generic.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\placeholders\waiting-generic.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\processing.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\processing.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\retry.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\retry.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\trash.gif">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\trash.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-login.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\cando-login.css</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-dashboard.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\cando-dashboard.css</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-detail.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\cando-detail.css</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-index.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\cando-index.css</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Modern\controls-modern.css">
+			<Link>wwwroot\Content\common-assets-includes\features\modern\controls-modern.css</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\css\viewer\app.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\css\viewer\app.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\diagram-js.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\diagram-js.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn-js-shared.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn-js-shared.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn-js-drd.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn-js-drd.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn-js-decision-table.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn-js-decision-table.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn-js-decision-table-controls.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn-js-decision-table-controls.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn-js-literal-expression.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn-js-literal-expression.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\dmn.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\dmn.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\css\style.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\css\style.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\font\dmn.eot">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\font\dmn.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\font\dmn.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\font\dmn.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\font\dmn.ttf">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\font\dmn.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\font\dmn.woff">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\font\dmn.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Dmn\font\dmn.woff2">
+			<Link>wwwroot\Content\common-assets-includes\features\design\dmn\font\dmn.woff2</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Images\Global\login.png">
+			<Link>wwwroot\Content\common-assets-includes\images\global\login.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Fine Uploader\jquery.fine-uploader.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\fine-uploader\jquery.fine-uploader.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-check.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-check.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-comment.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-comment.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-help.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-help.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-insert.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-insert.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-key.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-key.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-newparagraph.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-newparagraph.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-noicon.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-noicon.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-note.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-note.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\annotation-paragraph.svg">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\annotation-paragraph.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-next%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-next%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-next-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-next-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-next-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-next-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-next.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-next.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-previous%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-previous%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-previous-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-previous-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-previous-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-previous-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\findbarButton-previous.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\findbarButton-previous.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\grab.cur">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\grab.cur</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\grabbing.cur">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\grabbing.cur</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\loading-icon.gif">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\loading-icon.gif</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\loading-small%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\loading-small%402x.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\loading-small.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\loading-small.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-documentProperties%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-documentProperties%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-documentProperties.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-documentProperties.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-firstPage%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-firstPage%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-firstPage.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-firstPage.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-handTool%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-handTool%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-handTool.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-handTool.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-lastPage%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-lastPage%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-lastPage.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-lastPage.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-rotateCcw%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-rotateCcw%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-rotateCcw.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-rotateCcw.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-rotateCw%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-rotateCw%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-rotateCw.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-rotateCw.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-selectTool%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-selectTool%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\secondaryToolbarButton-selectTool.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\secondaryToolbarButton-selectTool.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\shadow.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\shadow.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\texture.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\texture.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-bookmark%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-bookmark%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-bookmark.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-bookmark.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-download%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-download%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-download.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-download.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-menuArrows%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-menuArrows%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-menuArrows.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-menuArrows.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-openFile%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-openFile%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-openFile.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-openFile.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageDown%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageDown%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageDown-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageDown-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageDown-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageDown-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageDown.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageDown.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageUp%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageUp%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageUp-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageUp-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageUp-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageUp-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-pageUp.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-pageUp.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-presentationMode%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-presentationMode%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-presentationMode.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-presentationMode.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-print%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-print%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-print.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-print.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-search%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-search%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-search.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-search.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-secondaryToolbarToggle%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-secondaryToolbarToggle%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-secondaryToolbarToggle-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-secondaryToolbarToggle-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-secondaryToolbarToggle-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-secondaryToolbarToggle-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-secondaryToolbarToggle.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-secondaryToolbarToggle.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-sidebarToggle%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-sidebarToggle%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-sidebarToggle-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-sidebarToggle-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-sidebarToggle-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-sidebarToggle-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-sidebarToggle.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-sidebarToggle.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewAttachments%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewAttachments%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewAttachments.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewAttachments.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewOutline%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewOutline%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewOutline-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewOutline-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewOutline-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewOutline-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewOutline.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewOutline.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewThumbnail%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewThumbnail%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-viewThumbnail.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-viewThumbnail.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-zoomIn%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-zoomIn%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-zoomIn.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-zoomIn.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-zoomOut%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-zoomOut%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\toolbarButton-zoomOut.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\toolbarButton-zoomOut.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-collapsed%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-collapsed%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-collapsed-rtl%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-collapsed-rtl%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-collapsed-rtl.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-collapsed-rtl.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-collapsed.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-collapsed.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-expanded%402x.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-expanded%402x.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\images\treeitem-expanded.png">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\images\treeitem-expanded.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\pdfjs\pdf.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\pdfjs\pdf.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\pdfjs\pdf.worker.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\pdfjs\pdf.worker.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\viewer.css">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\viewer.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\viewer.html">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\viewer.html</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\viewer.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\viewer.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Usage\teta-jw-use.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\usage\teta-jw-use.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Bootstrap Dialog\bootstrap-dialog.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bootstrap-dialog\bootstrap-dialog.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Bootstrap Add Clear\bootstrap-add-clear.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bootstrap-add-clear\bootstrap-add-clear.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)LibmanLibs\bootstrap4-toggle\js\bootstrap4-toggle.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bootstrap-toggle\bootstrap4-toggle.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\laylazi\bootstrap-rtl\dist\js\bootstrap.bundle.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bootstrap\bootstrap.bundle.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\bs-custom-file-input\dist\bs-custom-file-input.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bs-custom-file-input\bs-custom-file-input.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\vuerd\dist\vuerd.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\vuerd\vuerd.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Popper\popper.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\popper\popper.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\data.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\data.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\exporting.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\exporting.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\heatmap.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\heatmap.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Cookie\js.cookie-2.2.1.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\cookie\js.cookie-2.2.1.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\highcharts-more.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\highcharts-more.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\highcharts5.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\highcharts5.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\High charts\treemap.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\high-charts\treemap.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Input Mask\inputmask.binding.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\input-mask\inputmask.binding.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)LibmanLibs\iframe-resizer\js\iframeResizer.contentWindow.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\iframe-resizer\iframeResizer.contentWindow.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)LibmanLibs\signalr\dist\browser\signalr.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\signalr\signalr.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)LibmanLibs\rapidoc\dist\rapidoc-min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\rapidoc\rapidoc-min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Input Mask\inputmask.extensions.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\input-mask\inputmask.extensions.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Input Mask\inputmask.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\input-mask\inputmask.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Input Mask\inputmask.numeric.extensions.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\input-mask\inputmask.numeric.extensions.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Input Mask\jquery.inputmask.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\input-mask\jquery.inputmask.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Mmenu\jquery.mmenu.all.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-mmenu\jquery.mmenu.all.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Usage\teta-mmenu-use.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\usage\teta-mmenu-use.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Mmenu\Mmenu Fa\jquery.mmenu.fa.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-mmenu\mmenu-fa\jquery.mmenu.fa.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Mmenu\Mmenu Search Field\jquery.mmenu.searchfield.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-mmenu\mmenu-search-field\jquery.mmenu.searchfield.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Progress\jquery-ui.min-progress.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-progress\jquery-ui.min-progress.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Sortable\jquery-sortable-min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-sortable\jquery-sortable-min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Ui\jquery-ui.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-ui\jquery-ui.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\jquery\jquery.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery\jquery.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\jquery-migrate\jquery-migrate.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-migrate\jquery-migrate.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jstree\jstree.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jstree\jstree.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jvector Map\jquery-jvectormap-2.0.3.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jvector-map\jquery-jvectormap-2.0.3.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jvector Map\jquery-jvectormap-world-mill.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jvector-map\jquery-jvectormap-world-mill.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jvector Map\jquery-jvectormap-iran-mill.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jvector-map\jquery-jvectormap-iran-mill.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Ladda\ladda.jquery.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\ladda\ladda.jquery.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Ladda\ladda.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\ladda\ladda.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Ladda\spin.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\ladda\spin.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\ListJs\list.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\list-js\list.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Moment\moment.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\moment\moment.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Marked\marked.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\marked\marked.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Pwt Date Picker\persian-date.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\pwt-datepicker\persian-date.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Jquery Autocomplete\jquery.autocomplete.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\jquery-autocomplete\jquery.autocomplete.min.js</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Pwt Date Picker\persian-datepicker.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\pwt-datepicker\persian-datepicker.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Select2\fa.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\select2\fa.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Select2\select2.full.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\select2\select2.full.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shim\respond.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shim\respond.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Shiv\html5shiv.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\shiv\html5shiv.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Side Navi\SideNavi.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\side-navi\SideNavi.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Global\Tabulator\tabulator.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\tabulator\tabulator.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\bs4-toast\dist\toast.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\global\bs4-toast\toast.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Usage\teta-toast-use.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\usage\teta-toast-use.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Bpmn Viewer\bpmn-viewer-use.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\bpmn-viewer\bpmn-viewer-use.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Bpmn Viewer\index.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\bpmn-viewer\index.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Common Features\drf.common.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\common-features\drf.common.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Controls\operation-button.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\controls\operation-button.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Common Features\FolderManager.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\common-features\FolderManager.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Dashboard\Dashboard.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\dashboard\Dashboard.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Bpmn\index.min.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\bpmn\index.min.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Bpmn\modify.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\bpmn\modify.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Bpmn\use.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\bpmn\use.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Dmn\index.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\dmn\index.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Dmn\dmn-modeler.development.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\dmn\dmn-modeler.development.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Form Design\controller\build.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\form-design\controller\build.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Other Process\EventTrees.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\other-process\EventTrees.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Other Process\ISOConvertor.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\other-process\ISOConvertor.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Filter\FilterTree.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\filter\FilterTree.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Filter\FlagInFilterDescription.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\filter\FlagInFilterDescription.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\Form.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\Form.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\IndexForm.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\IndexForm.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\Logic.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\Logic.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\ExpressionFunctions.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\ExpressionFunctions.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\State.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\State.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\History\HistoryManager.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\history\HistoryManager.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\History\SessionStorageStackTests.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\history\SessionStorageStackTests.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Process\ProcessTree.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\process\ProcessTree.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\ConfigConfig.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\ConfigConfig.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\ConfigsTreeManager.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\ConfigsTreeManager.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\OpenSubReportMenu.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\OpenSubReportMenu.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\report-listView-colorsSettings.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\report-listView-colorsSettings.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\report-listView-columnsSettings.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\report-listView-columnsSettings.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\report-listView-ordersSettings.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\report-listView-ordersSettings.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\report-reportSettings.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\report-reportSettings.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\Report.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\Report.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\AddSubReport.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\AddSubReport.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\ChartViewHelpers.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\ChartViewHelpers.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\ScheduledReport.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\ScheduledReport.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\ScheduledReportTreeManager.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\ScheduledReportTreeManager.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\showOrHideJobScheduleFeatures.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\showOrHideJobScheduleFeatures.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\teta.metric.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\teta.metric.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Techniques\teta-bidi.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\techniques\teta-bidi.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Animate\animate.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\animate\animate.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Bootstrap Dialog\bootstrap-dialog.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\bootstrap-dialog\bootstrap-dialog.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Bootstrap Fonts\glyphicons-halflings-regular.svg">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\fonts\glyphicons-halflings-regular.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\laylazi\bootstrap-rtl\dist\css\bootstrap-rtl.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\bootstrap-rtl\bootstrap-rtl.min.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)LibmanLibs\bootstrap4-toggle\css\bootstrap4-toggle.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\bootstrap-toggle\bootstrap4-toggle.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\laylazi\bootstrap-rtl\dist\css\bootstrap.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\bootstrap\bootstrap.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\I18n\global-texts-en.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\i18n\global-texts-en.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\I18n\global-texts-fa.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\i18n\global-texts-fa.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\I18n\teta-i18n.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\i18n\teta-i18n.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\HomePage\homepage.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\homepage\homepage.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\HomePage\homepage.css">
+			<Link>wwwroot\Content\common-assets-includes\features\homepage\homepage.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Captcha\captcha.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\captcha\captcha.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_glass_75_d0e5f5_1x400.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_glass_75_d0e5f5_1x400.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_glass_85_dfeffc_1x400.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_glass_85_dfeffc_1x400.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_glass_95_fef1ec_1x400.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_glass_95_fef1ec_1x400.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_gloss-wave_55_5c9ccc_500x100.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_inset-hard_100_f5f8f9_1x100.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_inset-hard_100_f5f8f9_1x100.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-bg_inset-hard_100_fcfdfd_1x100.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-bg_inset-hard_100_fcfdfd_1x100.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_217bc0_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_217bc0_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_2e83ff_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_2e83ff_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_469bdd_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_469bdd_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_6da8d5_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_6da8d5_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_cd0a0a_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_cd0a0a_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_d8e7f3_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_d8e7f3_256x240.png</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Images\ui-icons_f9bd01_256x240.png">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\images\ui-icons_f9bd01_256x240.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Mmenu\jquery.mmenu.all.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jquery-mmenu\jquery.mmenu.all.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Mmenu\Mmenu Positioning\jquery.mmenu.positioning.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jquery-mmenu\mmenu-positioning\jquery.mmenu.positioning.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Progress\jquery-ui.theme-progress.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jquery-progress\jquery-ui.theme-progress.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jquery Ui\jquery-ui.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jquery-ui\jquery-ui.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jstree\32px.png">
+			<Link>wwwroot\bundles\32px.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jstree\40px.png">
+			<Link>wwwroot\bundles\40px.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jstree\throbber.gif">
+			<Link>wwwroot\bundles\throbber.gif</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jstree\style.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jstree\style.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jstree\teta-overriedes.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jstree\teta-overriedes.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Jvector Map\jquery-jvectormap-2.0.3.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\jvector-map\jquery-jvectormap-2.0.3.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Ladda\ladda-themeless.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\ladda\ladda-themeless.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Print\print.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\print\print.css</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Pwt Date Picker\persian-datepicker.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\pwt-datepicker\persian-datepicker.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\ttskch\select2-bootstrap4-theme\dist\select2-bootstrap4.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\select2\select2-bootstrap4.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Select2\select2.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\select2\select2.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Side Navi\sidenavi-right.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\side-navi\sidenavi-right.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Tabulator\tabulator_bootstrap.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\tabulator\tabulator_bootstrap.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\bs4-toast\dist\toast.min.css">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\bs4-toast\toast.min.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\css\diagram-js.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\css\diagram-js.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\css\bpmn-embedded.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\css\bpmn-embedded.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\css\bpmn.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\css\bpmn.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\font\bpmn.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\font\bpmn.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Form Design\Blackbox Images\IndexTable.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\form-design\blackbox-images\IndexTable.svg</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Form Design\Blackbox Images\MultipleSelectableCombo.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\form-design\blackbox-images\MultipleSelectableCombo.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Form Design\Blackbox Images\None.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\form-design\blackbox-images\None.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Form Design\form-columns-settings.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\form-design\form-columns-settings.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\primeicons.eot">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\primeicons.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\primeicons.svg">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\primeicons.svg</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\primeicons.ttf">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\primeicons.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\primeicons.woff">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\primeicons.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\color.png">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\color.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\hue.png">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\hue.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\password-meter.png">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\password-meter.png</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Meta Design\styles.css">
+			<Link>wwwroot\Content\common-assets-includes\features\design\meta-design\styles.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\ltr.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\ltr.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\rtl.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\rtl.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Report\Bpmn Diagram\app.css">
+			<Link>wwwroot\Content\common-assets-includes\features\report\bpmn-diagram\app.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Report\report-orderByModal.css">
+			<Link>wwwroot\Content\common-assets-includes\features\report\report-orderByModal.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Report\report-selectColumnsModal.css">
+			<Link>wwwroot\Content\common-assets-includes\features\report\report-selectColumnsModal.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\User Menu\user-menu.css">
+			<Link>wwwroot\Content\common-assets-includes\features\user-menu\user-menu.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\locale\locale.properties">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\locale\locale.properties</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Scripts\Common Plugins\Controls\Pdf Viewer\locale\fa\viewer.properties">
+			<Link>wwwroot\Scripts\common-assets-includes\common-plugins\controls\pdf-viewer\locale\fa\viewer.properties</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\font\bpmn.eot">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\font\bpmn.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\font\bpmn.ttf">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\font\bpmn.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Design\Bpmn\vendor\bpmn-font\font\bpmn.woff">
+			<Link>wwwroot\Content\common-assets-includes\features\design\bpmn\vendor\bpmn-font\font\bpmn.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\fontawesome-webfont.eot">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\fontawesome-webfont.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\fontawesome-webfont.ttf">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\fontawesome-webfont.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\fontawesome-webfont.woff">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\fontawesome-webfont.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\fontawesome-webfont.woff2">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\fontawesome-webfont.woff2</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Font Awesome 420\fonts\FontAwesome.otf">
+			<Link>wwwroot\Content\common-assets-includes\fonts\font-awesome420\fonts\FontAwesome.otf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\wpthm\Yekan.eot">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\wpthm\Yekan.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\wpthm\Yekan.ttf">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\wpthm\Yekan.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\wpthm\Yekan.woff">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\wpthm\Yekan.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\weblogma.com\WeblogmaYekan.eot">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\weblogma.com\WeblogmaYekan.eot</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\weblogma.com\WeblogmaYekan.ttf">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\weblogma.com\WeblogmaYekan.ttf</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\weblogma.com\WeblogmaYekan.woff">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\weblogma.com\WeblogmaYekan.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Fonts\Pfont\fonts\yekan\WebYekan\WebYekan.woff">
+			<Link>wwwroot\Content\common-assets-includes\fonts\pfont\fonts\yekan\WebYekan\WebYekan.woff</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Bootstrap Fonts\glyphicons-halflings-regular.eot">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\fonts\glyphicons-halflings-regular.eot</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Bootstrap Fonts\glyphicons-halflings-regular.ttf">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\fonts\glyphicons-halflings-regular.ttf</Link>
+		</Content>
+		<Content
+		  Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Global\Bootstrap Fonts\glyphicons-halflings-regular.woff">
+			<Link>wwwroot\Content\common-assets-includes\common-plugins\global\fonts\glyphicons-halflings-regular.woff</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Design\Form Design\main.js.map">
+			<Link>wwwroot\Scripts\common-assets-includes\features\design\form-design\main.js.map</Link>
+		</Content>
+
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Pages\Database Migration\DatabaseMigration.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\pages\database-migration\DatabaseMigration.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Pages\Database Migration\texts-fa.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\pages\database-migration\texts-fa.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Pages\Database Migration\texts-en.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\pages\database-migration\texts-en.js</Link>
+		</Content>
+
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\xterm\lib\xterm.js">
+			<Link>wwwroot\Scripts\common-assets-includes\terminal\xterm\xterm.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\xterm\lib\xterm-addon-fit.js">
+			<Link>wwwroot\Scripts\common-assets-includes\terminal\xterm\xterm-addon-fit.js</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)LibmanLibs\xterm\css\xterm.css">
+			<Link>wwwroot\Content\common-assets-includes\terminal\xterm\xterm.css</Link>
+		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Icons\svgSprite.svg">
+			<Link>wwwroot\Content\common-assets-includes\icons\svgSprite.svg</Link>
+		</Content>
+	</ItemGroup>
+</Project>

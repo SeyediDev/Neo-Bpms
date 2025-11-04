@@ -1,0 +1,175 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.FilterModels
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.WorkItems
+@using Neo.Bpms.UI.MVC.ViewModels
+@using Neo.Bpms.UI.MVC.ViewModels.ProcessModels
+@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+
+@model WorkItemsViewModel
+
+@{
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+
+    var jsTasks = new HtmlString(JsonConvert.SerializeObject(Model.ServiceTasks));
+}
+
+@{
+    Func<dynamic, HelperResult> TopBarTools =
+        @<text>
+            @{ var bulkDoActivityButtonModel = new BulkDoActivityButtonModel {workItemsModel = item, style = "margin-bottom: -10px; margin-left: 5px;", caller = "MyWorkItems"}; }
+            <partial name="Helpers/BulkDoActivityButton" model="bulkDoActivityButtonModel"/>
+            <a href="#" class="float-left top-bar-anchor-icon text-primary icons-tables" role="button" id="showFilter">
+                <svg title="@ViewTexts.Filter" style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
+                </svg>
+            </a>
+         </text>;
+
+    async Task TopBar(string pageIcon, dynamic pageTitle)
+    {
+        string title = string.IsNullOrEmpty(pageTitle) ? "کارهای من" : pageTitle;
+        <partial name="Common/TopBar" model="new TopBarModel {Title = title, PageIcon = pageIcon, Tools = TopBarTools(Model)}"/>
+    }
+}
+
+<script>
+    var jsTasks = @jsTasks;
+</script>
+
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/design/bpmn/vendor/bpmn-font/css/bpmn.css">
+
+@using (Html.BeginForm("MyWorkItems", "Process", FormMethod.Post, new {enctype = "multipart/form-data", id = "filter-form"}))
+{
+    int pageLinkCount = 10;
+    var recordCount = Model.RecordsCount;
+    var recordsPerPage = ViewBag.recordsPerPage;
+    var totalPageCount = (recordCount + (recordsPerPage - 1)) / recordsPerPage;
+    var currentFilter = Model.CartableFilter;
+
+    int pageNo = ViewBag.Page;
+    var pageTitle = !string.IsNullOrEmpty(ViewBag.processName) ? ("کارهای من در " + ViewBag.processName) : "";
+    <input type="hidden" name="Page" value="@pageNo"/>
+    <input type="hidden" name="newPage" value="1"/>
+
+
+    await TopBar(pageIcon, pageTitle);
+
+    <partial name="Helpers/WorkItemsFilter" model="new WorkItemsFilterModel {currentFilter = Model.CartableFilter, pageType = Model.CartableFilter.PageType, processList = ViewBag.processList, activityList = ViewBag.activityList}"/>
+    <div class="customDiv col-md-12 col-sm-12">
+        @{ await CartableTable(); }
+        <partial name="Common/Pagination" model="new PaginationModel {pageNo = pageNo, maxPageLinksToShow = pageLinkCount, recordsPerPage = recordsPerPage, thisPageRowsCount = Model.WorkItems.Count, totalRecordsCount = Model.RecordsCount}"/>
+    </div>
+
+    <input type="submit" id="submitBtn" style="display: none;"/>
+}
+
+<link href="@CommonBundles.WorkItemsCssBundle" asp-append-version="true" rel="stylesheet" />
+<script src="@CommonBundles.WorkItemsJsBundle" asp-append-version="true"></script>
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css"/>
+<script type="text/javascript">
+    $(function() {
+        ProgressManager.initialize();
+        FilterManager.initialize();
+        SelectionManager.setFunctionOfGetIdentifier(function($row) {
+            return $row.data('aiid');
+        });
+        $('#filter-form').on('submit', SelectionManager.setAlreadySelections);
+        SelectionManager.checkAlreadyCheckboxes();
+    });
+</script>
+
+@functions
+{
+
+    async Task CartableTable()
+    {
+        <div class="t-table-wrapper custom-scroll">
+            <table id="workItemsTbl" class="table table-hover ">
+
+                @{ await CartableHeader(Model.CartableFilter); }
+
+                <tbody>
+                @foreach (var item in Model.WorkItems)
+                {
+                    await CartableRow(item, Model.CartableFilter);
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    async Task CartableHeader(WorkItemsFilter filter)
+    {
+        <thead>
+        <tr ignored="true" class="sticky-row">
+            <th class="cColumn" id="checkboxes-column">
+                <i class="fa fa-check mouse-pointer" onclick="SelectionManager.toggleCheckAllRows()" id="check-all"></i>
+            </th>
+            <th class="cColumn">
+                <span>کار</span>
+            </th>
+
+            <th class="cColumn">
+                <span>فعالیت</span>
+            </th>
+
+            <th class="cColumn">
+                <span>شرح پرونده</span>
+            </th>
+
+            <th class="cColumn">
+                <span>زمان ایجاد</span>
+            </th>
+
+            <th class="cColumn">
+                <span>وضعیت</span>
+            </th>
+
+            @if (filter.PageType == WorkItemsPageType.WorkItems)
+            {
+                <th class="cColumn">
+                    <span>نقش</span>
+                </th>
+                <th class="cColumn">
+                    <span>کاربر</span>
+                </th>
+            }
+            <partial name="Helpers/RestoreTh" model="filter"/>
+        </tr>
+
+        </thead>
+    }
+
+    async Task CartableRow(WorkItemViewModel item, WorkItemsFilter filter)
+    {
+        var cartableRowFormsModel = new CartableRowFormsModel {item = item, caller = "MyWorkItems"};
+        <tr @(item.GetAttributes())>
+            <td class="cColumn">
+                <input class="row-checkbox" data-id="@item.ActivityInstanceId" type="checkbox" id="checkbox-row-@item.ActivityInstanceId">
+            </td>
+            <td style="padding: 0 !important;">
+                <partial name="Helpers/CartableRowForms" model="cartableRowFormsModel"/>
+            </td>
+            <td>@item.ActivityName</td>
+            <td>@item.EntityDescription</td>
+            <td title="@item.ReadableCreationDateTime">
+                @item.ReadableCreationDate
+            </td>
+            <partial name="Helpers/StateTd" model="item"/>
+            @if (filter.PageType == WorkItemsPageType.WorkItems)
+            {
+                <td>@item.UserGroupName</td>
+                <td>@item.ActualOwnerName</td>
+            }
+            <partial name="Helpers/RestoreTd" model="filter"/>
+        </tr>
+    }
+}

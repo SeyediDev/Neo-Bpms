@@ -1,0 +1,30 @@
+﻿@using System.Text
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Components
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Common.Extensions
+@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Converters
+@inject FormDesignHelper formDesignHelper;
+@model Neo.Bpms.UI.MVC.PartialModels.FormDesign.RenderPropertyGlobalsModel
+@{
+	var sb = new StringBuilder();
+
+	<script>
+		var propertyTypes = {};
+
+		@foreach (var propertyId in Enum.GetValues(typeof(eControlPropertyId)).Cast<eControlPropertyId>())
+		{
+			var arr = propertyId.GetControlGroup() ?? new ControlGroup[0];
+
+			var serializedArray = JsonConvert.SerializeObject(arr,
+				new StringEnumConverter());
+			sb.Append(string.Format("propertyTypes['{0}']={{type:'{1}', title:'{2}', controlGroups:{3}}};",
+				propertyId, propertyId.GetValueType(), propertyId.GetTitle(), serializedArray));
+		}
+		@(new HtmlString(sb.ToString()))
+
+		var controlModels = @(formDesignHelper.RenderPropertiesObject(Model.structure, Model.isFilter));
+	</script>
+}

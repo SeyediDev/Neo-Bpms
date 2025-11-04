@@ -1,0 +1,114 @@
+﻿
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.ViewModels.ProcessModels
+@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+
+@model TaskSummaryViewModel
+
+@{
+    var myModel = Model;
+}
+
+<link href="@CommonBundles.TabulatorCssBundle" asp-append-version="true" rel="stylesheet" />
+<script src="@CommonBundles.TabulatorJsBundle" asp-append-version="true"></script>
+
+<div class="customDiv col-md-12 col-sm-12">
+	<div class="row">
+		<div class="col-sm-6">
+			@{
+				DetailItem("فعالیت انجام شده", Model.ActivityName);
+				DetailItem("پرونده", Model.EntityDisplayText);
+				DetailItem("شرح", Model.ActivityDescription);
+				DetailItem("شماره", Model.EntityId);
+				DetailItem("وضعیت", Model.StateDisplayText);
+			}
+		</div>
+		<div class="col-sm-6">
+			@{
+				DetailItem("زمان انجام", Model.CloseTime != null ? Model.CloseTimeToText : null);
+				DetailItem("مدت انتظار", Model.WaitingDuration.ToString());
+				DetailItem("مدت انجام", Model.DoingDuration.ToString());
+				DetailItem("نقش", Model.UserGroupId.ToString());
+				DetailItem("کاربر", Model.ActualOwnerId);
+			}
+		</div>
+	</div>
+
+	<h4>عملیات فعال</h4>
+	<div id="active-tasks-table"></div>
+	<h4>سابقه‌ی فرآیند</h4>
+	<div id="closed-tasks-table"></div>
+</div>
+
+<script>
+	var TaskSummaryManager = function(activeTasks, closedTasks) {
+		var activeTasksTableSelector = '#active-tasks-table';
+		var closedTasksTableSelector = '#closed-tasks-table';
+
+		$(activeTasksTableSelector).tabulator({
+			layout: "fitColumns",
+			columns: [
+				{
+					title: "عنوانِ فعالیت",
+					field: "ActivityName"
+				},
+				{
+					title: "نقش",
+					field: "UserGroupId"
+				},
+				{
+					title: "کاربر",
+					field: "ActualOwnerId"
+				}
+			],
+			data: activeTasks
+		});
+		$(closedTasksTableSelector).tabulator({
+			layout: "fitColumns",
+			columns: [
+				{
+					title: "عنوانِ فعالیت",
+					field: "ActivityName"
+				},
+				{
+					title: "نقش",
+					field: "UserGroupId"
+				},
+				{
+					title: "کاربر",
+					field: "ActualOwnerId"
+				},
+				{
+					title: "شرح",
+					field: "Description"
+				},
+				{
+					title: "زمانِ انجام",
+					field: "CompletionTime"
+				},
+				{
+					title: "زمانِ ایجاد",
+					field: "CreationTime"
+				}
+			],
+			data: closedTasks
+		});
+
+		return {
+			activeTasks: activeTasks,
+			closedTasks: closedTasks
+		};
+	}(@(new HtmlString(JsonConvert.SerializeObject(Model.ActiveTasks))),
+		@(new HtmlString(JsonConvert.SerializeObject(Model.ClosedTasks))));
+</script>
+
+
+@functions
+{
+	void DetailItem(string title, string description)
+	{
+		<div class="col-sm-6">@title</div>
+		<div class="col-sm-6">@description</div>
+	}
+}

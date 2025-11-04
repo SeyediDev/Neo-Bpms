@@ -1,0 +1,193 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.ViewModels.ProcessModels
+
+@model List<ProcessItemsViewModel>
+
+@{
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+}
+
+<style>
+    .process-card-wrapper {
+        min-height: 122px;
+    }
+
+        .process-card-wrapper a {
+            text-decoration: none;
+        }
+
+    .process-card {
+        margin-bottom: 20px;
+        border: unset;
+    }
+
+    .hoverable:hover {
+        -webkit-box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+        box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+        -webkit-transition: all .20s ease-in-out;
+        transition: all .20s ease-in-out;
+    }
+
+        .hoverable:hover * {
+            color: #f6ebb0 !important;
+        }
+
+    .skew-shadow {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .skew-shadow:before {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            width: 50%;
+            min-width: 150px;
+            height: 100%;
+            top: 0;
+            left: -25%;
+            /* left: -30%; */
+            /* transform: skewX(32.5deg); */
+            transform: skewX(22deg);
+        }
+
+    .op-8 {
+        opacity: 0.8;
+    }
+
+    .process-card-body {
+        height: 135px;
+    }
+
+    .color1 {
+        background-color: #6861ce;
+        color: #ffffff;
+    }
+
+    .color2 {
+        background-color: #d60a0a;
+        color: #ffffff;
+    }
+
+    .color3 {
+        background-color: #0987d5;
+        color: #ffffff;
+    }
+
+    .color4 {
+        background-color: #16d509;
+        color: #ffffff;
+    }
+
+    .color5 {
+        background-color: #d2d509;
+        color: #ffffff;
+    }
+
+    .process-card-body2 {
+        padding: 15px;
+        height: 157px;
+    }
+
+    .work-items-count {
+        font-size: 36px;
+    }
+
+    .process-title {
+        line-height: 2.2rem;
+        font-size: 14px;
+    }
+
+    .new-work-items {
+        font-size: 24px;
+    }
+
+    .count-with-not-started {
+        margin-top: -3px;
+    }
+
+    .process-card-body .bpms-flaticon-spark:before {
+        font-size: 16px;
+    }
+
+    .process-card-body2 .bpms-flaticon-spark:before {
+        font-size: 19px;
+        font-weight: 600;
+    }
+</style>
+
+
+@* var pageTitle = (!string.IsNullOrEmpty(ViewBag.processName) ? (ViewBag.PageTitle + ": " + ViewBag.processName) : ""); *@
+
+@{
+
+    var topBarModel = new TopBarModel
+    {
+        Title = "کارهای من",
+        PageIcon = pageIcon
+    };
+}
+<partial name="Common/TopBar" model="topBarModel" />
+
+@*    @WorkItemsHelpers.WorkItemsFilter(currentFilter, WorkItemsPageType.MyWorkItems)*@
+@if (Model.Any())
+{
+    <div class="customDiv col-md-12 col-sm-12">
+        @{ await ProcessCards(); }
+    </div>
+}
+else
+{
+    NoAvailableWork();
+}
+
+
+@functions
+{
+
+    async Task ProcessCards()
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                await ProcessCard2(item);
+            }
+        </div>
+    }
+
+    void NoAvailableWork()
+    {
+        <div class="alert alert-secondary" style="font-size: 1rem;">
+            در حال حاضر کاری برای شما وجود ندارد.
+        </div>
+    }
+
+    async Task ProcessCard2(ProcessItemsViewModel item)
+    {
+        <div class="process-card-wrapper col-sm-3">
+            <div class="process-card hoverable">
+                <a href="~/Process/IndexWorkItems?@(string.Format("__ProcessId={0}", item.ProcessId))">
+                    <div class="process-card-body2 skew-shadow color3">
+                        <span class="work-items-count" title="تعداد">@item.Count</span>
+                        <h5 title="نام فرآیند" class="col-lg-9 noPadding process-title">@item.ProcessName</h5>
+                        @if (item.NotStartedCount > 0)
+                        {
+                            <div class="float-end col-lg-3 noPadding" title="شروع نشده">
+                                <h3 class="op-8 new-work-items">
+                                    @item.NotStartedCount
+                                    <i class="bpms-flaticon-spark no-margin-flaticon"></i>
+                                </h3>
+                            </div>
+                        }
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
+
+}

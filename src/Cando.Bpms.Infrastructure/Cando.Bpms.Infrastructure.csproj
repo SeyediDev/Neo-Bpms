@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+	  <Content Include="Features\Orm\DataSources\TODOList.txt" />
+	  <Content Include="Features\Orm\DDL\Document.txt" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus" />
+    <PackageReference Include="Microsoft.OpenApi" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="System.Formats.Asn1" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.Data.OracleClient" />
+    <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" />
+    <PackageReference Include="RestSharp" />
+    <PackageReference Include="System.Text.RegularExpressions" />
+  </ItemGroup>
+  <ItemGroup>
+	  <ProjectReference Include="..\..\..\Cando\Neo.Infrastructure\Neo.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />
+	  <ProjectReference Include="..\Neo.Bpms.Domain.Modeling\Neo.Bpms.Domain.Modeling.csproj" />
+	  <ProjectReference Include="..\Neo.Bpms.UI.Resources\Neo.Bpms.UI.Resources.csproj" />
+	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Features\Cmmn\Forms\Resources\Texts.Designer.cs">
+      <DependentUpon>Texts.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Features\Cmmn\Forms\Resources\Texts.en.Designer.cs">
+      <DependentUpon>Texts.en.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Features\Security\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Features\Cmmn\Forms\Resources\Texts.en.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\Cmmn\Forms\Resources\Texts.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

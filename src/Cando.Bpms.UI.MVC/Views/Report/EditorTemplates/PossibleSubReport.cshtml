@@ -1,0 +1,7 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@model Report.PossibleSubReport
+
+<!option value="@Model.SubReportId" data-associationname="@Model.AssociationName" data-entityid="@Model.EntityId" 
+         data-namespaceid="@Model.NamespaceId" data-srtype="@Model.Type">
+	@Html.DisplayTextFor(y => y.Name)
+</!option>

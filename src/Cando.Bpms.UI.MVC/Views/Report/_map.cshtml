@@ -1,0 +1,359 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Microsoft.AspNetCore.Html
+@model             ReportData
+@{
+	var calendar = ProjectDefinition.Project.DefaultCalendar;
+	var reportInfo = Model;
+	var canDesign = ViewBag.CanDesign ?? false;
+	var isDrillDown = ViewBag.DrillDown ?? false;
+	var reportKey = reportInfo.structure.ConfigId;
+	var bFromDashboard = ViewBag.bFromDashboard ?? false;
+	var drilldownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+}
+@if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
+{
+	 @*     <div id="map-design-tools-container" class="designTool designMode"> *@
+	<partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = Model, forInlineSubReport = true}"/>
+	 @* </div> *@
+}
+
+@* <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.css"/>
+<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.min.js"></script> *@
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.css"/>
+<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.min.js"></script>
+@if (Model.structure.ChartType == Report.ChartType.WorldMap)
+{
+	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-world-mill.js"></script>
+}
+else if (Model.structure.ChartType == Report.ChartType.IranMap)
+{
+	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-iran-mill.js"></script>
+}
+
+<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drilldownSubReports, reportKey = reportKey, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}"/>
+
+
+<div id="world-map" class="world-map-container">
+</div>
+
+<script>
+	var isWorldMap = @((Model.structure.ChartType == Report.ChartType.WorldMap).ToString().ToLower());
+	var mapData = {};
+	var mapInfo = {};
+
+	@{
+		var colorColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
+		var iso2Column = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "Iso2")
+			?? reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.Alias == "Iso2");
+		var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+
+		bool isValidIranProvinceIso2(object iso2)
+		{
+			if (iso2 == null || string.IsNullOrEmpty(iso2.ToString()))
+				return false;
+
+			return iso2.ToString().StartsWith("IR-");
+		}
+	}
+
+	var subReportsCount = @subReportsCount;
+	var reportKey = "@reportKey";
+
+	@foreach (var row in reportInfo.Rows)
+	{
+		var iso2 = row.Data[iso2Column != null ? iso2Column.ColumnTypeName : "Iso2"];
+		if (Model.structure.ChartType == Report.ChartType.IranMap)
+		{
+			if(!isValidIranProvinceIso2(iso2))
+				iso2 = "iran";
+		}
+		var rowIds = row.Data.GetString("Ids").Split(',')[0];
+		double colorValue = 0;
+
+		if (colorColumn != null)
+		{
+			colorValue = row.Data.GetDouble(colorColumn.ColumnTypeName);
+		}
+		
+		
+		var str = "mapData['" + iso2 + "']=" + colorValue + ";\n";
+		str += "mapInfo['" + iso2 + "']={};\n";
+		str += "mapInfo['" + iso2 + "']['ids']='" + rowIds + "';\n";
+		str += "mapInfo['" + iso2 + "']['tooltipValues']={};\n";
+		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+			//s.aggrType != eAggregationFunctions.InColumn &&
+			s.aggrType != eAggregationFunctions.GroupByItem &&
+			s.ColumnName != "Iso2");
+		foreach (var colInfo in columns)
+		{
+			var value = ReportRenderer.GetCelValue(colInfo, row);
+			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			str += "mapInfo['" + iso2 + "']['tooltipValues']['" + colInfo.Alias + "'] = '" + val + "';";
+		}
+		@(new HtmlString(str))
+	}
+
+	//todo read mapMarkers from mapInfo
+
+	var iso2sWhichShouldBeMarkers = [
+		@if (Model.structure.ChartType == Report.ChartType.WorldMap)
+		{
+			<text>
+				{ markerType: 'satellite', iso2: '3ry', latLng: [-51, -130], name: 'ماهواره ثریا' },
+				{ markerType: 'satellite', iso2: '3is', latLng: [-30, -130], name: 'Inmarsat' },
+				{ markerType: 'country', iso2: 'VA', latLng: [41.90, 12.45], name: 'Vatican City' },
+				{ markerType: 'country', iso2: 'MC', latLng: [43.73, 7.41], name: 'Monaco' },
+				{ markerType: 'country', iso2: 'NR', latLng: [-0.52, 166.93], name: 'Nauru' },
+				{ markerType: 'country', iso2: 'TV', latLng: [-8.51, 179.21], name: 'Tuvalu' },
+				{ markerType: 'country', iso2: 'SM', latLng: [43.93, 12.46], name: 'San Marino' },
+				{ markerType: 'country', iso2: 'LI', latLng: [47.14, 9.52], name: 'Liechtenstein' },
+				{ markerType: 'country', iso2: 'MH', latLng: [7.11, 171.06], name: 'Marshall Islands' },
+				{ markerType: 'country', iso2: 'KN', latLng: [17.3, -62.73], name: 'Saint Kitts and Nevis' },
+				{ markerType: 'country', iso2: 'MV', latLng: [3.2, 73.22], name: 'Maldives' },
+				{ markerType: 'country', iso2: 'MT', latLng: [35.88, 14.5], name: 'Malta' },
+				{ markerType: 'country', iso2: 'GD', latLng: [12.05, -61.75], name: 'Grenada' },
+				{ markerType: 'country', iso2: 'VC', latLng: [13.16, -61.23], name: 'Saint Vincent and the Grenadines' },
+				{ markerType: 'country', iso2: 'BB', latLng: [13.16, -59.55], name: 'Barbados' },
+				{ markerType: 'country', iso2: 'AG', latLng: [17.11, -61.85], name: 'Antigua and Barbuda' },
+				{ markerType: 'country', iso2: 'SC', latLng: [-4.61, 55.45], name: 'Seychelles' },
+				{ markerType: 'country', iso2: 'PW', latLng: [7.35, 134.46], name: 'Palau' },
+				{ markerType: 'country', iso2: 'AD', latLng: [42.5, 1.51], name: 'Andorra' },
+				{ markerType: 'country', iso2: 'LC', latLng: [14.01, -60.98], name: 'Saint Lucia' },
+				{ markerType: 'country', iso2: 'FM', latLng: [6.91, 158.18], name: 'Federated States of Micronesia' },
+				{ markerType: 'country', iso2: 'SG', latLng: [1.3, 103.8], name: 'Singapore' },
+				{ markerType: 'country', iso2: 'KI', latLng: [1.46, 173.03], name: 'Kiribati' },
+				{ markerType: 'country', iso2: 'TO', latLng: [-21.13, -175.2], name: 'Tonga' },
+				{ markerType: 'country', iso2: 'DM', latLng: [15.3, -61.38], name: 'Dominica' },
+				{ markerType: 'country', iso2: 'MU', latLng: [-20.2, 57.5], name: 'Mauritius' },
+				{ markerType: 'country', iso2: 'BH', latLng: [26.02, 50.55], name: 'Bahrain' },
+				{ markerType: 'country', iso2: 'ST', latLng: [0.33, 6.73], name: 'São Tomé and Príncipe' }
+			</text>
+		}
+		@if (Model.structure.ChartType == Report.ChartType.IranMap)
+		{
+			<text>
+				{ markerType: 'iran', iso2: 'iran', latLng: [50, -10], name: 'تعیین نشده' },
+			</text>
+		}
+	];
+
+
+	var mapMarkers = [];
+
+	for (var i = 0; i < iso2sWhichShouldBeMarkers.length; i++) {
+		var t = iso2sWhichShouldBeMarkers[i];
+		mapMarkers[i] = {
+			code: t.iso2,
+			latLng: t.latLng,
+			name: t.name,
+			markerType: t.markerType
+		};
+	}
+
+	var showTip = function(event, label, code) {
+		var countryName = $(label).text();
+		if (!code) {
+			code = countryName;
+		}
+
+		$(label).empty();
+		$(label).css('min-width', '200px');
+		if (isWorldMap) {
+			$(label)
+				.append($("<img/>",
+					{
+						'src': window.top.rootUrl +
+							'Content/common-assets-includes/flags/' +
+							countryNamesBasedOnIso2[code] +
+							'.svg',
+						'style':
+							'display: inline; height: 36px; height: 36px; margin-left: 4px; margin-top:-7px; margin-bottom:-6px;'
+					}));
+		}
+		$(label)
+			.append($("<span/>",
+				{
+					'html': countryName,
+					'style':
+						' font-size: 1.5em; margin-top:3px; float: ' +
+							(isWorldMap ? 'left' : 'right') +
+							'; color: #FFFADC'
+				}));
+		if (!!mapInfo[code]) {
+			var tooltipsObj = mapInfo[code]["tooltipValues"];
+			$(label).append($("<hr/>", { 'style': 'margin: 3px 0;' }));
+			for (var field in tooltipsObj) {
+				if (tooltipsObj.hasOwnProperty(field)) {
+					$(label)
+						.append($("<span/>",
+							{
+								'html': field +
+									' : ' +
+									'<span style="color: #f7eeb9;">' +
+									tooltipsObj[field] +
+									'</span>',
+								'class': 'teta-bidi'
+							}));
+					$(label).append($("<br/>"));
+				}
+			}
+		}
+	};
+
+	var showMarkerTip = function(event, label, code) {
+		showTip(event, label, mapMarkers[code].code);
+	}
+
+	var showDrillDown = function(event, code, docObj) {
+//        console.log(docObj);
+//        console.log(this);
+//        console.log(code);
+//        console.log(event);
+
+		var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
+//        console.log(mapInstanceData);
+//        console.log(mapInstanceData.regions[code]);
+//        console.log(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes);
+//        console.log(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10]);
+//        console.log($(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10])[0].getBBox());
+
+		if (mapInfo[code]) {
+			openSubReportFrame2(subReportsCount,
+				mapInfo[code]['ids'],
+				reportKey,
+				window.top.reportInfo['@reportKey']["parentFilter"],
+//            mapInstanceData.regions[code].element,
+//            mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10],
+				mapInstanceData.container[0],
+//                docObj || this,
+				event);
+		}
+	}
+
+	var showMarkerDrillDown = function(event, code) {
+		showDrillDown(event, mapMarkers[code].code, this);
+	}
+
+	$('#world-map')
+		.vectorMap({
+			map: '@(Model.structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
+			markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
+//            labels: {
+//                markers: {
+//                    render: function(index){
+//                        return mapMarkers[index].name;
+//                    },
+//                    offsets: function(index){
+//                        var offset = [0, 0];
+//
+//                        return [offset[0] - 7, offset[1] + 3];
+//                    }
+//                }
+//            },
+//            backgroundColor: "#DEEBF7",
+			backgroundColor: "#B5CEE5",
+			markerStyle: {
+				initial: {
+					fill: '#FFFFFF',
+					stroke: '#ffffff'
+//                    stroke: '#383f47'
+				}
+			},
+			regionStyle: {
+				initial: {
+					fill: '#ffffff',
+					"fill-opacity": 0.9,
+					stroke: '#8D8D8D',
+					"stroke-width": 1,
+					// "stroke-opacity": 0
+				}
+			},
+
+			//            onRegionLabelShow: function(event, label, code) {
+			onRegionTipShow: showTip,
+			onMarkerTipShow: showMarkerTip,
+			onRegionClick: showDrillDown,
+			onMarkerClick: showMarkerDrillDown,
+			onViewportChange: function(event, scale) {
+				var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
+
+				// loop through your array of markers
+				for (var marker in mapInstanceData.markers) {
+					if (mapInstanceData.markers.hasOwnProperty(marker)) {
+						var radius = 1 * scale;
+						mapInstanceData.markers[marker].element.config.style.current.r = radius;
+					}
+				}
+//                mapInstanceData.markers(function (marker) {
+//                    var radius = 1 * scale;
+//                    // change the radius
+//                    marker.element.node.setAttribute('r', radius);
+//                });
+			},
+			series: {
+				regions: [
+					{
+						values: mapData,
+						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+						scale: ['#C8EEFF', '#0071A4'],
+						normalizeFunction: 'polynomial',
+						min: 0
+						//                        max: 100
+					}
+				],
+				markers: [
+					{
+						attribute: 'image',
+						scale: {
+//                            'country': '/img/icon-np-3.png',
+							'satellite': window.top.rootUrl + 'Content/common-assets-includes/flags/satellite.svg',
+							'iran': window.top.rootUrl + 'Content/common-assets-includes/flags/iran.svg'
+						},
+						values: mapMarkers.reduce(function(p, c, i) {
+								p[i] = c.markerType;
+								return p;
+							},
+							{})
+					}, {
+						attribute: 'fill',
+						values: mapMarkers.map(function(h) {
+							return mapData[h.code];
+						}),
+						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+						scale: ['#C8EEFF', '#0071A4'],
+						normalizeFunction: 'polynomial',
+						min: 0
+					}, {
+						attribute: 'stroke',
+						values: mapMarkers.map(function(h) {
+							return mapData[h.code];
+						}),
+						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+						scale: ['#C8EEFF', '#0071A4'],
+						normalizeFunction: 'polynomial',
+						min: 0
+					},
+					{
+						attribute: 'r',
+						values: mapMarkers.map(function(h) {
+							return 1;
+						})
+//                        ,
+//                        scale: ["#ffffff", "#990024"],
+//                        normalizeFunction: 'polynomial',
+//                        min: 0
+					}
+				]
+			}
+		});
+
+
+</script>
+<partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>

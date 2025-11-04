@@ -1,0 +1,57 @@
+﻿
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.Resources.Resources
+@model             ReportData
+@{
+	 var structure = Model.structure;
+	 Layout = null;
+	 ViewBag.IsPrintPreview = true;
+}
+<!DOCTYPE html>
+<html mozNoMarginBoxes>
+<head>
+	 <meta name="viewport" content="width=device-width" />
+	 <title>@ViewTexts.PrintPreview @Model.structure.Name</title>
+	 <link href="~/Content/common-assets-includes/common-plugins/global/print/print.css" rel="stylesheet" />
+	 <link rel="stylesheet" href="~/Content/common-assets-includes/fonts/pfont/yekan-persian-digits.css">
+	 <style type="text/css" media="print">
+		 @@page {
+			size: auto; /* auto is the initial value */
+			margin: 0; /* this affects the margin in the printer settings */
+		 }
+
+		 html {
+			background-color: #FFFFFF;
+			margin: 0px; /* this affects the margin on the HTML before sending to printer */
+		 }
+	 </style>
+</head>
+
+<body>
+	 @if (Model != null)
+	 {
+		  switch (structure.ReportViewType)
+		  {
+				case ReportViewType.Chart:
+				<script src="@CommonBundles.JqueryAloneJsBundle" asp-append-version="true"></script>
+					 if (structure.ChartType == Report.ChartType.WorldMap || structure.ChartType == Report.ChartType.IranMap)
+					 {
+	 	 	 	 	 @Html.Partial("_map", Model)
+			}
+			else
+			{
+	 	 	 <div style="direction: ltr !important;">
+	 	 	 	 @Html.Partial("_chartView", Model)
+	 	 </div>
+	}
+	break;
+default:
+@Html.Partial("_printPreviewListView", Model)
+break;
+}
+}
+</body>
+</html>

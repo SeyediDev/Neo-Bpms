@@ -1,0 +1,18 @@
+﻿
+@using Neo.Bpms.UI.MVC.Helpers
+@model Neo.Bpms.UI.MVC.PartialModels.Report.DrillDownIncludeModel
+
+@{
+	if (Model.report.structure.HasAnyDrillDown && ViewBag.DrillDownIncluded == null)
+	{
+		ViewBag.DrillDownIncluded = true;
+
+		<link href="@Url.Content("~/Content/common-assets-includes/common-plugins/global/bootstrap-dialog/bootstrap-dialog.css")" rel="stylesheet" type="text/css"/>
+		<script src="@CommonBundles.OpenDrillDownJsBundle" asp-append-version="true"></script>
+
+		if (ViewBag.DrillDown ?? false)
+		{
+			<partial name="~/Views/Report/Helpers/MyDrillDownMenu.cshtml"/>
+		}
+	}
+}

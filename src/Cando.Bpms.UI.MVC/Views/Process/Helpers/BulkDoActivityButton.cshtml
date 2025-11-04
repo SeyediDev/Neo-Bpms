@@ -1,0 +1,17 @@
+﻿@model Neo.Bpms.UI.MVC.PartialModels.WorkItems.BulkDoActivityButtonModel
+
+@{
+	if (!string.IsNullOrEmpty(Model.workItemsModel.CartableFilter.Activity) &&
+	    Model.workItemsModel.WorkItems.Any())
+	{
+		var firstForm = Model.workItemsModel.WorkItems.First().Forms.FirstOrDefault();
+		if (firstForm != null)
+		{
+			<button type="button" class="btn btn-secondary" style="@(Model.style)"
+			        onclick="BulkActivityManager.goToForm('@firstForm.FormId', '@Model.caller')"
+			        title="انجام گروهی @firstForm.Name">
+				@firstForm.Name
+			</button>
+		}
+	}
+}

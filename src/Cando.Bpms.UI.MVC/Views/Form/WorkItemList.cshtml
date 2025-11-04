@@ -1,0 +1,188 @@
+﻿
+@using Neo.Bpms.UI.MVC.Helpers
+<link href="@CommonBundles.TabulatorCssBundle" asp-append-version="true" rel="stylesheet" />
+<script src="@CommonBundles.TabulatorJsBundle" asp-append-version="true"></script>
+@model dynamic
+
+@{
+    var structure = ViewBag.structure;
+    var pageTitle = ViewBag.structure.Name;
+    var processId = ViewBag.ProcessId as string;
+    var recordId = ViewBag.Ids;
+    <script>
+        var scrollingElement = (document.scrollingElement || document.body);
+        var historyShown = false;
+
+        function scrollSmoothToBottom(id) {
+            $(scrollingElement).animate({
+                    scrollTop: document.body.scrollHeight
+                },
+                500);
+        }
+
+        function viewWorkItemHistory() {
+            if (!historyShown) {
+                $('#workItem-history-section').removeClass('hidden');
+            $('#workItem-history')
+                .tabulator({
+                    virtualDom: false,
+                    layout: "fitColumns",
+                    selectable: false,
+                        pagination: "local",
+                        paginationSize: 10,
+                    ajaxURL: window.top.rootUrl + "WorkItemHistory/GetWorkItemHistory",
+                    ajaxParams: {
+                        namespaceId: "@structure.NamespaceId",
+                        entityId: "@structure.EntityId",
+                        processId: "@processId",
+                        entityPkv: "@recordId"
+                    },
+                    ajaxResponse: function(url, params, response) {
+                        console.log('response', response);
+                        //todo: should rename usertasks
+                        return response;
+                    },
+                    ajaxError: function(xhr, textStatus, errorThrown) {
+                        console.log('xhr', xhr);
+                        console.log('textStatus', textStatus);
+                        console.log('errorThrown', errorThrown);
+                    },
+                    columns: [
+                        {
+                            title: "نوع کار",
+                            field: "ActivityName",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                widthGrow: 3,
+                            align: "center"
+                        },
+                        {
+                            title: "زمان ایجاد کار",
+                            field: "CreationTime",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                width: 160,
+                            align: "center"
+                        },
+                        {
+                            title: "انجام دهنده",
+                            field: "ActualOwnerName",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                widthGrow: 2,
+                            align: "center"
+							  },
+	                    {
+                            title: "نقش",
+                            field: "UserGroupName",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                widthGrow: 2,
+                            align: "center"
+                        },
+                        {
+                            title: "زمان انجام",
+                            field: "CompletionTime",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                width: 160,
+                            align: "center"
+                        },
+                        {
+                            title: "وضعیت",
+                            field: "UserTaskState",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                width: 120,
+                            align: "center"
+                        },
+                        {
+                            title: "توضیحات",
+                            field: "Description",
+                            headerSort: false,
+                                formatter: 'textarea',
+                                widthGrow: 5,
+                                align: "right",
+                                height: 300
+                        }
+                    ],
+                    rowFormatter: function(row) {
+                        var data = row.getData();
+                        row.getElement().addClass(data.WorkItemClass);
+                        },
+                        langs: {
+                            "fa": {
+                                "ajax": {
+                                    "loading": "در حال دریافت اطلاعات",
+                                    "error": "خطا"
+                                },
+                                "pagination": {
+                                    "first": "صفحه‌ی نخست",
+                                    "first_title": "صفحه‌ی نخست",
+                                    "last": "صفحه‌ی آخر",
+                                    "last_title": "صفحه‌ی آخر",
+                                    "prev": "قبلی",
+                                    "prev_title": "صفحه‌ی قبلی",
+                                    "next": "بعدی",
+                                    "next_title": "صفحه‌ی بعدی"
+                    }
+        }
+                        }
+                    }).tabulator('setLocale', window.tetaConfigs.neutralCulture);
+                   historyShown = true;
+            }
+
+            scrollSmoothToBottom();
+        }
+
+        function destroyTable() {
+            $('#workItem-history').tabulator("destroy");
+        }
+
+        function changePinState() {
+            var processHistoryPinIcon = $('#processHistory-pin-icon');
+            if (processHistoryPinIcon.hasClass('processHistory-pinned')) {
+                localStorage.setItem('state', JSON.stringify({ 'processHistoryIsPinned': false }));
+                processHistoryPinIcon.removeClass('processHistory-pinned');
+                processHistoryPinIcon.addClass('processHistory-unpinned');
+            } else {
+                localStorage.setItem('state', JSON.stringify({ 'processHistoryIsPinned': true }));
+                processHistoryPinIcon.removeClass('processHistory-unpinned');
+                processHistoryPinIcon.addClass('processHistory-pinned');
+            }
+        }
+
+        function applyProcessHistoryPinState() {
+            var state = JSON.parse(localStorage.getItem('state'));
+            if (state && state.processHistoryIsPinned) {
+                $('#processHistory-pin-icon').addClass('processHistory-pinned');
+                viewWorkItemHistory();
+            } else {
+                $('#processHistory-pin-icon').addClass('processHistory-unpinned');
+            }
+        }
+
+        $(function() {
+            applyProcessHistoryPinState();
+        });
+    </script>
+    <div id="workItem-history-section" class="col-sm-12 customDiv form-element sortable-container hidden" style="margin-top: 30px;">
+        <div class="row mx-0 my-1">
+        <div class="col-md-11 col-sm-11">
+            <h5 style="color: #1869AA">
+                <i class="fa fa-2x fa-calendar-check-o" style="font-size: unset;"></i>
+                    @ViewTexts.ProcessHistory @pageTitle
+            </h5>
+        </div>
+            <div id="processHistory-pin-container" class="col-md-1 col-sm-1">
+                <h5 class="float-end">
+                    <i id="processHistory-pin-icon" title=""
+                       onclick="changePinState(this)"
+                       class="fa fa-thumb-tack faa-float animated-hover mouse-pointer">
+                    </i>
+                </h5>
+            </div>
+            </div>
+        <div id="workItem-history"></div>
+    </div>
+}

@@ -1,0 +1,13 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+<div class="sideNavi-top-bar bg-light">
+	<i title="@ViewTexts.AddFolder" class="text-2x bpms-flaticon-folder-plus text-success faa-float animated-hover float-end mouse-pointer ml-2" onclick="FilterTreeManager.newFolder()"></i>
+	<div class="col-sm-9">
+		<div class="input-group">
+			<input type="text" placeholder="@ViewTexts.Search" class="form-control " id="filters-search-input"/>
+			<div class="input-group-append">
+				<i class="input-group-text fa fa-search text-small"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="filters-tree" class="side-navi-body"></div>

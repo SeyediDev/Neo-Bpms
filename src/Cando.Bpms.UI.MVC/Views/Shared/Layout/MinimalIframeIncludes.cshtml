@@ -1,0 +1,29 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@{
+	if (CultureHelper.IsRightToLeft())
+	{
+		<link href="@Url.Content("~/Content/common-assets-includes/common-plugins/global/bootstrap-rtl/bootstrap-rtl.min.css")" rel="stylesheet"/>
+	}
+	else
+	{
+		<link href="@Url.Content("~/Content/common-assets-includes/common-plugins/global/bootstrap/bootstrap.min.css")" rel="stylesheet"/>
+	}
+	<link rel="stylesheet" href="@Url.Content("~/Content/common-assets-includes/fonts/pfont/yekan-persian-digits.css")">
+	if (CultureHelper.IsRightToLeft())
+	{
+		<link href="@CommonBundles.RtlCssBundle" asp-append-version="true" rel="stylesheet" />
+	}
+	else
+	{
+		<link href="@CommonBundles.LtrCssBundle" asp-append-version="true" rel="stylesheet" />
+	}
+
+	<link href="@Url.Content("~/Content/common-assets-includes/fonts/font-awesome420/css/font-awesome.min.css")" rel="stylesheet"/>
+
+	<!--[if lt IE 9]>
+		<script src="@Url.Content("~/Scripts/common-assets-includes/common-plugins/global/shiv/html5shiv.js")"></script>
+		<script src="@Url.Content("~/Scripts/common-assets-includes/common-plugins/global/shim/respond.min.js")"></script>
+	<![endif]-->
+	<script src="@CommonBundles.IframesJsBundle" asp-append-version="true"></script>
+	<partial name="Utility/I18NAwareBundle" model="CommonBundles.GlobalTextsBundle"/>
+}

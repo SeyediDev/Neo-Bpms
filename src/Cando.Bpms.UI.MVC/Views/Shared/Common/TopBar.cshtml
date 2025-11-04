@@ -1,0 +1,27 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@model TopBarModel
+
+<div class="top-page col-md-12 col-sm-12 code main-box">
+    @if (Model.Tools != null)
+    {
+        <div class="icons float-end @Model.IconsContainerClass">
+            @Model.Tools
+        </div>
+    }
+    <h5 class="text-secondary mb-0 mt-2 " style="padding-top:10px">
+        <span id="title-show-filter">
+            @if (!string.IsNullOrEmpty(Model.PageIcon))
+            {
+                <!--<i class="@Model.PageIcon"></i>-->
+                <svg class="page-icon" viewBox="0 0 24 24">
+                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#@Model.PageIcon"></use>
+                </svg>
+                <span style="margin-right: 8px;">@Model.Title</span>
+            }
+            else
+            {
+                @Model.Title
+            }
+        </span>
+    </h5>
+</div>

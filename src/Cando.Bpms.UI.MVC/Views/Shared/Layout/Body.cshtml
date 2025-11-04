@@ -1,0 +1,7 @@
+﻿@model Neo.Bpms.UI.MVC.PartialModels.Layout.BodyModel
+
+<div class="@Model.containerClass body-content contentDiv" style="@(string.IsNullOrEmpty(Model.PaddingBottom) ? "" : $"padding-bottom: {Model.PaddingBottom}");">
+	<div style="width: 100%; height: 100%; margin: 0;padding-bottom: 1px;">
+		@Model.bodyRenderFunc()
+	</div>
+</div>

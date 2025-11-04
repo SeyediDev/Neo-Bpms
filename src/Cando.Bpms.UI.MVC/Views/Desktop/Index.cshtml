@@ -1,0 +1,47 @@
+﻿@using Neo.Bpms.Domain.Entities.Security.Authentication
+@using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.UI.MVC.Helpers
+
+@inject IControlsRenderer controlsRenderer;
+
+@model CommonFormStructure
+
+@{
+    IdentityUser user = ViewBag.user;
+}
+
+@if (Model != null)
+{
+    await CardView(Model, user);
+}
+
+@functions
+{
+    async Task CardView(CommonFormStructure structure, IdentityUser user)
+    {
+        var options = new RendererOptions();
+        var rendererData = new ControlsRendererData(structure, null, options, user, Url);
+        await Task.CompletedTask;
+
+        <link href="@CommonBundles.HomePageCssBundle" asp-append-version="true" rel="stylesheet" />
+
+        <script src="@CommonBundles.HomePageJsBundle" asp-append-version="true"></script>
+
+        @controlsRenderer.Render(rendererData)
+        ;
+
+        <partial name="Controls/_ControlIncludes" model="rendererData.IncludeNeedingControls" />
+
+        if (user.IsAdmin)
+        {
+            <a class="fab bg-danger" href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId">
+                <svg title="@ViewTexts.Settings" style="width:28px;height:28px; align-items: center; justify-content: center;" viewBox="0 0 24 24">
+                    <use xlink:href="Content/common-assets-includes/icons/svgSprite.svg#setting3-blue" />
+                </svg>
+            </a>
+        }
+    }
+}
+

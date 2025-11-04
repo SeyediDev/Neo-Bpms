@@ -1,0 +1,72 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@model Neo.Bpms.UI.MVC.PartialModels.Filter.FilterConfigModalModel
+@{
+	<div class="modal fade keep-side-navi" id="filters-modal" tabindex="-1" role="dialog" aria-labelledby="filters-modal-label">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="filters-modal-label">@ViewTexts.FilterSettings</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="folder-id" value="0"/>
+					<input type="hidden" id="parent-folder-id" value=""/>
+					<input type="hidden" name="filterId" value=""/>
+					<input type="hidden" name="ConfigId" value=""/>
+					<div class="form-group">
+						<label for="filter-name">
+							@ViewTexts.Name
+						</label>
+						<input class="form-control" id="filter-name" name="filterName" type="text" value=""/>
+					</div>
+					<div class="form-group">
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input class="custom-control-input" type="checkbox" name="isDefault" id="filterIsDefault" value="1">
+							<label class="custom-control-label" for="filterIsDefault">
+								@ViewTexts.Default
+							</label>
+						</div>
+						@if (Model.hasConfig)
+						{
+							<div class="custom-control custom-checkbox custom-control-inline">
+								<input class="custom-control-input" type="checkbox" name="isForThisConfig" id="filterIsForThisConfig" value="">
+								<label for="filterIsForThisConfig" class="custom-control-label">
+									@ViewTexts.JustForThisConfig
+								</label>
+							</div>
+						}
+					</div>
+
+					@if (Model.canPublishConfigs)
+					{
+						<div class="form-group">
+							<div class="col-form-label">
+								@ViewTexts.AccessLevel
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicFalse" value="false">
+								<label class="custom-control-label" for="filterIsPublicFalse">
+									@ViewTexts.Personal
+								</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicTrue" value="true">
+								<label class="custom-control-label" for="filterIsPublicTrue">
+									@ViewTexts.Public
+								</label>
+							</div>
+						</div>
+					}
+
+
+				</div>
+				<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary save-button" data-dismiss="modal">@ViewTexts.Cancel</button> 
+                    <button type="button" class="btn btn-success add-button" onclick="FilterConfig.submitForm()">@ViewTexts.Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,71 @@
+﻿
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Helpers
+
+@model ReportData
+
+@{
+    Layout = null;
+    var structure = Model.structure;
+    var calendar = ProjectDefinition.Project.DefaultCalendar;
+    ViewBag.IsIframeReport = true;
+}
+<partial name="Layout/MinimalIframeIncludes"/>
+
+@using (Html.BeginForm("IframeReport", "Report",
+    new
+    {
+        structure.NamespaceId,
+        structure.EntityId,
+        ReportId = structure.Form_ReportId,
+        structure.ConfigId
+    }, FormMethod.Post,true, new { enctype = "multipart/form-data", id = "filter-form", @class="m-0" }))
+{
+	@Html.Hidden("ParentReportIds", structure.ParentReportIds)
+    @Html.Hidden("calendar", calendar)
+    <input type="hidden" name="newPage" value="1" />
+    <input type="hidden" name="Page" value="@ViewBag.Page" />
+    <input type="hidden" id="soValues" name="sortFields" value="@ViewBag.SortFields" />
+
+    <div class="row no-margin-row" id="ReportBody">
+        <div class="col-md-12 col-sm-12 p-0 reportBody">
+            @if (Model != null)
+            {
+                switch (structure.ReportViewType)
+                {
+                    case ReportViewType.Chart:
+                        switch (structure.ChartType)
+                        {
+                            case Report.ChartType.WorldMap:
+                            case Report.ChartType.IranMap:
+                                @Html.Partial("_map", Model)
+                                break;
+                            case Report.ChartType.BpmnDiagram:
+                                @Html.Partial("_bpmn", Model)
+                                break;
+                            default:
+                                <div style="direction: ltr !important;">
+                                    @Html.Partial("_chartView", Model)
+                                </div>
+                                break;
+                        }
+                        break;
+                    default:
+                        <div>
+                            @Html.Partial("_listView", Model)
+                        </div>
+                        break;
+                }
+            }
+        </div>
+    </div>
+
+    <script src="~/Scripts/common-assets-includes/features/report/Report.js"></script>
+    <script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
+}
+
+<script src="@CommonBundles.FlagsJsBundle" asp-append-version="true"></script>

@@ -1,0 +1,720 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+
+<script src="@CommonBundles.JsTreeJsBundle" asp-append-version="true"></script>
+<script src="~/Scripts/common-assets-includes/features/process/ProcessTree.js"></script>
+<script src="~/Scripts/common-assets-includes/features/design/other-process/EventTrees.js"></script>
+<script src="~/Scripts/common-assets-includes/common-plugins/global/moment/moment.js"></script>
+<script src="~/Scripts/common-assets-includes/features/design/other-process/ISOConvertor.js">
+</script>
+<link href="@CommonBundles.JsTreeCssBundle" asp-append-version="true" rel="stylesheet" />
+<link href="@CommonBundles.TabulatorCssBundle" asp-append-version="true" rel="stylesheet" />
+<script src="@CommonBundles.TabulatorJsBundle" asp-append-version="true"></script>
+
+<style>
+
+    svg, text, span { font-family: 'Yekan', Calibri, Tahoma !important; }
+
+    body {
+        font-size: small;
+        font-family: 'Yekan', Calibri, Tahoma;
+        margin-bottom: 30px;
+        -webkit-text-size-adjust: none;
+    }
+
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1030;
+        top: 0;
+        right: 0;
+        background-color: white;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 30px;
+    }
+
+    .closebtn {
+        position: absolute;
+        top: 10px;
+        font-size: 14px;
+    }
+
+    .vakata-context { z-index: 1031 !important; }
+</style>
+
+
+<div id="side-tabs" class="sidenav">
+    <button class="closebtn btn btn-link text-secondary" onclick="closeNavs()">
+        <i class="fa fa-times">
+        </i>
+    </button>
+
+<ul class="nav nav-tabs">
+    <li class="active nav-item" role="tablist">
+            <a data-toggle="tab" role="tab" aria-controls="Process Classification" aria-selected="true" href="#process-category-tab" class="nav-link active">Process Classification</a>
+    </li>
+    <li class="nav-item">
+        <a data-toggle="tab" role="tab" aria-controls="Root Elements" aria-selected="false" href="#elements-tab" class="nav-link">Root Elements</a>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+
+<div id="process-category-tab" class="tab-pane fade in active show text-right" role="tabpanel">
+    <div class="navbar navbar-default bg-light">
+        <div class="container-fluid">
+            <div class="row w-100">
+                <div class="col-7">
+                    <div class="input-group" dir="ltr">
+                        <input id="process-search-input" type="text" class="form-control" placeholder="Search">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <button type="button" class="btn btn-outline-secondary" onclick="ProcessesManager.closeAllNodes()">
+                        <i class="fa fa-minus-square"></i>
+                        Collapse
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="ProcessesManager.showModal(1, '#')">
+                        <i class="fa fa-plus"></i>
+                        New Folder
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="process-tree" dir="rtl"></div>
+</div>
+<div id="elements-tab" class="tab-pane fade" role="tabpanel">
+    <ul class="nav nav-tabs">
+        <li class="nav-item active">
+            <a class="nav-link active" data-toggle="tab" href="#error-tab">
+                <i class="bpmn-icon-intermediate-event-catch-error" style="font-size: 24px" title="Error"></i>
+                @*Error*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#message-tab">
+                <i class="bpmn-icon-intermediate-event-throw-message" style="font-size: 24px" title="Message"></i>
+                @*Message*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#signal-tab">
+                <i class="bpmn-icon-intermediate-event-throw-signal" style="font-size: 24px" title="Signal"></i>
+                @*Signal*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#escalate-tab">
+                <i class="bpmn-icon-intermediate-event-throw-escalation" style="font-size: 24px" title="Escalation"></i>
+                @*Escalation*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#interface-tab">
+                <i title="Interface">
+                    <img src="~/Content/common-assets-includes/icons/interface2.svg" style="width: 32px; height: 24px"/>
+                </i>
+                @*Interface*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#datastore-tab">
+                <i class="bpmn-icon-data-store" style="font-size: 24px" title="DataStore"></i>
+                @*DataStore*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="~/MetaDesign/App/resources" target="_blank">Resources</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="error-tab" class="tab-pane fade active in show" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Errors</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="error-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="ErrorEventManager.showModal()">
+                                <i class="fa fa-plus"></i>
+                                New Error
+                            </button>
+                            @*<button type="button" class="btn btn-outline-success" onclick="ISOConvertor.exportDuration()"> تبدیل تاریخ</button>*@
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="error-tree"></div>
+        </div>
+        <div id="message-tab" class="tab-pane fade" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Messages</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="message-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="MessageEventManager.showModal()">
+                                <i class="fa fa-plus"></i>
+                                New Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="message-tree"></div>
+        </div>
+        <div id="signal-tab" class="tab-pane fade" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Signals</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="signal-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="SignalEventManager.showModal()">
+                                <i class="fa fa-plus"></i>
+                                New Signal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="signal-tree"></div>
+        </div>
+        <div id="escalate-tab" class="tab-pane fade" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Escalations</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="escalate-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="EscalateEventManager.showModal()">
+                                <i class="fa fa-plus"></i>
+                                New Escalation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="escalate-tree"></div>
+        </div>
+        <div id="interface-tab" class="tab-pane fade" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Interfaces</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="interface-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="InterfaceManager.showModal('interface', '#')">
+                                <i class="fa fa-plus"></i>
+                                New Interface
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="interface-tree"></div>
+        </div>
+        <div id="datastore-tab" class="tab-pane fade" role="tabpanel">
+            <div class="navbar navbar-default bg-light">
+                <h6 class="m-0" href="#">Data Stores</h6>
+                <div class="container-fluid">
+                    <div class="row w-100">
+                        <div class="col-7">
+                            <div class="input-group" dir="ltr">
+                                <input id="datastore-search-input" type="text" class="form-control" placeholder="Search">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="DataStoreManager.showModal()">
+                                <i class="fa fa-plus"></i>
+                                New Data-Store
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="datastore-tree"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+    function openNav() {
+        $('#side-tabs').width("560px");
+
+    }
+
+    function closeNavs() {
+        $('#side-tabs').width("0");
+    }
+</script>
+
+@*modals*@
+
+<div class="modal fade" id="business-rule-modal" tabindex="-1" role="dialog" aria-labelledby="business-rule-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="business-rule-modal-label">Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="business-rule-id" value=""/>
+                <input type="hidden" id="business-rule-node-type" value=""/>
+                <input type="hidden" id="business-rule-parent-id" value=""/>
+                <input type="hidden" id="business-rule-order-id" value=""/>
+                <div id="business-rule-name-div" class="form-group">
+                    <label for="business-rule-name">Name</label>
+                    <input class="form-control" id="business-rule-name" name="businessRuleName" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="standard-code">Code</label>
+                    <input class="form-control" id="business-rule-standard-code" name="standardCode" type="text"/>
+                </div>
+                <div id="business-rule-purpose-div" class="form-group">
+                    <label for="business-rule-purpose">Purpose</label>
+                    <input class="form-control" id="business-rule-purpose" name="businessRulePurpose" type="text"/>
+                </div>
+                <div id="business-rule-description-div" class="form-group">
+                    <label for="">Description</label>
+                    <input class="form-control" id="business-rule-description" name="businessRuleDescription" type="text"/>
+                </div>
+                <div id="business-rule-type-div" class="form-group">
+                    <label for="business-rule-type">Type</label>
+                    <select class="form-control" id="business-rule-type" style="float: right;">
+                        <option value="1">DataFlow</option>
+                        <option value="2">DMN</option>
+                        <option value="3">PRR</option>
+                        <option value="4">PMML - Future</option>
+                        <option value="5">Solving Model - Future</option>
+                        <option value="101">NonExecutable</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="ProcessesManager.submitForm('#business-rule-modal')">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modals*@
+
+<div class="modal fade" id="process-modal" tabindex="-1" role="dialog" aria-labelledby="process-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="process-modal-label">Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="process-id" value=""/>
+                <input type="hidden" id="parent-id" value=""/>
+                <input type="hidden" id="order-id" value=""/>
+                <div id="process-name-div" class="form-group">
+                    <label for="process-name">Name</label>
+                    <input class="form-control" id="process-name" name="processName" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="standard-code">Code</label>
+                    <input class="form-control" id="standard-code" name="standardCode" type="text"/>
+                </div>
+                <div id="node-type-div" class="form-group">
+                    <label for="">Type</label>
+                    <select class="form-control" id="type" style="float: right;">
+                        <option value="1">Process Category</option>
+                        <option value="2">Process Group</option>
+                        <option value="3" hidden>Process</option>
+                        <option value="4" hidden>Process Version</option>
+                        <option value="15">Main Process</option>
+                        <option value="16">Sub Process</option>
+                        <option value="17">System</option>
+                        <option value="18">SubSystem</option>
+                        <option value="19">Business Segment</option>
+                        <option value="20">Business Unit</option>
+                        <option value="21">Department</option>
+                        <option value="22">Organization Unit</option>
+                        <option value="23" hidden>Business Rule</option>
+                        <option value="24" hidden>Business Rule Version</option>
+                        <option value="25">Business Domain</option>
+                        <option value="26">Business Policy</option>
+                        <option value="27">Business Policy Group</option>
+                        <option value="28">RoleGroup</option>
+                        <option value="29">Metrics</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="ProcessesManager.submitForm('#process-modal')">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="error-modal-label">Error Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="error-id" value=""/>
+                <div class="form-group">
+                    <label for="error-name">Name</label>
+                    <input class="form-control" id="error-name" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="">Error Code</label>
+                    <input class="form-control" id="error-code" type="text"/>
+                </div>
+                @*<div class="form-group">
+						 <label for="">فضای نامی</label>
+						 <select class="form-control" id="error-namespaceId" onchange="ErrorEventManager.showRelatedEntities()">
+							  <option value="0"></option>
+						 </select>
+					</div>*@
+                <div class="form-group">
+                    <label for="">Structure Entity</label>
+                    <select class="form-control" id="error-entityId">
+                        <option value="" selected></option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="ErrorEventManager.submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="message-modal" tabindex="-1" role="dialog" aria-labelledby="message-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="message-modal-label">Message Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="message-id" value=""/>
+                <div class="form-group">
+                    <label for="message-name">Name</label>
+                    <input class="form-control" id="message-name" type="text"/>
+                </div>
+                @*<div class="form-group">
+						 <label for="message-namespaceId">فضای نامی</label>
+						 <select class="form-control" id="message-namespaceId"  onchange="MessageEventManager.showRelatedEntities()">
+							  <option value=""></option>
+						 </select>
+					</div>*@
+                <div class="form-group">
+                    <label for="message-entityId">Item Entity</label>
+                    <select class="form-control" id="message-entityId">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <span>This item entity will be defined as Correlation Property. Primary key fields of this entity, will be saved as this collaboration's Correlation Key.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="MessageEventManager.submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="escalate-modal" tabindex="-1" role="dialog" aria-labelledby="escalate-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="escalate-modal-label">Escalation Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="escalate-id" value=""/>
+                <div class="form-group">
+                    <label for="escalate-name">Name</label>
+                    <input class="form-control" id="escalate-name" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="escalation-code">Escalation Code</label>
+                    <input class="form-control" id="escalation-code" type="text"/>
+                </div>
+                @*<div class="form-group">
+						 <label for="escalate-namespaceId">فضای نامی</label>
+						 <select class="form-control" id="escalate-namespaceId" onchange="EscalateEventManager.showRelatedEntities()">
+							  <option value="0"></option>
+						 </select>
+					</div>*@
+                <div class="form-group">
+                    <label for="">Structure Entity</label>
+                    <select class="form-control" id="escalate-entityId">
+                        <option value="" selected> </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="EscalateEventManager.submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="signal-modal" tabindex="-1" role="dialog" aria-labelledby="signal-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="signal-modal-label">Signal Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="signal-id" value=""/>
+                <div class="form-group">
+                    <label for="signal-name">Name</label>
+                    <input class="form-control" id="signal-name" type="text"/>
+                </div>
+                @*<div class="form-group">
+						 <label for="signal-namespaceId">فضای نامی</label>
+						 <select class="form-control" id="signal-namespaceId" onchange="SignalEventManager.showRelatedEntities()">
+							  <option value="0"></option>
+						 </select>
+					</div>*@
+                <div class="form-group">
+                    <label for="signal-entityId">Structure Entity</label>
+                    <select class="form-control" id="signal-entityId">
+                        <option value="" selected> </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="SignalEventManager.submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="datastore-modal" tabindex="-1" role="dialog" aria-labelledby="datastore-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="datastore-modal-label">Data-Store Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="datastore-id" value=""/>
+                <div class="form-group">
+                    <label for="datastore-name">Name</label>
+                    <input class="form-control" id="datastore-name" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="datastore-isunLimited">Is Unlimited</label>
+                    <input id="datastore-isunLimited" type="checkbox" onclick="DataStoreManager.showOrhideCapacity();"/>
+                </div>
+                <div class="form-group" id="datastore-capacity-div">
+                    <label for="datastore-capacity">Capacity</label>
+                    <input class="form-control" id="datastore-capacity" type="number"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="datastore-namespaceId">Namespace</label>
+                    <select class="form-control" id="datastore-namespaceId" onchange="DataStoreManager.showRelatedEntities()">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="datastore-entityId">Item Subject Entity</label>
+                    <select class="form-control" id="datastore-entityId">
+                        <option value="" selected> </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="DataStoreManager.submitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="interface-modal" tabindex="-1" role="dialog" aria-labelledby="interface-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="interface-modal-label">Interface Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="interface-parent" value=""/>
+                <input type="hidden" id="interface-id" value=""/>
+                <div class="form-group">
+                    <label for="interface-name">Name</label>
+                    <input class="form-control" id="interface-name" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="implementationRef">Implementation</label>
+                    <input class="form-control" id="implementationRef" type="text"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="InterfaceManager.submitForm('interface')">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="operations-modal" tabindex="-1" role="dialog" aria-labelledby="operations-modal-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="operations-modal-label">Operation Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <input type="hidden" id="operation-interfaceId" value=""/>
+                    <input type="hidden" id="operation-id" value=""/>
+                    <div class="form-group">
+                        <label for="operation-name">Name</label>
+                        <input class="form-control" id="operation-name" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="implementationRef">Implementation</label>
+                        <input class="form-control" id="implementationRef" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="inMessageRef">Input Message</label>
+                        <select class="form-control" id="inMessageRef">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="outMessageRef">Output Message</label>
+                        <select class="form-control" id="outMessageRef">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <h5>
+                                Errors
+                            </h5>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group">
+                                <select class="custom-select" id="errorRef">
+                                    <option value="" disabled selected>Choose an error</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-success" onclick="InterfaceManager.addExistingErrorToTable()">
+                                        <i class="fa fa-plus"></i>
+                                        Add Existing Error
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button type="button" class="btn btn-outline-success" onclick="InterfaceManager.addNewError()">
+                                <i class="fa fa-plus"></i>
+                                Add New Error
+                            </button>
+                        </div>
+                        <div id="error-table"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary
+				" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="InterfaceManager.submitForm('operation')">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,156 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
+@using Neo.Bpms.UI.Resources.Resources;
+@inject FormDesignHelper formDesignHelper;
+
+@model CommonFormStructure
+@{
+    var structure = Model;
+    var selectedColumns = structure.ColumnInfos;
+    var remainingColumns = formDesignHelper.AcquireOtherInputFields(structure, FormField.Type.ColumnField, false);
+
+    var selectedSubjects = structure.Subjects;
+    var remainingSubjects = FormDesignHelper.AcquireOtherSubjects(structure);
+}
+
+<script language="javascript">
+    if (!window.top.modalObjects)
+        window.top.modalObjects = {};
+</script>
+
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/design/form-design/form-columns-settings.css?v001"/>
+
+<div class="modal fade columnsSettingsModal" id="columnsSettingsModal" tabindex="-1" role="dialog" aria-labelledby="columnsSettingsModal-label">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+	            <h4 class="modal-title" id="columnsSettingsModal-label">تنظیمات ستون‌ها</h4>
+                <button type="button" class="close" data-dismiss="modal" data-target="#columnsSettingsModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <p>
+                            @ViewTexts.PossibleColumns
+                        </p>
+                        <div class="scrollbar custom-scroll">
+                            <ul id="availableColumns" class="sortable-form-columns vertical-sortable-list" style="overflow: hidden">
+                                @foreach (var column in remainingColumns)
+                                {
+                                    <li id="@column.InputFieldDefinition.FieldName"
+                                        data-id="@column.InputFieldDefinition.FieldName"
+                                        class="sortable-item" column-name="@column.InputFieldDefinition.FieldName"
+                                        ondblclick="renameColumn(this)">
+                                        <span class="alias">
+                                            @column.InputFieldDefinition.Alias
+                                        </span>
+                                        <a fieldName="@column.InputFieldDefinition.FieldName" formFieldType="@column.InputFieldDefinition.FormFieldType" formFieldType="@column.InputFieldDefinition.FormFieldType" href="#">
+                                            <i class="fa fa-1x fa-cog properties-icon"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style="border-left: solid gray 1px;">
+                        <p>
+                            @ViewTexts.SelectedReportColumns
+                        </p>
+                        <div class="scrollbar custom-scroll">
+                            <ul id="selectedColumns" class="selected-column-ul sortable-form-columns vertical-sortable-list" style="overflow: hidden">
+                                @foreach (var column in selectedColumns)
+                                {
+                                    <li id="@column.ColumnName"
+                                        data-id="@column.ColumnName"
+                                        class="sortable-item"
+                                        column-name="@column.ColumnName"
+                                        ondblclick="renameColumn(this)">
+                                        <span class="alias">
+                                            @column.Alias
+                                        </span>
+                                            <a fieldName="@column.FieldName" formFieldType="@column.FormFieldType" href="#">
+                                                <i class="fa fa-1x fa-cog properties-icon"></i>
+                                            </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>
+                            @ViewTexts.SelectableSubjectForms
+                        </p>
+                        <div class="scrollbar custom-scroll">
+                            <ul id="availableSubjects" class="available-subject-ul sortable-form-columns vertical-sortable-list" style="overflow: hidden">
+                                @foreach (var column in remainingSubjects)
+                                {
+                                    <li id="@column.Name" class="sortable-item"
+                                        column-name="@column.Name"
+                                        ondblclick="renameColumn(this)">
+                                        <span class="alias">
+                                            @column.Alias
+                                        </span>
+
+                                        <div class="float-left">
+                                            <i class="fa has-edit fa-pencil-square-o editYes" onclick="toggleEdit(this)"></i>
+                                        </div>
+                                        <div class="float-left">
+                                            <i class="fa has-details fa-info-circle detailsYes" onclick="toggleDetails(this)"></i>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>
+                            @ViewTexts.SelectedSubjectForms
+
+                        </p>
+                        <div class="scrollbar custom-scroll">
+                            <ul id="selectedSubjects" class="selected-subject-ul sortable-form-columns vertical-sortable-list" style="overflow: hidden">
+                                @foreach (var column in selectedSubjects)
+                                {
+                                    var hasEditClass = column.HasEditForm ? "editYes" : "editNo";
+                                    var hasDetailsClass = column.HasDetailsForm ? "detailsYes" : "detailsNo";
+
+                                    <li id="@column.Name" class="sortable-item" column-name="@column.Name" ondblclick="renameColumn(this)">
+                                        <span class="alias">
+                                            @column.Alias
+                                        </span>
+
+                                        <div class="float-left">
+                                            <i class="fa has-edit fa-pencil-square-o @hasEditClass" onclick="toggleEdit(this)"></i>
+                                        </div>
+                                        <div class="float-left">
+                                            <i class="fa has-details fa-info-circle @hasDetailsClass" onclick="toggleDetails(this)"></i>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    <br/>
+                    آیتم‌ها، با کشیدن و رها کردن، بین ردیف ها قابل جابجایی هستند.
+                    <br/>
+                    شما می‌توانید با استفاده از <kbd>Ctrl + Click</kbd> چند آیتم را به طور هم‌زمان انتخاب نمایید.
+                    <br/>
+                    همچنین می‌توانید با <kbd>Double Click</kbd> روی ستون‌ها، نام آن‌ها را تغییر دهید.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <div class="float-right">
+                    <button type="button" class="btn btn-secondary add-button" data-dismiss="modal" data-target="#columnsSettingsModal">انصراف</button>
+                    <button type="button" class="btn btn-primary save-button" onclick="submitColumnSettings()">اعمال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/common-assets-includes/features/design/form-design/form-columns-settings.js">
+</script>

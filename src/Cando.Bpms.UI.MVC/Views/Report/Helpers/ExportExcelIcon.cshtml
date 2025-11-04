@@ -1,0 +1,18 @@
+﻿@model             ReportStructure
+<a class="top-bar-anchor-icon icons-tables" title="@ViewTexts.ExcelExport" href="#" role="button" onclick="exportExcel()">
+    <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#download-green" />
+        </svg>
+</a>
+
+<script>
+	function exportExcel() {
+		window.location = window.top.rootUrl +
+			'Report/ExportToExcel?' +
+			$('#filter-form').serialize() +
+			'&NamespaceId=@Model.NamespaceId' +
+			'&EntityId=@Model.EntityId' +
+			'&ReportId=@Model.Form_ReportId' +
+			'&ConfigId=@Model.ConfigId';
+	}
+</script>

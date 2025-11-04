@@ -1,0 +1,254 @@
+﻿@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign;
+@using Microsoft.AspNetCore.Html
+@inject FormDesignHelper formDesignHelper;
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+
+@model ElasticObject
+
+@{
+    CommonFormStructure structure = ViewBag.structure;
+
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+
+    var options = new RendererOptions
+    {
+        IsReadOnly = structure.FormType == Form.eFormType.Detail || structure.FormType == Form.eFormType.Delete || structure.FormType == Form.eFormType.VirtualDelete,
+        IsFilter = structure.FormType == Form.eFormType.Index || structure.FormType == Form.eFormType.Report,
+        IsDesignMode = true
+    };
+    ControlsRendererData controlsRendererData = new(structure, Model, options, ViewBag.user, Url);
+}
+@{
+    Func<dynamic, HelperResult> TopBarTools =
+    @<Text>
+    <span id="cancel-cut" class="btn btn-secondary btn-sm hidden" style="margin-top: -8px">
+        بگذار بماند
+    </span>
+    <i class="fa fa-paste top-bar-icon paste-icon hidden mouse-pointer"></i>
+    @{
+        async Task HigherOrderSettingsLink(CommonFormStructure structure)
+        {
+            var lastPart = structure.FormType == Form.eFormType.Report
+                ? string.Format("reportId={0}", structure.Form_ReportId)
+                : string.Format("formId={0}", structure.Form_ReportId);
+
+            <a target="_blank"
+               href="~/MetaDesign/App/Entity?namespaceId=@structure.NamespaceId&entityId=@structure.EntityId&@lastPart"
+               class="btn btn-outline-info btn-sm" style="margin-top: -8px;">
+                <span style="font-family: FontAwesome !important;" class="fa fa-link"></span>
+                تنظیمات بالادستی
+            </a>
+        }
+
+        async Task GoToTheFormLink(CommonFormStructure structure)
+        {
+            var action = structure.FormAction;
+            var controller = structure.FormType == Form.eFormType.Report ? "Report" : "Form";
+            var queryTypeStr = structure.FormType == Form.eFormType.BulkEdit || structure.FormType == Form.eFormType.ProcessCreateOnExistingRecord
+                ? "&queryType=List"
+                : "";
+
+            <a href="~/@controller/@action?@("NamespaceId=" + structure.NamespaceId + "&EntityId=" + structure.EntityId + "&FormId=" + structure.Form_ReportId + queryTypeStr)"
+               class="designer top-bar-anchor-icon">
+                @*<span class="reportSettingTitle">تنظیمات</span>&nbsp;*@
+
+                <i title="نمایش فرم" class="fa fa-2x top-bar-icon fa-file-text-o faa-float animated-hover"></i>
+            </a>
+        }
+
+        await HigherOrderSettingsLink(item);
+        await GoToTheFormLink(item);
+    }
+    <i title="ذخیره" class="fa fa-save top-bar-icon faa-float animated-hover mouse-pointer" id="save-form-btn"></i>
+    </Text>;
+
+
+async Task ToolBox(CommonFormStructure structure, ElasticObject elModel, string calendar, bool isFilter)
+{
+//var editorBug = ":(";
+
+<div id="toolbox-section" class="col-md-2 customDiv toolbox-column overflow-default">
+    @{ ControllerDesigner(); }
+    <hr class="my-2">
+    <h3 class="text-primary text-center">ابزار</h3>
+
+    <div class="accordion" id="toolbox-accordion" role="tablist" aria-multiselectable="true">
+        <div class="card">
+            <div class="card-header" role="tab" id="toolbox-accordion-heading-one">
+                <h6 class="m-0">
+                    <span role="button" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#toolbox-accordion" href="#toolbox-accordion-one" aria-expanded="true" aria-controls="toolbox-accordion-one">
+                        فیلد‌ها
+                    </span>
+                    <a target="_blank" href="~/MetaDesign/App/entity?namespaceId=@(structure.NamespaceId)&EntityId=@(structure.EntityId)">
+                        <i class="fa fa-table"></i>
+                    </a>
+                </h6>
+            </div>
+            <div id="toolbox-accordion-one" class="collapse in" role="tabpanel" aria-labelledby="toolbox-accordion-heading-one">
+                <div class="card-body little-padding custom-scroll" style="overflow-y: auto; max-height: 80vh; overflow-x: hidden;">
+                    <div class="toolbox-fields sortable-container" id="form-builder-toolbox-fields">
+                        @{
+                            var otherFields = formDesignHelper.CreateOtherFields(structure, isFilter, elModel, false, true, Url);
+                            foreach (var otherField in otherFields)
+                            {
+                                @(new HtmlString(otherField.Html))
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" role="tab" id="toolbox-accordion-heading-two">
+                <h6 class="m-0">
+                    <span class="accordion-toggle collapsed" role="button" data-toggle="collapse" data-parent="#toolbox-accordion" href="#toolbox-accordion-two" aria-expanded="false" aria-controls="toolbox-accordion-two">
+                        کنترل‌ها
+                    </span>
+                </h6>
+            </div>
+            <div id="toolbox-accordion-two" class="collapse" role="tabpanel" aria-labelledby="toolbox-accordion-heading-two">
+                <div class="card-body little-padding">
+                    <div class="toolbox-controls sortable-container" id="form-builder-toolbox-controls">
+                        @{
+                            var controls = formDesignHelper.CreateToolBoxControls(structure, isFilter, Url);
+                            foreach (var control in controls)
+                            {
+                                @(new HtmlString(control))
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+}
+
+
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+    window.jsIsFilter = @(options.IsFilter ? "true" : "false");
+</script>
+
+@using (Html.BeginForm("Create", "Form", FormMethod.Post, new { enctype = "multipart/form-data", id = "create-form" }))
+{
+    var workItemFormId = ViewBag.workItemFormId;
+    var taskId = ViewBag.TaskId;
+    var processId = ViewBag.ProcessId;
+    var wid = ViewBag.wid;
+
+    HiddenInputs(structure, options.CalendarType, taskId, processId, wid, workItemFormId);
+
+
+    <body @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+        <div class="container-fluid">
+            <partial name="Common/TopBarWithRow" model="new TopBarModel {Title = structure.Name, PageIcon = pageIcon, Tools = TopBarTools(structure), FilteredBy = ViewBag.ParentDisplay}" />
+
+            <div class="row">
+                @{ await ToolBox(structure, Model, options.CalendarType, options.IsFilter); }
+
+                @{ MainPartOfTheForm(controlsRendererData, structure); }
+            </div>
+        </div>
+    </body>
+
+    <partial name="Logic/_Logic" model="structure" />
+    <partial name="Helpers/RenderPropertyGlobals" model="new RenderPropertyGlobalsModel {structure = structure, isFilter = options.IsFilter}" />
+    <partial name="_propertiesModal" />
+    <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bootstrap-toggle/bootstrap4-toggle.min.css" />
+    <script src="@CommonBundles.FormDesignJsBundle" asp-append-version="true"></script>
+
+    <script>
+        $.get(window.top.rootUrl + 'Enums/FormControlTypes')
+            .then(function (res) { window.controlTypes = res }); //todo not robust
+        var getControlTypes = function () {
+            return window.controlTypes;
+        };
+        var formDesigner = new FormDesigner(window.jQuery,
+            window.top.rootUrl,
+            window.controlModels,
+            window.propertyTypes,
+            getControlTypes,
+            window.jsIsFilter,
+            false);
+
+        var formSaver = new FormDesignSaver(window.jQuery,
+            window.toast,
+            window.top.rootUrl,
+            false,
+            AddAntiForgeryToken);
+
+        $('#save-form-btn')
+            .on('click',
+                function () {
+                    formSaver.saveTheForm(formDesigner.getSelectedControls(), true);
+                });
+    </script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+</script>
+
+@functions{
+
+    void HiddenInputs(CommonFormStructure structure, string calendar,
+        dynamic taskId, dynamic processId, dynamic wid, dynamic workItemFormId)
+    {
+        <input type="hidden" name="TaskId" value="@taskId" />
+        <input type="hidden" name="ProcessId" value="@processId" />
+        <input type="hidden" name="wid" value="@wid" />
+        <input type="hidden" name="workItemFormId" value="@workItemFormId" />
+        <input type="hidden" name="Caller" value="@ViewBag.Caller" />
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("addAgain", false)
+        @Html.Hidden("calendar", calendar)
+        @Html.Hidden("CreateType", eCreateType.Apply)
+        @Html.Hidden("returnUrl", "")
+        <input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId" />
+        <input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId" />
+        <input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId" />
+        <input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId" />
+        <input type="hidden" name="__parentIds" value="@ViewBag.__parentIds" />
+    }
+
+    void MainPartOfTheForm(ControlsRendererData controlsRendererData, CommonFormStructure structure)
+    {
+        <div class="col-md-10 customDiv">
+            <div id="mainPartOfTheForm" class="form-group hidden">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    @controlsRenderer.Render(controlsRendererData)
+                </div>
+            </div>
+        </div>
+    }
+
+    void ControllerDesigner()
+    {
+        <a data-toggle="modal" data-target="#controllerDesignerModal" class="btn btn-dark btn-block">
+            قواعد فرم
+        </a>
+        @Html.Partial("_controllerDesignerModal")
+    }
+
+}

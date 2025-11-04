@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+@model Neo.Bpms.UI.MVC.PartialModels.Filter.SetFiltersTreeDataModel
+
+@{
+	var filtersTree = new HtmlString(JsonConvert.SerializeObject(Model.structure.FiltersTree));
+}
+
+var filtersTree = @filtersTree;
+window.currentFilterId = '@Model.filterId';

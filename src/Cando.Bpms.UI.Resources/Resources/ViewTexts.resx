@@ -1,0 +1,990 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyFilter" xml:space="preserve">
+    <value>اعمال فیلتر</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>ثبت</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Design" xml:space="preserve">
+    <value>طراحی</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="ExcelExport" xml:space="preserve">
+    <value>خروجی اکسل</value>
+  </data>
+  <data name="ExcelImport" xml:space="preserve">
+    <value>ورود اطلاعات با اکسل</value>
+  </data>
+  <data name="DownloadTemplate" xml:space="preserve">
+    <value>دانلود قالب</value>
+  </data>
+  <data name="ExcelOperations" xml:space="preserve">
+    <value>عملیات اکسل</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>فیلتر</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>فهرست</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>چاپ</value>
+  </data>
+  <data name="QueryTime" xml:space="preserve">
+    <value>زمان گزارش گیری</value>
+  </data>
+  <data name="RefreshTime" xml:space="preserve">
+    <value>تنظیم به روز رسانی گزارش</value>
+  </data>
+  <data name="ReportDesigns" xml:space="preserve">
+    <value>طراحی گزارش‌ها</value>
+  </data>
+  <data name="ReportingDate" xml:space="preserve">
+    <value>تاریخ گزارش</value>
+  </data>
+  <data name="ReportingTime" xml:space="preserve">
+    <value>ساعت گزارش</value>
+  </data>
+  <data name="ReportScheduling" xml:space="preserve">
+    <value>زمانبندی اجرای طراحی</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>ردیف</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>ذخیره</value>
+  </data>
+  <data name="UsefulFilters" xml:space="preserve">
+    <value>فیلترهای پرکاربرد</value>
+  </data>
+  <data name="SaveNewFilter" xml:space="preserve">
+    <value>ثبت فیلتر جدید</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="AddFolder" xml:space="preserve">
+    <value>افزودن پوشه</value>
+  </data>
+  <data name="AddFormula" xml:space="preserve">
+    <value>افزودن فرمول</value>
+  </data>
+  <data name="AddNewConfig" xml:space="preserve">
+    <value>ثبت تنظیم جدید</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>افزودن رکورد</value>
+  </data>
+  <data name="AddReportConfig" xml:space="preserve">
+    <value>افزودن طراحی</value>
+  </data>
+  <data name="AddSchedule" xml:space="preserve">
+    <value>افزودن زمانبندی</value>
+  </data>
+  <data name="AddWidget" xml:space="preserve">
+    <value>افزودن ویجت</value>
+  </data>
+  <data name="AggregationFilter" xml:space="preserve">
+    <value>فیلتر تجمیع</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>اعمال</value>
+  </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>صعودی</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>انصراف</value>
+  </data>
+  <data name="Chart" xml:space="preserve">
+    <value>نمودار</value>
+  </data>
+  <data name="ChartType" xml:space="preserve">
+    <value>نوع نمودار</value>
+  </data>
+  <data name="ColorsSettings" xml:space="preserve">
+    <value>تنظیمات رنگ رکوردها</value>
+  </data>
+  <data name="ColumnsSettings" xml:space="preserve">
+    <value>تنظیمات ستون‌ها</value>
+  </data>
+  <data name="CompleteFormTask" xml:space="preserve">
+    <value>انجام</value>
+  </data>
+  <data name="ConfiguredDashboards" xml:space="preserve">
+    <value>داشبوردهای تنظیم شده</value>
+  </data>
+  <data name="ContextActive" xml:space="preserve">
+    <value>فعال</value>
+  </data>
+  <data name="ContextDanger" xml:space="preserve">
+    <value>خطرناک</value>
+  </data>
+  <data name="ContextInfo" xml:space="preserve">
+    <value>اطلاع</value>
+  </data>
+  <data name="ContextSuccess" xml:space="preserve">
+    <value>موفق</value>
+  </data>
+  <data name="ContextWarning" xml:space="preserve">
+    <value>اخطار</value>
+  </data>
+  <data name="DashboardWidgetHeightLabel" xml:space="preserve">
+    <value>ارتفاع ویجت(پیکسل)</value>
+  </data>
+  <data name="DashboardWidgetWidthLabel" xml:space="preserve">
+    <value>عرض ویجت(یک تا دوازده)</value>
+  </data>
+  <data name="DeleteAndReturn" xml:space="preserve">
+    <value>حذف و بازگشت</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>نزولی</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>غیر فعال</value>
+  </data>
+  <data name="EditFormula" xml:space="preserve">
+    <value>ویرایش فرمول</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>خطا</value>
+  </data>
+  <data name="FilteredBy" xml:space="preserve">
+    <value>فیلتر شده با</value>
+  </data>
+  <data name="FirstPage" xml:space="preserve">
+    <value>اولین</value>
+  </data>
+  <data name="Formula" xml:space="preserve">
+    <value>فرمول</value>
+  </data>
+  <data name="FormulaExpression" xml:space="preserve">
+    <value>متن فرمول</value>
+  </data>
+  <data name="FormulaName" xml:space="preserve">
+    <value>نام فرمول</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>برو</value>
+  </data>
+  <data name="GroupedBy" xml:space="preserve">
+    <value>گروه‌بندی بر اساس</value>
+  </data>
+  <data name="IndexNoData" xml:space="preserve">
+    <value>داده‌ای برای نمایش وجود ندارد.</value>
+  </data>
+  <data name="JumpToPage" xml:space="preserve">
+    <value>پرش به صفحه</value>
+  </data>
+  <data name="LastPage" xml:space="preserve">
+    <value>آخرین</value>
+  </data>
+  <data name="LinkedSubReport" xml:space="preserve">
+    <value>زیرگزارش پیوندی</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>در حال بارگذاری</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>نقشه</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>دقیقه</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>بعدی</value>
+  </data>
+  <data name="OrderedBy" xml:space="preserve">
+    <value>به ترتیب</value>
+  </data>
+  <data name="OrderSettings" xml:space="preserve">
+    <value>تنظیمات ترتیب رکوردها</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>صفحه</value>
+  </data>
+  <data name="PageOf" xml:space="preserve">
+    <value>از</value>
+  </data>
+  <data name="PageRecord" xml:space="preserve">
+    <value>رکورد</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>صفحات</value>
+  </data>
+  <data name="PageTo" xml:space="preserve">
+    <value>تا</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>درصد</value>
+  </data>
+  <data name="PossibleColumns" xml:space="preserve">
+    <value>ستون‌های قابل انتخاب</value>
+  </data>
+  <data name="PossibleReportDimensions" xml:space="preserve">
+    <value>ابعاد گروه بندی قابل انتخاب</value>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>قبلی</value>
+  </data>
+  <data name="RecordsCount" xml:space="preserve">
+    <value>تعداد رکوردها</value>
+  </data>
+  <data name="RefreshTimeInterval" xml:space="preserve">
+    <value>فاصله تا به‌روز‌رسانی بعدی</value>
+  </data>
+  <data name="ReloadTheReport" xml:space="preserve">
+    <value>بارگذاری مجدد گزارش</value>
+  </data>
+  <data name="ReportDimensions" xml:space="preserve">
+    <value>ابعاد گروه بندی</value>
+  </data>
+  <data name="GroupByList" xml:space="preserve">
+    <value>گزارش تجمیعی</value>
+  </data>
+  <data name="ReportSettings" xml:space="preserve">
+    <value>تنظیمات گزارش</value>
+  </data>
+  <data name="Return" xml:space="preserve">
+    <value>بازگشت</value>
+  </data>
+  <data name="SaveAndNew" xml:space="preserve">
+    <value>ثبت و جدید</value>
+  </data>
+  <data name="SaveAndReturn" xml:space="preserve">
+    <value>ثبت و بازگشت</value>
+  </data>
+  <data name="SaveFilterValues" xml:space="preserve">
+    <value>ذخیره مقادیر فیلتر</value>
+  </data>
+  <data name="SaveScheduleFilter" xml:space="preserve">
+    <value>ذخیره مقادیر فیلتر زمانبندی</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>جستجو</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>ثانیه</value>
+  </data>
+  <data name="SeeChanges" xml:space="preserve">
+    <value>مشاهده تغییرات</value>
+  </data>
+  <data name="SelectedReportColumns" xml:space="preserve">
+    <value>ستون‌های نمایشی</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>ثبت</value>
+  </data>
+  <data name="SubReport" xml:space="preserve">
+    <value>زیرگزارش</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>کل</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>مقدار</value>
+  </data>
+  <data name="WidgetSettings" xml:space="preserve">
+    <value>تنظیمات ویجت</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>رنگ پس زمینه</value>
+  </data>
+  <data name="ChangeSubReportType" xml:space="preserve">
+    <value>تغییر نوع زیر گزارش</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="ConstantMaxValue" xml:space="preserve">
+    <value>مقدار ثابت حداکثر</value>
+  </data>
+  <data name="ConstantMinValue" xml:space="preserve">
+    <value>مقدار ثابت حداقل</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>داشبورد</value>
+  </data>
+  <data name="DisplayType" xml:space="preserve">
+    <value>نوع نمایش</value>
+  </data>
+  <data name="GroupedList" xml:space="preserve">
+    <value>لیست گروه‌بندی شده</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>آیکون</value>
+  </data>
+  <data name="IranMap" xml:space="preserve">
+    <value>نقشه ایران</value>
+  </data>
+  <data name="Levels" xml:space="preserve">
+    <value>سطوح</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>لیست</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>عملیات</value>
+  </data>
+  <data name="SubReportName" xml:space="preserve">
+    <value>نام زیرگزارش</value>
+  </data>
+  <data name="TextColor" xml:space="preserve">
+    <value>رنگ متن</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>واحد</value>
+  </data>
+  <data name="WorldMap" xml:space="preserve">
+    <value>نقشه جهان</value>
+  </data>
+  <data name="AccessLevel" xml:space="preserve">
+    <value>سطح دسترسی</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>بستن</value>
+  </data>
+  <data name="ConfigSettings" xml:space="preserve">
+    <value>ویژگی های طراحی</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>روز</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>پیش فرض</value>
+  </data>
+  <data name="FilterSettings" xml:space="preserve">
+    <value>تنظیمات فیلتر</value>
+  </data>
+  <data name="FolderSettings" xml:space="preserve">
+    <value>تنظیمات پوشه</value>
+  </data>
+  <data name="ForSpecificUserGroup" xml:space="preserve">
+    <value>مختص گروه کاربری</value>
+  </data>
+  <data name="JustForThisConfig" xml:space="preserve">
+    <value>مختص این طراحی</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>ماه</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>نام</value>
+  </data>
+  <data name="Once" xml:space="preserve">
+    <value>یک بار</value>
+  </data>
+  <data name="Personal" xml:space="preserve">
+    <value>شخصی</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>همگانی</value>
+  </data>
+  <data name="RepeatPeriod" xml:space="preserve">
+    <value>دوره تکرار</value>
+  </data>
+  <data name="Repetetive" xml:space="preserve">
+    <value>تکرار شونده</value>
+  </data>
+  <data name="UserGroup" xml:space="preserve">
+    <value>گروه کاربری</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>هفته</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>هیچ کدام</value>
+  </data>
+  <data name="AllTitle" xml:space="preserve">
+    <value>همه</value>
+  </data>
+  <data name="FalseTitle" xml:space="preserve">
+    <value>خیر</value>
+  </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>انتخاب فایل</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>دانلود</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>ساعت</value>
+  </data>
+  <data name="Milliseconds" xml:space="preserve">
+    <value>میلی ثانیه</value>
+  </data>
+  <data name="PleaseDownloadFirst" xml:space="preserve">
+    <value>لطفا فایل را دانلود کرده و سپس مشاهده نمایید.</value>
+  </data>
+  <data name="BulkOperations" xml:space="preserve">
+    <value>عملیات گروهی</value>
+  </data>
+  <data name="ClearFilterForm" xml:space="preserve">
+    <value>خالی کردن فرم فیلتر</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>ورود</value>
+  </data>
+  <data name="LoginToSystem" xml:space="preserve">
+    <value>ورود به سامانه</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>خروج</value>
+  </data>
+  <data name="OrganizationLogo" xml:space="preserve">
+    <value>لوگوی سازمان</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>رمز عبور</value>
+  </data>
+  <data name="RecordNotFound" xml:space="preserve">
+    <value>رکورد یافت نشد</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>مرا به خاطرت نگه دار</value>
+  </data>
+  <data name="StartProcess" xml:space="preserve">
+    <value>شروع فرآیند</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>موبایل</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>تایید</value>
+  </data>
+  <data name="DropFilesHere" xml:space="preserve">
+    <value>برای آپلود، فایل را اینجا رها کنید.</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>خیر</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>تلاش مجدد</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>در حال بارگذاری</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>بله</value>
+  </data>
+  <data name="PrintPreview" xml:space="preserve">
+    <value>پیش نمایش گزارش</value>
+  </data>
+  <data name="AddNewFilter" xml:space="preserve">
+    <value>افزودن فیلتر جدید</value>
+  </data>
+  <data name="AddNewTemplate" xml:space="preserve">
+    <value>افزودن قالب جدید</value>
+  </data>
+  <data name="Bottom" xml:space="preserve">
+    <value>پایین</value>
+  </data>
+  <data name="ClassName" xml:space="preserve">
+    <value>نام کلاس</value>
+  </data>
+  <data name="ColumnDisplaySettings" xml:space="preserve">
+    <value>تنظیمات نمایشی ستون</value>
+  </data>
+  <data name="ColumnFilterSettings" xml:space="preserve">
+    <value>تنظیمات فیلتر ستون</value>
+  </data>
+  <data name="ColumnLength" xml:space="preserve">
+    <value>طول ستون</value>
+  </data>
+  <data name="ColumnTemplateSettings" xml:space="preserve">
+    <value>تنظیمات قالب ستون</value>
+  </data>
+  <data name="Containing" xml:space="preserve">
+    <value>شامل</value>
+  </data>
+  <data name="DisplaySettings" xml:space="preserve">
+    <value>تنظیمات نمایشی</value>
+  </data>
+  <data name="EqualWith" xml:space="preserve">
+    <value>برابر با</value>
+  </data>
+  <data name="ExistInList" xml:space="preserve">
+    <value>موجود در لیست</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>فیلترها</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>نوع فیلتر</value>
+  </data>
+  <data name="FilterValue" xml:space="preserve">
+    <value>مقدار فیلتر</value>
+  </data>
+  <data name="GreaterEqual" xml:space="preserve">
+    <value>بیشتر یا مساوی</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>بیشتر از</value>
+  </data>
+  <data name="GroupBy" xml:space="preserve">
+    <value>گروه‌بندی بر اساس</value>
+  </data>
+  <data name="HorizontalPosition" xml:space="preserve">
+    <value>موقعیت افقی</value>
+  </data>
+  <data name="Left" xml:space="preserve">
+    <value>چپ</value>
+  </data>
+  <data name="LeftToRight" xml:space="preserve">
+    <value>چپ به راست</value>
+  </data>
+  <data name="LessEqual" xml:space="preserve">
+    <value>کمتر یا مساوی</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>کمتر از</value>
+  </data>
+  <data name="Middle" xml:space="preserve">
+    <value>وسط</value>
+  </data>
+  <data name="NewSettingRegistration" xml:space="preserve">
+    <value>ثبت تنظیم جدید</value>
+  </data>
+  <data name="NotExistInList" xml:space="preserve">
+    <value>عدم وجود در لیست</value>
+  </data>
+  <data name="Right" xml:space="preserve">
+    <value>راست</value>
+  </data>
+  <data name="RightToLeft" xml:space="preserve">
+    <value>راست به چپ</value>
+  </data>
+  <data name="ScheduleSettings" xml:space="preserve">
+    <value>تنظیمات زمانبندی</value>
+  </data>
+  <data name="ScheduleType" xml:space="preserve">
+    <value>نوع زمانبندی</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>انتخاب</value>
+  </data>
+  <data name="SelectedColumns" xml:space="preserve">
+    <value>ستون‌های انتخاب شده</value>
+  </data>
+  <data name="StartWith" xml:space="preserve">
+    <value>شروع با</value>
+  </data>
+  <data name="SubReportSettings" xml:space="preserve">
+    <value>تنظیمات زیر گزارش</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>قالب</value>
+  </data>
+  <data name="TemplateCondition" xml:space="preserve">
+    <value>شرط قالب</value>
+  </data>
+  <data name="TemplateName" xml:space="preserve">
+    <value>نام قالب</value>
+  </data>
+  <data name="TextDirection" xml:space="preserve">
+    <value>جهت متن</value>
+  </data>
+  <data name="Top" xml:space="preserve">
+    <value>بالا</value>
+  </data>
+  <data name="UnequalWith" xml:space="preserve">
+    <value>نابرابر با</value>
+  </data>
+  <data name="VerticalPosition" xml:space="preserve">
+    <value>موقعیت عمودی</value>
+  </data>
+  <data name="AccessDeniedHeader" xml:space="preserve">
+    <value>شما به این صفحه دسترسی ندارید.</value>
+  </data>
+  <data name="AccessDeniedTitle" xml:space="preserve">
+    <value>خطا: عدم دسترسی</value>
+  </data>
+  <data name="AccessViaUserGroup" xml:space="preserve">
+    <value>دسترسی از طریق گروه کاربری</value>
+  </data>
+  <data name="ApplySettings" xml:space="preserve">
+    <value>اعمال تنظیمات</value>
+  </data>
+  <data name="ApplyUserSettings" xml:space="preserve">
+    <value>اعمال تنظیمات کاربران</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>تغییر رمز عبور</value>
+  </data>
+  <data name="ChangeUsernameAndPassword" xml:space="preserve">
+    <value>تغییر نام کاربری و رمزعبور</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>تکرار رمز عبور جدید</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>رمز عبور جاری</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>تاریخ</value>
+  </data>
+  <data name="DefaultValue" xml:space="preserve">
+    <value>مقدار پیش فرض</value>
+  </data>
+  <data name="DisableAccess" xml:space="preserve">
+    <value>دسترسی غیر فعال</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>موجودیت</value>
+  </data>
+  <data name="FormSubject" xml:space="preserve">
+    <value>موضوع فرم</value>
+  </data>
+  <data name="FormType" xml:space="preserve">
+    <value>نوع فرم</value>
+  </data>
+  <data name="HasAccess" xml:space="preserve">
+    <value>دسترسی دارد</value>
+  </data>
+  <data name="Namespace" xml:space="preserve">
+    <value>فضای نامی</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>رمز عبور جدید</value>
+  </data>
+  <data name="NewUsername" xml:space="preserve">
+    <value>نام کاربری جدید</value>
+  </data>
+  <data name="BulkCreateProcess" xml:space="preserve">
+    <value>ایجاد گروهی فرآیند</value>
+  </data>
+  <data name="BulkEditEntity" xml:space="preserve">
+    <value>ویرایش گروهی موجودیت</value>
+  </data>
+  <data name="ControllerDesign" xml:space="preserve">
+    <value>طراحی قواعد</value>
+  </data>
+  <data name="DefinitionsError" xml:space="preserve">
+    <value>خطا در تعاریف</value>
+  </data>
+  <data name="NotFoundError" xml:space="preserve">
+    <value>صفحه‌ی مورد نظر یافت نشد.</value>
+  </data>
+  <data name="PageNotFoundError" xml:space="preserve">
+    <value>خطا: صفحه یافت نشد</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>ویژگی ها</value>
+  </data>
+  <data name="SelectableSubjectForms" xml:space="preserve">
+    <value>فرم‌های موضوعی قابل انتخاب</value>
+  </data>
+  <data name="SelectedSubjectForms" xml:space="preserve">
+    <value>فرم‌های موضوعی انتخاب شده</value>
+  </data>
+  <data name="ServerInternalError" xml:space="preserve">
+    <value>خطا داخلی در سرویس دهنده</value>
+  </data>
+  <data name="ServerSideError" xml:space="preserve">
+    <value>خطای سمت سرویس دهنده</value>
+  </data>
+  <data name="MyWorkItems" xml:space="preserve">
+    <value>کارهای من</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>ویرایش اطلاعات</value>
+  </data>
+  <data name="ViewFormInWorkFlow" xml:space="preserve">
+    <value>نمایش  جایگاه فرم در جریان کار</value>
+  </data>
+  <data name="ProcessHistory" xml:space="preserve">
+    <value>سابقه فرآیند</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>اکشن</value>
+  </data>
+  <data name="AssignAccess" xml:space="preserve">
+    <value>تخصیص دسترسی</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>کنترلر</value>
+  </data>
+  <data name="Dashboards" xml:space="preserve">
+    <value>داشبورد‌ها</value>
+  </data>
+  <data name="Forms" xml:space="preserve">
+    <value>فرم‌ها</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>نام خانوادگی</value>
+  </data>
+  <data name="OrganizationalPosition" xml:space="preserve">
+    <value>پست سازمانی</value>
+  </data>
+  <data name="Process" xml:space="preserve">
+    <value>فرآیند</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>گزارش‌ها</value>
+  </data>
+  <data name="SpecialPages" xml:space="preserve">
+    <value>صفحات خاص</value>
+  </data>
+  <data name="SpecialSystemFeatures" xml:space="preserve">
+    <value>امکانات ویژه‌ی سیستم</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>عنوان</value>
+  </data>
+  <data name="UserGroups" xml:space="preserve">
+    <value>گروه های کاربری</value>
+  </data>
+  <data name="MyAssignedAccess" xml:space="preserve">
+    <value>دسترسی های من</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>نسخه</value>
+  </data>
+  <data name="RemoveFile" xml:space="preserve">
+    <value>حذفِ فایل</value>
+  </data>
+  <data name="UndoRemoveFile" xml:space="preserve">
+    <value>عدمِ حذفِ فایل</value>
+  </data>
+  <data name="ChangeUsersPassword" xml:space="preserve">
+    <value>تغییر رمز عبور کاربران</value>
+  </data>
+  <data name="PasswordInstructions" xml:space="preserve">
+    <value>لازم است رمزِ عبور به طولِ حداقل 6 و شاملِ حداقل یک کاراکتر عددی، یک کاراکتر با حروف کوچک و یک کاراکتر با حروف بزرگ باشد.</value>
+  </data>
+  <data name="AddSubReport" xml:space="preserve">
+    <value>ایجاد زیرگزارش</value>
+  </data>
+  <data name="InlineSubReport" xml:space="preserve">
+    <value>داخلی</value>
+  </data>
+  <data name="Linked" xml:space="preserve">
+    <value>پیوندی</value>
+  </data>
+  <data name="SubReports" xml:space="preserve">
+    <value>زیرگزارش‌ها</value>
+  </data>
+  <data name="OrderById" xml:space="preserve">
+    <value>بر اساس شناسه</value>
+  </data>
+  <data name="OrderByText" xml:space="preserve">
+    <value>بر اساس متن</value>
+  </data>
+  <data name="DatabaseSynchronization" xml:space="preserve">
+    <value>یکسان‌سازی پایگاه داده</value>
+  </data>
+  <data name="DatabaseSynchronizationStart" xml:space="preserve">
+    <value>شروع یکسان‌سازی</value>
+  </data>
+  <data name="DatabaseSynchronizationStop" xml:space="preserve">
+    <value>توقف یکسان‌سازی</value>
+  </data>
+  <data name="Form" xml:space="preserve">
+    <value>فرم</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>گزارش</value>
+  </data>
+  <data name="ReportAddNewConfig" xml:space="preserve">
+    <value>تعریف طراحی جدید برای گزارش</value>
+  </data>
+  <data name="ReportAsHorizontalColumn" xml:space="preserve">
+    <value>افقی</value>
+  </data>
+  <data name="ReportUseColumnInTooltips" xml:space="preserve">
+    <value>استفاده در تولتیپ</value>
+  </data>
+  <data name="ColumnDispalySettings" xml:space="preserve">
+    <value>تنظیمات نمایشی ستون</value>
+  </data>
+  <data name="AddPossibleSubReport" xml:space="preserve">
+    <value>افزودن زیرگزارش</value>
+  </data>
+  <data name="CurrentSubReports" xml:space="preserve">
+    <value>زیرگزارش‌های کنونی</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>تغییر نام</value>
+  </data>
+  <data name="AdminTools" xml:space="preserve">
+    <value>ابزارهای مدیریتی</value>
+  </data>
+  <data name="ConfigIsNotModifiable" xml:space="preserve">
+    <value>این طراحی قابل ویرایش نیست. در صورت نیاز می‌توانید از آن کپی بگیرید.</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>کپی</value>
+  </data>
+  <data name="HasCountWithoutRowsMessage" xml:space="preserve">
+    <value>نتیجه شامل {0} رکورد است. احتمالن در تنظیمات ستون‌ها اشکالی وجود دارد.</value>
+  </data>
+  <data name="CSVExport" xml:space="preserve">
+    <value>خروجی CSV</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>فرآیند‌ها</value>
+  </data>
+  <data name="Excel" xml:space="preserve">
+    <value>اکسل</value>
+  </data>
+  <data name="TrueTitle" xml:space="preserve">
+    <value>بله</value>
+  </data>
+  <data name="ChartSettings" xml:space="preserve">
+    <value>تنظیمات نمودار</value>
+  </data>
+  <data name="LanguageSelection" xml:space="preserve">
+    <value>انتخاب زبان</value>
+  </data>
+  <data name="EditViaExcel" xml:space="preserve">
+    <value>اصلاح با اکسل</value>
+  </data>
+  <data name="DownloadTemplateWithData" xml:space="preserve">
+    <value>دانلود قالب با داده</value>
+  </data>
+  <data name="SetEnumerationItems" xml:space="preserve">
+    <value>یکسان سازی جداول پایه</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>بروز رسانی</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>کد</value>
+  </data>
+  <data name="VerifyLoginToSystem" xml:space="preserve">
+    <value>وارد کد ارسالی برای ورود به سامانه</value>
+  </data>
+  <data name="ChangeFile" xml:space="preserve">
+    <value>تغییر فایل</value>
+  </data>
+</root>

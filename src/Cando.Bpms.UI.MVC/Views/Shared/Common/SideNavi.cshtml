@@ -1,0 +1,42 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@model SideNaviModel
+
+<div id="sideNavi">
+    <div class="nav-pills">
+        <div class="side-navi-item item1 nav-link p-0">
+            <div style="padding-top: 6px">@ViewTexts.UsefulFilters</div>
+        </div>
+        @for (int i = 0; i < Model.titles.Count; i++)
+        {
+            <div class="side-navi-item item@(i + 2) nav-link p-0">
+                <div style="padding-top: 6px">@Model.titles[i]</div>
+            </div>
+        }
+    </div>
+    <div class="side-navi-data bg-light">
+        <div class="side-navi-tab">
+            <div class="sideNavi-top-bar bg-light" style="align-items: center;justify-content: space-between;display: flex;flex-direction: row-reverse;padding: 0 1rem;">
+                <span class="icons-tables" title="@ViewTexts.AddFolder">
+                    <svg title="@ViewTexts.AddFolder" style="width:18px;height:18px;vertical-align:middle;margin:4px;" viewBox="0 0 24 24" onclick="FilterTreeManager.newFolder()">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#add-folder-icon" />
+                    </svg>
+                </span>
+                <div class="col-sm-9" style="padding:0px">
+                    <div class="input-group">
+                        <input type="text" placeholder="@ViewTexts.Search" class="form-control " id="filters-search-input" />
+                        <div class="input-group-append">
+                            <i class="input-group-text fa fa-search text-small"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="filters-tree" class="side-navi-body"></div>
+        </div>
+        @foreach (var tab in Model.tabContents)
+        {
+            <div class="side-navi-tab">
+                @tab
+            </div>
+        }
+    </div>
+</div>

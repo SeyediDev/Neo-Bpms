@@ -1,0 +1,12 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@{
+    Layout = null;
+}
+
+<partial name="Layout/MinimalIframeIncludes" />
+
+
+<img class="d-block mx-auto"
+     style="max-height: 90vh; max-width: 100%;"
+     src="~/Content/common-assets-includes/images/errors/500Error.gif" alt=@ViewTexts.DefinitionsError>
+<div class="alert alert-danger text-2x" style="text-align: center">@ViewTexts.DefinitionsError</div>

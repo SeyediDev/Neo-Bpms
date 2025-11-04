@@ -1,0 +1,17 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.FilterModels
+@model WorkItemsFilter
+
+@{
+	if (Model.JustRestorableTasks)
+	{
+		<button type="button" onclick="FilterManager.backToNormalTasks();" class="btn btn-outline-dark">
+			<span>بازگشت به کارهای جاری</span>
+		</button>
+	}
+	else
+	{
+		<button type="button" onclick="FilterManager.bringRestorableTasks();" class="btn btn-dark">
+			<span>نمایش کارهای قابل بازگشت</span>
+		</button>
+	}
+}

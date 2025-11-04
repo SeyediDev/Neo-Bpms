@@ -1,0 +1,92 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@{
+    Layout = null;
+}
+
+<html>
+
+<head>
+    <title>Teta Bpmn Designer</title>
+    <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/fonts/pfont/yekan-persian-digits.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/fonts/font-awesome420/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bs4-toast/toast.min.css">
+    <link href="@CommonBundles.BpmnModelerCssBundle" asp-append-version="true" rel="stylesheet"/>
+    <script src="@CommonBundles.ProcessDesignJsBundle" asp-append-version="true"></script>
+    <script>
+		window.top.rootUrl = '@Context.Request.GetBaseUrl()/';
+	</script>
+</head>
+
+<body>
+
+@Html.AntiForgeryToken()
+
+<div class="row file-panel border bg-light" style="padding: 10px;">
+    <div class="col-sm-5" dir="ltr">
+        <button class="btn btn-success" id="saveProcessButton">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+        </button>
+        <div class="custom-file w-auto">
+            <label class="btn btn-dark m-0" for="btnOpenFileDialog"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp; Import</label>
+            <input type="file" id="btnOpenFileDialog" class="custom-file-input d-none" name="files">
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-dark dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <i class="fa fa-download"></i>
+                <span>
+                    Export
+                </span>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item disable-export-item" href="#" id="js-download-diagram">BPMN2 XML</a>
+                <a class="dropdown-item disable-export-item" href="#" id="js-download-svg">Image</a>
+            </div>
+        </div>
+        <div id="links-dropdown" class="btn-group">
+            <button type="button" class="btn btn-info dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <i class="fa fa-link"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" id="entityDesignerLink">Entity Design</a>
+                <a class="dropdown-item" href="#" id="processLink">Work Items</a>
+            </div>
+        </div>
+        <button type="button" class="btn btn-warning" onclick="location.reload()" title="Reload Diagram">
+            <i class="fa fa-refresh" style="margin: 3px;"></i>
+        </button>
+    </div>
+
+    <div class="col-sm-7 form-inline" style="direction: rtl;">
+        <button class="btn btn-dark" onclick="openNav()" style="cursor: pointer">
+            Design Explorer
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+<div class="content" id="js-drop-zone">
+    <div class="message error">
+        <div class="note">
+            <p>خطا در نمایش دیاگرام</p>
+            <div class="details">
+                <span>علت</span>
+                <pre></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="canvas" id="js-canvas"></div>
+    <div class="properties-panel-parent" id="js-properties-panel"></div>
+</div>
+
+<script src="@CommonBundles.BpmnModelerJsBundle" asp-append-version="true"></script>
+@await Html.PartialAsync("_DesignList")
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Contains" xml:space="preserve">
+    <value>شامل</value>
+  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>به جز</value>
+  </data>
+  <data name="EndsWith" xml:space="preserve">
+    <value>تمام شود با</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>بزرگتر از</value>
+  </data>
+  <data name="GreaterThanOrEqual" xml:space="preserve">
+    <value>بزرگتر یا مساوی</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>کوچکتر از</value>
+  </data>
+  <data name="LessThanOrEqual" xml:space="preserve">
+    <value>کوچکتر یا مساوی</value>
+  </data>
+  <data name="IsEqualTo" xml:space="preserve">
+    <value>برابر با</value>
+  </data>
+  <data name="IsNotEqualTo" xml:space="preserve">
+    <value>نابرابر با</value>
+  </data>
+  <data name="IsNotNull" xml:space="preserve">
+    <value>دارای مقدار</value>
+  </data>
+  <data name="IsNull" xml:space="preserve">
+    <value>بدون مقدار</value>
+  </data>
+  <data name="IsPassword" xml:space="preserve">
+    <value>پسورد است</value>
+  </data>
+  <data name="LinkPathFirstPart" xml:space="preserve">
+    <value>بخش اول مسیر (کنترلر)</value>
+  </data>
+  <data name="LinkPathLastPart" xml:space="preserve">
+    <value>بخش آخر مسیر (اکشن)</value>
+  </data>
+  <data name="PageType" xml:space="preserve">
+    <value>نوع صفحه (Form/Report/Dashboard)</value>
+  </data>
+  <data name="ReadOnly" xml:space="preserve">
+    <value>فقط خواندنی</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>الزامی</value>
+  </data>
+  <data name="StartsWith" xml:space="preserve">
+    <value>شروع شود با</value>
+  </data>
+  <data name="Summable" xml:space="preserve">
+    <value>جمع شود</value>
+  </data>
+  <data name="TimeDisplayResolution" xml:space="preserve">
+    <value>دقت نمایش زمان</value>
+  </data>
+  <data name="WidthPercentage" xml:space="preserve">
+    <value>عرض به درصد</value>
+  </data>
+  <data name="GridColumns" xml:space="preserve">
+    <value>ستون‌های عرضی (1 تا 12)</value>
+  </data>
+  <data name="GridColumnsSmall" xml:space="preserve">
+    <value>ستون‌های عرضی در صفحات کوچک (1 تا 12)</value>
+  </data>
+  <data name="GridColumnsMedium" xml:space="preserve">
+    <value>ستون‌های عرضی در صفحات متوسط (1 تا 12)</value>
+  </data>
+  <data name="GridColumnsLarge" xml:space="preserve">
+    <value>ستون‌های عرضی در صفحات بزرگ (1 تا 12)</value>
+  </data>
+  <data name="GridColumnsExtraLarge" xml:space="preserve">
+    <value>ستون‌های عرضی در صفحات خیلی بزرگ (1 تا 12)</value>
+  </data>
+  <data name="HeightInPixels" xml:space="preserve">
+    <value>ارتفاع (به پیکسل)</value>
+  </data>
+  <data name="PageSubType" xml:space="preserve">
+    <value>زیر نوع صفحه</value>
+  </data>
+  <data name="ShowHide" xml:space="preserve">
+    <value>نمایش پیدا کند</value>
+  </data>
+  <data name="IconClass" xml:space="preserve">
+    <value>کلاس آیکون</value>
+  </data>
+  <data name="IconImage" xml:space="preserve">
+    <value>تصویر آیکون</value>
+  </data>
+  <data name="SourceFileAddress" xml:space="preserve">
+    <value>آدرس فایل مرجع</value>
+  </data>
+  <data name="ReportConfigurationId" xml:space="preserve">
+    <value>شناسه‌ی طراحی</value>
+  </data>
+  <data name="ProcessId" xml:space="preserve">
+    <value>شناسه‌ی فرآیند</value>
+  </data>
+  <data name="TaskId" xml:space="preserve">
+    <value>شناسه‌ی فعالیت</value>
+  </data>
+  <data name="SuccessWhen" xml:space="preserve">
+    <value>شرطِ استایلِ موفق</value>
+  </data>
+  <data name="DangerWhen" xml:space="preserve">
+    <value>شرطِ استایلِ خطر</value>
+  </data>
+  <data name="WarningWhen" xml:space="preserve">
+    <value>شرطِ استایلِ هشدار</value>
+  </data>
+  <data name="InfoWhen" xml:space="preserve">
+    <value>شرطِ استایلِ اطلاع</value>
+  </data>
+  <data name="ActiveWhen" xml:space="preserve">
+    <value>شرطِ استایلِ فعال</value>
+  </data>
+  <data name="TrueStyle" xml:space="preserve">
+    <value>استایل وقتی مقدار true است</value>
+  </data>
+  <data name="FalseStyle" xml:space="preserve">
+    <value>استایل وقتی مقدار false است</value>
+  </data>
+  <data name="ContextualStyle" xml:space="preserve">
+    <value>استایل</value>
+  </data>
+  <data name="EnLabelName" xml:space="preserve">
+    <value>عنوان به انگلیسی</value>
+  </data>
+  <data name="CustomProperty" xml:space="preserve">
+    <value>پراپرتی خاص کنترل (key:value)</value>
+  </data>
+  <data name="AssociatedEntityFormula" xml:space="preserve">
+    <value>فرمول موجودیت مرتبط شده</value>
+  </data>
+  <data name="RefreshEveryXMilliseconds" xml:space="preserve">
+    <value>دوره‌ی بارگذاریِ مجدد (به میلی‌ثانیه)</value>
+  </data>
+  <data name="ConfirmationMessage" xml:space="preserve">
+    <value>پیام تأیید</value>
+  </data>
+  <data name="OperationName" xml:space="preserve">
+    <value>نام عملیات</value>
+  </data>
+  <data name="ServiceInterfaceProtocol" xml:space="preserve">
+    <value>پروتکل رابط سرویس</value>
+  </data>
+  <data name="Option" xml:space="preserve">
+    <value>گزینه</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>رنگ پس زمینه</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+</root>

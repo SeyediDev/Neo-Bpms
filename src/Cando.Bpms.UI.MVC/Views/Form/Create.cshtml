@@ -1,0 +1,171 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Features
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+@using Microsoft.Extensions.Options
+@using static Neo.Bpms.Domain.Model.UI.Forms.Form
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules
+
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+@inject IOptions<CmmnSettings> cmmnSettings;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model dynamic
+
+@{
+	CommonFormStructure structure = ViewBag.structure;
+	var canDesign = ViewBag.CanDesign ?? false;
+	var pageName = ViewBag.PagePackId as string;
+	var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+	var elModel = Model as ElasticObject;
+	var options = new RendererOptions();
+	var controlsRendererData = new ControlsRendererData(structure, elModel, options, ViewBag.user, Url);
+	
+	Func<dynamic, HelperResult> TopBarTools =
+		@<partial name="Helpers/FormDesignLink" model="new FormDesignLinkModel {structure = structure, canDesign = canDesign}" />;
+}
+
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/Content/common-assets-includes/features/modern/controls-modern.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/sbvr/sbvr-styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/combo/combo-clear.css" asp-append-version="true" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+@using (Html.BeginForm("Create", "Form", FormMethod.Post, new { enctype = "multipart/form-data", @class = "modern-form" }))
+{
+	var workItemFormId = ViewBag.workItemFormId;
+	var taskId = ViewBag.TaskId;
+	var processId = ViewBag.ProcessId;
+	var wid = ViewBag.wid;
+	HiddenInputs(structure, options.CalendarType, taskId, processId, wid, workItemFormId);
+    
+    <div id="mm-main-page" @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+				<!-- Modern Title Box -->
+				<div class="modern-title-box">
+					<div class="modern-title-content">
+						<div class="modern-title-text">
+							<h2 class="modern-title">
+								<i class="fa fa-plus-circle" style="margin-left: 8px; color: #10b981;"></i>
+								@structure.Name
+								@Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
+							</h2>
+						</div>
+						<div class="modern-title-actions">
+							@if (canDesign)
+							{
+								<a href="/Form/Design?NamespaceId=@structure.NamespaceId&amp;EntityId=@structure.EntityId&amp;FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+									<svg viewBox="0 0 24 24">
+										<use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+									</svg>
+								</a>
+							}
+						</div>
+					</div>
+				</div>
+				
+				<div class="modern-form-wrapper">
+					@{ await MainPartOfTheForm(controlsRendererData, structure); }
+				</div>
+    </div>
+
+    //render Controller's required Scripts.
+    <partial name="Logic/_Logic" model="structure" />
+    <script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+    <script src="~/Content/common-assets-includes/features/sbvr/sbvr-init.js" asp-append-version="true"></script>
+    <script src="~/Content/common-assets-includes/features/combo/combo-clear.js" asp-append-version="true"></script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+    
+    @if (structure.Logic != null &&
+         structure.Logic.Logics.Any(l => l.TriggeringEvent.EventType == UIRuleEvent.eEventType.onPageLoad))
+    {
+        <text>
+    pageLoaded();
+        </text>
+    }
+    
+    // Function to handle SaveAndReturn with CreateType
+    function saveAndReturnWithType(button, createType) {
+        // Call doSubmit which exists in Form.js
+        doSubmit(button);
+    }
+</script>
+
+@functions
+{
+    void HiddenInputs(CommonFormStructure structure, string calendar, object taskId, object processId, object wid, object workItemFormId)
+    {
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("calendar", calendar)
+        @Html.Hidden("TaskId", taskId)
+        @Html.Hidden("ProcessId", processId)
+        @Html.Hidden("wid", wid)
+        @Html.Hidden("workItemFormId", workItemFormId)
+        <input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId" />
+        <input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId" />
+        <input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId" />
+        <input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId" />
+        <input type="hidden" name="__parentIds" value="@ViewBag.__parentIds" />
+    }
+
+    async Task MainPartOfTheForm(ControlsRendererData controlsRendererData, CommonFormStructure structure)
+    {
+        <partial name="Utility/RenderLoading" />
+        <div id="mainPartOfTheForm" class="modern-form-content hidden">
+            @Html.ValidationSummary(false, "", new { @class = "modern-validation-summary" })
+            <div id="main-part">
+                @controlsRenderer.Render(controlsRendererData)
+            </div>
+        </div>
+        ActionButtons(structure);
+    }
+
+    async Task ActionButtons(CommonFormStructure structure)
+    {
+        <div class="modern-action-buttons">
+            <div class="modern-button-group">
+                <div class="modern-button-row">
+                    <button type="submit" class="modern-btn modern-btn-primary ladda-button" data-style="zoom-in" name="CreateType" value="@eCreateType.Save">
+                        <span>@GetSaveButtonText(structure)</span>
+                        <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                            <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                        </svg>
+                    </button>
+                    <button type="button" class="modern-btn modern-btn-success ladda-button" data-style="zoom-in" onclick="saveAndReturnWithType(this, '@eCreateType.SaveAndReturn')">
+                        <span>@ViewTexts.SaveAndReturn</span>
+                        <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                            <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-and-return-button" />
+                        </svg>
+                    </button>
+                </div>
+                <partial name="Common/BackButton"/>
+            </div>
+        </div>
+    }
+
+    string GetSaveButtonText(CommonFormStructure structure)
+    {
+        return ViewTexts.Save;
+    }
+}

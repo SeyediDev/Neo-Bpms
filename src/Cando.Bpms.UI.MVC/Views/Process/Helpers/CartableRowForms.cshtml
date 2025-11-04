@@ -1,0 +1,126 @@
+﻿@using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events
+@using Neo.Bpms.Domain.Entities.Bpmn.Execution
+@using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities
+@using Neo.Bpms.Domain.Model.BPMN.Core.CommonElements
+@using Neo.Bpms.Domain.Model.BPMN.Processes
+@using Neo.Bpms.Domain.Model.UI
+@model Neo.Bpms.UI.MVC.PartialModels.WorkItems.CartableRowFormsModel
+
+@{
+	foreach (var fo in Model.item.Forms)
+	{
+		switch (fo.FormType)
+		{
+			case Form.eFormType.ActiveProcessInstance:
+				<a class="text-success" href="@Url.Action("Edit", "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-edit" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.Create:
+				<a class="text-success" href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-plus-circle" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.Delete:
+				<a class="text-danger" href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-times" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.Detail:
+				<a class="text-info" href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa  fa-info-circle" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.Edit:
+				<a class="text-success" href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa  fa-pencil-square-o" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.ProcessCreate:
+				<a class="text-success" href="@Url.Action("Edit", "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-plus-circle" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.ProcessInstance:
+				<a class="text-success" href="@Url.Action("Edit", "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-pencil-square-o" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.SpecificURL:
+				<a href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABUUlEQVQ4T53TvUtQURgH4EcCJysHv7aIFkUHPwad1bQhAiUQnQLpPwg00kVQAkEQxElIh2oLdIg+yMBFHXSwAmmWcPQjJAhSXjmX7KCCneleznuf8/I77y3xd1XgCXpxG0dYxwyWztT981iS3prxFtU4wDZuoDbtz2MQf3IogDj5Kyoxiin8SoX1WEALJvDsPOA5htJmFOWrHF9QhVvYPVsQHXxPrUf7xck5EtlM4jHmcuA3NtF6UVBoxydEt09zYB8/UHcJ0IM3GMF4DnzAXTTg2wXISwygA8s58ACL2EAn9jKkD69TkI04zoF4f4FH2MF0yuQmHqIfEfYwZnF4HnANY2kSS7MOtvAqBRiT2ZWG7bSsmMTimxrcxx38xCo+owwf002tobtAcuCSizgd7Qg8rjvge4FcBQg8kPdoS0j3VYECeYf4Abv+BwjkOpqwcgI8H0Bc0N8O6QAAAABJRU5ErkJggg=="
+					     width="14" height="14" style="margin-top: 3px;" title="@fo.Name"/>
+				</a>
+				break;
+			case Form.eFormType.SpecificURLForRecord:
+				<a href="@Url.Action(fo.FormType.ToString(), "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABUUlEQVQ4T53TvUtQURgH4EcCJysHv7aIFkUHPwad1bQhAiUQnQLpPwg00kVQAkEQxElIh2oLdIg+yMBFHXSwAmmWcPQjJAhSXjmX7KCCneleznuf8/I77y3xd1XgCXpxG0dYxwyWztT981iS3prxFtU4wDZuoDbtz2MQf3IogDj5Kyoxiin8SoX1WEALJvDsPOA5htJmFOWrHF9QhVvYPVsQHXxPrUf7xck5EtlM4jHmcuA3NtF6UVBoxydEt09zYB8/UHcJ0IM3GMF4DnzAXTTg2wXISwygA8s58ACL2EAn9jKkD69TkI04zoF4f4FH2MF0yuQmHqIfEfYwZnF4HnANY2kSS7MOtvAqBRiT2ZWG7bSsmMTimxrcxx38xCo+owwf002tobtAcuCSizgd7Qg8rjvge4FcBQg8kPdoS0j3VYECeYf4Abv+BwjkOpqwcgI8H0Bc0N8O6QAAAABJRU5ErkJggg=="
+					     width="14" height="14" style="margin-top: 3px;" title="@fo.Name"/>
+				</a>
+				break;
+			case Form.eFormType.VirtualDelete:
+				<a class="text-danger" href="@Url.Action("Delete", "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="fa fa-times" title="@fo.Name"></i>
+				</a>
+				break;
+			case Form.eFormType.ProcessCreateOnExistingRecord:
+			case Form.eFormType.WorkItem:
+				<a class="text-success" href="@Url.Action("Edit", "Form", new {fo.NamespaceId, fo.EntityId, FormSubject = fo.FormSubjectId, fo.FormId, ids = Model.item.EntityPkv, isWorkItem = true, fo.FormType, pid = Model.item.ProcessInstanceId, wid = Model.item.ActivityInstanceId, Model.item.TaskId, Model.item.ProcessId, Caller = Model.caller, callerPage = ViewBag.Page})">
+					<i class="bpmn-icon-user-task cartable-form-icon" title="@fo.Name"></i>
+				</a>
+				break;
+		}
+	}
+	switch (Model.item.ActivityType)
+	{
+		case null:
+			if (Model.item.ActivityType == null && Model.item.EventType != null)
+			{
+				switch (Model.item.EventType)
+				{
+					case Event.eEventType.Message:
+						<span title="Intermediate Message Catch" class="bpmn-icon-intermediate-event-catch-message cartable-form-icon"></span>
+						break;
+					case Event.eEventType.Signal:
+						<span title="Intermediate Signal Catch" class="bpmn-icon-intermediate-event-catch-signal cartable-form-icon"></span>
+						break;
+					case Event.eEventType.Timer:
+						<span title="Intermediate Timer Catch" class="bpmn-icon-intermediate-event-catch-timer cartable-form-icon"></span>
+						break;
+					case Event.eEventType.Condition:
+						<span title="Intermediate Condition Catch" class="bpmn-icon-intermediate-event-catch-condition cartable-form-icon"></span>
+						break;
+				}
+			}
+			if (Model.item.ActivityType == null && Model.item.FlowNodeType == FlowNodeTypeId.ParallelGateway)
+			{
+				<span title="Parallel Gateway" class="bpmn-icon-gateway-parallel cartable-form-icon"></span>
+			}
+			break;
+		case Activity.eActivityType.UserTask:
+			if (Model.item.Forms.Count == 0)
+			{
+				<span title="User Task" class="bpmn-icon-user-task cartable-form-icon"></span>
+			}
+			break;
+		case Activity.eActivityType.ServiceTask:
+			<span class="bpmn-icon-service-task cartable-form-icon" title="Service Task"></span>
+			break;
+		case Activity.eActivityType.CallActivitySubProcess:
+            <span class="bpmn-icon-subprocess-collapsed cartable-form-icon" title="Call Activity Sub Process"></span>
+			break;
+		case Activity.eActivityType.BusinessRuleTask:
+			<span class="bpmn-icon-business-rule-task cartable-form-icon" title="Business Rule Task"></span>
+			break;
+		case Activity.eActivityType.ScriptTask:
+			<span class="bpmn-icon-script-task cartable-form-icon" title="Script Task"></span>
+			break;
+		case Activity.eActivityType.ManualTask:
+			<span class="bpmn-icon-manual-task cartable-form-icon" title="Manual Task"></span>
+			break;
+	}
+	if (Model.item.StartTime == null)
+	{
+		<i title="شروع نشده" class="bpms-flaticon-spark unstarted-work-icon"></i>
+	}
+}

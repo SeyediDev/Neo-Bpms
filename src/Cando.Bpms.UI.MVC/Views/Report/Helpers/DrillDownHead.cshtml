@@ -1,0 +1,59 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model Neo.Bpms.UI.MVC.PartialModels.Report.DrillDownHeadModel
+
+<partial name="Layout/MinimalIframeIncludes"/>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2 col-lg-1 float-end reportSettingBtn">
+            <a class="top-bar-anchor-icon" target="_blank"
+               href="@(Url.Action("PrintPreview", new {Model.reportInfo.structure.NamespaceId, Model.reportInfo.structure.EntityId, ReportId = Model.reportInfo.structure.Form_ReportId, Model.reportInfo.structure.ConfigId, Model.reportInfo.structure.ParentReportIds}))">
+                <i title="@ViewTexts.Print" class="fa fa-print"></i>
+            </a>
+
+            <partial name="~/Views/Report/Helpers/ExportExcelIcon.cshtml" model="Model.reportInfo.structure"/>
+
+            @if (Model.canDesign)
+            {
+                <partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = Model.reportInfo, forInlineSubReport = false}"/>
+            }
+        </div>
+
+        <div class="col-sm-10 col-lg-11 float-start">
+            <partial name="~/Views/Report/Helpers/DrillDownFilteredBy.cshtml" model="new DrillDownFilteredByModel {structure = Model.reportInfo.structure, user = ViewBag.User, parentFilterValues = ViewBag.ParentFilterValues}"/>
+        </div>
+    </div></div>
+
+@{
+    using (Html.BeginForm("Index", "Report", FormMethod.Post,
+        new {enctype = "multipart/form-data", id = "filter-form"}))
+    {
+        @Html.Hidden("NamespaceId", Model.reportInfo.structure.NamespaceId)
+        @Html.Hidden("EntityId", Model.reportInfo.structure.EntityId)
+        @Html.Hidden("ReportId", Model.reportInfo.structure.Form_ReportId)
+        @Html.Hidden("ConfigId", Model.reportInfo.structure.ConfigId)
+
+        <input type="hidden" name="ParentReportIds" value="@ViewBag.ParentReportIds"/>
+        <input type="hidden" name="DrillDown" value="1"/>
+        <input type="hidden" name="Page" value="1"/>
+        <input type="hidden" id="soValues" name="SortFields" value="@ViewBag.SortFields"/>
+
+        if (Model.inFormContent != null)
+        {
+            @Model.inFormContent
+        }
+    }
+
+
+    <script src="@CommonBundles.FlagsJsBundle" asp-append-version="true"></script>
+
+    if (Model.canDesign)
+    {
+        <partial name="~/Views/Report/Helpers/AddSubReportModal.cshtml"/>
+        <partial name="_columnSettingsModal" model="Model.reportInfo"/>
+        <partial name="_OrderByModal" model="Model.reportInfo"/>
+        <partial name="_ColorsModal" model="Model.reportInfo"/>
+        <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
+    }
+}

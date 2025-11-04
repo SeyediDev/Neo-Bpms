@@ -1,0 +1,295 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Microsoft.AspNetCore.Html
+
+@model ReportData
+@{
+	Layout = null;
+	var calendar = ProjectDefinition.Project.DefaultCalendar;
+	var reportInfo = Model;
+	var config = reportInfo.Config;
+	var recordPP = ViewBag.recordsPerPage ?? 20;
+	if (recordPP <= 0)
+	{
+		recordPP = 20;
+	}
+	var pageLinkCount = 10;
+	int pageNo = ViewBag.Page ?? 1;
+	var hasSubReportCount = reportInfo.structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
+	var isDrillDown = ViewBag.DrillDown ?? false;
+	var canDesign = ViewBag.CanDesign ?? false;
+	var bFromDashboard = ViewBag.bFromDashboard ?? false;
+	var hasDetailsForm = true; //todo
+	var reportKey = reportInfo.structure.ConfigId;
+	var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+	var drillDownCount = drillDownSubReports.Count;
+}
+
+<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drillDownSubReports, reportKey = reportKey, reportInfo = reportInfo}"/>
+
+@if (ViewBag.ListAssetsIncluded == null)
+{
+	ViewBag.ListAssetsIncluded = true;
+
+	<script src="~/Scripts/common-assets-includes/features/common-features/sorting.js"></script>
+}
+
+<div class="col-md-12">
+<div class="table-responsive t-table-wrapper 
+     @(Model.Config.IsInlineSubReport ? "no-min-height" : "")
+     @(isDrillDown ? "drill-down-tw" : "")">
+	@if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
+	{
+		<partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = reportInfo, forInlineSubReport = true}"/>
+	}
+        <table key="@reportKey" class="table table-hover table-striped" style="font-size: xx-small;">
+		@if (!hasSubReportCount || reportInfo.Rows.Count == 0)
+		{
+			<thead>
+			@{ RenderHeaderRow(reportInfo, drillDownCount); }
+			</thead>
+		}
+		<tbody>
+		@{
+			var co = 0;
+			var rowNumber = (((pageNo - 1) * recordPP) + 1);
+			if (ViewBag.subReportRowNumber != null)
+			{
+				rowNumber = 1;
+			}
+			var selectedColumns = reportInfo.structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
+		}
+		@if (!hasSubReportCount && reportInfo.TotalRecord != null)
+		{
+			<tr class="warning">
+				<td style="text-align: center; direction: rtl;">
+					@ViewTexts.Total
+				</td>
+				@{
+					var length = selectedColumns.Count;
+					for (var i = 0; i < length; i++)
+					{
+						var colInfo = selectedColumns[i];
+						<td style="direction: rtl;">
+							@{
+								var value = ReportRenderer.GetCelValue(colInfo, reportInfo.TotalRecord);
+								var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+							}
+                            <span class="table-col-value">@(!string.IsNullOrEmpty(val.Value.Trim()) ? Convert.ToDouble(val.Value.Trim()).ToString("N0") : val)</span>
+						</td>
+					}
+				}
+				@if (drillDownCount >= 1)
+				{
+					<td style="text-align: center;"></td>
+				}
+			</tr>
+		}
+		@foreach (var row in reportInfo.Rows)
+		{
+			if (hasSubReportCount)
+			{
+				RenderHeaderRow(reportInfo, drillDownCount);
+			}
+			var rowClassNames = "";
+			if (config != null && config.Formats != null)
+			{
+				foreach (var conditionalFormatting in config.Formats)
+				{
+					if (conditionalFormatting.Type == ConditionalFormatting.eType.Row)
+					{
+						if (row.Data.GetBool(conditionalFormatting.QueryName))
+						{
+							rowClassNames += conditionalFormatting.ClassName + " ";
+						}
+					}
+				}
+			}
+			object ids;
+			row.Data.GetField("Ids", out ids);
+			<tr @((drillDownCount >= 1) ? "ondblclick=openSubReportFrame(this,event) sReportCount=" + drillDownCount + " style='cursor:pointer;'" : "") class="@rowClassNames" ids="@ids">
+				<td class="table-col-value" style="text-align: center; direction: rtl;">
+					@if (reportInfo.structure.ReportViewType == ReportViewType.List && hasDetailsForm)
+					{
+						<a href="~/Form/Details?NamespaceId=@(reportInfo.structure.NamespaceId)&EntityId=@(reportInfo.structure.EntityId)&ids=@(ids)">@rowNumber</a>
+					}
+					else
+					{
+						@rowNumber
+					}
+				</td>
+				@{
+					var length = selectedColumns.Count;
+					for (var i = 0; i < length; i++)
+					{
+						var colInfo = selectedColumns[i];
+						var clsNameStr = "";
+						if (config != null && config.Formats != null)
+						{
+							foreach (var conditionalFormatting in config.Formats)
+							{
+								if (conditionalFormatting.Type == ConditionalFormatting.eType.Column && conditionalFormatting.ColumnName == colInfo.ColumnName)
+								{
+									if (row.Data.GetBool(conditionalFormatting.QueryName))
+									{
+										clsNameStr += conditionalFormatting.ClassName + " ";
+									}
+								}
+							}
+						}
+						<td class="@clsNameStr " style="direction: rtl;">
+							@{
+								var value = ReportRenderer.GetCelValue(colInfo, row);
+								var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+								var percentage = new HtmlString("");
+								var tooltip = new HtmlString("");
+                                var isNumber = false;
+								if (colInfo.aggrType == eAggregationFunctions.Count || colInfo.aggrType == eAggregationFunctions.Sum)
+								{
+									var v = Convert.ToDouble(value);
+									var total = Convert.ToDouble(ReportRenderer.GetValue(colInfo, reportInfo.TotalRecord) ?? 0);
+									var percent = total == 0 ? 0 : Math.Round(v * 10000 / total) / 100;
+									if (percent != 0)
+									{
+										percentage = new HtmlString("(" + percent + "%)");
+									}
+									tooltip = new HtmlString(string.Format("{0} : {1}\n\r{2} : %{3}", ViewTexts.Value, value, ViewTexts.Percentage, Math.Round(v * 10000000 / total) / 100000));
+                                    isNumber = true;
+								}
+                                <span class="table-col-value" title="@tooltip" >@(isNumber ? Convert.ToDouble(val.Value.Trim()).ToString("N0") : val) @percentage</span>
+							}
+						</td>
+					}
+				}
+				@if (drillDownCount >= 1)
+				{
+					<td style="text-align: center;">
+						<span ids="@ids" onclick="openSubReportFrame(this, event)" sReportCount="@drillDownCount">
+							<i title="@(drillDownCount > 1 ? ViewTexts.SubReports : drillDownSubReports.First().ConfiguredReport.Name)" class="fa fa-2x fa-desktop" style="cursor: pointer;"></i>
+						</span>
+					</td>
+				}
+
+			</tr>
+			if (row.SubReports != null) //&& Model.structure.ReportViewType!=eReportViewType.GroupByList
+			{
+				var chartReports = new List<ReportData>();
+				var listReports = new List<ReportData>();
+				foreach (var sReport in row.SubReports)
+				{
+					if (sReport.structure.ReportViewType == ReportViewType.Chart)
+					{
+						chartReports.Add(sReport);
+					}
+					else
+					{
+						listReports.Add(sReport);
+					}
+				}
+				<tr>
+					<td style="text-align: center; direction: rtl;" colspan="@(length + 1 + (((drillDownCount >= 1)) ? 1 : 0))">
+						@if (listReports != null && listReports.Count > 0)
+						{
+							foreach (var lReport in listReports)
+							{
+								ViewBag.subReportRowNumber = 1;
+								@Html.Partial("~/Views/Report/_listViewGenerator.cshtml", lReport)
+							}
+						}
+						@foreach (var cReport in chartReports)
+						{
+							ViewBag.Counter = co;
+							if (cReport.structure.ChartType == Report.ChartType.WorldMap ||
+							    cReport.structure.ChartType == Report.ChartType.IranMap)
+							{
+								@Html.Partial("_map", cReport)
+							}
+							else
+							{
+								@Html.Partial("~/Views/Report/_chartView.cshtml", cReport)
+							}
+							co++;
+						}
+					</td>
+				</tr>
+			}
+			++rowNumber;
+		}
+		</tbody>
+	</table>
+</div>
+
+@if (!bFromDashboard && reportInfo.RecordCount > recordPP)
+{
+	if (!Model.Config.IsInlineSubReport)
+	{
+		<partial name="Common/Pagination" model="new PaginationModel {pageNo = pageNo, maxPageLinksToShow = pageLinkCount, recordsPerPage = recordPP, thisPageRowsCount = reportInfo.Rows.Count, totalRecordsCount = reportInfo.RecordCount}"/>
+	}
+	else
+	{
+		<div class="col-lg-12">
+			<partial name="Common/RecordsIntervalDescription" model="new RecordsIntervalDescriptionModel {pageNo = pageNo, recordsPerPage = recordPP, thisPageRowsCount = reportInfo.Rows.Count, totalRecordsCount = reportInfo.RecordCount}"/>
+		</div>
+	}
+}
+
+</div>
+
+<partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>
+
+@functions{
+
+	void RenderSortableTh(ColumnFieldDefinition colth, bool isInlineSubTable)
+	{
+		<th data-colname="@colth.ColumnName" style="text-align: center; min-width: 40px; direction: rtl;" class="cColumn">
+			@if (!isInlineSubTable)
+			{
+				<button style="background: none; border: none; color: inherit;"
+				        data-refer="@colth.ColumnTypeName" data-entity-id="@colth.entityId"
+				        type="button"
+				        data-sort="@(colth.IsSorted ? (colth.Descending ? "DESC" : "ASC") : "noSort")"
+				        onclick="SortingManager.changeSort(event, this)">
+					<span>
+						@colth.Alias @(colth.IsSorted
+							             ? string.Format("({0} {1})", (colth.Descending ? ViewTexts.Descending : ViewTexts.Ascending),
+								             ((colth.SortOrder != 1) ? Convert.ToString(colth.SortOrder) : ""))
+							             : "")
+					</span>
+				</button>
+			}
+			else
+			{
+				@colth.Alias
+			}
+		</th>
+	}
+
+	void RenderHeaderRow(ReportData reportInfo, int drillDownCount)
+	{
+		<tr class="sticky-row">
+			<th style="text-align: center; min-width: 40px; direction: rtl; width: 20px;" class="cColumn">
+				@ViewTexts.Row
+			</th>
+
+			@foreach (var colth in reportInfo.structure.SelectedColumns)
+			{
+				if (colth.aggrType != eAggregationFunctions.GroupByItem)
+				{
+					RenderSortableTh(colth, reportInfo.Config.IsInlineSubReport);
+				}
+			}
+
+			@if (drillDownCount >= 1)
+			{
+				<th width="50" style="text-align: center; direction: rtl;">
+					<span></span>
+				</th>
+			}
+		</tr>
+	}
+
+}

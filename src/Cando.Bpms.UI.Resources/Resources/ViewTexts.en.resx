@@ -1,0 +1,990 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyFilter" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Design" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ExcelExport" xml:space="preserve">
+    <value>Excel Export</value>
+  </data>
+  <data name="ExcelImport" xml:space="preserve">
+    <value>Excel Import</value>
+  </data>
+  <data name="DownloadTemplate" xml:space="preserve">
+    <value>Download Template</value>
+  </data>
+  <data name="ExcelOperations" xml:space="preserve">
+    <value>Excel Operations</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>Index</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="QueryTime" xml:space="preserve">
+    <value>It took</value>
+  </data>
+  <data name="RefreshTime" xml:space="preserve">
+    <value>Refresh Time</value>
+  </data>
+  <data name="ReportDesigns" xml:space="preserve">
+    <value>Report Designs</value>
+  </data>
+  <data name="ReportingDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ReportingTime" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="ReportScheduling" xml:space="preserve">
+    <value>Scheduling</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="UsefulFilters" xml:space="preserve">
+    <value>Saved Filters</value>
+  </data>
+  <data name="SaveNewFilter" xml:space="preserve">
+    <value>Save Filter As</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddFolder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="AddFormula" xml:space="preserve">
+    <value>Add Formula</value>
+  </data>
+  <data name="AddNewConfig" xml:space="preserve">
+    <value>New Config</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>Add New Record</value>
+  </data>
+  <data name="AddReportConfig" xml:space="preserve">
+    <value>New Design</value>
+  </data>
+  <data name="AddSchedule" xml:space="preserve">
+    <value>New Schedule</value>
+  </data>
+  <data name="AddWidget" xml:space="preserve">
+    <value>Add Widget</value>
+  </data>
+  <data name="AggregationFilter" xml:space="preserve">
+    <value>Aggregation Filter</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Chart" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="ChartType" xml:space="preserve">
+    <value>Chart Type</value>
+  </data>
+  <data name="ColorsSettings" xml:space="preserve">
+    <value>Color Settings</value>
+  </data>
+  <data name="ColumnsSettings" xml:space="preserve">
+    <value>Columns Settings</value>
+  </data>
+  <data name="CompleteFormTask" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="ConfiguredDashboards" xml:space="preserve">
+    <value>Configured Dashboards</value>
+  </data>
+  <data name="ContextActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="ContextDanger" xml:space="preserve">
+    <value>Danger</value>
+  </data>
+  <data name="ContextInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="ContextSuccess" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="ContextWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="DashboardWidgetHeightLabel" xml:space="preserve">
+    <value>Widget Height (px)</value>
+  </data>
+  <data name="DashboardWidgetWidthLabel" xml:space="preserve">
+    <value>Widget Width (1 to 12)</value>
+  </data>
+  <data name="DeleteAndReturn" xml:space="preserve">
+    <value>Delete and Return</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="EditFormula" xml:space="preserve">
+    <value>Edit Formula</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="FilteredBy" xml:space="preserve">
+    <value>Filtered By</value>
+  </data>
+  <data name="FirstPage" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="Formula" xml:space="preserve">
+    <value>Formula</value>
+  </data>
+  <data name="FormulaExpression" xml:space="preserve">
+    <value>Formula Expression</value>
+  </data>
+  <data name="FormulaName" xml:space="preserve">
+    <value>Formula Name</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="GroupedBy" xml:space="preserve">
+    <value>Grouped By</value>
+  </data>
+  <data name="IndexNoData" xml:space="preserve">
+    <value>There is no data available.</value>
+  </data>
+  <data name="JumpToPage" xml:space="preserve">
+    <value>Jump To Page</value>
+  </data>
+  <data name="LastPage" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="LinkedSubReport" xml:space="preserve">
+    <value>Linked Sub Report</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="OrderedBy" xml:space="preserve">
+    <value>Ordered By</value>
+  </data>
+  <data name="OrderSettings" xml:space="preserve">
+    <value>Order Settings</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="PageOf" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="PageRecord" xml:space="preserve">
+    <value>Records</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>Pages</value>
+  </data>
+  <data name="PageTo" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="PossibleColumns" xml:space="preserve">
+    <value>Possible Columns</value>
+  </data>
+  <data name="PossibleReportDimensions" xml:space="preserve">
+    <value>Possible Dimensions</value>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="RecordsCount" xml:space="preserve">
+    <value>Records Count</value>
+  </data>
+  <data name="RefreshTimeInterval" xml:space="preserve">
+    <value>Refresh Time Interval</value>
+  </data>
+  <data name="ReloadTheReport" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="ReportDimensions" xml:space="preserve">
+    <value>Dimensions</value>
+  </data>
+  <data name="GroupByList" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="ReportSettings" xml:space="preserve">
+    <value>Report Settings</value>
+  </data>
+  <data name="Return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="SaveAndNew" xml:space="preserve">
+    <value>Save and New</value>
+  </data>
+  <data name="SaveAndReturn" xml:space="preserve">
+    <value>Save and Return</value>
+  </data>
+  <data name="SaveFilterValues" xml:space="preserve">
+    <value>Save Filter</value>
+  </data>
+  <data name="SaveScheduleFilter" xml:space="preserve">
+    <value>Save Schedule Filter</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="SeeChanges" xml:space="preserve">
+    <value>See Changes</value>
+  </data>
+  <data name="SelectedReportColumns" xml:space="preserve">
+    <value>Selected Columns</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="SubReport" xml:space="preserve">
+    <value>Sub Report</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="WidgetSettings" xml:space="preserve">
+    <value>Widget Settings</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>Background Color</value>
+  </data>
+  <data name="ChangeSubReportType" xml:space="preserve">
+    <value>Change Sub-Report Type</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="ConstantMaxValue" xml:space="preserve">
+    <value>Constant Maximum Value</value>
+  </data>
+  <data name="ConstantMinValue" xml:space="preserve">
+    <value>Constant Minimum Value</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="DisplayType" xml:space="preserve">
+    <value>Display Type</value>
+  </data>
+  <data name="GroupedList" xml:space="preserve">
+    <value>Grouped List</value>
+  </data>
+  <data name="Icon" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="IranMap" xml:space="preserve">
+    <value>Iran Map</value>
+  </data>
+  <data name="Levels" xml:space="preserve">
+    <value>Levels</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>Operation</value>
+  </data>
+  <data name="SubReportName" xml:space="preserve">
+    <value>Sub-Report Name</value>
+  </data>
+  <data name="TextColor" xml:space="preserve">
+    <value>Text Color</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="WorldMap" xml:space="preserve">
+    <value>World Map</value>
+  </data>
+  <data name="AccessLevel" xml:space="preserve">
+    <value>Access Level</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ConfigSettings" xml:space="preserve">
+    <value>Design Settings</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="FilterSettings" xml:space="preserve">
+    <value>Filter Settings</value>
+  </data>
+  <data name="FolderSettings" xml:space="preserve">
+    <value>Folder Settings</value>
+  </data>
+  <data name="ForSpecificUserGroup" xml:space="preserve">
+    <value>For Specific User Group</value>
+  </data>
+  <data name="JustForThisConfig" xml:space="preserve">
+    <value>Just For This Design</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Once" xml:space="preserve">
+    <value>Once</value>
+  </data>
+  <data name="Personal" xml:space="preserve">
+    <value>Personal</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="RepeatPeriod" xml:space="preserve">
+    <value>Repetition Period</value>
+  </data>
+  <data name="Repetetive" xml:space="preserve">
+    <value>Repetetive</value>
+  </data>
+  <data name="UserGroup" xml:space="preserve">
+    <value>User Group</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="AllTitle" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="FalseTitle" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>Choose a File</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>hour</value>
+  </data>
+  <data name="Milliseconds" xml:space="preserve">
+    <value>milliseconds</value>
+  </data>
+  <data name="PleaseDownloadFirst" xml:space="preserve">
+    <value>Please download and then open the file.</value>
+  </data>
+  <data name="BulkOperations" xml:space="preserve">
+    <value>Bulk Operations</value>
+  </data>
+  <data name="ClearFilterForm" xml:space="preserve">
+    <value>Clear Filter Form</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="LoginToSystem" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log Out</value>
+  </data>
+  <data name="OrganizationLogo" xml:space="preserve">
+    <value>Organization Logo</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RecordNotFound" xml:space="preserve">
+    <value>Record Not Found</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="StartProcess" xml:space="preserve">
+    <value>Start Process</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DropFilesHere" xml:space="preserve">
+    <value>Drop files here.</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>Uploading</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="PrintPreview" xml:space="preserve">
+    <value>Print Preview</value>
+  </data>
+  <data name="AddNewFilter" xml:space="preserve">
+    <value>Add New Filter</value>
+  </data>
+  <data name="AddNewTemplate" xml:space="preserve">
+    <value>Add New Template</value>
+  </data>
+  <data name="Bottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="ClassName" xml:space="preserve">
+    <value>Class Name</value>
+  </data>
+  <data name="ColumnDisplaySettings" xml:space="preserve">
+    <value>Column Display Settings</value>
+  </data>
+  <data name="ColumnFilterSettings" xml:space="preserve">
+    <value>Column Filter Settings</value>
+  </data>
+  <data name="ColumnLength" xml:space="preserve">
+    <value>Column Length</value>
+  </data>
+  <data name="ColumnTemplateSettings" xml:space="preserve">
+    <value>Column Template Settings</value>
+  </data>
+  <data name="Containing" xml:space="preserve">
+    <value>Containing</value>
+  </data>
+  <data name="DisplaySettings" xml:space="preserve">
+    <value>Display Settings</value>
+  </data>
+  <data name="EqualWith" xml:space="preserve">
+    <value>Equals</value>
+  </data>
+  <data name="ExistInList" xml:space="preserve">
+    <value>Exist In List</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Filter Type</value>
+  </data>
+  <data name="FilterValue" xml:space="preserve">
+    <value>Filter Value</value>
+  </data>
+  <data name="GreaterEqual" xml:space="preserve">
+    <value>Greater Equal</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>Greater Than</value>
+  </data>
+  <data name="GroupBy" xml:space="preserve">
+    <value>Group By</value>
+  </data>
+  <data name="HorizontalPosition" xml:space="preserve">
+    <value>Horizontal Position</value>
+  </data>
+  <data name="Left" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="LeftToRight" xml:space="preserve">
+    <value>Left To Right</value>
+  </data>
+  <data name="LessEqual" xml:space="preserve">
+    <value>Less Equal</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>Less Than</value>
+  </data>
+  <data name="Middle" xml:space="preserve">
+    <value>Middle</value>
+  </data>
+  <data name="NewSettingRegistration" xml:space="preserve">
+    <value>Add New Configuration</value>
+  </data>
+  <data name="NotExistInList" xml:space="preserve">
+    <value>Not Exist In List</value>
+  </data>
+  <data name="Right" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="RightToLeft" xml:space="preserve">
+    <value>Right To Left</value>
+  </data>
+  <data name="ScheduleSettings" xml:space="preserve">
+    <value>Schedule Settings</value>
+  </data>
+  <data name="ScheduleType" xml:space="preserve">
+    <value>Schedule Type</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="SelectedColumns" xml:space="preserve">
+    <value>Selected Columns</value>
+  </data>
+  <data name="StartWith" xml:space="preserve">
+    <value>Start With</value>
+  </data>
+  <data name="SubReportSettings" xml:space="preserve">
+    <value>Sub-Report Settings</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="TemplateCondition" xml:space="preserve">
+    <value>Template Condition</value>
+  </data>
+  <data name="TemplateName" xml:space="preserve">
+    <value>Template Name</value>
+  </data>
+  <data name="TextDirection" xml:space="preserve">
+    <value>Text Direction</value>
+  </data>
+  <data name="Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="UnequalWith" xml:space="preserve">
+    <value>Unequal with</value>
+  </data>
+  <data name="VerticalPosition" xml:space="preserve">
+    <value>Vertical Position</value>
+  </data>
+  <data name="AccessDeniedHeader" xml:space="preserve">
+    <value>You do not have access to this page.</value>
+  </data>
+  <data name="AccessDeniedTitle" xml:space="preserve">
+    <value>Error: Lack of Access</value>
+  </data>
+  <data name="AccessViaUserGroup" xml:space="preserve">
+    <value>Access via User Group</value>
+  </data>
+  <data name="ApplySettings" xml:space="preserve">
+    <value>Apply Settings</value>
+  </data>
+  <data name="ApplyUserSettings" xml:space="preserve">
+    <value>Apply User Settings</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="ChangeUsernameAndPassword" xml:space="preserve">
+    <value>Change Username And Password</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DefaultValue" xml:space="preserve">
+    <value>Default Value</value>
+  </data>
+  <data name="DisableAccess" xml:space="preserve">
+    <value>Disable Access</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="FormSubject" xml:space="preserve">
+    <value>Form Subject</value>
+  </data>
+  <data name="FormType" xml:space="preserve">
+    <value>Form Type</value>
+  </data>
+  <data name="HasAccess" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="Namespace" xml:space="preserve">
+    <value>Namespace</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="NewUsername" xml:space="preserve">
+    <value>New Username</value>
+  </data>
+  <data name="BulkCreateProcess" xml:space="preserve">
+    <value>Bulk Create Process</value>
+  </data>
+  <data name="BulkEditEntity" xml:space="preserve">
+    <value>Bulk Edit Entity</value>
+  </data>
+  <data name="ControllerDesign" xml:space="preserve">
+    <value>Controller Design</value>
+  </data>
+  <data name="DefinitionsError" xml:space="preserve">
+    <value>Definitions Error</value>
+  </data>
+  <data name="NotFoundError" xml:space="preserve">
+    <value>Page Not Found</value>
+  </data>
+  <data name="PageNotFoundError" xml:space="preserve">
+    <value>Error : Page Not Found</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="SelectableSubjectForms" xml:space="preserve">
+    <value>Selectable Subject Forms</value>
+  </data>
+  <data name="SelectedSubjectForms" xml:space="preserve">
+    <value>Selected Subject Forms</value>
+  </data>
+  <data name="ServerInternalError" xml:space="preserve">
+    <value>Server Internal Error</value>
+  </data>
+  <data name="ServerSideError" xml:space="preserve">
+    <value>Server Side Error</value>
+  </data>
+  <data name="MyWorkItems" xml:space="preserve">
+    <value>My Work Items</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="ViewFormInWorkFlow" xml:space="preserve">
+    <value>View Form In Work Flow</value>
+  </data>
+  <data name="ProcessHistory" xml:space="preserve">
+    <value>Process History</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="AssignAccess" xml:space="preserve">
+    <value>Assign Access</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Controller</value>
+  </data>
+  <data name="Dashboards" xml:space="preserve">
+    <value>Dashboards</value>
+  </data>
+  <data name="Forms" xml:space="preserve">
+    <value>Forms</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="OrganizationalPosition" xml:space="preserve">
+    <value>Organizational Position</value>
+  </data>
+  <data name="Process" xml:space="preserve">
+    <value>Process</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="SpecialPages" xml:space="preserve">
+    <value>Special Pages</value>
+  </data>
+  <data name="SpecialSystemFeatures" xml:space="preserve">
+    <value>Special System Features</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="UserGroups" xml:space="preserve">
+    <value>User Groups</value>
+  </data>
+  <data name="MyAssignedAccess" xml:space="preserve">
+    <value>My Assigned Accesses</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="RemoveFile" xml:space="preserve">
+    <value>Remove File</value>
+  </data>
+  <data name="UndoRemoveFile" xml:space="preserve">
+    <value>Undo File Remove</value>
+  </data>
+  <data name="ChangeUsersPassword" xml:space="preserve">
+    <value>Change Users Password</value>
+  </data>
+  <data name="PasswordInstructions" xml:space="preserve">
+    <value>The password length must be at least 6 and it must contain at least one numeric, one capital-case and one lower-case character.</value>
+  </data>
+  <data name="AddSubReport" xml:space="preserve">
+    <value>Add Sub-Report</value>
+  </data>
+  <data name="InlineSubReport" xml:space="preserve">
+    <value>Inline</value>
+  </data>
+  <data name="Linked" xml:space="preserve">
+    <value>Linked</value>
+  </data>
+  <data name="SubReports" xml:space="preserve">
+    <value>Sub Reports</value>
+  </data>
+  <data name="OrderById" xml:space="preserve">
+    <value>By Id</value>
+  </data>
+  <data name="OrderByText" xml:space="preserve">
+    <value>By Text</value>
+  </data>
+  <data name="DatabaseSynchronization" xml:space="preserve">
+    <value>Synchronizing Database With Model</value>
+  </data>
+  <data name="DatabaseSynchronizationStart" xml:space="preserve">
+    <value>Start Synchronization</value>
+  </data>
+  <data name="DatabaseSynchronizationStop" xml:space="preserve">
+    <value>Stop Synchronization</value>
+  </data>
+  <data name="Form" xml:space="preserve">
+    <value>Form</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="ReportAddNewConfig" xml:space="preserve">
+    <value>Add New Config</value>
+  </data>
+  <data name="ReportAsHorizontalColumn" xml:space="preserve">
+    <value>Horizontal</value>
+  </data>
+  <data name="ReportUseColumnInTooltips" xml:space="preserve">
+    <value>Use in tooltips</value>
+  </data>
+  <data name="ColumnDispalySettings" xml:space="preserve">
+    <value>Column  Display Settings</value>
+  </data>
+  <data name="AddPossibleSubReport" xml:space="preserve">
+    <value>Add Possible Sub Report</value>
+  </data>
+  <data name="CurrentSubReports" xml:space="preserve">
+    <value>Current Sub Reports</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="AdminTools" xml:space="preserve">
+    <value>Admin Tools</value>
+  </data>
+  <data name="ConfigIsNotModifiable" xml:space="preserve">
+    <value>This config is not modifiable. You can copy it if you need a modification.</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="HasCountWithoutRowsMessage" xml:space="preserve">
+    <value>The result contains {0} records. There is probably a problem in columns settings.</value>
+  </data>
+  <data name="CSVExport" xml:space="preserve">
+    <value>CSV Export</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>Processes</value>
+  </data>
+  <data name="Excel" xml:space="preserve">
+    <value>Excel</value>
+  </data>
+  <data name="TrueTitle" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="ChartSettings" xml:space="preserve">
+    <value>Chart Settings</value>
+  </data>
+  <data name="LanguageSelection" xml:space="preserve">
+    <value>Language Selection</value>
+  </data>
+  <data name="EditViaExcel" xml:space="preserve">
+    <value>Edit via Excel</value>
+  </data>
+  <data name="DownloadTemplateWithData" xml:space="preserve">
+    <value>Download Template With Data</value>
+  </data>
+  <data name="SetEnumerationItems" xml:space="preserve">
+    <value>Sync Enums</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Referesh</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="VerifyLoginToSystem" xml:space="preserve">
+    <value>Verify Login</value>
+  </data>
+  <data name="ChangeFile" xml:space="preserve">
+    <value>Change File</value>
+  </data>
+</root>

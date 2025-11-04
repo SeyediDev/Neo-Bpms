@@ -1,0 +1,13 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.ProcessDesign
+
+
+@{
+	var iframeWrapperModel = new IframeWrapperModel
+	{
+		iframeId = "bpmnDesignIframe",
+		wrapperRoute = "Process/BPMNDesign",
+		iframeRoute = "Process/Design"
+	};
+}
+<partial name="Helpers/IframeWrapper" model="iframeWrapperModel"/>

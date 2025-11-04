@@ -1,0 +1,52 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@model bool
+@{
+	<div class="modal fade keep-side-navi" id="new-folder-modal" tabindex="-1" role="dialog" aria-labelledby="new-folder-modal-label">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="new-folder-modal-label">@ViewTexts.FolderSettings</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="config-folder-id" value="0"/>
+					<input type="hidden" id="config-folder-parent-id" value=""/>
+					<input type="hidden" id="folder-isForConfig" value="false"/>
+					<div class="form-group">
+						<label for="new-folder-name">
+							@ViewTexts.Name:
+						</label>
+						<input class="form-control" id="new-folder-name" name="newFolderName" type="text" value=""/>
+					</div>
+
+					@if (Model)
+					{
+						<div class="form-group">
+							<div class="col-form-label">
+								@ViewTexts.AccessLevel:
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" id="newFolderAccessPrivate" name="newFolderAccess" value="false">
+								<label class="custom-control-label" for="newFolderAccessPrivate">
+									@ViewTexts.Personal
+								</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" id="newFolderAccessPublic" name="newFolderAccess" value="true">
+								<label class="custom-control-label" for="newFolderAccessPublic">
+									@ViewTexts.Public
+								</label>
+							</div>
+						</div>
+					}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary save-button" data-dismiss="modal">@ViewTexts.Cancel</button>
+					<button type="button" class="btn btn-success add-button" onclick="FolderManager.submitForm()">@ViewTexts.Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,159 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+@using static Neo.Bpms.Domain.Model.UI.Forms.Form
+
+@inject IFormLogicHelper formLogicHelper;
+@inject FormStructRoutines formStructRoutines;
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model dynamic
+
+@{
+	CommonFormStructure structure = ViewBag.structure;
+	var canDesign = ViewBag.CanDesign ?? false;
+	var pageName = ViewBag.PagePackId as string;
+	var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+	var elModel = Model as ElasticObject;
+	var options = new RendererOptions();
+	ControlsRendererData controlsRendererData = new(structure, elModel, options, ViewBag.user, Url);
+	Func<dynamic, HelperResult> TopBarTools =
+		@<partial name="Helpers/FormDesignLink" model="new FormDesignLinkModel {structure = structure, canDesign = canDesign}" />;
+}
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/CommonAssets/Styles/Features/Modern/controls-modern.css" />
+<link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+@using (Html.BeginForm("CommandForm", "Form", FormMethod.Post, new { enctype = "multipart/form-data", @class = "modern-form", id = "commandform-form" }))
+{
+	var workItemFormId = ViewBag.workItemFormId;
+	var taskId = ViewBag.TaskId;
+	var processId = ViewBag.ProcessId;
+	var wid = ViewBag.wid;
+	HiddenInputs(structure, options.CalendarType, taskId, processId, wid, workItemFormId);
+
+	<body @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+		<div id="mm-main-page" class="modern-main-container">
+			<div class="modern-container">
+				<!-- Modern Title Box -->
+				<div class="modern-title-box">
+					<div class="modern-title-content">
+						<div class="modern-title-text">
+							<h2 class="modern-title">فرم دستور @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))</h2>
+						</div>
+						<div class="modern-title-actions">
+							<a href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+								<svg viewBox="0 0 24 24">
+									<use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+								</svg>
+							</a>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modern-form-wrapper">
+					@{ await MainPartOfTheForm(controlsRendererData, structure); }
+				</div>
+			</div>
+		</div>
+	</body>
+
+	//render Controller's required Scripts.
+	<partial name="Logic/_Logic" model="structure" />
+
+
+	<script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+	<partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+</script>
+
+@functions
+{
+	void HiddenInputs(CommonFormStructure structure, string calendar,
+		 dynamic taskId, dynamic processId, dynamic wid, dynamic workItemFormId)
+	{
+		<input type="hidden" name="TaskId" value="@taskId" />
+		<input type="hidden" name="ProcessId" value="@processId" />
+		<input type="hidden" name="wid" value="@wid" />
+		<input type="hidden" name="workItemFormId" value="@workItemFormId" />
+		<input type="hidden" name="Caller" value="@ViewBag.Caller" />
+		@Html.Hidden("NamespaceId", structure.NamespaceId)
+		@Html.Hidden("EntityId", structure.EntityId)
+		@Html.Hidden("FormId", structure.Form_ReportId)
+		@Html.Hidden("FormSubjectId", structure.FormSubjectId)
+		@Html.Hidden("addAgain", false)
+		@Html.Hidden("calendar", calendar)
+		@Html.Hidden("CreateType", eCreateType.Apply)
+		@Html.Hidden("returnUrl", "")
+		<input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId" />
+		<input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId" />
+		<input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId" />
+		<input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId" />
+		<input type="hidden" name="__parentIds" value="@ViewBag.__parentIds" />
+	}
+
+	async Task ActionButtons(CommonFormStructure structure)
+	{
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12" style="display:flex;justify-content:space-between;flex-direction:row-reverse;">
+				@if (structure.FormType == eFormType.ProcessCreate)
+				{
+					<div class="col-md-12" style="float: left;">
+						<button type="button" data-ctype='@eCreateType.Save' onclick="ProcessCreateSave(this)" class="btn btn-success" style="float: left;">
+							<span>@ViewTexts.Save</span> <i class="fa fa-save"></i>
+						</button>&nbsp;
+						<button type="button" data-ctype='@eCreateType.Apply' onclick="doSubmit(this)" class="btn btn-primary" style="float: left;">
+							<span>@ViewTexts.CompleteFormTask</span> <i class="fa fa-check"></i>
+						</button>
+					</div>
+				}
+				else
+				{
+					<div style="display:flex;gap:0.25rem;">
+						<button type="button" onclick="addAndRepeat(this)" class="btn btn-success float-left ladda-button add-button" data-style="zoom-in">
+							<span>@structure.Name</span> 
+                        <svg style="width: 18px;height: 18px;vertical-align: middle;" viewBox="0 0 24 24">
+                            <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-information" />
+                        </svg>
+						</button>
+					</div>
+
+					<partial name="Common/BackButton" />
+				}
+				<input type="submit" id="submitBtn" style="display: none;" />
+			</div>
+		</div>
+	}
+
+	async Task MainPartOfTheForm(ControlsRendererData controlsRendererData, CommonFormStructure structure)
+	{
+		<div class="col-sm-12 customDiv">
+			<partial name="Utility/RenderLoading" />
+			<div id="mainPartOfTheForm" class="form-group hidden">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+					@controlsRenderer.Render(controlsRendererData)
+				</div>
+			</div>
+			@{ await ActionButtons(structure); }
+		</div>
+	}
+}

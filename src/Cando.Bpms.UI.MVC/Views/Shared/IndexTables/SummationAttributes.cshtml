@@ -1,0 +1,8 @@
+﻿@model             ColumnFieldDefinition
+
+@{
+	if (Model.IsSummable)
+	{
+		<text>data-summable data-summation-method="@Model.SummationMethod"</text>
+	}
+}

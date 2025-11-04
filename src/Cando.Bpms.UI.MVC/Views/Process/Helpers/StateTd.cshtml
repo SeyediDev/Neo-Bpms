@@ -1,0 +1,11 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto
+@using Neo.Bpms.UI.MVC.ViewModels.ProcessModels
+@model             WorkItemViewModel
+
+<td class="cColumn">
+	<span class="resource-state-text">
+		@Model.ReadableUserTaskState
+	</span>
+	<span class="ai-progress"></span>
+</td>

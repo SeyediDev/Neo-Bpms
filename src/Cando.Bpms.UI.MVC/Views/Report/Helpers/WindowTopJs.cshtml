@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Html
+@inject ControllerMethods controllerMethods
+
+@model Neo.Bpms.UI.MVC.PartialModels.WindowTopJsModel
+@{
+	var subReportConfigNames = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Name));
+	var subReportNamespaceIds = string.Join(",",
+		Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.entity.model.Id));
+	var subReportEntityIds =
+		string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.entity.Id));
+	var subReportReportIds = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.Id));
+	var subConfigIds = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.ConfigId));
+
+	var subReportConfigData = Model.drillDownSubReports.Select(
+		dsr => new
+		{
+			ViewType = dsr.ConfiguredReport.ViewType,
+			NamespaceId = dsr.NamespaceId,
+			EntityId = dsr.EntityId,
+			dsr.DashboardId,
+			dsr.DashboardConfigId
+		}
+		);
+
+	<script>
+		if (!window.top.subConfigIds || !window.top.subReportConfigNames) {
+			window.top.subConfigIds = {};
+			window.top.subReportConfigNames = {};
+		}
+		if (!window.top.subReportNamespaceIds) {
+			window.top.subReportNamespaceIds = {};
+		}
+		if (!window.top.subReportEntityIds) {
+			window.top.subReportEntityIds = {};
+		}
+		if (!window.top.subReportReportIds) {
+			window.top.subReportReportIds = {};
+		}
+		if (!window.top.subConfigIds) {
+			window.top.subConfigIds = {};
+		}
+		window.top.subReportNamespaceIds['@Model.reportKey'] = '@subReportNamespaceIds';
+		window.top.subReportEntityIds['@Model.reportKey'] = '@subReportEntityIds';
+		window.top.subReportReportIds['@Model.reportKey'] = '@subReportReportIds';
+		window.top.subConfigIds['@Model.reportKey'] = '@subConfigIds';
+
+		window.top.subReportConfigNames['@Model.reportKey'] = '@subReportConfigNames';
+		if (!window.top.reportInfo) {
+			window.top.reportInfo = {};
+		}
+		if (!window.top.reportInfo['@Model.reportKey']) {
+			window.top.reportInfo['@Model.reportKey'] = {};
+		}
+		@{
+			var fvs = controllerMethods.CodeFilterValues(ViewBag.FilterValues);
+		}
+
+		window.top.reportInfo['@Model.reportKey']["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));
+		window.top.reportInfo['@Model.reportKey']["DashboardId"] =
+			'@string.Join(",", subReportConfigData.Select(sr => sr.DashboardId))';
+		window.top.reportInfo['@Model.reportKey']["DashboardConfigId"] =
+			'@string.Join(",", subReportConfigData.Select(sr => sr.DashboardConfigId))';
+		window.top.reportInfo['@Model.reportKey']["ReportViewType"] =
+			'@string.Join(",", subReportConfigData.Select(sr => sr.ViewType.ToString()))';
+		window.top.reportInfo['@Model.reportKey']["NamespaceId"] =
+			'@Model.reportInfo.structure.NamespaceId';
+		window.top.reportInfo['@Model.reportKey']["EntityId"] =
+			'@Model.reportInfo.structure.EntityId';
+
+	</script>
+}

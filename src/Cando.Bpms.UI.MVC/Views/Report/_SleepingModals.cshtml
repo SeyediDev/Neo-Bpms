@@ -1,0 +1,424 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.UI.MVC.PartialModels.Filter
+@model             ReportData
+
+@{
+	var calendar = ProjectDefinition.Project.DefaultCalendar;
+	var canScheduleReports = ViewBag.CanScheduleReports ?? false;
+}
+
+<div class="modal fade keep-side-navi" id="config-config-modal" tabindex="-1" role="dialog" aria-labelledby="config-config-modal-label">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="config-config-modal-label">@ViewTexts.ConfigSettings</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<input name="ConfiggingConfigId" type="hidden" value=""/>
+
+					<div class="form-group">
+						<label for="config-config-alias">
+							@ViewTexts.Name:
+						</label>
+						<input class="form-control" id="config-config-alias" name="alias" type="text" value=""/>
+					</div>
+					<div class="form-group">
+						<div class="custom-control custom-checkbox custom-checkbox-inline">
+							<input class="custom-control-input" id="config-config-isdefault" name="isdefault" type="checkbox"/>
+							<label class="custom-control-label" for="config-config-isdefault">
+								@ViewTexts.Default
+							</label>
+						</div>
+					</div>
+
+					@if (ViewBag.CanPublishConfigs)
+					{
+						<div class="form-group">
+							<div class="col-form-label">
+								@ViewTexts.AccessLevel:
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" name="access" id="configAccessPersonal" value="0" onchange="ConfigConfig.showOrHideUserGroupsCombo()">
+								<label class="custom-control-label" for="configAccessPersonal">
+									@ViewTexts.Personal
+								</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" name="access" id="configAccessPublic" value="1" onchange="ConfigConfig.showOrHideUserGroupsCombo()">
+								<label class="custom-control-label" for="configAccessPublic">
+									@ViewTexts.Public
+								</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input class="custom-control-input" type="radio" name="access" id="configAccessUserGroup" value="2" onchange="ConfigConfig.showOrHideUserGroupsCombo()">
+								<label class="custom-control-label" for="configAccessUserGroup">
+									@ViewTexts.ForSpecificUserGroup
+								</label>
+							</div>
+						</div>
+
+						<div class="user-group-div form-group">
+							<label for="config-config-userGroup">
+								@ViewTexts.UserGroup:
+							</label>
+							<select class="form-control" id="config-config-userGroup" name="userGroup">
+								<option value="0"></option>
+								@foreach (var userGroup in Model.structure.UserGroups)
+								{
+									<option value="@userGroup.Id">
+										@userGroup.Name
+									</option>
+								}
+							</select>
+						</div>
+					}
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">@ViewTexts.Close</button>
+				<button type="button" class="btn btn-primary" onclick="ConfigConfig.submitForm()">@ViewTexts.Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<partial name="Common/FolderConfigModal" model="ViewBag.CanPublishConfigs"/>
+
+@if (canScheduleReports)
+{
+	<div class="modal fade keep-side-navi" id="scheduled-report-modal" tabindex="-1" role="dialog" aria-labelledby="scheduled-report-modal-label">
+	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title">@ViewTexts.ScheduleSettings @Model.structure.Name</h4>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+
+	</div>
+	<div class="modal-body">
+	<form class="row" style="margin: 0 25px">
+	<input type="hidden" id="schedule-id" value=""/>
+	<div class="col-12">
+		<div class="form-group row">
+			<label for="scheduled-report-name" class="col-form-label col-md-3 label-right">@ViewTexts.Name</label>
+			<div class="col-md-9">
+				<input class="form-control" id="scheduled-report-name" name="name" type="text" value=""/>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<div class="form-group row">
+			<label for="schedule-type" class="col-form-label col-md-3 label-right">@ViewTexts.ScheduleType</label>
+			<div class="col-md-7">
+				<select class="form-control" id="schedule-type" name="scheduleType" onchange="showOrHideJobScheduleFeatures();">
+					<option value="1">@ViewTexts.Once</option>
+					<option value="2">@ViewTexts.Repetetive</option>
+				</select>
+			</div>
+			<div class="custom-control custom-checkbox custom-control-inline">
+				<input class="custom-control-input" type="checkbox" name="isDisable" id="schedule-is-disabled" value="0">
+				<label class="custom-control-label col-form-label col-md-2 label-right" for="schedule-is-disabled">
+					@ViewTexts.Disabled
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<div class="form-group row scheduled-report-DateTime">
+			<label for="scheduled-report-date" class="col-form-label col-md-3 label-right">@ViewTexts.Day</label>
+			<div class="col-md-3">
+				<input class="form-control dateField @calendar" dont-convert="true" id="scheduled-report-date" name="date" type="text" value=""/>
+			</div>
+			<label for="scheduled-report-time" class="col-form-label col-md-3 label-right">@ViewTexts.Hour</label>
+			<div class="col-md-3">
+				<input class="form-control" id="scheduled-report-time" name="time" type="time" value=""/>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<fieldset class="job-frequency">
+			<legend>@ViewTexts.RepeatPeriod</legend>
+			<div class="form-group row">
+				<label for="scheduled-report-repetition" class="col-form-label col-md-2 label-right">هر</label>
+				<div class="col-md-3">
+					<input class="form-control" id="scheduled-report-repetition" name="every" type="number" value=""/>
+				</div>
+				<div class="col-md-4">
+					<select class="form-control" id="schedule-job-frequency" name="jobfrequency" onchange="showOrHideJobScheduleFeatures();">
+						<option value="1">@ViewTexts.Day</option>
+						<option value="2">@ViewTexts.Week</option>
+						<option value="3" data-toggle="tooltip" title="ماه میلادی">@ViewTexts.Month</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row week-days">
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays1" value="1">
+					<label class="custom-control-label col-form-label" for="onWeekDays1">
+						شنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays2" value="2">
+					<label class="custom-control-label col-form-label" for="onWeekDays2">
+						یکشنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays4" value="4">
+					<label class="custom-control-label col-form-label" for="onWeekDays4">
+						دوشنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays8" value="8">
+					<label class="custom-control-label col-form-label" for="onWeekDays8">
+						سه‌شنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" value="16">
+					<label class="custom-control-label col-form-label" id="onWeekDays16">
+						چهارشنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays32" value="32">
+					<label class="custom-control-label col-form-label" for="onWeekDays32">
+						پنجشنبه
+					</label>
+				</div>
+				<div class="custom-control custom-checkbox custom-control-inline">
+					<input class="custom-control-input" type="checkbox" name="onWeekDays" id="onWeekDays64" value="64">
+					<label class="custom-control-label col-form-label" for="onWeekDays64">
+						جمعه
+					</label>
+				</div>
+			</div>
+			<div class="form-group row month-frequency">
+				<div class="col-md-2">
+					<label class="col-form-label label-right" data-toggle="tooltip" title="ماه میلادی">
+						<input class="day-of-month" type="radio" name="monthFrequency" value="1" onclick="showOrHideJobScheduleFeatures();">
+						روز ماه
+					</label>
+				</div>
+				<div class="col-md-3">
+					<input class="form-control" id="scheduled-report-dayOfMonth" name="dayOfMonth" type="number" value="" disabled/>
+				</div>
+				<div class="col-md-1">
+					<label class="col-form-label">
+						<input class="mf" type="radio" name="monthFrequency" value="2" onclick="showOrHideJobScheduleFeatures();"/>
+						در
+					</label>
+				</div>
+				<div class="col-md-3">
+					<select class="form-control" id="week-counter" name="monthlyFrequency" value="" disabled>
+						<option value="1">اولین</option>
+						<option value="2">دومین</option>
+						<option value="3">سومین</option>
+						<option value="4">چهارمین</option>
+						<option value="5">آخرین</option>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<select class="form-control weekday" name="WeekDays" disabled>
+						<option value="1">شنبه</option>
+						<option value="2">یکشنبه</option>
+						<option value="3">دوشنبه</option>
+						<option value="4">سه شنبه</option>
+						<option value="5">چهارشنبه</option>
+						<option value="6">پنجشنبه</option>
+						<option value="7">جمعه</option>
+						<option value="8">روز کاری</option>
+						<option value="9">آخر هفته</option>
+					</select>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<div class="col-12">
+		<fieldset class="daily-frequency">
+			<legend>زمان گزارش گیری در روز</legend>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="col-form-label label-right">
+						<input type="radio" class="specific-time" name="dailyFrequency" value="1" onclick="showOrHideJobScheduleFeatures();">
+						در ساعت
+					</label>
+				</div>
+				<div class="col-md-3">
+					<input class="form-control" id="daily-frequency-hour" name="time" type="time" value=""/>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="col-form-label label-right">
+						<input type="radio" class="hourly-every" name="dailyFrequency" value="2" onclick="showOrHideJobScheduleFeatures();">
+						هر
+					</label>
+				</div>
+				<div class="col-md-3">
+					<input class="form-control" id="scheduled-report-hourlyEvery" type="number" value="" disabled/>
+				</div>
+				<div class="col-md-1">
+					<label for="scheduled-report-hourlyEvery" class="col-form-label label-right">@ViewTexts.Hour</label>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="scheduled-report-starttime" class="col-form-label col-md-3 label-right">ساعت شروع</label>
+				<div class="col-md-3">
+					<input class="form-control" id="scheduled-report-starttime" name="startTime" type="time" value="" disabled/>
+				</div>
+				<label for="scheduled-report-endtime" class="col-form-label col-md-3 label-right">ساعت پایان</label>
+				<div class="col-md-3">
+					<input class="form-control" id="scheduled-report-endtime" name="endTime" type="time" value="" disabled/>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+	<div class="col-12">
+		<fieldset class="duration">
+			<legend>طول دوره گزارش گیری</legend>
+
+			<div class="form-group row">
+				<label for="scheduled-report-startdate" class="col-form-label col-md-3 label-right">
+					تاریخ شروع
+				</label>
+				<div class="col-md-3">
+					<input class="form-control dateField @calendar" dont-convert="true" id="scheduled-report-startdate" name="startDate" type="text" value=""/>
+				</div>
+				<label for="scheduled-report-enddate" class="col-form-label col-md-3 label-right">
+					تاریخ منقضی شدن
+				</label>
+				<div class="col-md-3">
+					<input class="form-control dateField @calendar" dont-convert="true" id="scheduled-report-enddate" name="endDate" type="text" value=""/>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<div class="col-12">
+		<fieldset>
+			<legend>تعیین عملیات</legend>
+			<div class="form-group row">
+				<label for="output-type" class="col-form-label col-md-3 label-right">نوع خروجی گزارش</label>
+				<div class="col-md-3">
+					<select class="form-control" id="output-type" name="outputType" onchange="showOrHideJobScheduleFeatures();">
+						<option value="2">ایمیل</option>
+						<option value="4">پیامک</option>
+						<option value="5">اطلاع رسانی</option>
+						<option value="1">دایرکتوری فایل</option>
+						<option value="3">پیوست سابقه</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="action-name" class="col-form-label col-sm-3 label-right">عنوان در خروجی</label>
+				<div class="col-sm-3">
+					<input class="form-control" id="action-name" name="actionName" type="text" value=""/>
+				</div>
+				<label for="file-type" class="col-form-label col-sm-3 label-right">فرمت گزارش</label>
+				<div class="col-sm-3">
+					<select class="form-control" id="file-type" name="fileType">
+						<option value="1">HTML</option>
+						<option value="2">Excel</option>
+						<option value="3">Text</option>
+						<option value="4">CSV</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="max-record" class="col-form-label col-md-3 label-right">حداکثر تعداد رکورد</label>
+				<div class="col-md-3">
+					<input class="form-control" id="max-record" min="0" max="100000" type="number" value=""/>
+				</div>
+			</div>
+			<div class="form-group row user-group-div">
+				<label for="scheduled-report-userGroup" class="col-form-label col-md-3 label-right">ارسال به گروه کاربری</label>
+				<div class="col-md-3">
+					<select class="form-control" id="scheduled-report-userGroup" name="userGroup">
+						<option value="0"></option>
+						@foreach (var userGroup in ViewBag.UserGroups)
+						{
+							<option value="@userGroup.Id">
+								@userGroup.Name
+							</option>
+						}
+					</select>
+				</div>
+				<label for="scheduled-report-user" class="col-form-label col-md-3 label-right">ارسال به کاربر</label>
+				<div class="col-md-3">
+					@*<select class="form-control" id="scheduled-report-user" name="user">
+                                                  <option value="0"></option>
+                                            @foreach (var user in ViewBag.Users.Values)
+                                                  {
+                                                        <option value="@user.Id">
+                                                             @user.Name
+                                                        </option>
+                                                  }
+                                             </select>*@
+					<input class="form-control" id="scheduled-report-user" name="user" type="text" value="" placeholder="نام کاربری"/>
+				</div>
+			</div>
+			<div class="form-group row output-type">
+				<label for="destination-user-name" class="col-form-label col-sm-3 label-right">نام کاربری</label>
+				<div class="col-sm-3">
+					<input class="form-control" id="destination-user-name" type="text" value=""/>
+				</div>
+				<label for="destination-password" class="col-form-label col-sm-3 label-right">رمز عبور</label>
+				<div class="col-sm-3">
+					<input class="form-control" id="destination-password" type="text" value=""/>
+				</div>
+			</div>
+			<div class="form-group row output-type">
+				<label for="destination-path" class="col-form-label label-right">مسیر خروجی</label>
+				<input class="form-control" id="destination-path" type="text" value="" placeholder="\\TetaScheduledReport" dir="ltr"/>
+			</div>
+		</fieldset>
+	</div>
+	</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary float-right" data-dismiss="modal">انصراف</button>
+		<button type="button" id="schedule-without-filter-submit" class="btn btn-success" onclick="ScheduledReport.submitForm(false)">
+			ذخیره بدون تغییر فیلتر
+		</button>
+		<button type="button" class="btn btn-primary" onclick="ScheduledReport.submitForm(true)">
+			ذخیره‌ به همراه فیلتر
+		</button>
+	</div>
+	</div>
+	</div>
+	</div>
+}
+
+<partial name="Filter/FilterConfigModal" model="new FilterConfigModalModel {hasConfig = true, canPublishConfigs = ViewBag.CanPublishConfigs}"/>
+
+<div class="modal fade" id="reportConfigModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style="height: 450px;">
+			<div class="modal-header">
+				<span class="modal-title" id="myModalLabel">
+					@ViewTexts.ReportAddNewConfig
+				</span>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body" style="height: 75%;">
+				@ViewTexts.Loading...
+			</div>
+		</div>
+	</div>
+</div>
+
+<partial name="~/Views/Report/Helpers/AddSubReportModal.cshtml"/>
+
+<style>
+	.label-right { text-align: right !important; }
+</style>

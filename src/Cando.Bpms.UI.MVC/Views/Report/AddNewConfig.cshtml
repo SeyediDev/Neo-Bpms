@@ -1,0 +1,106 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.UI.Resources.Resources
+@model             AddNewConfigParameters
+@{
+	Layout = null;
+}
+
+<partial name="Layout/MinimalIframeIncludes"/>
+
+@using (Html.BeginForm("AddNewConfig", "Report", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+	<input type="hidden" name="EntityId" value="@Model.EntityId"/>
+	<input type="hidden" name="NamespaceId" value="@Model.NamespaceId"/>
+	<input type="hidden" name="ReportId" value="@Model.ReportId"/>
+	<span></span>
+	<span>@ViewTexts.Name :</span>
+	<span style="color: red;">&nbsp;*</span>
+	<input class="form-control" type="text" required oninvalid="InvalidMsg(this);" name="NewConfigName"/>
+	<br/>
+	<div style="margin-top: 10px;">
+		<span>@ViewTexts.DisplayType :</span>
+		<select class="form-control" name="viewType" id="viewType" onchange="viewChanged(this)">
+			<option selected="selected" value="@((int)ReportViewType.List)">@ViewTexts.List</option>
+			<option value="@((int)ReportViewType.GroupByList)">@ViewTexts.GroupedList</option>
+			<option value="@((int)ReportViewType.Chart)">@ViewTexts.Chart</option>
+		</select>
+	</div>
+	<div style="display: none;">
+		<span>@ViewTexts.ChartType :</span>
+		<select class="form-control" id="nCharts" name="chartType">
+			<option selected="selected" value="@((int) Report.ChartType.Area)">Area</option>
+			<option value="@((int) Report.ChartType.Bar)">Bar</option>
+			<option value="@((int) Report.ChartType.Column)">Column</option>
+			<option value="@((int) Report.ChartType.Line)">Line</option>
+			<option value="@((int) Report.ChartType.Pie)">Pie</option>
+			<option value="@((int) Report.ChartType.Spline)">Spline</option>
+			<option value="@((int) Report.ChartType.Areaspline)">Areaspline</option>
+			<option value="@((int) Report.ChartType.Scatter)">Scatter</option>
+			<option value="@((int) Report.ChartType.Treemap)">Tree Map</option>
+			<option value="@((int) Report.ChartType.Gauge)">Gauge</option>
+			<option value="@((int) Report.ChartType.MetricBox)">MetricBox</option>
+			<option value="@((int) Report.ChartType.BpmnDiagram)">BPMN Diagram</option>
+            <option value="@((int) Report.ChartType.IranMap)">Iran Map</option>
+            <option value="@((int) Report.ChartType.WorldMap)">World Map</option>
+		</select>
+	</div>
+	<br/>
+
+	<input type="button" class="btn btn-success btn-block" value="@ViewTexts.NewSettingRegistration" onclick="addNewConfig(this)"/>
+	<button type="submit" name="submitBtn" class="ShowHide"></button>
+	<script>
+		function viewChanged(ct) {
+			var val = $(ct).val();
+			if (val == "2")
+				$("#nCharts").parent("div").slideDown();
+			else {
+				$("#nCharts").parent("div").slideUp();
+			}
+		}
+
+		function addNewConfig(ct) {
+			$(ct).closest("form").find('button[name="submitBtn"]').click();
+		}
+
+		function InvalidMsg(elem) {
+			var e = window.event;
+			if (e) {
+				e.target.setCustomValidity("");
+				if (!e.target.validity.valid) {
+					if (e.target.validity.patternMismatch) {
+						e.target.setCustomValidity(window.tetaI18n.t('InvalidInputValue'));
+					} else {
+						e.target.setCustomValidity(window.tetaI18n.t('RequiredError'));
+					}
+				} else {
+					e.target.setCustomValidity('');
+				}
+				return true;
+			} else {
+				if (elem.value == '') {
+					elem.setCustomValidity(window.tetaI18n.t('RequiredError'));
+				} else {
+					elem.setCustomValidity('');
+				}
+				return true;
+			}
+		};
+		@if (!string.IsNullOrEmpty(ViewBag.ConfiguredReportId))
+		{
+			<text>
+		window.top.location =
+			window.top.rootUrl +
+			'Report/Index?' +
+			window.top.PageAddressManager.getQueryParameters() +
+			'&ConfigId=@ViewBag.ConfiguredReportId';
+			</text>
+		}
+	</script>
+	var message = ViewBag.message;
+	if (message != null)
+	{
+		<hr/>
+		<span id="cbMsg">@message</span>
+	}
+}

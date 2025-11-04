@@ -1,0 +1,67 @@
+﻿@using Neo.Bpms.UI.MVC.Controls
+
+@using Neo.Bpms.UI.MVC.Helpers
+
+@model IncludeNeeds
+
+@if (Model.PluginIncludes != null)
+{
+    foreach (var c in Model.PluginIncludes)
+    {
+        switch (c)
+        {
+            case PluginInclude.FineUploader:
+            {
+                <link href="~/Content/common-assets-includes/common-plugins/controls/fine-uploader/fine-uploader-new.min.css" rel="stylesheet">
+                <script src="@CommonBundles.FineUploaderJsBundle" asp-append-version="true"></script>
+                <partial name="Controls/FineUploaderTemplate"/>
+            }
+                break;
+            case PluginInclude.JwPlayer:
+            {
+                <script src="~/Scripts/common-assets-includes/common-plugins/controls/jw-player/jwplayer.js"></script>
+                <script>
+					window.rootJW = window.top.rootUrl +
+						"Scripts/common-assets-includes/common-plugins/controls/jw-player/8/";
+				</script>
+                <script src="~/Scripts/common-assets-includes/features/usage/teta-jw-use.js"></script>
+            }
+                break;
+            case PluginInclude.InputMask:
+            {
+                <script src="@CommonBundles.InputMaskJsBundle" asp-append-version="true"></script>
+            }
+                break;
+            case PluginInclude.OperationButton:
+            {
+                <script src="@CommonBundles.OperationButtonJsBundle" asp-append-version="true"></script>
+            }
+                break;
+            case PluginInclude.Terminal:
+            {
+                <link rel="stylesheet" href="~/Content/common-assets-includes/terminal/xterm/xterm.css"/>
+                <script src="~/Scripts/common-assets-includes/terminal/xterm/xterm.js"></script>
+                <script src="~/Scripts/common-assets-includes/terminal/xterm/xterm-addon-fit.js"></script>
+            }
+                break;
+           case PluginInclude.Toggle:
+            {
+                <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/bootstrap-toggle/bootstrap4-toggle.min.css"/>
+                <script src="~/Scripts/common-assets-includes/common-plugins/global/bootstrap-toggle/bootstrap4-toggle.min.js"></script>
+            }
+                break;
+            case PluginInclude.ReportControl:
+            {
+                <script src="~/bundles/report-control.min.js"></script>
+            }
+                break;
+        }
+    }
+}
+@if (Model.BusinessDefinedControls != null)
+{
+    foreach (var c in Model.BusinessDefinedControls)
+    {
+        @c.WebAssetIncludes()
+    }
+}

@@ -1,0 +1,268 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+@using static Neo.Bpms.Domain.Model.UI.Forms.Form
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules
+
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model ElasticObject 
+
+@{
+    CommonFormStructure structure = ViewBag.structure;
+    var canDesign = ViewBag.CanDesign ?? false;
+    var canSeeBpmn = ViewBag.CanSeeBpmn ?? false;
+    var hasProcess = ViewBag.HasProcess ?? false;
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+    var elModel = Model;
+    var options = new RendererOptions();
+    ControlsRendererData controlsRendererData = new(structure, elModel, options, ViewBag.user, Url);
+    var recordNotFound = ViewBag.RecordNotFound ?? false;
+}
+
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/modern/controls-modern.css" asp-append-version="true" />
+<link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/sbvr/sbvr-styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/combo/combo-clear.css" asp-append-version="true" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+
+@{
+    Func<dynamic, HelperResult> TopBarTools =
+        @<text>
+            @if (hasProcess)
+            {
+                <a class="top-bar-anchor-icon text-secondary icons-tables" title="@ViewTexts.ProcessHistory">
+                    <svg title="@ViewTexts.ProcessHistory" onclick="viewWorkItemHistory()" style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#history" />
+                    </svg>
+                </a>
+            }
+
+            @if (item.processId != null && item.taskId != null && canSeeBpmn)
+            {
+                <a onclick="TetaBpmnViewerManager.openBpmnViewerModal('@item.processId', '@item.taskId', '@item.versionId')"
+                class="top-bar-anchor-icon text-info icons-tables" title="@ViewTexts.ViewFormInWorkFlow">
+                    <svg title="@ViewTexts.ViewFormInWorkFlow" onclick="viewWorkItemHistory()" style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#flowchart"/>
+                    </svg>
+                </a>
+            }
+
+            <partial name="Helpers/FormDesignLink" model="new FormDesignLinkModel {structure = item.structure, canDesign = item.canDesign}"/>
+         </text>;
+
+    void HiddenInputs(CommonFormStructure structure, string calendar,
+        dynamic taskId, dynamic processId, dynamic wid, object recordId)
+    {
+        //var editorBug = ":(";
+        if (structure.FormType == eFormType.WorkItem ||
+            structure.FormType == eFormType.ProcessCreateOnExistingRecord ||
+            structure.FormType == eFormType.ProcessCreate)
+        {
+            <input type="hidden" name="TaskId" value="@taskId"/>
+            <input type="hidden" name="ProcessId" value="@processId"/>
+            <input type="hidden" name="wid" value="@wid"/>
+        }
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("calendar", calendar)
+        @Html.Hidden("EditType", EditTypeId.SaveAndReturn)
+        @Html.Hidden("returnUrl", "")
+        <input type="hidden" name="Caller" value="@ViewBag.Caller"/>
+        <input type="hidden" name="callerPage" value="@ViewBag.CallerPage"/>
+        <input type="hidden" name="isApply" value="0"/>
+        <input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId"/>
+        <input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId"/>
+        <input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId"/>
+        <input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId"/>
+        <input type="hidden" name="__parentIds" value="@ViewBag.__parentIds"/>
+
+
+        if (ViewBag.bSubTable != null && ViewBag.bSubTable)
+        {
+            <input type="hidden" name="bSubTable" value="1"/>
+        }
+        else
+        {
+            <input type="hidden" name="bSubTable" value="0"/>
+        }
+
+        <input type="hidden" name="ids" value="@(recordId ?? ViewBag.Ids ?? "")"/>
+        
+        <!-- Hidden submit button for JavaScript form submission -->
+        <button type="submit" style="display:none;" aria-hidden="true"></button>
+    }
+
+    async Task ActionButtons(CommonFormStructure structure)
+    {
+        <div class="modern-action-buttons">
+            <div class="modern-button-group">
+                <div class="modern-button-row">
+                    @if (structure.FormType == eFormType.WorkItem ||
+                         structure.FormType == eFormType.ProcessCreateOnExistingRecord ||
+                         structure.FormType == eFormType.ProcessCreate)
+                    {
+                        <button type="button" onclick="apply(this)" class="modern-btn modern-btn-primary ladda-button" data-style="zoom-in">
+                            <span>@structure.Name</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                            </svg>
+                        </button>
+                        @if(string.IsNullOrEmpty(structure.FormSubjectId))
+                        {
+                            <button type="button" data-etype="@EditTypeId.Save" onclick="edit(this)" id="save-edit-form" class="modern-btn modern-btn-success ladda-button" data-style="zoom-in">
+                                <span>@ViewTexts.Save</span>
+                                <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                                </svg>
+                            </button>
+                        }
+                        <partial name="Common/BackButton"/>
+                    }
+                    else
+                    {
+                        @if(string.IsNullOrEmpty(structure.FormSubjectId))
+                        {
+                            <button type="button" data-etype="@EditTypeId.Save" onclick="edit(this)" id="save-edit-form" class="modern-btn modern-btn-success ladda-button" data-style="zoom-in">
+                                <span>@ViewTexts.Save</span>
+                                <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                                </svg>
+                            </button>
+                        }
+                        <button type="button" data-etype="@EditTypeId.SaveAndReturn" onclick="edit(this)" class="modern-btn modern-btn-primary ladda-button" data-style="zoom-in">
+                            <span>@GetSaveAndReturnText(structure)</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-and-return-button" />
+                            </svg>
+                        </button>
+                        <partial name="Common/BackButton"/>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    string GetSaveAndReturnText(CommonFormStructure structure)
+    {
+        if (!string.IsNullOrEmpty(structure.FormSubjectId))
+            return structure.Name;
+        return ViewTexts.SaveAndReturn;
+    }
+
+    async Task MainPartOfTheForm(ControlsRendererData controlsRendererData, bool recordNotFound, CommonFormStructure structure)
+    {
+        <partial name="Utility/RenderLoading"/>
+        <div id="mainPartOfTheForm" class="modern-form-content hidden">
+            @if (recordNotFound)
+            {
+                <div class="modern-validation-summary">
+                    <h6>رکورد یافت نشد.</h6>
+                </div>
+            }
+            @Html.ValidationSummary(false, "", new {@class = "modern-validation-summary"})
+            <div id="main-part">
+                @controlsRenderer.Render(controlsRendererData)
+            </div>
+        </div>
+        await ActionButtons(structure);
+    }
+}
+
+@using (Html.BeginForm("Edit", "Form", FormMethod.Post,
+  new { enctype = "multipart/form-data", id = "edit-form", @class = "modern-form" }))
+{
+    var taskId = ViewBag.TaskId;
+    var processId = ViewBag.ProcessId;
+    var versionId = ViewBag.VersionId;
+    var wid = ViewBag.wid;
+    object recordId;
+    elModel.GetField("Ids", out recordId);
+
+    HiddenInputs(structure, options.CalendarType, taskId, processId, wid, recordId);
+
+    <div class="modern-title-box edit-page">
+        <div class="modern-title-content">
+            <div class="modern-title-text">
+                <h2 class="modern-title">
+                    <i class="fa fa-edit" style="margin-left: 8px; color: #3b82f6;"></i>
+                    @structure.Name
+                    @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="modern-title-actions" @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+        @if (hasProcess)
+        {
+            <a class="modern-settings-btn" onclick="viewWorkItemHistory()" title="@ViewTexts.ProcessHistory">
+                <svg viewBox="0 0 24 24">
+                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#history" />
+                </svg>
+            </a>
+        }
+        @if (processId != null && taskId != null && canSeeBpmn)
+        {
+            <a class="modern-settings-btn" onclick="TetaBpmnViewerManager.openBpmnViewerModal('@processId', '@taskId', '@versionId')" title="@ViewTexts.ViewFormInWorkFlow">
+                <svg viewBox="0 0 24 24">
+                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#flow-chart-icon" />
+                </svg>
+            </a>
+        }
+        @if (canDesign)
+        {
+            <a href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+                <svg viewBox="0 0 24 24">
+                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+                </svg>
+            </a>
+        }
+    </div>
+                
+    await MainPartOfTheForm(controlsRendererData, recordNotFound, structure);
+
+    if (!string.IsNullOrEmpty(processId) && !string.IsNullOrEmpty(taskId))
+    {
+        <partial name="_BpmnViewer"/>
+    }
+    if (hasProcess)
+    {
+        <partial name="WorkItemList" model="structure"/>
+    }
+    <partial name="Logic/_Logic" model="structure"/>
+    <script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+    <script src="~/Content/common-assets-includes/features/sbvr/sbvr-init.js" asp-append-version="true"></script>
+    <script src="~/Content/common-assets-includes/features/combo/combo-clear.js" asp-append-version="true"></script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls"/>
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+    
+    @if (structure.Logic != null &&
+         structure.Logic.Logics.Any(l => l.TriggeringEvent.EventType == UIRuleEvent.eEventType.onPageLoad))
+    {
+        <text>
+    pageLoaded();
+        </text>
+    }
+</script>

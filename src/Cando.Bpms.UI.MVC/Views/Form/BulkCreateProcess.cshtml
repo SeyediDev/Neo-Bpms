@@ -1,0 +1,212 @@
+﻿@using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls;
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+@using Neo.Bpms.UI.MVC.ViewModels
+@using Neo.Bpms.UI.MVC.ViewModels.Forms
+@using Neo.Bpms.UI.Resources.Resources
+@using Microsoft.AspNetCore.Mvc.Razor
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model dynamic
+
+@{
+    CommonFormStructure structure = ViewBag.structure;
+    var canDesign = ViewBag.CanDesign ?? false; //todo there isn't in bulkcreateprocess forms viewBag
+    var canSeeBpmn = ViewBag.CanSeeBpmn ?? false;
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+    var elModel = Model as ElasticObject;
+
+    var recordIdsCount = ViewBag.RecordsIds == null ? 0 : ViewBag.RecordsIds.Count;
+
+    var options = new RendererOptions();
+    var renderer = new ControlsRendererData(structure, elModel, options, ViewBag.user, Url);
+}
+@{
+    Func<dynamic, HelperResult> TopBarTools =
+        @<text>
+            @{
+                if (item.processId != null && item.taskId != null && item.canSeeBpmn)
+                {
+                    <a class="top-bar-anchor-icon text-info"
+                       onclick="TetaBpmnViewerManager.openBpmnViewerModal('@item.processId', '@item.taskId', '@item.versionId')">
+                        <i class="top-bar-icon bpms-flaticon-flow-chart" title="@ViewTexts.ViewFormInWorkFlow"></i>
+                    </a>
+                }
+            }
+            <partial name="Helpers/FormDesignLink" model="new FormDesignLinkModel {structure = item.structure, canDesign = item.canDesign}"/>
+         </text>;
+
+    async Task TopBar(CommonFormStructure structure, bool canDesign, string pageIcon,
+        dynamic recordIdsCount, string processId, string taskId, string versionId, bool canSeeBpmn)
+    {
+        string filteredBy = ViewBag.QueryType == BulkQueryType.Query ? "بر اساس فیلتر" :
+            string.Format("برای {0} رکورد انتخاب شده", recordIdsCount);
+
+        var topBarToolsModel = new {structure = structure, canDesign = canDesign, processId = processId, taskId = taskId, versionId = versionId, canSeeBpmn = canSeeBpmn};
+        <partial name="Common/TopBar" model="new TopBarModel {Title = structure.Name, PageIcon = pageIcon, Tools = TopBarTools(topBarToolsModel), FilteredBy = filteredBy}"/>
+    }
+}
+
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/CommonAssets/Styles/Features/Modern/controls-modern.css" />
+<link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+@using (Html.BeginForm("BulkCreateProcess", "Form", FormMethod.Post, new {enctype = "multipart/form-data", @class = "modern-form", id = "bulk-create-process-form"}))
+{
+    ViewBag.Title = @ViewTexts.BulkCreateProcess + " " + structure.EntityId + " " + ViewTexts.Page + " " + ViewBag.Page;
+    var taskId = ViewBag.TaskId;
+    var processId = ViewBag.ProcessId;
+    var versionId = ViewBag.ProcessVersion;
+    var wid = ViewBag.wid;
+
+    elModel.GetField("Ids", out var recordId);
+
+    <span class="dummy hidden"></span>
+
+    @HiddenInputs(structure, options.CalendarType, wid, taskId, processId, recordId)
+    ;
+
+    <body @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+
+    <div id="mm-main-page" class="modern-main-container">
+        <div class="modern-container">
+            <!-- Modern Title Box -->
+            <div class="modern-title-box">
+                <div class="modern-title-content">
+                    <div class="modern-title-text">
+                        <h2 class="modern-title">ایجاد گروهی فرآیند @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))</h2>
+                    </div>
+                    <div class="modern-title-actions">
+                        @if (processId != null && taskId != null && canSeeBpmn)
+                        {
+                            <a class="modern-settings-btn" onclick="TetaBpmnViewerManager.openBpmnViewerModal('@processId', '@taskId', '@versionId')" title="@ViewTexts.ViewFormInWorkFlow">
+                                <svg viewBox="0 0 24 24">
+                                    <use href="/Content/common-assets-includes/icons/svgSprite.svg#flow-chart-icon" />
+                                </svg>
+                            </a>
+                        }
+                        <a href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+                            <svg viewBox="0 0 24 24">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modern-form-wrapper">
+                @{ await MainPartOfTheForm(renderer); }
+            </div>
+        </div>
+    </div>
+
+    </body>
+    if (!string.IsNullOrEmpty(processId) && !string.IsNullOrEmpty(taskId))
+    {
+        @await Html.PartialAsync("_BpmnViewer")
+    }
+    <partial name="Logic/_Logic" model="structure"/>
+    <script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+}
+
+@functions
+{
+    void HiddenInputs(CommonFormStructure structure, string calendar, dynamic wid,
+        dynamic taskId, dynamic processId, object recordId)
+    {
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("calendar", calendar)
+        @Html.Hidden("EditType", EditTypeId.SaveAndReturn)
+        @Html.Hidden("returnUrl", "")
+        @Html.Hidden("queryType", ViewBag.QueryType.ToString() as string)
+        @Html.Hidden("returnPage", FormController.BulkCreateReturn.Index)
+
+        var recordsIdIndex = 0;
+        foreach (var recordsId in (ViewBag.RecordsIds as List<string>) ?? Enumerable.Empty<string>())
+        {
+            @:<input type="hidden" name="recordsIds[@recordsIdIndex]" value="@recordsId">
+            recordsIdIndex++;
+        }
+
+        @Html.Hidden("indexFormId", ViewBag.IndexFormId as string)
+        @Html.Hidden("indexFormFilterValues", ViewBag.IndexFormFilterValues as string)
+        @Html.Hidden("indexFormPageNo", ViewBag.IndexFormPageNo as string)
+        @Html.Hidden("associationFieldId", ViewBag.AssociationFieldId as string)
+
+        <input type="hidden" name="Caller" value="@ViewBag.Caller"/>
+        <input type="hidden" name="callerPage" value="@ViewBag.CallerPage"/>
+        <input type="hidden" name="isApply" value="0"/>
+        <input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId"/>
+        <input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId"/>
+        <input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId"/>
+        <input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId"/>
+        <input type="hidden" name="__parentIds" value="@ViewBag.__parentIds"/>
+        <input type="hidden" name="wid" value="@wid"/>
+        <input type="hidden" name="TaskId" value="@taskId"/>
+        <input type="hidden" name="ProcessId" value="@processId"/>
+        <input type="hidden" name="ProcessVersion" value="@(ViewBag.ProcessVersion as string)"/>
+
+        if (ViewBag.bSubTable != null && ViewBag.bSubTable)
+        {
+            <input type="hidden" name="bSubTable" value="1"/>
+        }
+        else
+        {
+            <input type="hidden" name="bSubTable" value="0"/>
+        }
+
+        <input type="hidden" name="ids" value="@recordId"/>
+    }
+
+
+    async Task MainPartOfTheForm(ControlsRendererData rendererData)
+    {
+        <div class="col-sm-12 customDiv">
+            <partial name="Utility/RenderLoading"/>
+            <div id="mainPartOfTheForm" class="form-group hidden">
+                <div class="col-md-12 col-sm-12">
+                    @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+                    @controlsRenderer.Render(rendererData)
+                </div>
+
+                <br/>
+            </div>
+            @{ ActionButtons(); }
+        </div>
+    }
+
+    void ActionButtons()
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 buttons-sub-row">
+                <div class="col-md-12 col-sm-12">
+                    <button type="button" onclick="CreateProcess.applyAndGoTo(this, 'Index')" class="btn btn-outline-primary float-right ladda-button" data-style="zoom-in" data-spinner-color="black">
+                        <i class="fa fa-check"></i> <span>شروع فرآیند و بازگشت به انتخاب پرونده‌ها</span>
+                    </button>
+                    <button type="button" onclick="CreateProcess.applyAndGoTo(this, 'MyWorkItems')" class="btn btn-primary float-right ladda-button" data-style="zoom-in" data-spinner-color="black">
+                        <i class="fa fa-check"></i> <span>شروع فرآیند و انتقال به کارهای من</span>
+                    </button>
+                </div>
+
+                <input type="submit" id="submitBtn" style="display: none;"/>
+            </div>
+        </div>
+    }
+}

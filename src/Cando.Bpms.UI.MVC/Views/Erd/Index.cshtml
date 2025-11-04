@@ -1,0 +1,61 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>vuerd demo</title>
+    <script src="~/Scripts/common-assets-includes/common-plugins/global/vuerd/vuerd.min.js"></script>
+    @* <!-- or module --> *@
+    @* <script src="https://cdn.jsdelivr.net/npm/vuerd/dist/vuerd.min.js"></script> *@
+</head>
+<body>
+<script>
+        const container = document.querySelector('body');
+        const editor = document.createElement('erd-editor');
+        editor.automaticLayout = true;
+        container.appendChild(editor);
+                    window.addEventListener('resize',
+                        () => {
+                            editor.width = window.innerWidth;
+                            editor.height = window.innerHeight;
+                        });
+                    window.dispatchEvent(new Event('resize'));
+    function createVuerd(data) {
+         editor.initLoadJson(JSON.stringify(data));
+     }
+    function instantiateEntityDiagram(namespaceId, entityId, depth) {
+        function queryParam(obj) {
+            console.log(obj);
+            var result = '';
+            for (var field in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, field)) {
+                    if (result === '')
+                        result += '?';
+                    else result += '&';
+
+                    result += field;
+                    result += '=';
+                    result += obj[field];
+                }
+            }
+            return result;
+        }
+
+        var query = queryParam({ namespaceId, entityId, depth });
+        console.log(query);
+        fetch('/Erd/Entity' + query).then(res => res.json()).then(function(json) {
+          createVuerd(json)
+        });
+    }
+    function instantiateAllDiagram(namespaceId) {
+        fetch('/Erd/All?namespaceId=' + namespaceId).then(res => res.json()).then(function(json) {
+            createVuerd(json)
+        });
+    }
+</script>
+</body>
+</html>

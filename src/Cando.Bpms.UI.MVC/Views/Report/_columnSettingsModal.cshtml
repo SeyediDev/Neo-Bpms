@@ -1,0 +1,299 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.Resources.Resources
+@model ReportData
+
+@{
+	var structure = Model.structure;
+	var availableColumns = structure.ColumnInfos;
+	var selectedColumns = structure.SelectedColumns;
+	var remainingColumns = availableColumns.Except(selectedColumns, new ColumnFieldDefinitionComparerBasedOnName()).ToList();
+	var hasGroupBy = structure.ReportViewType == ReportViewType.Chart || structure.ReportViewType == ReportViewType.GroupByList;
+	var colmd = "col-md-" + (hasGroupBy ? "3" : "6");
+	var modalKey = structure.ConfigId;
+}
+<script language="javascript">
+	if (!window.top.modalObjects)
+		window.top.modalObjects = {};
+	window.top.modalObjects["@modalKey"] = {
+		NamespaceId: "@structure.NamespaceId",
+		EntityId: "@structure.EntityId",
+		ReportId: "@structure.Form_ReportId",
+		ConfigId: "@structure.ConfigId"
+	};
+	var formulaAggrId = "@eAggregationFunctions.Formula";
+</script>
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/report/report-selectColumnsModal.css?v001"/>
+<div class="modal fade columnsSettingsModal" id="columnsSettingsModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="columnsSettingsModal-label-@modalKey">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="columnsSettingsModal-label-@modalKey">@ViewTexts.ColumnsSettings</h4>
+				<button type="button" class="close" onclick="closeModal('columnsSettingsModal-@modalKey')" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					@if (hasGroupBy)
+					{
+						<div class="@colmd">
+							<p>
+								@ViewTexts.PossibleReportDimensions:
+							</p>
+							<div class="scrollbar custom-scroll">
+								<ul id="availableDimensions-@modalKey" class="sortable-report-dimensions vertical-sortable-list" modalKey="@modalKey" style="overflow: hidden">
+									@foreach (var column in remainingColumns)
+									{
+										if (column.aggrType == eAggregationFunctions.GroupByItem)
+										{
+											RenderColumnItem(modalKey, column, column.aggrType, "tooltipNo", "matrixTypeHorizontal");
+										}
+									}
+								</ul>
+							</div>
+						</div>
+						<div class="@colmd">
+							<p>
+								@ViewTexts.ReportDimensions :
+							</p>
+							<div class="scrollbar custom-scroll">
+								<ul id="selectedDimensions-@modalKey" class="sortable-report-dimensions vertical-sortable-list" modalKey="@modalKey" style="overflow: hidden">
+									@foreach (var column in selectedColumns)
+									{
+										if (column.aggrType == eAggregationFunctions.GroupByItem)
+										{
+											RenderColumnItem(modalKey, column, column.aggrType, "tooltipNo", "matrixTypeHorizontal");
+										}
+									}
+								</ul>
+							</div>
+						</div>
+					}
+					<div class="@colmd">
+						<p>
+							@ViewTexts.PossibleColumns:
+						</p>
+						<div class="scrollbar custom-scroll">
+							<ul id="availableColumns-@modalKey" class="sortable-report-columns vertical-sortable-list" modalKey="@modalKey" style="overflow: hidden">
+								@foreach (var column in remainingColumns)
+								{
+									if (column.aggrType != eAggregationFunctions.GroupByItem)
+									{
+										RenderColumnItem(modalKey, column, column.aggrType, "tooltipNo", "matrixTypeHorizontal");
+									}
+								}
+							</ul>
+						</div>
+					</div>
+					<div class="@colmd">
+						<p>
+							@ViewTexts.SelectedReportColumns :
+						</p>
+						<div class="scrollbar custom-scroll">
+							<ul id="selectedColumns-@modalKey" class="selected-column-ul sortable-report-columns vertical-sortable-list" modalKey="@modalKey" style="overflow: hidden">
+								@foreach (var column in selectedColumns)
+								{
+									var aggrType = column.aggrType;
+
+									if (column.aggrType != eAggregationFunctions.GroupByItem)
+									{
+										var isTooltip = column.IsTooltip ? "tooltipYes" : "tooltipNo";
+										var matrixType = column.MatrixType == ConfiguredReport.ReportMatrixType.Vertical ? "matrixTypeVertical" : "matrixTypeHorizontal";
+
+										RenderColumnItem(modalKey, column, aggrType, isTooltip, matrixType);
+									}
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<a class="btn btn-outline-dark btn-sm mt-1 btn-block" onclick="showAddNewFormulaModal('@modalKey')">
+							<i class="fa fa-plus"></i>
+							@ViewTexts.AddFormula
+						</a>
+					</div>
+					<div class="col-md-3">
+						<a class="btn btn-outline-dark btn-block hidden" id="showEditFormulaId-@modalKey"
+						   onclick="showEditFormulaModal('@modalKey')">
+							<i class="fa fa-edit"></i>
+							@ViewTexts.EditFormula
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						@* ReSharper disable once Html.IdNotResolved *@
+						<label for="Constraint-@modalKey">@ViewTexts.Filter:</label>
+						@*                        @Html.TextArea("",*@
+						@*                            structure.Constraint,*@
+						@*                            new*@
+						@*                            {*@
+						@*                                dir = "ltr",*@
+						@*                                id = string.Format("Constraint-{0}", modalKey),*@
+						@*                                @class = "formulaText form-control",*@
+						@*                            })*@
+						<input id="Constraint-@modalKey" class="formulaText form-control"
+						       type="text" value="@structure.Constraint"/>
+					</div>
+					<div class="col-md-6">
+						@* ReSharper disable once Html.IdNotResolved *@
+						<label for="HavingConstraint-@modalKey" class="@(!hasGroupBy ? "hidden" : "")">@ViewTexts.AggregationFilter: </label>
+						@*                        @Html.TextArea("",*@
+						@*                            structure.HavingConstraint,*@
+						@*                            new*@
+						@*                            {*@
+						@*                                dir = "ltr",*@
+						@*                                id = string.Format("HavingConstraint-{0}", modalKey),*@
+						@*                                @class = string.Format("formulaText form-control {0}", !hasGroupBy ? "hidden" : ""),*@
+						@*                            })*@
+						<input id="HavingConstraint-@modalKey"
+						       class="form-control formulaText @(!hasGroupBy ? "hidden" : "")"
+						       type="text" value="@structure.HavingConstraint"/>
+					</div>
+				</div>
+				@if (CultureHelper.GetCurrentNeutralCulture() == "fa") // todo translation!
+				{
+					<p>
+						<br/>
+						آیتم‌ها، با کشیدن و رها کردن، بین ستون ها قابل جابجایی هستند.
+						<br/>
+						شما می‌توانید با استفاده از <kbd>Ctrl + Click</kbd> چند آیتم را به طور هم‌زمان انتخاب نمایید.
+						<br/>
+						همچنین می‌توانید با <kbd>Double Click</kbd> روی ستون‌ها، نام آن‌ها را تغییر دهید.
+					</p>
+				}
+			</div>
+			<div class="modal-footer">
+				<div class="float-right">
+                    <button type="button" class="btn btn-secondary add-button" onclick="closeModal('columnsSettingsModal-@modalKey')">@ViewTexts.Cancel</button>
+					@if (Model.Config.IsMeta)
+					{
+						<button type="button" class="btn btn-primary disabled">
+							@ViewTexts.ConfigIsNotModifiable
+						</button>
+					}
+					else
+					{
+                        <button type="button" class="btn btn-primary save-button" onclick="submitColumnSettings('@modalKey')">
+							@ViewTexts.Apply
+						</button>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="addFormulaModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="addFormulaModal-label">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="addFormulaModal-label-@modalKey"></h4>
+				<button type="button" class="close" data-dismiss="modal" data-target="addFormulaModal-@modalKey" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				@{
+					var firstId = "";
+				}
+				@* ReSharper disable once Html.IdNotResolved *@
+				<label for="newFormulaName-@modalKey">@ViewTexts.FormulaName:</label>
+				<input id="newFormulaName-@modalKey" type="text" class="formulaTitle form-control"/>
+				<br/>
+				@* ReSharper disable once Html.IdNotResolved *@
+				<label for="newFormula-@modalKey">@ViewTexts.FormulaExpression:</label>
+				<input id="newFormula-@modalKey" type="text" class="formulaText form-control form-control-lg"/>
+				<br/>
+				<div class="row">
+					@foreach (var col in availableColumns)
+					{
+						if (string.IsNullOrEmpty(firstId))
+						{
+							firstId = col.ColumnName;
+						}
+						if (col.aggrType != eAggregationFunctions.GroupByItem)
+						{
+							if (string.IsNullOrEmpty(col.formula))
+							{
+								var frm = col.aggrType != eAggregationFunctions.InColumn ? (col.aggrType + "(" + col.ColumnName + ")") : col.ColumnName;
+
+								<a class="btn btn-outline-secondary col-md-4 col-sm-6  AddToFormulaBtn"
+								   title="@frm"
+								   onclick="addNewItemToFormula('@modalKey', '@frm', '@(firstId)')">
+									@col.Alias
+								</a>
+							}
+						}
+					}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="float-right">
+					<button type="button" class="btn btn-secondary save-button" data-dismiss="modal" data-target="#addFormulaModal-@modalKey">@ViewTexts.Cancel</button>
+					<button type="button" class="btn btn-success add-button" onclick="addToFormulas('@modalKey')">@ViewTexts.Submit</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@if (Model.Rows.Count != 0)
+{
+	var row = Model.Rows[0];
+	if (row.SubReports != null)
+	{
+		foreach (var subReport in row.SubReports)
+		{
+			@Html.Partial("_columnSettingsModal", subReport)
+		}
+	}
+}
+
+@functions
+{
+	void RenderColumnItem(string modalKey, ColumnFieldDefinition column,
+		eAggregationFunctions aggrType, string isTooltipClass, string matrixType)
+	{
+		<li id="@(modalKey + column.entityId + column.AssociationName + column.ColumnName + column.aggrType)"
+		    column-entityId="@column.entityId"
+		    column-associationName="@column.AssociationName"
+		    column-name="@column.ColumnName"
+		    column-aggrId="@aggrType"
+		    column-formula="@column.formula"
+		    column-matrixType="@column.MatrixType"
+		    ondblclick="renameColumn(this)">
+			<span class="alias">
+				@column.Alias
+			</span>
+			@if (Model.structure.ReportViewType == ReportViewType.Chart)
+			{
+				<div class="float-left">
+					<i class="fa tooltip-boolean fa-comment @isTooltipClass"
+					   onclick="toggleTooltip(this)"
+					   title="@ViewTexts.ReportUseColumnInTooltips">
+					</i>
+				</div>
+			}
+			@if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+			{
+				<div class="float-left">
+					<i class="fa matrixType-item fa-cube @matrixType"
+					   onclick="toggleMatrixType(this)"
+					   title="@ViewTexts.ReportAsHorizontalColumn">
+					</i>
+				</div>
+			}
+		</li>
+	}
+}

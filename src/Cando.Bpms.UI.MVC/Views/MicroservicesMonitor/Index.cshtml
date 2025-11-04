@@ -1,0 +1,150 @@
+﻿@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@model List<ElasticObject>
+
+@{
+    ViewBag.Title = "پایش سرویس های پایه";
+
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+}
+
+<link href="@CommonBundles.TabulatorCssBundle" asp-append-version="true" rel="stylesheet"/>
+<script src="@CommonBundles.TabulatorJsBundle" asp-append-version="true"></script>
+
+<style>
+    #monitor-table .tabulator-cell {
+        font-family: Tahoma !important;
+    }
+
+    .tabulator-header-filter input {
+        direction: ltr;
+    }
+</style>
+
+@{
+    var topBarModel = new TopBarModel
+    {
+        Title = "پایش سرویس های پایه",
+        PageIcon = pageIcon
+    };
+}
+<partial name="Common/TopBar" model="topBarModel"/>
+
+@Html.AntiForgeryToken()
+
+<div class="customDiv">
+    <div class="row">
+        <div class="col-lg-12">
+            <button id="fetch-button" class="btn btn-primary">
+                دریافت اطلاعات
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="monitor-table"></div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row hidden">
+        <div class="col-lg-4">
+            <label>
+                نام تابع
+                <input type="text" class="form-control" id="funcname" value=""/>
+            </label>
+        </div>
+        <div class="col-lg-4">
+            <label>
+                تعداد
+                <input type="number" class="form-control" id="queuecount" value=""/>
+            </label>
+        </div>
+        <div class="col-lg-4">
+            <button id="queue-button" class="btn btn-danger">
+                خواندن از صف
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        MonitorManager.instantiate();
+        $('#fetch-button').on('click', MonitorManager.displayItems);
+        $('#queue-button').on('click', MonitorManager.manuallyRunFromQueue);
+    });
+    var MonitorManager = function () {
+        var displayItems = function () {
+            //            $.get(window.top.rootUrl + 'MicroservicesMonitor/DummyData').then(function (data) {
+            //                console.log(data);
+            //            });
+            $("#monitor-table").tabulator("setData", window.top.rootUrl + 'MicroservicesMonitor/Data');
+        };
+        var instantiate = function () {
+            $("#monitor-table").tabulator({
+                height: "600px", // todo
+                layout: "fitColumns", //todo
+                groupBy: "FunctionName",
+                placeholder: "عدم دریافت اطلاعات",
+                tooltips: true,
+                columns: [
+                    //                    { title: "پیشرفت", field: "Progress", sorter: "number", formatter: "progress" },
+                    { title: "Progress", field: "Progress", sorter: "number", formatter: "progress" },
+                    //                    { title: "شناسه ی درخواست کنونی", field: "CurrentRequestId", sorter: "number" },
+                    { title: "Current Request Id", field: "CurrentRequestId", headerFilter: true, sorter: "number" },
+                    //                    { title: "در حال کار", field: "IsWorking", sorter: "boolean", formatter: "tick" },
+                    {
+                        title: "Is Working",
+                        field: "IsWorking",
+                        headerFilter: true,
+                        sorter: "boolean",
+                        formatter: "tick"
+                    },
+                    //                    { title: "شناسه ی ماشین", field: "MachineId", sorter: "string" },
+                    //                    { title: "پاسخ فوری", field: "IsImmediate", sorter: "boolean", formatter: "tick" },
+                    {
+                        title: "Is Immediate",
+                        field: "IsImmediate",
+                        headerFilter: true,
+                        sorter: "boolean",
+                        formatter: "tick"
+                    },
+                    {
+                        title: "Is Alive",
+                        field: "IsAlive",
+                        headerFilter: true,
+                        sorter: "boolean",
+                        formatter: "tickCross"
+                    },
+                    { title: "Url", field: "Url", headerFilter: true, sorter: "string" },
+                    { title: "Machine Id", field: "MachineId", headerFilter: true, sorter: "string" },
+                    //                    { title: "نام تابع", field: "FunctionName", sorter: "string" }
+                    { title: "Function Name", field: "FunctionName", headerFilter: true, sorter: "string" }
+                ]
+            });
+        };
+
+        var manuallyRunFromQueue = function () {
+            var funcName = $('#funcname').val();
+            var count = $('#queuecount').val();
+           $.post();
+            $.ajax({
+	            type: "POST",
+					url: window.top.rootUrl + 'MicroservicesMonitor/ManualRequeue?funcName=' + funcName + '&count=' + count,
+	            headers: AddAntiForgeryToken(),
+	            contentType: "application/json; charset=utf-8",
+	            dataType: 'json'
+            });
+        }
+
+        return {
+            displayItems: displayItems,
+            instantiate: instantiate,
+            manuallyRunFromQueue: manuallyRunFromQueue
+        };
+    }();
+</script>

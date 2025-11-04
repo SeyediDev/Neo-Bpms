@@ -1,0 +1,174 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.Fields
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.UI;
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+
+@model             ReportData
+
+@{
+	var structure = Model.structure;
+	var modalKey = structure.ConfigId;
+	var columnInfos = structure.ColumnInfos;
+	var selectedColumns = structure.SelectedColumns;
+	List<ColumnFieldDefinition> orderableColumns; // columnInfos.Union(selectedColumns, new ColumnFieldDefinitionComparerBasedOnName());
+	var hasGroupBy = (structure.ReportViewType == ReportViewType.Chart || structure.ReportViewType == ReportViewType.GroupByList);
+	//    var orderedColumns = structure.OrderInfos;
+	if (!hasGroupBy)
+	{
+		orderableColumns = columnInfos.Union(selectedColumns, new ColumnFieldDefinitionComparerBasedOnName()).ToList();
+	}
+	else
+	{
+		orderableColumns = selectedColumns.Where(column => column.aggrType != eAggregationFunctions.InColumn).ToList();
+		orderableColumns.AddRange(columnInfos.Where(column => (column.aggrType != eAggregationFunctions.InColumn) && (column.aggrType != eAggregationFunctions.GroupByItem)));
+	}
+	var orderedColumns = structure.OrderInfos.Where(o => !o.FromPersistence).Select(
+		item => new
+		{
+			col = selectedColumns.FirstOrDefault(s => s.entityId == item.EntityId && s.GetColumnOrderName() == item.ColumnName) ??
+			      columnInfos.FirstOrDefault(s => s.entityId == item.EntityId && s.GetColumnOrderName() == item.ColumnName),
+			item.orderById
+		}).Where(orderedColumn => orderedColumn != null).ToList();
+	var allOrderableColumns = new List<ColumnFieldDefinition>();
+	foreach (var column in orderableColumns)
+	{
+		if (orderedColumns.FirstOrDefault(oc => oc.col.GetColumnOrderName() == column.GetColumnOrderName() && oc.col.entityId == column.entityId) == null)
+		{
+			allOrderableColumns.Add(column);
+		}
+	}
+}
+<script language="javascript">
+	if (!window.top.modalObjects)
+		window.top.modalObjects = {};
+	window.top.modalObjects["@modalKey"] = {
+		NamespaceId: "@structure.NamespaceId",
+		EntityId: "@structure.EntityId",
+		ReportId: "@structure.Form_ReportId",
+		ConfigId: "@structure.ConfigId"
+	};
+	var formulaAggrId = "@(eAggregationFunctions.Formula)";
+</script>
+
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/report/report-orderByModal.css"/>
+
+<div class="ordersSettingsModal modal fade" id="ordersSettingsModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="ordersSettingsModal-label">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="orderSettingsModal-label-@modalKey">@ViewTexts.OrderSettings</h4>
+				<button type="button" class="close" data-dismiss="modal" data-target="#ordersSettingsModal-@modalKey" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<p>
+							@ViewTexts.PossibleColumns:
+						</p>
+						<div class="scrollbar custom-scroll">
+							<ul id="available_Columns-@modalKey" class="order-sortable-report-columns" style="overflow: hidden">
+								@foreach (var column in allOrderableColumns)
+								{
+									RenderOrderingItem(column, "", "governor2", "", "governor");
+								}
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<p>
+							@ViewTexts.SelectedColumns:
+						</p>
+						<div class="scrollbar custom-scroll">
+							<ul id="selected_Columns-@modalKey" class="selected-columns order-sortable-report-columns" style="overflow: hidden">
+								@foreach (var column in orderedColumns)
+								{
+									var descGovernor = column.col.Descending ? "governor" : "";
+									var ascGovernor = !column.col.Descending ? "governor" : "";
+									var orderById = column.orderById ? "governor2" : "";
+									var orderByBasic = !column.orderById ? "governor2" : "";
+
+									RenderOrderingItem(column.col, orderById, orderByBasic, descGovernor, ascGovernor);
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				@if (CultureHelper.GetCurrentNeutralCulture() == "fa") // todo translation!
+				{
+					<p>
+						<br/>
+						آیتم‌ها، با کشیدن و رها کردن، بین ستون ها قابل جابجایی هستند.
+						<br/>
+						شما می‌توانید با استفاده از <kbd>Ctrl + Click</kbd> چند آیتم را به طور هم‌زمان انتخاب نمایید.
+
+					</p>
+				}
+			</div>
+			<div class="modal-footer">
+				<div class="float-right">
+					<button type="button" class="btn btn-secondary save-button" data-dismiss="modal" data-target="#ordersSettingsModal-@modalKey">@ViewTexts.Cancel</button>
+					@if (Model.Config.IsMeta)
+					{
+						<button type="button" class="btn btn-primary disabled">
+							@ViewTexts.ConfigIsNotModifiable
+						</button>
+					}
+					else
+					{
+						<button type="button" class="btn btn-primary add-button" onclick="submitOrdersSettings('@modalKey')">@ViewTexts.Apply</button>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@if (Model.Rows.Count != 0)
+{
+	var row = Model.Rows[0];
+	if (row.SubReports != null)
+	{
+		foreach (var subReport in row.SubReports)
+		{
+			@Html.Partial("_OrderByModal", subReport)
+		}
+	}
+}
+
+@functions{
+
+	void RenderOrderingItem(ColumnFieldDefinition column, string orderById, string orderByBasic,
+		string descGovernor, string ascGovernor)
+	{
+		<li id="@(column.entityId + column.ColumnName + column.aggrType)"
+		    column-entityId="@(column.entityId)"
+		    column-associationName="@(column.AssociationName)"
+		    column-name="@(column.ColumnName)"
+		    column-aggrId="@(column.aggrType)"
+		    column-formula="@(column.formula)">
+			&nbsp; @(column.Alias)
+
+			@if (column.FieldType == TVariableTypes.Association)
+			{
+				<div class="float-left  order-by-what-icons">
+					<i class="fa fa-key key-boolean by-id @orderById" title="@ViewTexts.OrderById" onclick="toggleById(this)"></i>
+					<i class="fa fa-ellipsis-h key-boolean by-basic @orderByBasic" title="@ViewTexts.OrderByText" onclick="toggleById(this)"></i>
+				</div>
+			}
+
+			<div class="float-right order-type-icons">
+				<i class="fa fa-sort-alpha-desc order-type desc @descGovernor" title="@ViewTexts.Descending" onclick="toggleOrderType(this)"></i>
+				<i class="fa fa-sort-alpha-asc order-type asc @ascGovernor" title="@ViewTexts.Ascending" onclick="toggleOrderType(this)"></i>
+			</div>
+		</li>
+	}
+
+}

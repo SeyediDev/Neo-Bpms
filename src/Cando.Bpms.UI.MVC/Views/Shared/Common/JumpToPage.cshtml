@@ -1,0 +1,19 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.Resources.Resources
+@model JumpToPageModel
+
+<button type="button" id="jumpToPageDropdown" class="btn-link btn dropdown-toggle noPadding" data-toggle="dropdown" style="color:#6e6e71">
+	@ViewTexts.Page <span>@Model.pageNo</span>
+	@ViewTexts.PageOf <span>@Model.pagesCount</span>
+</button>
+<ul class="dropdown-menu" role="menu" aria-labelledby="jumpToPageDropdown">
+	<li role="presentation" class="dropdown-header">@ViewTexts.JumpToPage</li>
+	<li style="padding: 9px 18px;" role="presentation">
+		<div class="input-group">
+			<input id="jtpInput" type="text" placeholder="@Model.pageNo" class="form-control"/>
+			<div class="input-group-append">
+				<button class="btn btn-secondary jump-to-page-btn" onclick="PaginationManager.jumpToPage()">@ViewTexts.Go</button>
+			</div>
+		</div>
+	</li>
+</ul>

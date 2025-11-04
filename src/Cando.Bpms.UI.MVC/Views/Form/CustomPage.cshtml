@@ -1,0 +1,114 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model CommonFormStructure
+
+@{
+    var structure = Model;
+    var canDesign = ViewBag.CanDesign ?? false;
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+    var elModel = new ElasticObject();
+    var options = new RendererOptions();
+
+    Func<dynamic, HelperResult> TopBarTools =
+        @<partial name="Helpers/FormDesignLink" model="new FormDesignLinkModel {structure = structure, canDesign = canDesign}"/>;
+
+    ControlsRendererData controlsRendererData = new(structure, elModel, options, ViewBag.user, Url);
+}
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/CommonAssets/Styles/Features/Modern/controls-modern.css" />
+<link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+@{ HiddenInputs(structure, options.CalendarType); }
+
+<div class="modern-form">
+    <div id="mm-main-page" class="modern-main-container">
+        <div class="modern-container">
+            <!-- Modern Title Box -->
+            <div class="modern-title-box">
+                <div class="modern-title-content">
+                    <div class="modern-title-text">
+                        <h2 class="modern-title">صفحه سفارشی @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))</h2>
+                    </div>
+                    <div class="modern-title-actions">
+                        <a href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+                            <svg viewBox="0 0 24 24">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modern-form-wrapper">
+                @{ await MainPartOfTheForm(controlsRendererData); }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*render Controller's required Scripts.*@
+<partial name="Logic/_Logic" model="structure"/>
+<script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls"/>
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+</script>
+
+@functions
+{
+
+    void HiddenInputs(CommonFormStructure structure, string calendar)
+    {
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("calendar", calendar)
+    }
+
+    async Task MainPartOfTheForm(ControlsRendererData controlsRendererData)
+    {
+        <partial name="Utility/RenderLoading" />
+        <div id="mainPartOfTheForm" class="modern-form-content hidden">
+            @Html.ValidationSummary(false, "", new { @class = "modern-validation-summary" })
+            <div id="main-part">
+                @controlsRenderer.Render(controlsRendererData)
+            </div>
+        </div>
+        ActionButtons();
+    }
+
+    async Task ActionButtons()
+    {
+        <div class="modern-action-buttons">
+            <div class="modern-button-group">
+                <div class="modern-button-row">
+                    <partial name="Common/BackButton"/>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+}

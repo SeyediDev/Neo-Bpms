@@ -1,0 +1,93 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@{
+    var reports = ViewBag.Reports as IEnumerable<DashboardConfigViewModel.ReportViewModel>;
+    var canDesign = ViewBag.CanDesign ?? false;
+}
+
+@if (canDesign)
+{
+    <li class="dashboard-tab-add-item dashboard-design-only" style="display: none;">
+        <button class="dashboard-tab-add-btn" onclick="event.stopPropagation(); addNewConfig()" title="@ViewTexts.AddNewConfig">
+            + @ViewTexts.AddNewConfig
+        </button>
+    </li>
+    <li class="dashboard-tab-add-item dashboard-design-only" style="display: none;">
+        <button class="cando-dashboard-btn cando-dashboard-btn-primary"
+                type="button"
+                data-toggle="dropdown"
+                aria-expanded="false"
+                title="@ViewTexts.AddWidget">
+            <svg class="cando-dashboard-btn-icon" viewBox="0 0 24 24">
+                <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#add-file" />
+            </svg>
+            <span>@ViewTexts.AddWidget</span>
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-end cando-dashboard-widget-menu">
+            @if (reports != null && reports.Any())
+            {
+                @foreach (var report in reports)
+                {
+                    <div class="cando-dashboard-widget-group">
+                        <div class="cando-dashboard-widget-group-header">
+                            <span class="cando-dashboard-widget-group-title">@report.Name</span>
+                            <a href="@("Report/Index?NamespaceId=" + report.NamespaceId + "&EntityId=" + report.EntityId + "&ReportId=" + report.Id)"
+                                class="cando-dashboard-widget-link"
+                                target="_blank"
+                                title="باز کردن گزارش">
+                                <svg viewBox="0 0 16 16">
+                                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#link-dashboard" />
+                                </svg>
+                            </a>
+                        </div>
+
+                        @foreach (var config in report.Configs.Where(c => !string.IsNullOrEmpty(c.Name)))
+                        {
+                            var configDisplayName = config.Name.Length > 40 ? config.Name.Substring(0, 40) + "..." : config.Name;
+                            var viewTypeText = config.viewType == ReportViewType.Chart
+                            ? (config.ChartType == Report.ChartType.WorldMap || config.ChartType == Report.ChartType.IranMap
+                            ? ViewTexts.Map : ViewTexts.Chart)
+                            : (config.viewType == ReportViewType.GroupByList ? ViewTexts.GroupByList : "");
+
+                            <div class="cando-dashboard-widget-item"
+                                    cid='@config.Id'
+                                    rid='@report.Id'
+                                    rns='@report.NamespaceId'
+                                    re='@report.EntityId'
+                                    onclick="dashboard_addWidget(this)">
+                                <div class="cando-dashboard-widget-item-info">
+                                    <span class="cando-dashboard-widget-item-type">@viewTypeText</span>
+                                    <span class="cando-dashboard-widget-item-name" title="@config.Name">@configDisplayName</span>
+                                </div>
+                                <div class="cando-dashboard-widget-item-actions">
+                                    <a href="@("Report/Index?NamespaceId=" + report.NamespaceId + "&EntityId=" + report.EntityId + "&ReportId=" + report.Id + "&ConfigId=" + config.Id)"
+                                        class="cando-dashboard-widget-link"
+                                        target="_blank"
+                                        title="باز کردن گزارش">
+                                        <svg viewBox="0 0 16 16">
+                                            <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#link-dashboard" />
+                                        </svg>
+                                    </a>
+                                    <svg class="cando-dashboard-widget-add-icon" viewBox="0 0 18 18" style="width: 18px; height: 18px;">
+                                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#add-circle-dashboard" />
+                                    </svg>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="cando-dashboard-widget-empty">
+                    <svg viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#file-icon" />
+                    </svg>
+                    <span>هیچ گزارشی موجود نیست</span>
+                </div>
+            }
+        </div>
+    </li>
+}
+

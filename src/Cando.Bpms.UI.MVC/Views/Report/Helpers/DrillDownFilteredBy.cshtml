@@ -1,0 +1,20 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@inject ControllerMethods controllerMethods;
+@inject ReportFilterName reportFilterName;
+
+@model Neo.Bpms.UI.MVC.PartialModels.Report.DrillDownFilteredByModel
+
+@{
+	var fStr = await reportFilterName.GetConfigFilterNames(Model.structure.NamespaceId,
+        Model.structure.EntityId, Model.structure.Form_ReportId, Model.structure.ConfigId,
+        Model.structure.FilterValues, Model.structure.ParentReportIds, Model.structure.CombosData,
+        controllerMethods.DecodeFilterValues(Model.parentFilterValues), Model.structure.Fields,
+        Model.user, CultureHelper.GetCurrentNeutralCulture());
+	if (!string.IsNullOrEmpty(fStr))
+	{
+		<span class="titleSpan">@ViewTexts.FilteredBy: </span>
+		<span class="filtered-by">@fStr</span>
+	}
+}

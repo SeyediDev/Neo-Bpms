@@ -1,0 +1,44 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@{
+	<div class="">
+		<div class="nav navbar-nav">
+            <a class="text-info" title="@ViewTexts.LanguageSelection" href="#" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="
+        border-radius: 6px;
+        background: #DBEAFE;
+        height: 35px;
+        display: inline-block;
+        text-align: center;
+        margin-top: 4px;
+        padding: 5px;
+        ">
+                <span class="title-text" style="font-weight:400">Fa</span>
+                <svg style="width:24px;height:24px;margin-right: 4px" viewBox="0 0 16 16">
+                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#language-blue"/>
+                </svg>
+			</a>
+			<div class="dropdown-menu">
+				@{
+					LanguageItem("فارسی", "fa");
+					LanguageItem("English", "en-US");
+				}
+				@* <li class=""> *@
+				@*     <div class="list-group"> *@
+				@* *@
+				@*     </div> *@
+				@* </li> *@
+			</div>
+		</div>
+	</div>
+
+
+}
+
+@functions
+{
+	void LanguageItem(string title, string culture)
+	{
+		<a class="dropdown-item @(CultureHelper.GetCurrentCulture() == culture ? "active" : "")" href="#" onclick="tetaI18n.setCurrentCulture('@culture')"> @title
+		</a>
+	}
+}

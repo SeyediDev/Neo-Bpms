@@ -1,0 +1,10 @@
+﻿.tabulator-header-filter input, .tabulator-col-content,
+.tabulator .tabulator-footer .tabulator-page,
+.tabulator.tabulator-rtl .tabulator-row .tabulator-cell {
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+}
+
+.tabulator .tabulator-footer .tabulator-page:disabled {
+    opacity: 0.5;
+}

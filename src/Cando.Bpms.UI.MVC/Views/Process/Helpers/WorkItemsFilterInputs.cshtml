@@ -1,0 +1,141 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers
+@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto
+@using Neo.Bpms.UI.MVC.ViewModels.ProcessModels
+@model Neo.Bpms.UI.MVC.PartialModels.WorkItems.WorkItemsFilterModel
+@{
+	var descriptionWidth = (Model.pageType == WorkItemsPageType.MyWorkItems) ? "6" : "9";
+}
+<div class="row m-0">
+	@if (Model.pageType == WorkItemsPageType.MyWorkItems)
+	{
+		<div class="col-lg-3 col-md-3 col-sm-6">
+			<label for="process-id-select">فرآیند</label>
+			<select id="process-id-select" name="__ProcessId" data-default-value="@Model.currentFilter.ProcessId"
+			        onchange="FilterManager.loadProcessActivities(this)">
+				<option></option>
+
+				@foreach (var process in Model.processList)
+				{
+					foreach (var item in process)
+					{
+						<!option value="@item.processId" versionno="@item.versionNo"
+						        @if (Model.currentFilter.ProcessId == item.processId)
+						        {
+							        @:selected
+						        }>
+							@item.displayText
+						</!option>
+					}
+				}
+			</select>
+		</div>
+	}
+	else
+	{
+		<input type="hidden" name="__ProcessId" value="@Model.currentFilter.ProcessId"/>
+	}
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<label>فعالیت </label>
+		<select name="__Activity">
+			<option></option>
+
+			@foreach (var activityItem in Model.activityList)
+			{
+				<!option value="@activityItem.Ids"
+				        @if (Model.currentFilter.Activity == activityItem.Ids)
+				        {
+					        @:selected
+				        }>
+					@activityItem.DisplayValue
+				</!option>
+			}
+		</select>
+	</div>
+	<div class="col-lg-@descriptionWidth col-md-@descriptionWidth col-sm-6" style="min-height: 53px;">
+		<label>شرح پرونده</label>
+		<input type="text" name="__Description" class="form-control" value="@Model.currentFilter.Description"/>
+	</div>
+
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<label for="from-creation-date">از تاریخ</label>
+		<input id="from-creation-date" type="text" autocomplete="off" class="form-control" value="@(Model.currentFilter.FromCreationDate.HasValue ? Model.currentFilter.FromCreationDate.Value.ToString("o") : "")"/>
+		<input type="hidden" value="@Model.currentFilter.FromCreationDateText" name="__FromCreationDateText" id="alt-from-creation-date"/>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<label for="to-creation-date">تا تاریخ</label>
+		<input id="to-creation-date" type="text" autocomplete="off" class="form-control" value="@(Model.currentFilter.ToCreationDate.HasValue ? Model.currentFilter.ToCreationDate.Value.ToString("o") : "")"/>
+		<input type="hidden" value="@Model.currentFilter.ToCreationDateText" name="__ToCreationDateText" id="alt-to-creation-date"/>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<label>نقش</label>
+		<select name="__UserGroup" data-isremote="true" filter-formula="">
+			<option></option>
+		</select>
+	</div>
+
+	@*    <div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">*@
+	@*        <label>وضعیت زمانی</label>*@
+	@*        <select name="timeState">*@
+	@*            <option value="0" selected="selected">کلیه کارها</option>*@
+	@*            <option value="1">عادی</option>*@
+	@*            <option value="2">مهلت سپری شده</option>*@
+	@*            <option value="3" style="background-color: #fc4a60; color: black;">بحرانی</option>*@
+	@*        </select>*@
+	@*    </div>*@
+
+	@*    <div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">*@
+	@*        <label>اهمیت</label>*@
+	@*        <select name="Importance">*@
+	@*            <option value="0" selected="selected">کلیه کارها</option>*@
+	@*            <option value="1">عادی</option>*@
+	@*            <option value="2">مهم</option>*@
+	@*            <option value="3">بسیار مهم</option>*@
+	@*        </select>*@
+	@*    </div>*@
+
+	@*    <div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">*@
+	@*        <label for="Confidentiality">محرمانگی</label>*@
+	@*        <select id="Confidentiality" name="Confidentiality">*@
+	@*            <option value="0" selected="selected">کلیه کارها</option>*@
+	@*            <option value="1">عادی</option>*@
+	@*            <option value="2">محرمانه</option>*@
+	@*            <option value="3">بسیار محرمانه</option>*@
+	@*        </select>*@
+	@*    </div>*@
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<div>
+			<label for="bOffered">پیشنهادی</label>
+		</div>
+		<input type="checkbox" value="True" name="__Offered" id="bOffered"
+		       data-default-value="checked"
+		       @(Model.currentFilter.Offered ? "checked=\"checked\"" : "")/>
+	</div>
+
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<div>
+			<label for="bAllocated">تخصیص یافته</label>
+		</div>
+		<input type="checkbox" value="True" name="__Allocated" id="bAllocated"
+		       data-default-value="checked"
+		       @(Model.currentFilter.Allocated ? "checked=\"checked\"" : "")/>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<div>
+			<label for="bSuspended">صف انتظار</label>
+		</div>
+		<input type="checkbox" value="True" name="__Suspended" id="bSuspended"
+		       data-default-value="checked"
+		       @(Model.currentFilter.Suspended ? "checked=\"checked\"" : "")/>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-6" style="min-height: 53px;">
+		<div>
+			<label for="finished">خاتمه یافته</label>
+		</div>
+		<input type="checkbox" value="True" name="__Finished" id="finished"
+		       @(Model.currentFilter.Finished ? "checked=\"checked\"" : "")/>
+	</div>
+
+	<input type="hidden" name="__Created" value="@Model.currentFilter.Created.ToString()">
+	<input type="hidden" name="__PageType" value="@Model.currentFilter.PageType"/>
+	<input type="hidden" id="just-restorable-tasks" name="__JustRestorableTasks" value="@Model.currentFilter.JustRestorableTasks.ToString()"/>
+</div>

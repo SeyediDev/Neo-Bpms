@@ -1,0 +1,36 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.Resources.Resources
+@using Neo.Bpms.UI.MVC.PartialModels
+@model PaginationModel
+
+@{
+    var pagesCount = (Model.totalRecordsCount + (Model.recordsPerPage - 1)) / Model.recordsPerPage;
+}
+<div class="container-fluid">
+    <div class="row">
+        @{
+            if (Model.thisPageRowsCount != 0)
+            {
+                if (Model.totalRecordsCount > Model.recordsPerPage)
+                {
+                    <div class="col-12">
+                        <div class="dropup" style="text-align: left">
+                            <partial name="Common/PageLinks" model="new PageLinksModel {pageNo = Model.pageNo, maxPageLinksToShow = Model.maxPageLinksToShow, pagesCount = pagesCount}" />
+                            <partial name="Common/JumpToPage" model="new JumpToPageModel {pageNo = Model.pageNo, pagesCount = pagesCount}"/>
+                            <span style="padding: 0 5px;">|</span>
+                            <partial name="Common/RecordsIntervalDescription" model="new RecordsIntervalDescriptionModel {pageNo = Model.pageNo, recordsPerPage = Model.recordsPerPage, thisPageRowsCount = Model.thisPageRowsCount, totalRecordsCount = Model.totalRecordsCount}"/>
+                            <span style="padding: 0 5px;">|</span>
+                        </div>
+                    </div>
+                }
+            }
+            else if (Model.totalRecordsCount != 0)
+            {
+                <p>
+                    @ViewTexts.HasCountWithoutRowsMessage.Parameters(Model.totalRecordsCount)
+                </p>
+            }
+        }
+    </div>
+</div>

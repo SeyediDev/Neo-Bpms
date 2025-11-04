@@ -1,0 +1,22 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+<div class="modal fade" id="SubReportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content" style="height: 500px;">
+			<div class="modal-header">
+				<span class="modal-title" id="myModalLabel">
+					@ViewTexts.SubReportSettings
+				</span>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body" style="height: 75%;">
+				@ViewTexts.Loading...
+			</div>
+			<div class="modal-footer">
+				<button type="button" onclick="window.location.reload();"
+				        class="btn btn-outline-secondary save-button" @*data-dismiss="modal"*@>
+					@ViewTexts.ReloadTheReport
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

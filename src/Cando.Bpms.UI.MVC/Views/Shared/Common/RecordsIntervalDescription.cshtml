@@ -1,0 +1,21 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.Resources.Resources
+@model RecordsIntervalDescriptionModel
+
+@{
+	var fromRecord = (Model.pageNo - 1) * Model.recordsPerPage + 1;
+	var toRecord = (Model.pageNo - 1) * Model.recordsPerPage + Model.thisPageRowsCount;
+}
+
+<span class="text-secondary">
+	@GetIntervalDescriptionText(fromRecord, toRecord, Model.totalRecordsCount)
+</span>
+
+
+@{
+	static string GetIntervalDescriptionText(long fromRecord, long toRecord, long totalRecordsCount)
+	{
+		return string.Format("{0} {1} {2} {3} {4} {5}", ViewTexts.PageRecord, fromRecord, ViewTexts.PageTo, toRecord, ViewTexts.PageOf, totalRecordsCount);
+	}
+
+}

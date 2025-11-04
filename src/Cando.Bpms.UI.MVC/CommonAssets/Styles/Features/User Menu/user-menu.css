@@ -1,0 +1,195 @@
+.userLinks {
+    margin-bottom: 5px;
+}
+
+.userMenu {
+    width: 235px;
+    margin-top: 9px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.userMenu .user-image {
+    margin-bottom: 5px;
+    height: 100px; 
+    width: 100px;
+    border: 2px solid;
+    border-color: transparent;
+    border-color: coral;
+}
+
+.user-image { border-radius: 50%; }
+
+.userMenu > .user-image-wrapper { 
+    text-align: center; 
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 12px 12px 0 0;
+    padding: 15px 0;
+}
+
+.list-group.user-info-list, .list-group.user-menu-actions {
+    margin-bottom: 0;
+}
+
+.list-group.user-info-list > .list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.list-group.user-info-list > .list-group-item:last-child {
+     border-bottom-right-radius: 0;
+     border-bottom-left-radius: 0;
+}
+
+.user-info-list > .list-group-item {
+    border-left: 0;
+    border-right: 0;
+    transition: background-color 0.2s ease;
+}
+
+.user-info-list > .list-group-item:hover {
+    background-color: #f8fafc;
+}
+
+/* User Info Typography Enhancement */
+.user-info-list > .list-group-item:first-child {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 12px 16px;
+}
+
+.user-info-list > .list-group-item:first-child small {
+    font-weight: 400;
+    color: #6b7280;
+    font-size: 13px;
+    display: block;
+    margin-top: 4px;
+}
+
+.cartable-item {
+    padding-top: 5px;
+}
+
+.user-info-list a, .user-info-list a:hover {
+    color: #428bca;
+}
+
+/* Name Display Enhancement */
+.top-bar-title {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.top-bar-title:hover {
+    color: #0077b6;
+}
+
+.user-menu-footer {
+    padding: 10px;
+}
+
+/* Simple Avatar Enhancement */
+.avatar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    position: relative;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Micro-interactions */
+@keyframes avatar-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+}
+
+.avatar:focus {
+    animation: avatar-pulse 2s infinite;
+}
+
+/* Smooth dropdown animation */
+.userMenu {
+    animation: dropdown-fade-in 0.3s ease-out;
+}
+
+@keyframes dropdown-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced transitions */
+.user-info-list > .list-group-item {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-info-list > .list-group-item:hover {
+    transform: translateX(2px);
+}
+
+/* Responsive Name Display */
+@media (max-width: 768px) {
+    .top-bar-title {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar-title {
+        font-size: 12px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .userMenu {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        border-color: #4b5563;
+    }
+    
+    .userMenu > .user-image-wrapper {
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+    }
+    
+    .top-bar-title {
+        color: #f9fafb;
+    }
+    
+    .top-bar-title:hover {
+        color: #60a5fa;
+    }
+    
+    .user-info-list > .list-group-item:first-child {
+        color: #f9fafb;
+    }
+    
+    .user-info-list > .list-group-item:first-child small {
+        color: #d1d5db;
+    }
+    
+    .user-info-list > .list-group-item:hover {
+        background-color: #374151;
+    }
+    
+    .user-info-list a, .user-info-list a:hover {
+        color: #60a5fa;
+    }
+}

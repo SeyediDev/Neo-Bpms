@@ -1,0 +1,13 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.FilterModels
+@model             WorkItemsFilter
+
+@{
+	if (Model.JustRestorableTasks)
+	{
+		<td class="cColumn">
+			<i class="fa fa-recycle mouse-pointer" title="بازگرد"
+			   onclick="RestorationManager.restoreTask(this)">
+			</i>
+		</td>
+	}
+}

@@ -1,0 +1,24 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+
+@{
+	ViewBag.Title = ViewTexts.AccessDeniedTitle;
+	var inIframe = Context.Items["InIframe"] as bool? ?? false;
+	if (inIframe)
+	{
+		Layout = null;
+	}
+}
+
+@if (inIframe)
+{
+	<partial name="Layout/MinimalIframeIncludes"/>
+}
+
+<img class="d-block mx-auto"
+     style="max-height: 90vh; max-width: 100%;"
+     src="~/Content/common-assets-includes/images/errors/403Error.png"
+     title="@ViewTexts.AccessDeniedHeader">
+@if (!inIframe)
+{
+	<div class="alert alert-warning text-2x" style="text-align: center">@ViewTexts.AccessDeniedHeader</div>
+}

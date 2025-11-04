@@ -1,0 +1,159 @@
+﻿@using System.Globalization;
+@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.Resources.Resources
+@inject ReportConfigBackupRestore reportConfigBackupRestore;
+@inject ControllerMethods controllerMethods;
+@inject ReportFilterName reportFilterName;
+
+@model ReportData
+@{
+    var ReportInfo = Model;
+    var structure = ReportInfo.structure;
+    var hasSubReportCount = ReportInfo.structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
+    Layout = null;
+    var calendar = ProjectDefinition.Project.DefaultCalendar;
+    var selectedColumns = structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
+}
+
+<div>
+    <table cellpadding="0" cellspacing="0" style="width: 100%; direction: rtl;">
+        <thead>
+        @if (!Model.Config.IsSubReport)
+        {
+            <tr>
+                <th class="inf" colspan="@selectedColumns.Count">
+                    <table style="width: 100%">
+                        <tbody>
+                        <tr>
+                            <td width="100px;">
+                                <img class="img1" src="@Url.Content(SpecificCommonlyNeededAssets.GetImage("report-header-logo"))" width="100" height="100"/>
+                            </td>
+                            <td>
+                                <span class="reportNameSpan">@ViewBag.companyName</span>
+                            </td>
+                            <td>
+                                <span class="valueSpan">@structure.Name</span>
+                                <br/>
+                                @{
+                                    var fStr = await reportFilterName.GetConfigFilterNames(structure.NamespaceId,
+                                        structure.EntityId, structure.Form_ReportId, structure.ConfigId,
+                                        structure.FilterValues, structure.ParentReportIds, structure.CombosData,
+                                            controllerMethods.DecodeFilterValues(ViewBag.ParentFilterValues), structure.Fields, ViewBag.User, CultureHelper.GetCurrentNeutralCulture());
+                                    if (!string.IsNullOrEmpty(fStr))
+                                    {
+                                        <span style="float: right;" class="titleSpan">@ViewTexts.Filters: </span>
+                                        <span style="float: right;" class="valueSpan">( @fStr )</span>
+                                        <br/>
+                                    }
+                                }
+                                @{
+                                    var str = ReportController.GetGroupByNames(structure);
+                                }
+                                @if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+                                {
+                                    <span class="titleSpan">@ViewTexts.GroupBy: </span>
+                                    <span class="valueSpan">@str</span>
+                                }
+                            </td>
+                            <td style="text-align: right; width: 150px;">
+                                @{
+                                    DateTime dt = DateTime.Now;
+                                    var dStr = "";
+                                    var tStr = "";
+                                    if (dt.Year > 1900)
+                                    {
+                                        if (calendar == "shamsi")
+                                        {
+                                            var pc = new PersianCalendar();
+                                            dStr = pc.GetYear(dt).ToString() + '/' + pc.GetMonth(dt) + '/' + pc.GetDayOfMonth(dt);
+                                        }
+                                        else
+                                        {
+                                            dStr = dt.Year.ToString() + '/' + dt.Month + '/' + dt.Day;
+                                        }
+                                        tStr = dt.Hour.ToString() + ':' + dt.Minute;
+                                    }
+                                }
+                                <span class="titleSpan">@ViewTexts.ReportingDate: </span><span class="valueSpan">@dStr</span>
+                                <br/>
+                                <span class="titleSpan">@ViewTexts.ReportingTime: </span><span class="valueSpan">@tStr</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th>
+            </tr>
+        }
+        <tr>
+            @foreach (var colth in selectedColumns)
+            {
+                <th style="text-align: center; padding: 5px 0px 0px 0px; min-width: 40px; direction: rtl;">
+                    <span style="color: #0e71b9;">@colth.Alias</span>
+                </th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var row in ReportInfo.Rows)
+        {
+            object classNamesStr;
+            row.Data.GetField("rowClass", out classNamesStr);
+            object ids;
+            row.Data.GetField("Ids", out ids);
+            <tr class="@classNamesStr">
+                @{
+                    var length = selectedColumns.Count;
+                    for (int i = 0; i < length; i++)
+                    {
+                        var colInfo = selectedColumns[i];
+                        object clsNameStr;
+                        row.Data.GetField(colInfo.ColumnName + "_Class", out clsNameStr);
+                        <td class="@clsNameStr " style="direction: rtl;">
+                            @{
+                                var value = ReportRenderer.GetCelValue(colInfo, row);
+                                var val = TableHelper.CreateCellElement(value, colInfo, false, calendar);
+                                if (hasSubReportCount)
+                                {
+                                    <div>
+                                        <ul style="width: 100%; text-align: center; padding-right: 0px;">
+                                            <li style="display: inherit">
+                                                <span style="font-weight: bold">@colInfo.Alias</span>
+                                            </li>
+                                            <li style="display: inherit">
+                                                @val
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>@val</span>
+                                }
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+            if (row.SubReports != null) //&& Model.structure.ReportViewType!=eReportViewType.GroupByList
+            {
+                foreach (var subreport in row.SubReports)
+                {
+                    <tr>
+                        <td style="text-align: center; direction: rtl;" colspan="@(length)">
+                            @Html.Partial("~/Views/Report/_printPreviewListView.cshtml", subreport)
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        </tbody>
+    </table>
+</div>

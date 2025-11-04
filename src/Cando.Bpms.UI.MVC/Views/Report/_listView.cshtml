@@ -1,0 +1,37 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Microsoft.AspNetCore.Mvc.Razor
+@model ReportData
+
+@{
+	var isDrillDown = ViewBag.DrillDown ?? false;
+	bool canDesign = ViewBag.CanDesign ?? false;
+	Func<ReportData, HelperResult> RenderGrid = @<text>
+			<div>
+				@if (item.structure.SelectedColumns.Count(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical
+																	 && sc.aggrType == eAggregationFunctions.InColumn) > 0
+			&& item.structure.SelectedColumns.Count(sc => sc.aggrType == eAggregationFunctions.InColumn) > 1)
+				{
+					<partial name="~/Views/Report/_matrix.cshtml" model="item" />
+				}
+				else
+				{
+					<partial name="~/Views/Report/_listViewGenerator.cshtml" model="item" />
+				}
+			</div>
+	</text>;
+}
+
+@if (isDrillDown)
+{
+	<partial name="~/Views/Report/Helpers/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderGrid(Model)}" />
+
+	<script src="~/Scripts/common-assets-includes/features/common-features/drf.common.js?v=1.1.0"></script>
+}
+else
+{
+	@RenderGrid(Model)
+}

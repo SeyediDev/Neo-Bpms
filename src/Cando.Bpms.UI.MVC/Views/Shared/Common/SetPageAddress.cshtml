@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Html
+@using Neo.Bpms.UI.MVC.ViewModels
+@model CommonFormStructure
+
+@{
+	var currentPageAddress = new HtmlString(new PageAddress(Model).ToJson());
+}
+
+window.PageAddressManager.setPageAddress(@currentPageAddress);
+

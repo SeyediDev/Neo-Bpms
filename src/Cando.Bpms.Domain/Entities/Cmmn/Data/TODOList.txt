@@ -1,0 +1,32 @@
+﻿Transaction
+http://msdn.microsoft.com/en-us/library/System.Data.Common.DbTransaction(v=vs.110).aspx
+Async
+connection string security
+
+update the structure of Database, rename the removed fields and tables, recover fields and tables
+shape and map tables to objects
+
+paging
+concurrency
+http://msdn.microsoft.com/en-us/library/aa0416cz(v=vs.85).aspx
+
+tracing
+
+HasRows
+
+connection types:
+OpenXml
+Rest
+WSDL
+WCF rewrite()
+ScriptInterpreter
+Email
+RSS
+JavaLib
+FixedWidthTextfile
+Email,
+		Google,
+		GoogleSpreadsheet
+		SMS
+
+Spacial

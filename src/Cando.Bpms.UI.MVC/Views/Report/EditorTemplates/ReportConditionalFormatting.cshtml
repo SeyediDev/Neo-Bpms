@@ -1,0 +1,17 @@
+﻿@model             ReportConditionalFormatting
+
+@{
+    Layout = null;
+}
+
+<tr>
+    <td class='tableHeader'>
+        @Html.TextBoxFor(y => y.Filter, new { @Class = "filterInput" })
+    </td>
+    <td class='tableHeader'> @Html.TextBoxFor(y => y.ClassName, new { @Class = "filterInput" })</td>
+    <td class="tableHeader">
+        <span onclick="removeRow(this)" class="text-danger" title="@ViewTexts.Delete">
+			<i class="fa fa-times"></i>
+		</span>
+    </td>
+</tr>

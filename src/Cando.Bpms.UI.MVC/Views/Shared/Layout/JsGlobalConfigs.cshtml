@@ -1,0 +1,15 @@
+﻿@using Neo.Bpms.Domain.Utility
+@using Neo.Bpms.UI.MVC.Helpers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration;
+@{
+    string displayVersion = configuration["ApplicationDisplayVersion"];
+}
+<script>
+	window.tetaConfigs = {
+		neutralCulture: '@CultureHelper.GetCurrentNeutralCulture()',
+		isRtl: @(CultureHelper.IsRightToLeft() ? "true" : "false"),
+		version: '@displayVersion'
+	};
+</script>
+<script src="~/Scripts/business-configs.js" asp-append-version="true"></script>

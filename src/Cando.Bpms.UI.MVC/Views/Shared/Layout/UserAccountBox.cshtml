@@ -1,0 +1,39 @@
+﻿@using Neo.Bpms.Domain.Entities.Security.Authentication
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Layout
+@using Microsoft.AspNetCore.Http
+@model IdentityUser
+
+@{
+    <div class="user-account-box float-end">
+		@if (Model != null && !string.IsNullOrEmpty(Model.UserName))
+		{
+			<partial name="Layout/UserMenu" model="new UserMenuModel {user = Model, showUserAlias = true}"/>
+		}
+		else
+		{
+			<div class="user-info mx-2">
+				<a href='@GetLoginUrl(Url, Context.Request)'>
+					<span class="d-block mt-2 d-sm-inline">@ViewTexts.LogIn</span>
+					<img class="d-none d-sm-inline" src="@Url.Content("~/Content/common-assets-includes/images/global/login.png")" width="42" height="42"/>
+				</a>
+			</div>
+		}
+	</div>
+
+}
+
+@functions
+{
+	private static string GetLoginUrl(IUrlHelper url, HttpRequest request)
+	{
+        if (DependencyInjectionHolder.Instance.SsoIntegrator != null)
+		{
+            var externalLoginPage = DependencyInjectionHolder.Instance.SsoIntegrator.LoginPageUrl(request.GetBaseUrl());
+			if (externalLoginPage != null)
+				return externalLoginPage;
+		}
+
+		return url.Action("LogIn", "Account");
+	}
+}

@@ -1,0 +1,329 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.Fields
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+
+@model             ReportData
+@{
+	var calendar = ProjectDefinition.Project.DefaultCalendar;
+	var reportInfo = Model;
+	var canDesign = ViewBag.CanDesign ?? false;
+	var isDrillDown = ViewBag.DrillDown ?? false;
+	var reportKey = reportInfo.structure.ConfigId;
+	var bFromDashboard = ViewBag.bFromDashboard ?? false;
+	var drilldownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+
+	var process = Model.structure.FilterValues.GetString("Process");
+	if (string.IsNullOrEmpty(process))
+	{
+		//throw new Exception("Bpmn diagram needs WorkflowId in its filter.");
+	}
+	var processVersion = Model.structure.FilterValues.GetString("ProcessVersion");
+}
+
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/design/bpmn/css/diagram-js.css"/>
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/design/bpmn/vendor/bpmn-font/css/bpmn-embedded.css"/>
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/report/bpmn-diagram/app.css"/>
+
+@if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
+{
+	 @* 	<div id="map-design-tools-container"> *@
+	<partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = Model, forInlineSubReport = true}"/>
+	 @*	</div>*@
+}
+
+@{
+	var parameters = reportInfo.structure.SelectedColumns.Where(s =>
+		//s.aggrType != eAggregationFunctions.InColumn &&
+		s.aggrType != eAggregationFunctions.GroupByItem &&
+		s.ColumnName != "FlowNodeId").Select(sc => new
+		{
+			id = sc.ColumnTypeName, //todo correct?
+			name = sc.Alias,
+			type = sc.FieldType == TVariableTypes.DayHourMinute ? /*"duration-ms"*/ "duration-time-span" : ""
+		});
+	//    var nodeIdColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s =>
+	//        s.aggrType != eAggregationFunctions.GroupByItem &&
+	//        s.aggrType == eAggregationFunctions.InColumn &&
+	//        s.ColumnName == "FlowNodeId");
+	var data = reportInfo.Rows.Select(r => new
+	{
+		//        id = r.Data[nodeIdColumn != null ? nodeIdColumn.ColumnTypeName : "FlowNodeId"]
+		id = r.Data["Ids"],
+		parameters = reportInfo.structure.SelectedColumns.Where(s =>
+			//s.aggrType != eAggregationFunctions.InColumn &&
+			s.aggrType != eAggregationFunctions.GroupByItem &&
+			s.ColumnName != "FlowNodeId").Select(columnInfo => new
+			{
+				id = columnInfo.ColumnTypeName,
+				value = r.Data.GetDouble(columnInfo.ColumnTypeName)
+			})
+	});
+	/*{
+			 id: 'BulkChannelSelection',
+			 parameters: [
+			 {
+				  id: 'Time',
+			 value: 52
+		},
+			 {
+				  id: 'Count',
+				  value: 30
+			 }
+			 ]*/
+}
+
+<div class="canvas" id="teta-canvas" style="height: 70vh; direction: ltr;">
+</div>
+<script src="~/Scripts/common-assets-includes/features/report/bpmn-diagram/index.min.js"></script>
+@* <script src="~/Scripts/common-assets-includes/features/design/bpmn/modify.js"></script> *@
+<script>
+	var downloadUrl = window.top.rootUrl +
+		'Process/DownloadProcessVersion?processId=@process&@(string.IsNullOrEmpty(processVersion) ? "" : "versionId=" + processVersion)';
+	$.get(downloadUrl,
+		function(result) {
+			window.TetaBpmnModule.showCharts({
+				xml: result.xml,
+				containerSelector: '#teta-canvas',
+				type: 'bars',
+				data: @(new HtmlString(JsonConvert.SerializeObject(data))),
+				// tooltip: function (elementId) {
+				//     return `Dali :) ${elementId}`;
+				// },
+				parameters: @(new HtmlString(JsonConvert.SerializeObject(parameters)))
+			});
+		});
+</script>
+
+<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drilldownSubReports, reportKey = reportKey, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}"/>
+
+
+<script>
+	var diagramData = {};
+	var diagramInfo = {};
+
+	@{
+		//var heatColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
+		var nodeIdColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "FlowNodeId");
+		var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+	}
+	var subReportsCount = @subReportsCount;
+	var reportKey = "@reportKey";
+
+	@foreach (var row in reportInfo.Rows)
+	{
+		var nodeId = row.Data[nodeIdColumn != null ? nodeIdColumn.ColumnTypeName : "FlowNodeId"];
+		if (nodeId == null || string.IsNullOrEmpty(nodeId.ToString()))
+		{
+			continue;
+		}
+		var rowIds = row.Data.GetString("Ids").Split(',')[0];
+		double colorValue = 0;
+
+		//if (colorColumn != null)
+		//{
+		//    colorValue = row.Data.GetDouble(colorColumn.ColumnTypeName);
+		//}
+		var str = "diagramData['" + nodeId + "']=" + colorValue + ";\n";
+		str += "diagramInfo['" + nodeId + "']={};\n";
+		str += "diagramInfo['" + nodeId + "']['ids']='" + rowIds + "';\n";
+		str += "diagramInfo['" + nodeId + "']['tooltipValues']={};\n";
+		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+			//s.aggrType != eAggregationFunctions.InColumn &&
+			s.aggrType != eAggregationFunctions.GroupByItem &&
+			s.ColumnName != "Iso2");
+		foreach (var colInfo in columns)
+		{
+			var value = ReportRenderer.GetCelValue(colInfo, row);
+			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			str += "diagramInfo['" + nodeId + "']['tooltipValues']['" + colInfo.Alias + "'] = '" + val + "';";
+		}
+		@(new HtmlString(str))
+	}
+
+	//todo read mapMarkers from diagramInfo
+
+
+	var showTip = function(event, label, code) {
+		var countryName = $(label).text();
+		if (!code) {
+			code = countryName;
+		}
+
+		$(label).empty();
+		$(label).css('min-width', '200px');
+		$(label)
+			.append($("<span/>",
+				{
+					'html': countryName,
+					'style':
+						' font-size: 1.5em; margin-top:3px; float: ' +
+							+
+							'; color: #FFFADC'
+				}));
+		if (!!diagramInfo[code]) {
+			var tooltipsObj = diagramInfo[code]["tooltipValues"];
+			$(label).append($("<hr/>", { 'style': 'margin: 3px 0;' }));
+			for (var field in tooltipsObj) {
+				if (tooltipsObj.hasOwnProperty(field)) {
+					$(label)
+						.append($("<span/>",
+							{
+								'html': field +
+									' : ' +
+									'<span style="color: #f7eeb9;">' +
+									tooltipsObj[field] +
+									'</span>',
+								'class': 'teta-bidi'
+							}));
+					$(label).append($("<br/>"));
+				}
+			}
+		}
+	};
+
+	var showMarkerTip = function(event, label, code) {
+		showTip(event, label, mapMarkers[code].code);
+	}
+
+	var showDrillDown = function(event, code, docObj) {
+		var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
+
+		if (diagramInfo[code]) {
+			openSubReportFrame2(subReportsCount,
+				diagramInfo[code]['ids'],
+				reportKey,
+				window.top.reportInfo['@reportKey']["parentFilter"],
+				mapInstanceData.container[0],
+				event);
+		}
+	}
+
+	var showMarkerDrillDown = function(event, code) {
+		showDrillDown(event, mapMarkers[code].code, this);
+	}
+
+
+
+	@*$('#world-map')
+        .vectorMap({
+            map: '@(Model.structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
+            markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
+//            labels: {
+//                markers: {
+//                    render: function(index){
+//                        return mapMarkers[index].name;
+//                    },
+//                    offsets: function(index){
+//                        var offset = [0, 0];
+//
+//                        return [offset[0] - 7, offset[1] + 3];
+//                    }
+//                }
+//            },
+//            backgroundColor: "#DEEBF7",
+            backgroundColor: "#B5CEE5",
+            markerStyle: {
+                initial: {
+                    fill: '#FFFFFF',
+                    stroke: '#ffffff'
+//                    stroke: '#383f47'
+                }
+            },
+            regionStyle: {
+                initial: {
+                    fill: '#ffffff',
+                    "fill-opacity": 0.9,
+                    stroke: 'none',
+                    "stroke-width": 0,
+                    "stroke-opacity": 0
+                }
+            },
+
+            //            onRegionLabelShow: function(event, label, code) {
+            onRegionTipShow: showTip,
+            onMarkerTipShow: showMarkerTip,
+            onRegionClick: showDrillDown,
+            onMarkerClick: showMarkerDrillDown,
+            onViewportChange: function(event, scale) {
+                var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
+
+
+                for (var marker in mapInstanceData.markers) {
+                    if (mapInstanceData.markers.hasOwnProperty(marker)) {
+                        var radius = 1 * scale;
+                        mapInstanceData.markers[marker].element.config.style.current.r = radius;
+                    }
+                }
+//                mapInstanceData.markers(function (marker) {
+//                    var radius = 1 * scale;
+//                    // change the radius
+//                    marker.element.node.setAttribute('r', radius);
+//                });
+            },
+            series: {
+                regions: [
+                    {
+                        values: diagramData,
+                        //                scale: ["#ffffff", "#FF9C14"],
+                        //                        scale: ["#ffffff", "#FFC0A3"],
+//                        scale: ["#ffffff", "#D8A968"],
+                        scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+                        normalizeFunction: 'polynomial',
+                        min: 0
+                        //                        max: 100
+                    }
+                ],
+                markers: [
+                    {
+                        attribute: 'image',
+                        scale: {
+//                            'country': '/img/icon-np-3.png',
+                            'satellite': window.top.rootUrl + 'Content/common-assets-includes/flags/satellite.svg'
+                        },
+                        values: mapMarkers.reduce(function(p, c, i) {
+                                p[i] = c.markerType;
+                                return p;
+                            },
+                            {})
+                    }, {
+                        attribute: 'fill',
+                        values: mapMarkers.map(function(h) {
+                            return diagramData[h.code];
+                        }),
+                        scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+                        normalizeFunction: 'polynomial',
+                        min: 0
+                    }, {
+                        attribute: 'stroke',
+                        values: mapMarkers.map(function(h) {
+                            return diagramData[h.code];
+                        }),
+                        scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
+                        normalizeFunction: 'polynomial',
+                        min: 0
+                    },
+                    {
+                        attribute: 'r',
+                        values: mapMarkers.map(function(h) {
+                            return 1;
+                        })
+//                        ,
+//                        scale: ["#ffffff", "#990024"],
+//                        normalizeFunction: 'polynomial',
+//                        min: 0
+                    }
+                ]
+            }
+        });*@
+
+
+</script>
+<partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>

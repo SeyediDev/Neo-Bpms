@@ -1,0 +1,112 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 08/11/2020 19:35
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-people:before { content: "\f100"; }
+.flaticon-traffic-light:before { content: "\f101"; }
+.flaticon-admin-with-cogwheels:before { content: "\f102"; }
+.flaticon-cartable-computer-work:before { content: "\f103"; }
+.flaticon-hanging-over-the-key:before { content: "\f104"; }
+.flaticon-dashboard-1:before { content: "\f105"; }
+.flaticon-dashboard:before { content: "\f106"; }
+.flaticon-filter-design:before { content: "\f107"; }
+.flaticon-engineering:before { content: "\f108"; }
+.flaticon-flow-chart:before { content: "\f109"; }
+.flaticon-high-design:before { content: "\f10a"; }
+.flaticon-equal:before { content: "\f10b"; }
+.flaticon-not-equal:before { content: "\f10c"; }
+.flaticon-is-not-an-element-of:before { content: "\f10d"; }
+.flaticon-is-an-element-of:before { content: "\f10e"; }
+.flaticon-is-greater-than:before { content: "\f10f"; }
+.flaticon-is-less-than:before { content: "\f110"; }
+.flaticon-is-greater-than-or-equal-to:before { content: "\f111"; }
+.flaticon-is-less-than-or-equal-to:before { content: "\f112"; }
+.flaticon-is-approximately-equal-to:before { content: "\f113"; }
+.flaticon-empty-set:before { content: "\f114"; }
+.flaticon-abc:before { content: "\f115"; }
+.flaticon-left-quote:before { content: "\f116"; }
+.flaticon-right-quote-sign:before { content: "\f117"; }
+.flaticon-spark:before { content: "\f118"; }
+.flaticon-folder-plus:before { content: "\f119"; }
+.flaticon-csv-file:before { content: "\f11a"; }
+.flaticon-import:before { content: "\f11b"; }
+.flaticon-export:before { content: "\f11c"; }
+.flaticon-user-time-2:before { content: "\f11d"; }
+.flaticon-user-time-1:before { content: "\f11e"; }
+.flaticon-users-hierarchy-1:before { content: "\f11f"; }
+.flaticon-password:before { content: "\f120"; }
+.flaticon-authorization-2:before { content: "\f121"; }
+.flaticon-authorization-1:before { content: "\f122"; }
+.flaticon-users-hierarchy-2:before { content: "\f123"; }
+    
+    $font-Flaticon-people: "\f100";
+    $font-Flaticon-traffic-light: "\f101";
+    $font-Flaticon-admin-with-cogwheels: "\f102";
+    $font-Flaticon-cartable-computer-work: "\f103";
+    $font-Flaticon-hanging-over-the-key: "\f104";
+    $font-Flaticon-dashboard-1: "\f105";
+    $font-Flaticon-dashboard: "\f106";
+    $font-Flaticon-filter-design: "\f107";
+    $font-Flaticon-engineering: "\f108";
+    $font-Flaticon-flow-chart: "\f109";
+    $font-Flaticon-high-design: "\f10a";
+    $font-Flaticon-equal: "\f10b";
+    $font-Flaticon-not-equal: "\f10c";
+    $font-Flaticon-is-not-an-element-of: "\f10d";
+    $font-Flaticon-is-an-element-of: "\f10e";
+    $font-Flaticon-is-greater-than: "\f10f";
+    $font-Flaticon-is-less-than: "\f110";
+    $font-Flaticon-is-greater-than-or-equal-to: "\f111";
+    $font-Flaticon-is-less-than-or-equal-to: "\f112";
+    $font-Flaticon-is-approximately-equal-to: "\f113";
+    $font-Flaticon-empty-set: "\f114";
+    $font-Flaticon-abc: "\f115";
+    $font-Flaticon-left-quote: "\f116";
+    $font-Flaticon-right-quote-sign: "\f117";
+    $font-Flaticon-spark: "\f118";
+    $font-Flaticon-folder-plus: "\f119";
+    $font-Flaticon-csv-file: "\f11a";
+    $font-Flaticon-import: "\f11b";
+    $font-Flaticon-export: "\f11c";
+    $font-Flaticon-user-time-2: "\f11d";
+    $font-Flaticon-user-time-1: "\f11e";
+    $font-Flaticon-users-hierarchy-1: "\f11f";
+    $font-Flaticon-password: "\f120";
+    $font-Flaticon-authorization-2: "\f121";
+    $font-Flaticon-authorization-1: "\f122";
+    $font-Flaticon-users-hierarchy-2: "\f123";

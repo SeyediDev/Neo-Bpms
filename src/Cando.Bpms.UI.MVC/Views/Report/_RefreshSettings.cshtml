@@ -1,0 +1,344 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.UI.Resources.Resources
+@using System.Globalization
+@model ReportData
+
+@inject ControllerMethods controllerMethods;
+
+<script>
+    // Toggle refresh settings tooltip
+    function toggleRefreshSettings(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const panel = document.getElementById('refreshSettingsPanel');
+        const toggle = event.target.closest('a');
+
+        if (panel && toggle) {
+            // Hide all other tooltips first
+            const allPanels = document.querySelectorAll('.refresh-settings-panel');
+            allPanels.forEach(p => {
+                if (p !== panel) {
+                    p.classList.remove('show');
+                }
+            });
+
+            // Toggle current panel
+            if (!panel.classList.contains('show')) {
+                panel.classList.add('show');
+                toggle.classList.add('active');
+                
+                // Position tooltip relative to toggle button
+                const toggleRect = toggle.getBoundingClientRect();
+                panel.style.position = 'fixed';
+                panel.style.top = (toggleRect.bottom + 8) + 'px';
+                panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
+                panel.style.zIndex = '10000';
+                
+                console.log('Refresh settings tooltip shown');
+            } else {
+                panel.classList.remove('show');
+                toggle.classList.remove('active');
+                console.log('Refresh settings tooltip hidden');
+            }
+        }
+    }
+
+    // Close tooltip when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('[onclick*="toggleRefreshSettings"]') && !e.target.closest('#refreshSettingsPanel')) {
+            const panel = document.getElementById('refreshSettingsPanel');
+            const toggle = document.querySelector('[onclick*="toggleRefreshSettings"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+                console.log('Refresh settings tooltip hidden by outside click');
+            }
+        }
+    });
+
+    // Handle apply refresh settings functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const refreshIntervalSelect = document.getElementById('refresh-time-select');
+        const applyBtn = document.getElementById('applyRefreshSettings');
+        
+        let refreshTimer = null;
+        
+        if (applyBtn && refreshIntervalSelect) {
+            applyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const interval = parseInt(refreshIntervalSelect.value);
+                
+                console.log('Apply button clicked, interval:', interval);
+                
+                // Clear existing timer
+                if (refreshTimer) {
+                    clearInterval(refreshTimer);
+                    refreshTimer = null;
+                }
+                
+                // Update hidden input to save refresh time
+                const form = document.querySelector('form');
+                const refreshTimeInput = form.querySelector('input[name="__RefreshTime"]');
+                if (refreshTimeInput) {
+                    refreshTimeInput.value = interval.toString();
+                }
+                
+                // Set new timer if interval > 0
+                if (interval > 0) {
+                    refreshTimer = setInterval(() => {
+                        location.reload();
+                    }, interval * 1000);
+                    
+                    // Show notification
+                    showNotification(`بروزرسانی خودکار هر ${interval} ثانیه فعال شد`, 'success');
+                } else {
+                    showNotification('بروزرسانی خودکار غیرفعال شد', 'info');
+                }
+                
+                // Hide settings panel
+                const panel = document.getElementById('refreshSettingsPanel');
+                if (panel) {
+                    panel.classList.remove('show');
+                }
+                
+                // Update icon and badge
+                updateRefreshIcon(interval);
+                
+                // Submit form to save refresh time to server
+                setTimeout(() => {
+                    form.submit();
+                }, 1000); // Wait 1 second to show notification first
+            });
+        }
+        
+        // Notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-size: 14px;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Update refresh icon and badge based on interval
+        function updateRefreshIcon(interval) {
+            const toggle = document.querySelector('.refresh-settings-toggle');
+            let badge = toggle.querySelector('.refresh-time-badge');
+            
+            if (interval > 0) {
+                // Add active class for animation
+                toggle.classList.add('active');
+                
+                // Create or update badge
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'refresh-time-badge';
+                    toggle.appendChild(badge);
+                }
+                badge.textContent = interval;
+                
+                console.log('Refresh icon activated with interval:', interval);
+            } else {
+                // Remove active class
+                toggle.classList.remove('active');
+                
+                // Remove badge
+                if (badge) {
+                    badge.remove();
+                }
+                
+                console.log('Refresh icon deactivated');
+            }
+        }
+        
+        // Initialize icon state on page load
+        const initialInterval = parseInt(document.getElementById('refresh-time-select').value);
+        updateRefreshIcon(initialInterval);
+    });
+</script>
+
+<style>
+    /* Badge برای نمایش مقدار refresh time */
+    .refresh-time-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: #dc3545;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 4px;
+        border-radius: 8px;
+        min-width: 16px;
+        text-align: center;
+        line-height: 1;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* آیکن فعال - تغییر رنگ و انیمیشن */
+    .refresh-settings-toggle.active {
+        color: #dc3545 !important;
+        animation: pulse 2s infinite;
+    }
+
+    .refresh-settings-toggle.active svg circle {
+        fill: #dc3545;
+    }
+
+    .refresh-settings-toggle.active svg path {
+        stroke: #dc3545;
+    }
+
+    .refresh-settings-panel {
+        position: fixed !important;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        padding: 20px !important;
+        z-index: 10000 !important;
+        min-width: 300px !important;
+        max-width: 350px !important;
+        backdrop-filter: blur(10px) !important;
+        animation: slideDown 0.3s ease-out !important;
+        display: none !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .refresh-settings-panel.show {
+        display: flex !important;
+    }
+
+    .refresh-settings-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+    }
+
+    .refresh-settings-icon {
+        font-size: 18px;
+        width: 24px;
+        text-align: center;
+    }
+
+    .refresh-settings-label {
+        font-weight: 600;
+        color: #374151;
+        min-width: 90px;
+        font-size: 15px;
+    }
+
+    .refresh-settings-buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .refresh-settings-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 120px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .refresh-settings-btn:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .refresh-settings-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* آیکن تنظیمات بروزرسانی - رنگ سبز */
+    .top-page .icons a.text-success {
+        color: #28a745 !important;
+    }
+
+    .top-page .icons a.text-success:hover {
+        color: #19692c !important;
+    }
+</style>
+
+@{
+    var structure = Model.structure;
+    var refreshTime = structure.FilterValues.GetLong("__RefreshTime");
+    var hasActiveRefresh = refreshTime > 0;
+}
+
+<!-- پنل تنظیمات بروزرسانی (مخفی) -->
+<div class="refresh-settings-panel" id="refreshSettingsPanel">
+    <div class="refresh-settings-item">
+        <span class="refresh-settings-icon">⏱️</span>
+        <span class="refresh-settings-label">@ViewTexts.RefreshTimeInterval:</span>
+    </div>
+    <select id="refresh-time-select" name="__RefreshTime" >
+        <!option @(refreshTime == 0 ? "selected" : "") value="0">
+        @ViewTexts.Disabled
+        </!option>
+        <!option @(refreshTime == 10 ? "selected" : "") value="10">
+        10 @ViewTexts.Seconds
+        </!option>
+        <!option @(refreshTime == 30 ? "selected" : "") value="30">
+        30 @ViewTexts.Seconds
+        </!option>
+        <!option @(refreshTime == 60 ? "selected" : "") value="60">
+        1 @ViewTexts.Minutes
+        </!option>
+        <!option @(refreshTime == 120 ? "selected" : "") value="120">
+        2 @ViewTexts.Minutes
+        </!option>
+        <!option @(refreshTime == 300 ? "selected" : "") value="300">
+        5 @ViewTexts.Minutes
+        </!option>
+        <!option @(refreshTime == 600 ? "selected" : "") value="600">
+        10 @ViewTexts.Minutes
+        </!option>
+    </select>
+    <div class="refresh-settings-buttons">
+        <button id="applyRefreshSettings" class="refresh-settings-btn">اعمال</button>
+    </div>
+</div>

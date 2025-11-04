@@ -1,0 +1,11 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Bpms.Processes.FilterModels
+@model             WorkItemsFilter
+
+@{
+	if (Model.JustRestorableTasks)
+	{
+		<th class="cColumn">
+			<span style="color: #009D56;">بازگردانی</span>
+		</th>
+	}
+}

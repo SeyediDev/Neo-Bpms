@@ -1,0 +1,111 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.UI.Resources.Resources
+@model             ReportData
+@{
+    var structure = Model.structure;
+    var modalKey = structure.ConfigId;
+    var config = Model.structure.Configs.FirstOrDefault(cfg => cfg.ConfigId == Model.structure.ConfigId);
+    var format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-success") : null;
+    var successFilter = format != null ? format.Filter : "";
+    format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-danger") : null;
+    var dangerFilter = format != null ? format.Filter : "";
+    format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-info") : null;
+    var infoFilter = format != null ? format.Filter : "";
+    format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-warning") : null;
+    var warningFilter = format != null ? format.Filter : "";
+    format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-active") : null;
+    var activeFilter = format != null ? format.Filter : "";
+}
+<script language="javascript">
+    if (!window.top.modalObjects)
+        window.top.modalObjects = {};
+    if (!window.modalObjects)
+        window.modalObjects = {};
+        
+    window.top.modalObjects["@modalKey"] = {
+        NamespaceId: "@structure.NamespaceId",
+        EntityId: "@structure.EntityId",
+        ReportId: "@structure.Form_ReportId",
+        ConfigId: "@structure.ConfigId"
+    };
+    
+    window.modalObjects["@modalKey"] = {
+        NamespaceId: "@structure.NamespaceId",
+        EntityId: "@structure.EntityId",
+        ReportId: "@structure.Form_ReportId",
+        ConfigId: "@structure.ConfigId"
+    };
+    
+    var formulaAggrId = "@(eAggregationFunctions.Formula)";
+    
+            // Colors modal initialized
+</script>
+
+<div class="colorsSettingsModal modal fade" id="colorsSettingsModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="colorsSettingsModal-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+	            <h4 class="modal-title" id="colorsettingsModal-label-@modalKey">@ViewTexts.ColorsSettings</h4>
+                <button type="button" class="close" data-dismiss="modal" data-target="#colorsSettingsModal-@modalKey" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-0">
+                <div class="row">
+                    <table class="table mb-0" style="width: 100%;">
+                        <thead>
+                        <tr>
+                            <th></th><th>@ViewTexts.Formula</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="table-danger">
+                            <td>@ViewTexts.ContextDanger</td><td>
+                                <input class="form-control" dir="ltr" style="width: 100%" id="_color_danger-@modalKey" value="@dangerFilter"/>
+                            </td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td>@ViewTexts.ContextWarning</td><td>
+                                <input class="form-control" dir="ltr" style="width: 100%" id="_color_warning-@modalKey" value="@warningFilter"/>
+                            </td>
+                        </tr>
+                        <tr class="table-info">
+                            <td>@ViewTexts.ContextInfo</td><td>
+                                <input class="form-control" dir="ltr" style="width: 100%" id="_color_info-@modalKey" value="@infoFilter"/>
+                            </td>
+                        </tr>
+                        <tr class="table-success">
+                            <td>@ViewTexts.ContextSuccess</td><td>
+                                <input class="form-control" dir="ltr" style="width: 100%" id="_color_success-@modalKey" value="@successFilter"/>
+                            </td>
+                        </tr>
+                        <tr class="table-active">
+                            <td>@ViewTexts.ContextActive</td><td>
+                                <input class="form-control" dir="ltr" style="width: 100%" id="_color_active-@modalKey" value="@activeFilter"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="float-right">
+                    <button type="button" class="btn btn-secondary save-button" data-dismiss="modal" data-target="#colorsSettingsModal-@modalKey">@ViewTexts.Cancel</button>
+                    <button type="button" class="btn btn-primary add-button" onclick="submitColorsSettings('@modalKey')">@ViewTexts.Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Rows.Count != 0)
+{
+    var row = Model.Rows[0];
+    if (row.SubReports != null)
+    {
+        foreach (var subReport in row.SubReports)
+        {
+            @Html.Partial("_ColorsModal", subReport)
+        }
+    }
+}

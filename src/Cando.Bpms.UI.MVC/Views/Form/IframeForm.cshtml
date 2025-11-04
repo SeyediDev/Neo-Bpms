@@ -1,0 +1,243 @@
+﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
+
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model ElasticObject
+@{
+    Layout = null;
+
+    CommonFormStructure structure = ViewBag.structure;
+    var pageName = ViewBag.PagePackId as string;
+    var isReturnable = (bool)ViewBag.IsReturnable;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+
+    var options = new RendererOptions
+    {
+        IsReadOnly = IsReadOnly(structure),
+        ShowFormLinkIconForChoices = false,
+        IsIframe = true
+    };
+    ControlsRendererData controlsRendererData = new(structure, Model, options, ViewBag.user, Url);
+    var recordNotFound = ViewBag.RecordNotFound ?? false;
+}
+
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/CommonAssets/Styles/Features/Modern/controls-modern.css" />
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+            <text>
+        window.top.toast.success('@ViewBag.SuccessMessage', '@structure.Name');
+            </text>
+    }
+</script>
+
+@using (Html.BeginForm("IframeForm", "Form", FormMethod.Post,
+    new { enctype = "multipart/form-data", id = GetFormId(structure.FormType), @class = "modern-form mb-0" }))
+{
+    var recordId = Model.GetString("Ids");
+
+    HiddenInputs(structure, options.CalendarType, recordId);
+
+    <div class="modern-main-container">
+        <div class="modern-container">
+            <!-- Modern Title Box -->
+            <div class="modern-title-box">
+                <div class="modern-title-content">
+                    <div class="modern-title-text">
+                        <h2 class="modern-title">فرم Iframe @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))</h2>
+                    </div>
+                    <div class="modern-title-actions">
+                        @if (!string.IsNullOrEmpty(pageIcon))
+                        {
+                            <div class="modern-settings-btn">
+                                <i class="@pageIcon"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modern-form-wrapper">
+                @{
+                    await MainPartOfTheForm(controlsRendererData, recordNotFound);
+                }
+                @{
+                    await ActionButtons(structure, ViewBag.IndexFormId, isReturnable);
+                }
+            </div>
+        </div>
+    </div>
+
+    <partial name="Logic/_Logic" model="structure" />
+    <script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+
+    @if (structure.Logic != null &&
+                  structure.Logic.Logics.Any(l => l.TriggeringEvent.EventType == UIRuleEvent.eEventType.onPageLoad))
+    {
+            <text>
+        pageLoaded();
+            </text>
+    }
+</script>
+
+<partial name="Layout/JsGlobalConfigs" />
+
+@functions
+{
+    void HiddenInputs(CommonFormStructure structure, string calendar,
+        string recordId)
+    {
+        if (structure.FormType == Form.eFormType.WorkItem ||
+            structure.FormType == Form.eFormType.ProcessCreateOnExistingRecord ||
+            structure.FormType == Form.eFormType.ProcessCreate)
+        {
+            <input type="hidden" name="TaskId" value="@ViewBag.TaskId" />
+            <input type="hidden" name="ProcessId" value="@ViewBag.ProcessId" />
+            <input type="hidden" name="wid" value="@ViewBag.wid" />
+        }
+
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+
+        @*Not happy about these if-else hidden inputs. They are needed by form.js!*@
+        if (structure.FormType == Form.eFormType.Create)
+        {
+            @Html.Hidden("addAgain", false)
+        }
+        else if (structure.FormType == Form.eFormType.Edit)
+        {
+            @Html.Hidden("EditType", EditTypeId.Save)
+        }
+        else if (structure.FormType == Form.eFormType.Delete || structure.FormType == Form.eFormType.VirtualDelete)
+        {
+            @Html.Hidden("DeleteType", eDeleteType.DelAndReturn)
+        }
+        @Html.Hidden("returnUrl", "")
+        @Html.Hidden("indexFormId", ViewBag.IndexFormId as string)
+        <input type="hidden" name="ids" value="@(recordId ?? ViewBag.Ids ?? "")" />
+    }
+
+    void Title(CommonFormStructure structure, string pageIcon)
+    {
+        <h4>
+            @if (!string.IsNullOrEmpty(pageIcon))
+            {
+                <i class="@pageIcon"></i>
+            }
+            @structure.Name
+        </h4>
+    }
+
+    async Task ActionButtons(CommonFormStructure structure, string indexFormId, bool isReturnable)
+    {
+        <div class="modern-action-buttons">
+            <div class="modern-button-group">
+                <div class="modern-button-row">
+                    @if (structure.FormType == Form.eFormType.Edit)
+                    {
+                        <button type="button" data-etype="@EditTypeId.SaveAndReturn"
+                                onclick="edit(this)" id="save-edit-form"
+                                class="modern-btn modern-btn-success ladda-button"
+                                data-style="zoom-in">
+                            <span>@ViewTexts.Submit</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                            </svg>
+                        </button>
+                    }
+                    else if (structure.FormType == Form.eFormType.Create)
+                    {
+                        <button type="button" onclick="doSubmit(this)"
+                                data-ctype="@eCreateType.SaveAndReturn"
+                                class="modern-btn modern-btn-primary ladda-button"
+                                data-style="zoom-in">
+                            <span>@ViewTexts.Submit</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#save-button" />
+                            </svg>
+                        </button>
+                    }
+                    else if (structure.FormType == Form.eFormType.ProcessCreate)
+                    {
+                        <button type="submit" class="modern-btn modern-btn-primary ladda-button" data-style="zoom-in">
+                            <span>@structure.Name</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#check-button" />
+                            </svg>
+                        </button>
+                    }
+                    else if (structure.FormType == Form.eFormType.Delete || structure.FormType == Form.eFormType.VirtualDelete)
+                    {
+                        <button type="button" data-dtype="@eDeleteType.DelAndReturn" class="modern-btn modern-btn-danger ladda-button" data-style="zoom-in" onclick="del(this)">
+                            <span>@ViewTexts.DeleteAndReturn</span>
+                            <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                                <use href="/Content/common-assets-includes/icons/svgSprite.svg#delete-button" />
+                            </svg>
+                        </button>
+                    }
+                    @if (!string.IsNullOrEmpty(indexFormId) || isReturnable)
+                    {
+                        <partial name="Common/BackButton" />
+                    }
+                </div>
+            </div>
+            <input type="submit" id="submitBtn" style="display: none;" />
+        </div>
+    }
+
+    async Task MainPartOfTheForm(ControlsRendererData controlsRendererData, bool recordNotFound)
+    {
+        <partial name="Utility/RenderLoading" />
+        <div id="mainPartOfTheForm" class="modern-form-content hidden">
+            @if (recordNotFound)
+            {
+                <div class="modern-validation-summary">
+                    <h6>رکورد یافت نشد.</h6>
+                </div>
+            }
+            @Html.ValidationSummary(false, "", new { @class = "modern-validation-summary" })
+            <div id="main-part">
+                @controlsRenderer.Render(controlsRendererData)
+            </div>
+        </div>
+    }
+
+
+    private static string GetFormId(Form.eFormType formType)
+    {
+        if (formType.In(Form.eFormType.Edit, Form.eFormType.WorkItem))
+        {
+            return "edit-form";
+        }
+        if (formType == Form.eFormType.Create)
+        {
+            return "create-form";
+        }
+        return string.Empty;
+    }
+
+    private static bool IsReadOnly(CommonFormStructure structure)
+    {
+        if (structure.FormType.In(Form.eFormType.Detail, Form.eFormType.Delete))
+            return true;
+        return false;
+    }
+}

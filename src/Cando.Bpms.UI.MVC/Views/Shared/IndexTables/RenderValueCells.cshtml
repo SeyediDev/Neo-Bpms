@@ -1,0 +1,33 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@inject IFormLogicHelper formLogicHelper;
+
+@model Neo.Bpms.UI.MVC.PartialModels.IndexTables.RenderValueCellsModel
+
+@{
+	foreach (var columnInfo in Model.structure.ColumnInfos)
+	{
+		object value;
+		Model.rowData.GetField(columnInfo.ColumnName, out value);
+		var val = TableHelper.CreateCellElement(value, columnInfo, true, Model.calendar);
+		<td class="cColumn" @CellValueAttribute(columnInfo, value)>
+			<span @formLogicHelper.HtmlLogicEvent(Model.structure, null, null)>@val</span>
+		</td>
+	}
+
+
+	string CellValueAttribute(ColumnFieldDefinition column, object value)
+	{
+		if (column.IsSummable)
+		{
+			if (value is TimeSpan)
+			{
+				value = ((TimeSpan) value).Ticks;
+			}
+			return "<text>data-arithmetic-value=\"" + @Convert.ToDecimal(value) + "\"</text>";
+		}
+		return "";
+	}
+}

@@ -1,0 +1,13 @@
+﻿@using Neo.Bpms.UI.Resources.Resources
+@model Neo.Bpms.UI.MVC.PartialModels.FormDesign.FormDesignLinkModel
+
+@{
+	if (Model.canDesign)
+	{
+        <a href="@Url.Content(string.Format("~/Form/Design?NamespaceId={0}&EntityId={1}&FormId={2}", Model.structure.NamespaceId, Model.structure.EntityId, Model.structure.Form_ReportId))" title="@ViewTexts.Settings" class="icons-tables">
+           <svg style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 24 24">
+                <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+           </svg>
+		</a>
+	}
+}

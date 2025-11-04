@@ -1,0 +1,177 @@
+﻿@model Neo.Bpms.UI.MVC.PartialModels.Layout.HeaderModel
+<!--effect1-->
+<div id="cando-header" class="container-fluid menulink " style="width: 100%; position:relative; padding-top: 11px;background: none;">
+    <div class="row" style="margin: 10px 0 5px;">
+		<div class="col-4 float-start" style="margin-top: -4px; margin-right: -10px;">
+            <!-- Club Customer Badge as Logo - Right Side -->
+                <div class="d-none d-lg-block float-start" style="margin: 5px;">
+                <div style="display:flex;gap: 13px; align-items: center;">
+                    <!-- Modern Hamburger Menu Icon -->
+                    <div class="modern-hamburger-menu">
+                        <a href="#menu2" class="hamburger-link">
+                            <div class="hamburger-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Modern Hamburger Lines -->
+                                    <rect x="6" y="8" width="20" height="2" rx="1" fill="currentColor" class="hamburger-line hamburger-line-1"/>
+                                    <rect x="6" y="15" width="20" height="2" rx="1" fill="currentColor" class="hamburger-line hamburger-line-2"/>
+                                    <rect x="6" y="22" width="20" height="2" rx="1" fill="currentColor" class="hamburger-line hamburger-line-3"/>
+                                    
+                                    <!-- Hover Effect Circle -->
+                                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1" opacity="0" class="hamburger-hover-circle"/>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Club Customer Badge as Logo -->
+                    <div class="header-club-badge">
+                        <a href="@Url.Content("~/")" style="text-decoration: none; display: block;">
+                            <div class="club-svg-icon-header">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Professional Gradients -->
+                                <defs>
+                                    <!-- Main Circle Gradient -->
+                                    <radialGradient id="headerMainGradient" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
+                                        <stop offset="25%" style="stop-color:#00b4d8;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#0077b6;stop-opacity:1" />
+                                        <stop offset="75%" style="stop-color:#023e8a;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#001d3d;stop-opacity:1" />
+                                    </radialGradient>
+                                    
+                                    <!-- User Icons Gradient -->
+                                    <linearGradient id="headerUserGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#00b4d8;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#0077b6;stop-opacity:1" />
+                                    </linearGradient>
+                                    
+                                    <!-- Glow Effect -->
+                                    <filter id="headerGlowEffect">
+                                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                        <feMerge> 
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+                                
+                                <!-- Main Background Circle -->
+                                <circle cx="30" cy="30" r="28" fill="url(#headerMainGradient)" stroke="rgba(255,255,255,0.2)" stroke-width="1" filter="url(#headerGlowEffect)"/>
+                                
+                                <!-- Inner Ring -->
+                                <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                                
+                                <!-- Central Badge - Bank Badge SVG -->
+                                <g transform="translate(18, 24)">
+                                    <svg width="24" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="header_logo_svg__a" width="12" height="12" x="12" y="0" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+                                            <path fill="#fff" d="M19.88.942 11.803 9.27c2.827 4.84 7.464 4.04 10.128.65 2.2-2.178 2.404-5.81 1.284-8.28-.642-1.201-1.912-1.812-3.6-.918a4.54 4.54 0 0 0-.762.515z"></path>
+                                        </mask>
+                                        <g mask="url(#header_logo_svg__a)">
+                                            <path fill="#002D5D" d="M24.284-.292H11.803v13.608h12.481z"></path>
+                                            <path fill="#002D5D" d="M23.805 9.52c-.96 1.26-1.98 2.34-3.012 3.204q-.48.324-.96.608v-.357H12.234v.034c-.195-.418-.324-.884-.39-1.388-.132-1.006-.006-2.16.346-3.408.711-2.48 2.352-5.28 4.755-7.812.96-1.26 1.98-2.34 3.012-3.204a18.3 18.3 0 0 1 1.92-1.134q.477-.241.948-.442v.2h3.816v12.24h.39q-.198.245-.405.486a23.9 23.9 0 0 1-.866.96z"></path>
+                                        </g>
+                                        <mask id="header_logo_svg__b" width="18" height="12" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+                                            <path fill="#fff" d="m11.739 9.327 6.675-6.945C17.19 3.69 14.957 6.738 12.617 6.742c-2.34.003-4.31-1.78-4.486-1.899L3.971.696C2.512-.205 1.625-.117.774 1.96c-1.269 2.67-1.119 6.39 1.658 8.384 2.777 1.995 6.219 1.379 9.108-.53l.004-.004.005-.005z"></path>
+                                        </mask>
+                                        <g mask="url(#header_logo_svg__b)">
+                                            <path fill="#993" d="M18.542-.205H-.247v8.335h18.789z"></path>
+                                            <path fill="#993" d="M11.752 8.955c-3.696 3.88-9.834 4.032-13.71.336a9.7 9.7 0 0 1-1.79-1.152h.437V.042h-.192q.256-.411.558-.798v.234h12.178v-.224q.149.193.287.392a9.66 9.66 0 0 1 .93 1.332 9.7 9.7 0 0 1 .8 2.904 9.66 9.66 0 0 1-2.671 6.927z"></path>
+                                        </g>
+                                    </svg>
+                                </g>
+                                
+                                <!-- User Icons Around Badge (4 main users) -->
+                                <!-- Top User -->
+                                <g transform="translate(30, 6)">
+                                    <circle cx="0" cy="0" r="4" fill="url(#headerUserGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="0.8"/>
+                                    <circle cx="0" cy="-1.5" r="1.5" fill="rgba(255,255,255,0.9)"/>
+                                    <path d="M-2.5 1.5 Q0 3 2.5 1.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="0.6"/>
+                                </g>
+                                
+                                <!-- Right User -->
+                                <g transform="translate(54, 30)">
+                                    <circle cx="0" cy="0" r="4" fill="url(#headerUserGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="0.8"/>
+                                    <circle cx="0" cy="-1.5" r="1.5" fill="rgba(255,255,255,0.9)"/>
+                                    <path d="M-2.5 1.5 Q0 3 2.5 1.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="0.6"/>
+                                </g>
+                                
+                                <!-- Bottom User -->
+                                <g transform="translate(30, 54)">
+                                    <circle cx="0" cy="0" r="4" fill="url(#headerUserGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="0.8"/>
+                                    <circle cx="0" cy="-1.5" r="1.5" fill="rgba(255,255,255,0.9)"/>
+                                    <path d="M-2.5 1.5 Q0 3 2.5 1.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="0.6"/>
+                                </g>
+                                
+                                <!-- Left User -->
+                                <g transform="translate(6, 30)">
+                                    <circle cx="0" cy="0" r="4" fill="url(#headerUserGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="0.8"/>
+                                    <circle cx="0" cy="-1.5" r="1.5" fill="rgba(255,255,255,0.9)"/>
+                                    <path d="M-2.5 1.5 Q0 3 2.5 1.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="0.6"/>
+                                </g>
+                                
+                                <!-- Connection Lines -->
+                                <g stroke="rgba(255,255,255,0.4)" stroke-width="0.6" fill="none">
+                                    <line x1="30" y1="10" x2="30" y2="18"/>
+                                    <line x1="50" y1="18" x2="42" y2="18"/>
+                                    <line x1="58" y1="30" x2="50" y2="30"/>
+                                    <line x1="50" y1="42" x2="42" y2="42"/>
+                                    <line x1="30" y1="50" x2="30" y2="42"/>
+                                    <line x1="10" y1="42" x2="18" y2="42"/>
+                                    <line x1="2" y1="30" x2="10" y2="30"/>
+                                    <line x1="10" y1="18" x2="18" y2="18"/>
+                                </g>
+                                
+                                <!-- Sparkle Effects -->
+                                <g fill="rgba(255,255,255,0.9)">
+                                    <circle cx="22" cy="11" r="0.8"/>
+                                    <circle cx="38" cy="18" r="0.8"/>
+                                    <circle cx="22" cy="49" r="0.8"/>
+                                    <circle cx="11" cy="22" r="0.8"/>
+                                    <circle cx="49" cy="11" r="0.6"/>
+                                    <circle cx="49" cy="49" r="0.6"/>
+                                    <circle cx="11" cy="49" r="0.6"/>
+                                    <circle cx="11" cy="11" r="0.6"/>
+                                </g>
+                                
+                                <!-- Inner Glow -->
+                                <circle cx="30" cy="30" r="20" fill="none" stroke="rgba(0, 212, 170, 0.3)" stroke-width="0.4"/>
+                            </svg>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <span style="padding-top: 5px;">@Model.title</span>
+                </div>
+            </div>
+		</div>
+		<div class="col-4 col-sm-6 col-lg-6">
+			<!-- Title Section -->
+			@if (Model.titleImage != null)
+			{
+				<div style="height: 100%; float: right">
+					<a style="text-decoration: none" href="@Url.Content("~/")">
+						<img style="height: 42px;" src="@Url.Content(string.Format("~/{0}", Model.titleImage))" alt="@Model.title"/>
+					</a>
+				</div>
+			}
+			else if (Model.title != null)
+			{
+				<div class="text-truncate mt-2" style="height: 100%;text-align:center">
+					<a style="text-decoration: none" href="@Url.Content("~/")">
+                        <span class="d-sm-inline-block mx-2" style="font-size: 18px;color:#334155;">
+                            @* @Model.title *@
+                        </span>
+					</a>
+				</div>
+			}
+		</div>
+		<div class="col-4 col-sm-2 col-lg-2 float-end p-0">
+            <div class="top-bar">
+				<!-- User Account Box -->
+			<partial name="Layout/UserAccountBox" model="Model.user"/>
+		</div>
+	</div>
+	</div>
+</div>

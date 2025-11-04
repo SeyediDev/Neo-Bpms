@@ -1,0 +1,142 @@
+﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.FormDesign
+
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+@inject ISBVRRenderer sbvrRenderer;
+
+@model dynamic
+
+@{
+    CommonFormStructure structure = ViewBag.structure;
+    var canDesign = ViewBag.CanDesign ?? false;
+    var pageName = ViewBag.PagePackId as string;
+    var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
+    var elModel = Model as ElasticObject;
+    var options = new RendererOptions
+    {
+        IsReadOnly = true
+    };
+    ControlsRendererData controlsRendererData = new(structure, elModel, options, ViewBag.user, Url);
+    var recordNotFound = ViewBag.RecordNotFound ?? false;
+}
+
+<!-- Modern CSS Framework -->
+<link rel="stylesheet" href="/Content/common-assets-includes/features/modern/controls-modern.css" />
+<link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<!-- SBVR styles for rule icons and modal content -->
+<link rel="stylesheet" href="~/Content/common-assets-includes/features/sbvr/sbvr-styles.css" asp-append-version="true" />
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+
+
+@using (Html.BeginForm("Delete", "Form", FormMethod.Post, new { enctype = "multipart/form-data", @class = "modern-form" }))
+{
+    elModel.GetField("Ids", out var recordId);
+
+    HiddenInputs(structure, options.CalendarType, recordId);
+    
+    <div id="mm-main-page" @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+                <!-- Modern Title Box -->
+		<div class="modern-title-box delete-page">
+                    <div class="modern-title-content">
+                        <div class="modern-title-text">
+                            <h2 class="modern-title">
+                                <i class="fa fa-trash" style="margin-left: 8px; color: #ef4444;"></i>
+                                @structure.Name
+                                @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
+                            </h2>
+                        </div>
+                        <div class="modern-title-actions">
+                            @if (canDesign)
+                            {
+                                <a href="/Form/Design?NamespaceId=@structure.NamespaceId&EntityId=@structure.EntityId&FormId=@structure.Form_ReportId" title="تنظیمات" class="modern-settings-btn">
+                                    <svg viewBox="0 0 24 24">
+                                        <use href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />
+                                    </svg>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modern-form-wrapper">
+                    @{ await MainPartOfTheForm(controlsRendererData, recordNotFound); }
+                </div>
+            </div>
+
+    <partial name="Logic/_Logic" model="structure" />
+    <script src="@CommonBundles.FormJsBundle" asp-append-version="true"></script>
+}
+
+@if (controlsRendererData.IncludeNeedingControls != null)
+{
+    <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+}
+
+<script>
+    @controlsRenderer.RenderScripts(controlsRendererData)
+</script>
+
+@functions
+{
+    void HiddenInputs(CommonFormStructure structure, string calendar, object recordId)
+    {
+        @Html.Hidden("NamespaceId", structure.NamespaceId)
+        @Html.Hidden("EntityId", structure.EntityId)
+        @Html.Hidden("FormId", structure.Form_ReportId)
+        @Html.Hidden("FormSubjectId", structure.FormSubjectId)
+        @Html.Hidden("calendar", calendar)
+        @Html.Hidden("DeleteType", eDeleteType.DelAndReturn)
+        @Html.Hidden("returnUrl", "")
+        @Html.Hidden("ids", recordId)
+        <input type="hidden" name="__parentNamespaceId" value="@ViewBag.__parentNamespaceId" />
+        <input type="hidden" name="__parentEntityId" value="@ViewBag.__parentEntityId" />
+        <input type="hidden" name="__parentFormSubjectId" value="@ViewBag.__parentFormSubjectId" />
+        <input type="hidden" name="__subTableAssociationFieldId" value="@ViewBag.__subTableAssociationFieldId" />
+        <input type="hidden" name="__parentIds" value="@ViewBag.__parentIds" />
+    }
+
+    async Task ActionButtons()
+    {
+        <div class="modern-action-buttons">
+            <div class="modern-button-group">
+                <div class="modern-button-row">
+                    <button type="button" data-dtype="@eDeleteType.DelAndReturn" class="modern-btn modern-btn-danger ladda-button" data-style="zoom-in" onclick="del(this)">
+                        <span>@ViewTexts.DeleteAndReturn</span>
+                        <svg class="modern-svg-icon" viewBox="0 0 18 18">
+                            <use href="/Content/common-assets-includes/icons/svgSprite.svg#delete-button" />
+                        </svg>
+                    </button>
+                    <partial name="Common/BackButton"/>
+                </div>
+            </div>
+        </div>
+    }
+
+    async Task MainPartOfTheForm(ControlsRendererData controlsRendererData, bool recordNotFound)
+    {
+        <partial name="Utility/RenderLoading"/>
+        <div id="mainPartOfTheForm" class="modern-form-content hidden">
+            @if (recordNotFound)
+            {
+                <div class="modern-validation-summary">
+                    <h6>رکورد یافت نشد.</h6>
+                </div>
+            }
+            @Html.ValidationSummary(false, "", new {@class = "modern-validation-summary"})
+            <div id="main-part">
+                @controlsRenderer.Render(controlsRendererData)
+            </div>
+        </div>
+        ActionButtons();
+    }
+}

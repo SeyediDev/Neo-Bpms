@@ -1,0 +1,32 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.ProcessDesign
+@model             IframeWrapperModel
+<iframe id="@Model.iframeId" class="implicit-iframe"
+        iframeborder="0" scrolling="no"
+        style="width: 100%; height: 100%; overflow-y: scroll !important; overflow-x: hidden !important;">
+</iframe>
+<script>
+	function alignHeight() {
+		var iframeHeight = window.innerHeight - ($('#cando-header').height() + 5);
+		var iframeHeightStr = iframeHeight + 'px';
+		$('#@Model.iframeId').css('height', iframeHeightStr);
+		$('#@Model.iframeId').css('display', 'block');
+	}
+
+	$(window).on('resize', alignHeight);
+	$("#@Model.iframeId").on('load',
+			function(a) {
+				alignHeight();
+				var iFrameUrl = this.contentWindow.location.href;
+				if (iFrameUrl.indexOf('?') === -1)
+					return;
+				var queryString = iFrameUrl.substr(iFrameUrl.indexOf('?'));
+				window.history.pushState('design',
+					'',
+					window.top.rootUrl + '@Model.wrapperRoute' + queryString);
+			})
+		.attr('src',
+			window.top.rootUrl +
+			'@Model.iframeRoute' +
+			window.location.search);
+
+</script>
