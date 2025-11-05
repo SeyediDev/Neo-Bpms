@@ -1136,20 +1136,20 @@
 		<Content Include="$(MSBuildThisFileDirectory)Styles\Common Plugins\Controls\Fine Uploader\trash.gif">
 			<Link>wwwroot\Content\common-assets-includes\common-plugins\controls\fine-uploader\trash.gif</Link>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-login.css">
-			<Link>wwwroot\Content\common-assets-includes\features\global\cando-login.css</Link>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\neo-login.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\neo-login.css</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-dashboard.css">
-			<Link>wwwroot\Content\common-assets-includes\features\global\cando-dashboard.css</Link>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\neo-dashboard.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\neo-dashboard.css</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-detail.css">
-			<Link>wwwroot\Content\common-assets-includes\features\global\cando-detail.css</Link>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\neo-detail.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\neo-detail.css</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\cando-index.css">
-			<Link>wwwroot\Content\common-assets-includes\features\global\cando-index.css</Link>
+		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Global\neo-index.css">
+			<Link>wwwroot\Content\common-assets-includes\features\global\neo-index.css</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="$(MSBuildThisFileDirectory)Styles\Features\Modern\controls-modern.css">

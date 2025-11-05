@@ -9,9 +9,9 @@ public class AdvancedUpload : CabdoJsControl
     {
     }
 
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         result +=
             $@"$('[id=""{Field.FieldName}""]')
                          .fineUploader({{

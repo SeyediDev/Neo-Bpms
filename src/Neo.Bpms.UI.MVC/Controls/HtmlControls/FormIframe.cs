@@ -2,11 +2,11 @@
 
 public class FormIframe(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) 
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         result +=
             $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}"" {CommonProperties.GetStyle()} 
@@ -21,7 +21,7 @@ public class FormIframe(IFormLogicHelper formLogicHelper, InputFieldDefinition f
 
     private string IframeFormUrl => Url.Action("IframeForm", "Form", ControlsRendererData.Url, UrlObject);
 
-    protected override CandoStringBuilder RenderDesignIcons(CandoStringBuilder result)
+    protected override NeoStringBuilder RenderDesignIcons(NeoStringBuilder result)
     {
         base.RenderDesignIcons(result);
 

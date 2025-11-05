@@ -112,11 +112,11 @@ public abstract partial class AdoDotNetDatabaseDataSource
         var startTime = GetFunctionArgument(1, forWhere, function, localParameters, true);
         var endTime = GetFunctionArgument(2, forWhere, function, localParameters, true);
         var filter = GetFilterSql();
-        var joinBuilder = new CandoStringBuilder();
+        var joinBuilder = new NeoStringBuilder();
         var tables = new Dictionary<string, string> { { Name, Name } };
         GenerateQuery_WriteJoins(this, ref joinBuilder, ref tables);
         var join = joinBuilder.ToString();
-        var script = new CandoStringBuilder();
+        var script = new NeoStringBuilder();
         script += $@"(Select Sum(G.{endTime}-G.{startTime}) From (
 			Select Distinct B.{startTime}, B.{endTime}
 				From {tableName} A ";

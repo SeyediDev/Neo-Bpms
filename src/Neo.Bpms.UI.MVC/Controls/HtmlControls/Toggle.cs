@@ -4,12 +4,12 @@ namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 public class Toggle(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
     private readonly BooleanTitles _titles = new(field);
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         bool bValue = ControlsRendererData.Record.GetBool(Field.FieldName);
         result += $@"

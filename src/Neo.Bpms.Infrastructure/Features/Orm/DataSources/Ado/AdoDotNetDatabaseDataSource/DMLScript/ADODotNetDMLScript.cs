@@ -188,7 +188,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateDmlCommandWhereClause(string keyFilterValues, Entity entity)
     {
-        var commandString = new CandoStringBuilder();
+        var commandString = new NeoStringBuilder();
         if ((SubTables?.Count ?? 0) > 0)
         {
             var dbTableName = GetTableDbName(entity, DataSrcDefinition.connection.DatabaseName);
@@ -209,7 +209,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GetFilterSql()
     {
-        var filterSql = new CandoStringBuilder();
+        var filterSql = new NeoStringBuilder();
         GenerateQuery_WriteFilter(this, ref filterSql, false, "");
         return filterSql.ToString();
     }

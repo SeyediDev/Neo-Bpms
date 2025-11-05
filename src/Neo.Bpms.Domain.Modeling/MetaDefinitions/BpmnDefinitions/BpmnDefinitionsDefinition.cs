@@ -53,7 +53,7 @@ public abstract partial class BpmnDefinitionsDefinition : BaseModelingDefinition
     protected static BpmnDefinitions CreateBpmnDefinitions(string id, string name)
     {
         BpmnDefinitions definitions = new(id, name,
-            "www.bmi.ir/xmlns/e-bpmn2.xsd", "CandoBpms", ExporterVersion);
+            "www.bmi.ir/xmlns/e-bpmn2.xsd", "NeoBpms", ExporterVersion);
         return definitions;
     }
 

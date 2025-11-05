@@ -2,11 +2,11 @@
 
 public class ReportControl(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         result +=
             $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}"" {CommonProperties.GetStyle()} 
@@ -22,7 +22,7 @@ public class ReportControl(IFormLogicHelper formLogicHelper, InputFieldDefinitio
 
     private string IframeReportUrl => Url.Action("IframeReport", "Report", ControlsRendererData.Url, UrlObject);
 
-    protected override CandoStringBuilder RenderDesignIcons(CandoStringBuilder result)
+    protected override NeoStringBuilder RenderDesignIcons(NeoStringBuilder result)
     {
         base.RenderDesignIcons(result);
         if (ControlsRendererData.Options.IsDesignMode)

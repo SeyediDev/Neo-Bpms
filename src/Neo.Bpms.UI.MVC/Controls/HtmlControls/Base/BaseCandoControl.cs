@@ -1,6 +1,6 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Base;
 
-public abstract class BaseCandoControl
+public abstract class BaseNeoControl
 {
     protected CommonProperties CommonProperties { get; set; }
     protected InputFieldDefinition Field { get; set; }
@@ -9,7 +9,7 @@ public abstract class BaseCandoControl
     protected CommonFormStructure Structure => ControlsRendererData.Structure;
     protected bool IsInReportPage => ControlsRendererData.Structure.FormType==Form.eFormType.Report;
 
-    protected BaseCandoControl(InputFieldDefinition field, ControlsRendererData controlsRendererData)
+    protected BaseNeoControl(InputFieldDefinition field, ControlsRendererData controlsRendererData)
     {
         Field = field;
         ControlsRendererData = controlsRendererData;

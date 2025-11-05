@@ -3,7 +3,7 @@
 //
 // namespace Neo.Bpms.UI.MVC.Controllers
 // {
-//     public class LogsController : CandoController
+//     public class LogsController : NeoController
 // 	{
 // 	    public ActionResult Index()
 // 	    {

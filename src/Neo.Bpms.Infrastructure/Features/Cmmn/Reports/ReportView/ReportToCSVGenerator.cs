@@ -9,14 +9,14 @@ public class ReportToCSVGenerator : ReportViewGenerator
     }
 
     public override object Content => _text.ToString();
-    private CandoStringBuilder _text;
+    private NeoStringBuilder _text;
     private const char Discriminator = ',';
     private const string NewLine = "\n";
 
     public override void Init()
     {
         base.Init();
-        _text = new CandoStringBuilder();
+        _text = new NeoStringBuilder();
     }
 
     public override void Release()

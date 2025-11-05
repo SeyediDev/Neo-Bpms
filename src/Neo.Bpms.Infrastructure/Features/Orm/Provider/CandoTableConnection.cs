@@ -1,5 +1,5 @@
 ﻿namespace Neo.Bpms.Infrastructure.Features.Orm.Provider;
-public class CandoTableConnection(string tableName)
+public class NeoTableConnection(string tableName)
 {
     public string TableName { get; set; } = tableName;
     public long Counter { get; set; }

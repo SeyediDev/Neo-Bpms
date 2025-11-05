@@ -1,11 +1,11 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
-public class CandoImage(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) 
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
+public class NeoImage(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) 
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         result += $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}""
                         class=""{ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass} m-0"">";

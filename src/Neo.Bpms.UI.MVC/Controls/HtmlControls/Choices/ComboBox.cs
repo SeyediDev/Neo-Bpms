@@ -4,7 +4,7 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
     : Combo(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         ElasticObject record = ControlsRendererData.Record;
         bool isMultiple = ControlsRendererData.Options.IsFilter &&
@@ -12,7 +12,7 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         List<string> idsList = GatherIdsList(record);
         bool isRemoteData = Field.GetProperty(eControlPropertyId.RemoteData)?.GetValueAsBoolean() ?? false;
 
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         
         // اگر multiple است و در حالت فیلتر است، از کنترل مدرن استفاده کن
         /*if (isMultiple && ControlsRendererData.Options.IsFilter)
@@ -30,7 +30,7 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         return result;
     }
     /*
-    private void RenderModernMultiSelect(CandoStringBuilder result, List<string> idsList, bool isRemoteData)
+    private void RenderModernMultiSelect(NeoStringBuilder result, List<string> idsList, bool isRemoteData)
     {
         // Container اصلی
         result.Append($"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip + "\" class=\"" +
@@ -50,7 +50,7 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         result.Append("</div>");
     }
 
-    private void RenderCustomModernMultiSelect(CandoStringBuilder result, List<string> idsList, bool isRemoteData)
+    private void RenderCustomModernMultiSelect(NeoStringBuilder result, List<string> idsList, bool isRemoteData)
     {
         var selectedItems = GetSelectedItems(idsList);
         var allOptions = GetDataRows().ToList();
@@ -129,7 +129,7 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         return allOptions.Where(option => idsList.Contains(option.Ids)).ToList();
     }
 
-    private CandoStringBuilder RenderOptions(CandoStringBuilder result, List<string> idsList)
+    private NeoStringBuilder RenderOptions(NeoStringBuilder result, List<string> idsList)
     {
         foreach (FormDataRow item in GetDataRows())
         {

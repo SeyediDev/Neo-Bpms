@@ -32,7 +32,7 @@ public class FormLogicHelper(ILogger<FormLogicHelper> logger): IFormLogicHelper
 
     public string GetLogicEvent(CommonFormStructure structure, string scope, string fieldName)
     {
-        CandoStringBuilder sb = new();
+        NeoStringBuilder sb = new();
         if (string.IsNullOrEmpty(scope))
         {
             _ = sb.Append(GetLogicEvent(structure.Logic, scope, fieldName));

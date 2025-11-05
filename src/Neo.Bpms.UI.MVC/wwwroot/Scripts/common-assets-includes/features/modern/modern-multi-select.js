@@ -1,5 +1,5 @@
 /**
- * Modern Multi-Select Control - Cando BPMS
+ * Modern Multi-Select Control - Neo BPMS
  * Version: 1.0.0
  * A beautiful, modern multi-select control for reference fields
  */

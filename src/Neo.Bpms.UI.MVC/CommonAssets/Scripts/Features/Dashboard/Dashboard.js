@@ -15,7 +15,7 @@ window.toggleDesignMode = function() {
     const dashboardContent = document.getElementById('dashboard-content');
     
     // نمایش/مخفی کردن المان‌های طراحی
-    const designElements = document.querySelectorAll('.cando-dashboard-widget-title-actions, .dashboard-tab-edit-icon, .dashboard-tab-delete-icon, .dashboard-tab-add-item');
+    const designElements = document.querySelectorAll('.neo-dashboard-widget-title-actions, .dashboard-tab-edit-icon, .dashboard-tab-delete-icon, .dashboard-tab-add-item');
     
     if (isDesignMode) {
         // Show design overlay with animation
@@ -25,7 +25,7 @@ window.toggleDesignMode = function() {
         
         toggleBtn.classList.add('active');
         toggleBtn.innerHTML = `
-            <svg class="cando-dashboard-design-icon" viewBox="0 0 24 24">
+            <svg class="neo-dashboard-design-icon" viewBox="0 0 24 24">
                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#close-square" />
             </svg>
             <span>بستن طراحی</span>
@@ -52,7 +52,7 @@ window.toggleDesignMode = function() {
         
         toggleBtn.classList.remove('active');
         toggleBtn.innerHTML = `
-            <svg class="cando-dashboard-design-icon" viewBox="0 0 24 24">
+            <svg class="neo-dashboard-design-icon" viewBox="0 0 24 24">
                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#edit-dashboard" />
             </svg>
             <span>حالت طراحی</span>
@@ -60,7 +60,7 @@ window.toggleDesignMode = function() {
         
         // مخفی کردن دکمه‌های طراحی (به جز افزودن تب جدید و افزودن ویجت که همیشه نمایش داده می‌شوند)
         designElements.forEach(el => {
-            if (el.classList.contains('cando-dashboard-widget-title-actions')) {
+            if (el.classList.contains('neo-dashboard-widget-title-actions')) {
                 el.style.display = 'none';
             }
         });
@@ -172,9 +172,9 @@ window.editConfig = function(configId) {
             }
             
             // به‌روزرسانی در design overlay هم اگر وجود دارد
-            const configItem = document.querySelector(`.cando-dashboard-config-item[data-config-id="${configId}"]`);
+            const configItem = document.querySelector(`.neo-dashboard-config-item[data-config-id="${configId}"]`);
             if (configItem) {
-                const configNameElement = configItem.querySelector('.cando-dashboard-config-item-name');
+                const configNameElement = configItem.querySelector('.neo-dashboard-config-item-name');
                 if (configNameElement) {
                     configNameElement.textContent = newName.trim();
                 }
@@ -470,8 +470,8 @@ window.dashboard_renameConfig = function (element) {
     .then(result => {
         if (result) {
             // Update UI with new name
-            const configNameElement = element.closest('.cando-dashboard-config-item')
-                ?.querySelector('.cando-dashboard-config-name');
+            const configNameElement = element.closest('.neo-dashboard-config-item')
+                ?.querySelector('.neo-dashboard-config-name');
             
             if (configNameElement) {
                 const displayName = result.length > 50 ? result.substring(0, 50) + "..." : result;
@@ -629,7 +629,7 @@ window.dashboard_removeWidget = function (element) {
     .then(result => {
         if (result) {
             // Remove widget with animation
-            const widgetContainer = element.closest('.cando-dashboard-widget-container');
+            const widgetContainer = element.closest('.neo-dashboard-widget-container');
             if (widgetContainer) {
                 widgetContainer.style.transition = 'all 0.3s ease';
                 widgetContainer.style.transform = 'scale(0.8)';
@@ -866,7 +866,7 @@ window.dashboard_deleteConfig2 = function (configId, configName) {
             }
             
             // حذف از design overlay هم اگر وجود دارد
-            const configItem = document.querySelector(`.cando-dashboard-config-item[data-config-id="${configId}"]`);
+            const configItem = document.querySelector(`.neo-dashboard-config-item[data-config-id="${configId}"]`);
             if (configItem) {
                 configItem.style.transition = 'all 0.3s ease';
                 configItem.style.opacity = '0';
@@ -896,13 +896,13 @@ window.dashboard_addWidget2 = function () {
     
     // اسکرول به قسمت انتخاب ویجت
     setTimeout(() => {
-        const widgetSection = document.querySelector('.cando-dashboard-design-section:has(.cando-dashboard-widget-palette)');
+        const widgetSection = document.querySelector('.neo-dashboard-design-section:has(.neo-dashboard-widget-palette)');
         if (widgetSection) {
             widgetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // هایلایت کردن قسمت برای جلب توجه کاربر
             widgetSection.style.transition = 'all 0.3s ease';
-            widgetSection.style.background = 'var(--cando-dashboard-primary-light)';
+            widgetSection.style.background = 'var(--neo-dashboard-primary-light)';
             setTimeout(() => {
                 widgetSection.style.background = '';
             }, 1000);
@@ -954,7 +954,7 @@ window.dashboard_refreshWidget = function(widgetId) {
         return;
     }
     
-    const widgetContent = widgetContainer.querySelector('.cando-dashboard-widget-content');
+    const widgetContent = widgetContainer.querySelector('.neo-dashboard-widget-content');
     if (!widgetContent) {
         console.error(`Dashboard: Widget content for ${widgetId} not found`);
         return;
@@ -966,9 +966,9 @@ window.dashboard_refreshWidget = function(widgetId) {
     
     // Add loading indicator
     const loadingIndicator = document.createElement('div');
-    loadingIndicator.className = 'cando-dashboard-widget-loading';
+    loadingIndicator.className = 'neo-dashboard-widget-loading';
     loadingIndicator.innerHTML = `
-        <svg class="cando-dashboard-spinner" viewBox="0 0 24 24" style="width: 24px; height: 24px; animation: spin 1s linear infinite;">
+        <svg class="neo-dashboard-spinner" viewBox="0 0 24 24" style="width: 24px; height: 24px; animation: spin 1s linear infinite;">
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
             <path fill="currentColor" d="M12 2 A10 10 0 0 1 22 12" opacity="0.75"/>
         </svg>
@@ -1026,7 +1026,7 @@ window.dashboard_refreshWidget = function(widgetId) {
         
         // Show error message
         const errorMessage = document.createElement('div');
-        errorMessage.className = 'cando-dashboard-widget-error';
+        errorMessage.className = 'neo-dashboard-widget-error';
         errorMessage.style.cssText = 'color: #ef4444; padding: 8px; text-align: center;';
         errorMessage.textContent = 'خطا در به‌روزرسانی ویجت';
         widgetContent.appendChild(errorMessage);
@@ -1073,8 +1073,8 @@ window.dashboard_toggleGlobalAutoRefresh = function() {
         const btn = document.getElementById('autoRefreshToggle');
         const text = document.getElementById('autoRefreshText');
         if (btn) {
-            btn.classList.remove('cando-dashboard-btn-success');
-            btn.classList.add('cando-dashboard-btn-secondary');
+            btn.classList.remove('neo-dashboard-btn-success');
+            btn.classList.add('neo-dashboard-btn-secondary');
         }
         if (text) {
             text.textContent = 'به‌روزرسانی خودکار';
@@ -1085,8 +1085,8 @@ window.dashboard_toggleGlobalAutoRefresh = function() {
         const btn = document.getElementById('autoRefreshToggle');
         const text = document.getElementById('autoRefreshText');
         if (btn) {
-            btn.classList.remove('cando-dashboard-btn-secondary');
-            btn.classList.add('cando-dashboard-btn-success');
+            btn.classList.remove('neo-dashboard-btn-secondary');
+            btn.classList.add('neo-dashboard-btn-success');
         }
         if (text) {
             text.textContent = '✓ به‌روزرسانی فعال';
@@ -1101,15 +1101,15 @@ style.textContent = `
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
-    .cando-dashboard-widget-loading {
+    .neo-dashboard-widget-loading {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 16px;
-        color: var(--cando-dashboard-primary, #3b82f6);
+        color: var(--neo-dashboard-primary, #3b82f6);
         font-size: 14px;
     }
-    .cando-dashboard-spinner {
+    .neo-dashboard-spinner {
         animation: spin 1s linear infinite;
     }
 `;

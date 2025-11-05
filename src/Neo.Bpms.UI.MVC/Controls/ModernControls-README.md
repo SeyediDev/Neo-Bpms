@@ -1,8 +1,8 @@
-# سیستم کنترل‌های مدرن Cando BPMS
+# سیستم کنترل‌های مدرن Neo BPMS
 
 ## معرفی
 
-این سیستم بهبود یافته برای کنترل‌های فرم در Cando BPMS طراحی شده است که شامل:
+این سیستم بهبود یافته برای کنترل‌های فرم در Neo BPMS طراحی شده است که شامل:
 
 - **فریمورک CSS مدرن** با پشتیبانی از RTL و طراحی ریسپانسیو
 - **کنترل‌های HTML بهبود یافته** با UX بهتر
@@ -155,7 +155,7 @@ public async Task<IActionResult> IndexModern(string namespaceId, string entityId
 
 ### ModernTextField
 ```csharp
-public class ModernTextField : CandoHtmlControl
+public class ModernTextField : NeoHtmlControl
 {
     // فیلد متنی با اعتبارسنجی و استایل مدرن
 }
@@ -163,7 +163,7 @@ public class ModernTextField : CandoHtmlControl
 
 ### ModernComboBox
 ```csharp
-public class ModernComboBox : CandoHtmlControl
+public class ModernComboBox : NeoHtmlControl
 {
     // لیست انتخاب با جستجو و فیلتر
 }
@@ -171,7 +171,7 @@ public class ModernComboBox : CandoHtmlControl
 
 ### ModernDatePicker
 ```csharp
-public class ModernDatePicker : CandoHtmlControl
+public class ModernDatePicker : NeoHtmlControl
 {
     // انتخابگر تاریخ فارسی
 }
@@ -179,7 +179,7 @@ public class ModernDatePicker : CandoHtmlControl
 
 ### ModernFileUpload
 ```csharp
-public class ModernFileUpload : CandoHtmlControl
+public class ModernFileUpload : NeoHtmlControl
 {
     // آپلود فایل با UI بهتر
 }
@@ -187,7 +187,7 @@ public class ModernFileUpload : CandoHtmlControl
 
 ### ModernCheckbox
 ```csharp
-public class ModernCheckbox : CandoHtmlControl
+public class ModernCheckbox : NeoHtmlControl
 {
     // چک‌باکس مدرن
 }
@@ -195,7 +195,7 @@ public class ModernCheckbox : CandoHtmlControl
 
 ### ModernCard
 ```csharp
-public class ModernCard : CandoHtmlControl
+public class ModernCard : NeoHtmlControl
 {
     // کارت اطلاعاتی با لینک‌ها
 }

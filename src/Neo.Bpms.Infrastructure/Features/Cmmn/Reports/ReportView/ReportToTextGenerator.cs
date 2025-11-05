@@ -9,12 +9,12 @@ public class ReportToTextGenerator : ReportViewGenerator
     }
 
     public override object Content => _text.ToString();
-    private CandoStringBuilder _text;
+    private NeoStringBuilder _text;
 
     public override void Init()
     {
         base.Init();
-        _text = new CandoStringBuilder();
+        _text = new NeoStringBuilder();
     }
 
     public override void Release()

@@ -15,7 +15,7 @@ public class ChangeEventArgs : EventArgs
 /// <summary>
 /// This is a subclass of basic .Net Queue class with multi threading and support of change event
 /// </summary>
-public class CandoQueue : Queue
+public class NeoQueue : Queue
 {
 
     /// <summary>

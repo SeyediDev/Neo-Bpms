@@ -268,7 +268,7 @@ public abstract class DataSource(DataSourceDefinition definition, Connection con
         return false;
     }
 
-    public virtual void GenerateQuery_WriteJoins(DataSource dataSource, ref CandoStringBuilder sql,
+    public virtual void GenerateQuery_WriteJoins(DataSource dataSource, ref NeoStringBuilder sql,
         ref Dictionary<string, string> tables)
     {
     }

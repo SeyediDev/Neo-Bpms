@@ -13,7 +13,7 @@
 
 @if (divConfiguration != null)
 {
-    <div class="modal fade cando-dashboard-modal" 
+    <div class="modal fade neo-dashboard-modal" 
          id="widgetSettingsModal-@divConfiguration.WidgetId" 
          role="dialog" 
          tabindex="100">
@@ -21,7 +21,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                        <svg class="cando-dashboard-modal-icon" viewBox="0 0 24 24">
+                        <svg class="neo-dashboard-modal-icon" viewBox="0 0 24 24">
                             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-dashboard" />
                         </svg>
                         تنظیمات ویجت
@@ -34,11 +34,11 @@
                 <div class="modal-body">
                     @if (reportData?.structure?.ReportViewType == ReportViewType.Chart)
                     {
-                        <div class="cando-dashboard-form-group">
-                            <label for="selectChart-@divConfiguration.WidgetId" class="cando-dashboard-form-label">
+                        <div class="neo-dashboard-form-group">
+                            <label for="selectChart-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
                                 نوع نمودار
                             </label>
-                            <select id="selectChart-@divConfiguration.WidgetId" class="cando-dashboard-form-input">
+                            <select id="selectChart-@divConfiguration.WidgetId" class="neo-dashboard-form-input">
                                 @foreach (Report.ChartType chartType in Enum.GetValues<Report.ChartType>())
                                 {
                                     <option value="@chartType" selected="@(reportData.structure.ChartType == chartType)">
@@ -50,12 +50,12 @@
                     }
                     
                     @* Records Count *@
-                    <div class="cando-dashboard-form-group">
-                        <label for="recordsCount-@divConfiguration.WidgetId" class="cando-dashboard-form-label">
+                    <div class="neo-dashboard-form-group">
+                        <label for="recordsCount-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
                             تعداد رکوردها
                         </label>
                         <input type="number" 
-                               class="cando-dashboard-form-input" 
+                               class="neo-dashboard-form-input" 
                                id="recordsCount-@divConfiguration.WidgetId" 
                                value="@maxRecord"
                                min="1"
@@ -63,9 +63,9 @@
                     </div>
                     
                     @* Widget Dimensions *@
-                    <div class="cando-dashboard-form-row">
-                        <div class="cando-dashboard-form-group">
-                            <label for="widgetWidth-@divConfiguration.WidgetId" class="cando-dashboard-form-label">
+                    <div class="neo-dashboard-form-row">
+                        <div class="neo-dashboard-form-group">
+                            <label for="widgetWidth-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
                                 عرض ویجت
                             </label>
                             <input type="number" 
@@ -73,16 +73,16 @@
                                    max="12" 
                                    id="widgetWidth-@divConfiguration.WidgetId" 
                                    value="@divConfiguration.Width" 
-                                   class="cando-dashboard-form-input">
+                                   class="neo-dashboard-form-input">
                         </div>
                         
-                        <div class="cando-dashboard-form-group">
-                            <label for="widgetHeight-@divConfiguration.WidgetId" class="cando-dashboard-form-label">
+                        <div class="neo-dashboard-form-group">
+                            <label for="widgetHeight-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
                                 ارتفاع ویجت
                             </label>
                             <input type="number" 
                                    id="widgetHeight-@divConfiguration.WidgetId" 
-                                   class="cando-dashboard-form-input"
+                                   class="neo-dashboard-form-input"
                                    value="@widgetHeight"
                                    min="200"
                                    max="1000">
@@ -92,12 +92,12 @@
                 
                 <div class="modal-footer">
                     <button type="button" 
-                            class="cando-dashboard-btn cando-dashboard-btn-secondary" 
+                            class="neo-dashboard-btn neo-dashboard-btn-secondary" 
                             data-dismiss="modal">
                         لغو
                     </button>
                     <button type="button" 
-                            class="cando-dashboard-btn cando-dashboard-btn-primary" 
+                            class="neo-dashboard-btn neo-dashboard-btn-primary" 
                             widgetId="@divConfiguration.WidgetId"
                             onclick="dashboard_submitWidgetSettings(this, event)">
                         تایید

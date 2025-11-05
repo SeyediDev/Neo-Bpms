@@ -403,7 +403,7 @@ function getControlContainer(fieldName) {
 }
 
 function getSpecifierContainer(specifier) {
-	var $container = $("[" + specifier + "]").closest(".cando-control");
+	var $container = $("[" + specifier + "]").closest(".neo-control");
 	if ($container.length)
 		return $container;
 	return $("[" + specifier + "]").closest("div").parent();
@@ -1145,7 +1145,7 @@ var Select2Beneficiary = function() {
 		var namespaceId = $thisRemoteSelect.data('namespace') || window.PageAddressManager.getNamespaceId();
 		var entityId = $thisRemoteSelect.data('entity') || window.PageAddressManager.getEntityId();
 		var fieldId = $thisRemoteSelect.data('column') ||
-			$thisRemoteSelect.parents('.cando-control').data('id');
+			$thisRemoteSelect.parents('.neo-control').data('id');
 
 		var formId = $thisRemoteSelect.data('form') || window.PageAddressManager.getPageId();
 		$thisRemoteSelect
@@ -1206,7 +1206,7 @@ var Select2Beneficiary = function() {
 		fetchInitValues(values,
 				namespaceId,
 				entityId,
-				$remoteSelect.parents('.cando-control').data('id'),
+				$remoteSelect.parents('.neo-control').data('id'),
 				formId,
 				$remoteSelect.attr("filter-formula"))
 			.then(function(rows) {

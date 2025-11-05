@@ -4,7 +4,7 @@ using Neo.Bpms.Domain.Entities.Security.Authorization;
 namespace Neo.Bpms.Infrastructure.Features.Security.AccessServices;
 
 //TODO MRSH
-public class CandoAccessServices : IAccessServices
+public class NeoAccessServices : IAccessServices
 {
     public bool CheckFormAccess(IdentityUser user, Form form, out long userGroupId)
     {

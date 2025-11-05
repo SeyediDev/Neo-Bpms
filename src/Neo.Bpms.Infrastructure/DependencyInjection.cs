@@ -18,13 +18,13 @@ namespace Neo.Bpms.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddCandoBpmsInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddNeoBpmsInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         _ = services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         
         _ = services.AddScoped<ISsoIntegratorParams, ExternalLoginIntegratorParams>();
         _ = services.AddScoped<ISsoIntegrator, SsoIntegrator>();
-        _ = services.AddScoped<IAccessServices, CandoAccessServices>();
+        _ = services.AddScoped<IAccessServices, NeoAccessServices>();
         _ = services.AddScoped<ISendFormCommand, SendFormCommand>();
 
         _ = services.AddSingleton<IBpmsEngine, BpmsEngine>();
@@ -86,7 +86,7 @@ public static class DependencyInjection
         _ = services.AddScoped<IFormExcelImporter, FormExcelImporter>();
     }
 
-    public static void UseCandoBpms(this IApplicationBuilder app)
+    public static void UseNeoBpms(this IApplicationBuilder app)
     {
         using IServiceScope scope = app.ApplicationServices.CreateScope();
         

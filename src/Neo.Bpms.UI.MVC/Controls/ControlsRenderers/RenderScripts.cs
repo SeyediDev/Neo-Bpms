@@ -8,7 +8,7 @@ public partial class ControlsRenderer
 {
     public virtual HtmlString RenderScripts(ControlsRendererData data)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         foreach (InputFieldDefinition fieldDefinition in data.Structure.Fields)
         {
             switch (fieldDefinition.ControlType)

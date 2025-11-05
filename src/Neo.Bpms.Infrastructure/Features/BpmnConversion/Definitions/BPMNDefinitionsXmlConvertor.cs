@@ -65,7 +65,7 @@ internal static class BpmnDefinitionsXmlConvertor
         ElasticObject bpmnElement, bool IsMainBpmn)
     {
         var targetNamespace = "www.bmi.ir/xmlns/e-bpmn2.xsd"; //todo xml don't have namespace
-        var exporter = bpmnElement.GetString("exporter") ?? "CandoBpms";
+        var exporter = bpmnElement.GetString("exporter") ?? "NeoBpms";
         var exporterVersion = bpmnElement.GetString("exporterVersion") ?? "1.0";
         // todo add exrea BpmnDefinitions fields
 

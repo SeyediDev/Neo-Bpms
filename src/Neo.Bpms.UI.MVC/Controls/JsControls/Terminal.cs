@@ -7,10 +7,10 @@ public class Terminal : CabdoJsControl
     {
     }
 
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         string contentValue = ControlsRendererData.Record.GetString(Field.FieldName);
-        CandoStringBuilder result = new(); // todo calculate cols and rows
+        NeoStringBuilder result = new(); // todo calculate cols and rows
         result +=
             $@"
             const ansiEscapeRegex = new RegExp(

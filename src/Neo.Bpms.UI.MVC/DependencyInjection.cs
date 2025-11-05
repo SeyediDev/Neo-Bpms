@@ -54,7 +54,7 @@ public static class DependencyInjection
         _ = services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-                options.Cookie.Name = "CandoCookies";
+                options.Cookie.Name = "NeoCookies";
                 options.ForwardDefaultSelector = ctx => ctx.Request.Path.StartsWithSegments("/api") ? JwtBearerDefaults.AuthenticationScheme : null;
                 options.SlidingExpiration = true;
                 options.Cookie.HttpOnly = true;
@@ -138,7 +138,7 @@ public static class DependencyInjection
         }
         _ = app.UseAuthentication();
         _ = app.UseResponseCaching();
-        app.UseCandoBpms();
+        app.UseNeoBpms();
 
         _ = app.UseEndpoints(endpoints =>
         {

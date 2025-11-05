@@ -6,7 +6,7 @@ public class MultipleSelectableCombo(IFormLogicHelper formLogicHelper, InputFiel
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
     : Combo(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         if (ControlsRendererData.Options.IsInToolBox)
             return BlackBox();
@@ -17,7 +17,7 @@ public class MultipleSelectableCombo(IFormLogicHelper formLogicHelper, InputFiel
         EntityField multipleForeignKeyField = entity?.GetField(multipleForeignKeyFieldId);
         bool isRemoteData = Field.PropertyBoolean(eControlPropertyId.RemoteData);
         Dictionary<string, string> idsList = GetIdsList(record, table, multipleForeignKeyField);
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         RenderHeader(result, isRemoteData, true, [.. idsList.Values], true);
         //todo Check OnDemand and RemoteData Properties?
         if (multipleForeignKeyFieldId != null && table.CombosData.TryGetValue(multipleForeignKeyFieldId, out ComboData value))
@@ -84,7 +84,7 @@ public class MultipleSelectableCombo(IFormLogicHelper formLogicHelper, InputFiel
         return idsList;
     }
 
-    public override CandoStringBuilder RenderRelatedLinks(CandoStringBuilder result, bool recordBase)
+    public override NeoStringBuilder RenderRelatedLinks(NeoStringBuilder result, bool recordBase)
     {
         TableDefinition table = (TableDefinition)Field;
         if (table.MultipleForeignKeyField == null)

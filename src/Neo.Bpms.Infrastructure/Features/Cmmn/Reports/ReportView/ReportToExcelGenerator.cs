@@ -63,7 +63,7 @@ public class ReportToExcelGenerator : ReportViewGenerator
     protected override void GenerateRowsFooter(IList<ReportRowInfo> rowList)
     {
         _cells.AutoFitColumns(0); //Auto-fit columns for all cells
-        _worksheet.Protection.SetPassword("Cando_SJS_$#");
+        _worksheet.Protection.SetPassword("Neo_SJS_$#");
     }
 
     protected override void GenerateRowHeader(ReportRowInfo row)

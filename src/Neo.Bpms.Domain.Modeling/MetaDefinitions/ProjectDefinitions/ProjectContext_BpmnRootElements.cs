@@ -14,7 +14,7 @@ namespace Neo.Bpms.Domain.Model.Project;
 public partial class ProjectContext
 {
     public BpmnDefinitions BpmnDefinitions { get; set; } =
-        new BpmnDefinitions("candoTotalBpmn", "cando-sjs", "www.bmi.ir/xmlns/e-bpmn2.xsd", "CandoBpms", "1.0");
+        new BpmnDefinitions("neoTotalBpmn", "neo-sjs", "www.bmi.ir/xmlns/e-bpmn2.xsd", "NeoBpms", "1.0");
 
     public IEnumerable<Resource> Resources => BpmnRootElements?.OfType<Resource>();
     public IEnumerable<Interface> Interfaces => BpmnRootElements?.OfType<Interface>();

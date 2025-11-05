@@ -1,11 +1,11 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 public class DatePicker(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         DateTime? value = ControlsRendererData.Record?.GetNullableDateTime(Field.FieldName);
 
         result.Append($"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip + "\" class=\"" +

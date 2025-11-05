@@ -4,7 +4,7 @@ public class FilterDescriber
 {
     public static string DescribeFilter(CommonFormStructure structure, ElasticObject values)
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         foreach (InputFieldDefinition field in structure.Fields)
         {
             if (values.GetField(field.FieldName, out object value) && value != null)
@@ -16,7 +16,7 @@ public class FilterDescriber
     }
     public static string DescribeWorkItemsFilter(WorkItemsFilter filter)
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         if (!string.IsNullOrEmpty(filter.ProcessId))
         {
             Domain.Model.BPMN.Processes.Process process = ProjectDefinition.Project.GetBpmnDefinition(filter.ProcessId, filter.ProcessVersionId)

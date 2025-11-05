@@ -279,7 +279,7 @@ var FormStateManager = function($, pageAddressManager) {
 			function(e) {
 				var selectedTab = $(e.target).attr("href");
 				saveLocalState('selectedTab',
-					$(e.target).closest('.cando-control').data('id'),
+					$(e.target).closest('.neo-control').data('id'),
 					selectedTab);
 			});
 

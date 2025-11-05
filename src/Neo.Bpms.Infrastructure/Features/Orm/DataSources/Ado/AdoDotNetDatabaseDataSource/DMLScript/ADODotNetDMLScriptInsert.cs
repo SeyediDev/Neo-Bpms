@@ -9,20 +9,20 @@ public abstract partial class AdoDotNetDatabaseDataSource
 {
     private string GenerateInsertScript(bool giveOutput, Entity entity)
     {
-        var commands = new CandoStringBuilder();
+        var commands = new NeoStringBuilder();
         GenerateInsertScriptInOneTable(null, giveOutput, entity, commands);
         return commands.ToString();
     }
 
     private void GenerateInsertScriptInOneTable(EntityField parentEntityField,
-        bool giveOutput, Entity entity, CandoStringBuilder commands)
+        bool giveOutput, Entity entity, NeoStringBuilder commands)
     {
         GenerateInsertParentScript(giveOutput, entity, commands);
 
         var selectedFields = Fields.Values
             .Where(f => FieldIsForParent(parentEntityField, entity, f))
             .ToDictionary(f => f.FieldId);
-        var commandStr = new CandoStringBuilder();
+        var commandStr = new NeoStringBuilder();
         var generateAuditRecord = entity.Auditable == AuditableVersion.V1;
         var insertValues = selectedFields.Select(fld => GetSqlValueField(true, fld.Value, DataSrcDefinition.Entity)).ToList();
         var values = insertValues.Where(f => f.SqlValue != "null").ToList();
@@ -98,7 +98,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private void GenerateInsertParentScript(
-        bool giveOutput, Entity entity, CandoStringBuilder commands)
+        bool giveOutput, Entity entity, NeoStringBuilder commands)
     {
         foreach (var referenceField in Parents(entity))
         {
@@ -131,7 +131,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         var insertFields = new List<string>();
         var beGenerateGroupBy = CheckMustBeGenerateGroupBy(queryDataSource);
         FetchAggregateAndFields(beGenerateGroupBy, queryDataSource, insertFields);
-        var commandString = new CandoStringBuilder();
+        var commandString = new NeoStringBuilder();
         var dbTableName = GetTableDbName(entity, queryDataSource.DataSrcDefinition.connection.DatabaseName);
         commandString += $@"INSERT INTO {dbTableName} ([";
         if (insertFields.Count > 0)

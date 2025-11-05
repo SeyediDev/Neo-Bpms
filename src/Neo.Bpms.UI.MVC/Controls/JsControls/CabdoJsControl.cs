@@ -3,11 +3,11 @@
 namespace Neo.Bpms.UI.MVC.Controls.JsControls;
 
 public abstract class CabdoJsControl(
-    InputFieldDefinition field, ControlsRendererData controlsRenderer) : BaseCandoControl(field, controlsRenderer)
+    InputFieldDefinition field, ControlsRendererData controlsRenderer) : BaseNeoControl(field, controlsRenderer)
 {
-    public abstract CandoStringBuilder Render();
+    public abstract NeoStringBuilder Render();
 
-    protected CandoStringBuilder RegisterControl(CandoStringBuilder stringBuilder,
+    protected NeoStringBuilder RegisterControl(NeoStringBuilder stringBuilder,
         JsBindingControl control, string fieldName)
     {
         string bindingControlJsObject = JsonConvert.SerializeObject(control);
@@ -15,9 +15,9 @@ public abstract class CabdoJsControl(
         return stringBuilder;
     }
 
-    protected CandoStringBuilder JsError(string error)
+    protected NeoStringBuilder JsError(string error)
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         result.Append("console.error('" + error + "');");
         return result;
     }

@@ -35,7 +35,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         if (newValuesOfChanged.All(oldValue => oldValue.Field.AuditField))
             return "";
         var setValues = string.Join(",", fieldSetList);
-        var commandString = new CandoStringBuilder("UPDATE");
+        var commandString = new NeoStringBuilder("UPDATE");
         if (TopRows > 0)
             commandString += $" TOP({TopRows})";
         var dbTableName = GetTableDbName(entity, DataSrcDefinition.connection.DatabaseName);

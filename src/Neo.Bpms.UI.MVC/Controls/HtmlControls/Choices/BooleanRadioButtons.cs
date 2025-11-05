@@ -7,7 +7,7 @@ public class BooleanRadioButtons(IFormLogicHelper formLogicHelper,
     InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) 
     : RadioButtons(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    protected override CandoStringBuilder RenderOptions(CandoStringBuilder result,
+    protected override NeoStringBuilder RenderOptions(NeoStringBuilder result,
         List<string> idsList)
     {
         object value = idsList?.FirstOrDefault();

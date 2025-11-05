@@ -2,11 +2,11 @@
 
 public class GridColumn(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, ControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer) 
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         result += $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}""
                         class=""{ControlsRendererData.ControlsClassString} {(ControlsRendererData.Options.IsDesignMode ? "border" : "")} {CommonProperties.NarrowColumnClasses} {CommonProperties.ShowHideRelatedClass}"">";

@@ -4,9 +4,9 @@
     <Content Include="Entities\Cmmn\Data\TODOList.txt" />
   </ItemGroup>
   <ItemGroup>
-    <!-- Neo Framework packages from NuGet.org or local Nexus -->
-    <PackageReference Include="Neo.Common" />
-    <PackageReference Include="Neo.Domain" />
+    <!-- Neo Framework - using project references for development -->
+    <ProjectReference Include="..\..\..\Neo\src\Neo.Common\Neo.Common.csproj" />
+    <ProjectReference Include="..\..\..\Neo\src\Neo.Domain\Neo.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Entities\Cmmn\Data\Resources\DataTexts.Designer.cs">

@@ -3,19 +3,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
-public class CandoHtmlControl(
+public class NeoHtmlControl(
     IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRendererData, 
     ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         throw new NotImplementedException();
     }
 
-    public CandoStringBuilder RenderCheckBoxList(string value)
+    public NeoStringBuilder RenderCheckBoxList(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" +
                               ControlsClassString +
@@ -72,9 +72,9 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
     
-    public CandoStringBuilder RenderCheckBox(string? value)
+    public NeoStringBuilder RenderCheckBox(string? value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder.Append($"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" + ControlsClassString +
                               CommonProperties.NarrowColumnClasses +
@@ -100,9 +100,9 @@ public class CandoHtmlControl(
         stringBuilder.Append("</div>");
         return stringBuilder;
     }
-    public CandoStringBuilder RenderTextInput(string value)
+    public NeoStringBuilder RenderTextInput(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" +
                               ControlsClassString +
@@ -127,9 +127,9 @@ public class CandoHtmlControl(
         stringBuilder += "</div>";
         return stringBuilder;
     }
-    public CandoStringBuilder RenderNumberInput(string value)
+    public NeoStringBuilder RenderNumberInput(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" + ControlsClassString +
                               CommonProperties.NarrowColumnClasses + CommonProperties.ShowHideRelatedClass +
@@ -151,9 +151,9 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
     
-    public CandoStringBuilder RenderRadioButton(string value)
+    public NeoStringBuilder RenderRadioButton(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" + ControlsClassString +
                               CommonProperties.NarrowColumnClasses + CommonProperties.ShowHideRelatedClass +
@@ -177,9 +177,9 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
     
-    public CandoStringBuilder RenderMultilineTextInput(string value)
+    public NeoStringBuilder RenderMultilineTextInput(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += "<br/>";
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" + ControlsClassString +
@@ -205,9 +205,9 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
     
-    public CandoStringBuilder RenderTimeInput(string value)
+    public NeoStringBuilder RenderTimeInput(string value)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip +
                               "\" class=\"" +
                               ControlsClassString +
@@ -233,9 +233,9 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
 
-    public CandoStringBuilder RenderMap()
+    public NeoStringBuilder RenderMap()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         RenderDesignIcons(stringBuilder);
         stringBuilder += "<BR\\><div class=\"col-md-2\" ></div>";
         stringBuilder += "<div title=\"" + CommonProperties.Tooltip + "\" name=\"" + Field.FieldName + "\" id=\"" +
@@ -248,7 +248,7 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
     
-    public CandoStringBuilder RenderSystemPageLink()
+    public NeoStringBuilder RenderSystemPageLink()
     {
         string AcquireSystemPageLink(InputFieldDefinition fi)
         {
@@ -319,7 +319,7 @@ public class CandoHtmlControl(
             return u;
         }
 
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder +=
             $"<div style=\"margin-top:2px;margin-bottom:3px;\" data-id=\"{Field.FieldName}\" title=\"" +
             CommonProperties.Tooltip +
@@ -344,9 +344,9 @@ public class CandoHtmlControl(
         stringBuilder += "</div>";
         return stringBuilder;
     }
-    public CandoStringBuilder RenderAdvancedUpload(ICmmnDocument cmmnFileManager, ILogger logger, IConfiguration configuration)
+    public NeoStringBuilder RenderAdvancedUpload(ICmmnDocument cmmnFileManager, ILogger logger, IConfiguration configuration)
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += new FileHtmlControl(cmmnFileManager, _formLogicHelper, Field, ControlsRendererData,
             logger, configuration, _sbvrRenderer).SetAnotherUploader().Render();
         ControlsRendererData.AddIncludeNeed(PluginInclude.FineUploader);
@@ -356,18 +356,18 @@ public class CandoHtmlControl(
         return stringBuilder;
     }
 
-    public CandoStringBuilder RenderTerminal()
+    public NeoStringBuilder RenderTerminal()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         ControlsRendererData.AddIncludeNeed(PluginInclude.Terminal);
         stringBuilder +=
             $"<div class=\"col-12\"><div id=\"{Field.FieldName}\">" +
             "</div></div>";
         return stringBuilder;
     }
-    public CandoStringBuilder RenderOperationButton()
+    public NeoStringBuilder RenderOperationButton()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder.Append(
             $@"<div class=""pt-4 {CommonProperties.NarrowColumnClasses}""><button type=""button"" class=""operation-button btn {CommonProperties.ButtonStyleClass(ContextualStyle.Primary)} {ControlsClassString} 
                  {CommonProperties.ShowHideRelatedClass}""

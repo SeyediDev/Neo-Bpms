@@ -5,9 +5,9 @@ namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 
 public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) 
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    public virtual CandoStringBuilder RenderRelatedLinks(CandoStringBuilder result, bool recordBase)
+    public virtual NeoStringBuilder RenderRelatedLinks(NeoStringBuilder result, bool recordBase)
     {
         var formIdentifier = new
         {
@@ -18,7 +18,7 @@ public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinit
         return RenderRelatedLinksUrl(Field, result, recordBase, formIdentifier);
     }
 
-    protected CandoStringBuilder RenderRelatedLinksUrl(InputFieldDefinition field, CandoStringBuilder result,
+    protected NeoStringBuilder RenderRelatedLinksUrl(InputFieldDefinition field, NeoStringBuilder result,
         bool recordBase, object formIdentifier)
     {
         if (!ControlsRendererData.Options.ShowFormLinkIconForChoices)
@@ -57,8 +57,8 @@ public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinit
         return result;
     }
 
-    private CandoStringBuilder GenerateRelatedLink(
-        CandoStringBuilder result, object formIdentifier, string flagColor, 
+    private NeoStringBuilder GenerateRelatedLink(
+        NeoStringBuilder result, object formIdentifier, string flagColor, 
         string action, string title, string className, SvgFilter svgFilter)
     {
         string url = Url.Action(action, "Form", ControlsRendererData.Url, formIdentifier);

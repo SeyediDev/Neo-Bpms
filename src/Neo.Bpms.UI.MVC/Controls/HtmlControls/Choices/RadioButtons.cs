@@ -4,13 +4,13 @@ public class RadioButtons(IFormLogicHelper formLogicHelper, InputFieldDefinition
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer) 
     : Choice(formLogicHelper, field, controlsRendererData, sbvrRenderer) // todo not a good abstraction(?)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         ElasticObject record = ControlsRendererData.Record;
 
         List<string> idsList = GatherIdsList(record);
 
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
 
         RenderTopDiv(result);
         RenderDesignIcons(result);
@@ -31,7 +31,7 @@ public class RadioButtons(IFormLogicHelper formLogicHelper, InputFieldDefinition
         return result;
     }
 
-    private CandoStringBuilder RenderTopDiv(CandoStringBuilder result)
+    private NeoStringBuilder RenderTopDiv(NeoStringBuilder result)
     {
         result += $"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip + "\" class=\"" +
                   ControlsRendererData.ControlsClassString +
@@ -41,7 +41,7 @@ public class RadioButtons(IFormLogicHelper formLogicHelper, InputFieldDefinition
         return result;
     }
 
-    protected virtual CandoStringBuilder RenderOptions(CandoStringBuilder result, List<string> idsList)
+    protected virtual NeoStringBuilder RenderOptions(NeoStringBuilder result, List<string> idsList)
     {
         foreach (FormDataRow item in GetDataRows())
         {

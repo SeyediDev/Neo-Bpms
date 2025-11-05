@@ -1,8 +1,8 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Base;
 
-public abstract class BaseCandoHtmlControl(
+public abstract class BaseNeoHtmlControl(
     IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
-    : BaseCandoControl(field, controlsRendererData)
+    : BaseNeoControl(field, controlsRendererData)
 {
     protected IFormLogicHelper _formLogicHelper = formLogicHelper;
     protected ISBVRRenderer _sbvrRenderer = sbvrRenderer;
@@ -10,7 +10,7 @@ public abstract class BaseCandoHtmlControl(
     protected string LogicString => _formLogicHelper.GetLogicEvent(ControlsRendererData.Structure, Field.parentControlId, Field.FieldName);
     protected string ModelAssetsRoot => "/Content/ModelAssets";
 
-    public abstract CandoStringBuilder Render();
+    public abstract NeoStringBuilder Render();
 
 
     ///  <summary>
@@ -20,7 +20,7 @@ public abstract class BaseCandoHtmlControl(
     ///  <param name="result">main StringBuilder of control</param>
     /// <param name="hasAssociatedField"></param>
     /// <returns>the same StringBuilder with (potentially) different content.</returns>
-    protected CandoStringBuilder RenderBulkEditCheckbox(CandoStringBuilder result, bool hasAssociatedField = false)
+    protected NeoStringBuilder RenderBulkEditCheckbox(NeoStringBuilder result, bool hasAssociatedField = false)
     {
         if (ControlsRendererData.IsBulk &&
         !(ControlsRendererData.Options.IsReadOnly || CommonProperties.IsReadOnlyByProperty || CommonProperties.IsRequired))
@@ -28,7 +28,7 @@ public abstract class BaseCandoHtmlControl(
         return result;
     } //todo not satisfied with its place
 
-    protected virtual CandoStringBuilder RenderDesignIcons(CandoStringBuilder result)
+    protected virtual NeoStringBuilder RenderDesignIcons(NeoStringBuilder result)
     {
         if (ControlsRendererData.Options.IsDesignMode || ControlsRendererData.Options.IsInToolBox)
         {
@@ -46,7 +46,7 @@ public abstract class BaseCandoHtmlControl(
         return result;
     } //todo not satisfied with its place
 
-    protected virtual CandoStringBuilder RenderLabel(CandoStringBuilder result)
+    protected virtual NeoStringBuilder RenderLabel(NeoStringBuilder result)
     {
         result.Append($"<label for=\"field-{Field.FieldName}\">{GetLabel()}&nbsp;" +
             $"{(CommonProperties.IsRequired ? " <span style=\"color:red;\">*</span>" : "")}" +
@@ -57,7 +57,7 @@ public abstract class BaseCandoHtmlControl(
         result.Append("</label> ");
         return result;
     }
-    protected virtual void RenderInnerOfLabel(CandoStringBuilder result, InputFieldDefinition field)
+    protected virtual void RenderInnerOfLabel(NeoStringBuilder result, InputFieldDefinition field)
     {
     }
     protected virtual string GetLabel()
@@ -65,9 +65,9 @@ public abstract class BaseCandoHtmlControl(
         return Field.Label;
     }
 
-    protected CandoStringBuilder BlackBox()
+    protected NeoStringBuilder BlackBox()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         result.Append($@"<div class=""black-box {CommonProperties.WideColumnClasses} {ControlsRendererData.ControlsClassString}"" data-id=""{Field.FieldName}"">");
         RenderDesignIcons(result);
         result.Append($@"<div><label class=""bb-title"">{Field.Alias}</label></div>
@@ -83,7 +83,7 @@ public abstract class BaseCandoHtmlControl(
                  f.ControlType == type);
     }
     
-    protected void RenderIcon(CandoStringBuilder result, string additionalClass, int height = 20)
+    protected void RenderIcon(NeoStringBuilder result, string additionalClass, int height = 20)
     {
         if (Field.HasProperty(eControlPropertyId.IconClass))
         {
@@ -119,7 +119,7 @@ public abstract class BaseCandoHtmlControl(
             };
     }
 
-    protected void RenderFilterParameters(CandoStringBuilder stringBuilder, FilterParameter defaultFilterParameter = FilterParameter.IsEqualTo)
+    protected void RenderFilterParameters(NeoStringBuilder stringBuilder, FilterParameter defaultFilterParameter = FilterParameter.IsEqualTo)
     {
         if (Field.ControlType == eControlTypeId.ComboBox)
             defaultFilterParameter = FilterParameter.Contains;

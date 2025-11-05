@@ -9,7 +9,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         string keyFilterValues, bool giveOutput,
         string keyValue, Entity entity)
     {
-        var commandString = new CandoStringBuilder();
+        var commandString = new NeoStringBuilder();
         var dbTableName = GetTableDbName(entity, DataSrcDefinition.connection.DatabaseName);
         commandString += $@"IF EXISTS(SELECT 1 FROM {dbTableName} WHERE {keyFilterValues})
 BEGIN

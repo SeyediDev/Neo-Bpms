@@ -48,7 +48,7 @@ public partial class QueryUtility
         }
     }
 
-    public void GenerateQuery_WriteJoins(ref CandoStringBuilder joins, ref Dictionary<string, string> tables)
+    public void GenerateQuery_WriteJoins(ref NeoStringBuilder joins, ref Dictionary<string, string> tables)
     {
         DataSource.GenerateQuery_WriteJoins(DataSource, ref joins, ref tables);
     }

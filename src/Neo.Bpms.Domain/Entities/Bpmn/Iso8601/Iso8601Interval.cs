@@ -13,7 +13,7 @@ public class Iso8601Interval
 
     /// <summary>
     /// Converts the ISO 8601 string representation of a interval to its equivalent
-    /// Cando <see cref="Iso8601Interval"/> representation.
+    /// Neo <see cref="Iso8601Interval"/> representation.
     /// A return value indicates whether the conversion succeeded or failed.
     /// </summary>
     /// <param name="interval">The ISO 8601 interval.
@@ -36,20 +36,20 @@ public class Iso8601Interval
     }
 
     /// <summary>
-    /// Converts the Cando ISO 8601 string representation of a interval to its equivalent
-    /// Cando <see cref="JobSchedule"/> representation.
+    /// Converts the Neo ISO 8601 string representation of a interval to its equivalent
+    /// Neo <see cref="JobSchedule"/> representation.
     /// A return value indicates whether the conversion succeeded or failed.
     /// </summary>
-    /// <param name="jobSchedule">The Cando ISO 8601 interval.
+    /// <param name="jobSchedule">The Neo ISO 8601 interval.
     /// </param>
-    /// <param name="candoIso8601Interval">
+    /// <param name="neoIso8601Interval">
     /// When the method returns, this parameter is set to the resulting <see cref="JobSchedule"/>
     /// if the conversion was successful, or null if the conversion was unsuccessful.</param>
     /// <returns><see langword="true"/> if the conversion succeeded; <see langword="false"/> otherwise.</returns>
-    public static bool TryParse(string candoIso8601Interval, out JobSchedule jobSchedule)
+    public static bool TryParse(string neoIso8601Interval, out JobSchedule jobSchedule)
     {
         jobSchedule = null;
-        IntervalVisitor result = IntervalVisitor.Parse(candoIso8601Interval);
+        IntervalVisitor result = IntervalVisitor.Parse(neoIso8601Interval);
         if (result.IsValid)
         {
             jobSchedule = result.jobSchedule;
@@ -71,7 +71,7 @@ public class Iso8601Interval
 
     /// <summary>
     /// Converts the ISO 8601 string representation of a interval to its equivalent
-    /// Cando <see cref="Iso8601Interval"/> representation.
+    /// Neo <see cref="Iso8601Interval"/> representation.
     /// </summary>
     /// <param name="iso8601Interval">The ISO 8601 interval.</param>
     /// <exception cref="FormatException">The ISO 8601 string was not in the proper format.</exception>
@@ -83,15 +83,15 @@ public class Iso8601Interval
 
 
     /// <summary>
-    /// Converts the Cando ISO 8601 Extended via Cando string representation of a interval to its equivalent
-    /// Cando <see cref="JobSchedule"/> representation.
+    /// Converts the Neo ISO 8601 Extended via Neo string representation of a interval to its equivalent
+    /// Neo <see cref="JobSchedule"/> representation.
     /// </summary>
-    /// <param name="candoIso8601Interval">The Cando ISO 8601 interval.</param>
-    /// <exception cref="FormatException">The Cando ISO 8601 string was not in the proper format.</exception>
-    public static JobSchedule ParseToJobSchedule(string candoIso8601Interval)
+    /// <param name="neoIso8601Interval">The Neo ISO 8601 interval.</param>
+    /// <exception cref="FormatException">The Neo ISO 8601 string was not in the proper format.</exception>
+    public static JobSchedule ParseToJobSchedule(string neoIso8601Interval)
     {
-        return !TryParse(candoIso8601Interval, out JobSchedule result)
-            ? throw new FormatException("Cando ISO 8601 string was not in the proper format.")
+        return !TryParse(neoIso8601Interval, out JobSchedule result)
+            ? throw new FormatException("Neo ISO 8601 string was not in the proper format.")
             : result;
     }
 

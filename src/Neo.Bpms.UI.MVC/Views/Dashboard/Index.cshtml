@@ -61,14 +61,14 @@
 }
 
 @* ===== TOOLBAR ===== *@
-<div class="cando-dashboard-header-toolbar">
+<div class="neo-dashboard-header-toolbar">
     @* ===== FILTER TOGGLE ===== *@
     @if (hasFilters)
     {
-        <button class="cando-dashboard-btn cando-dashboard-btn-secondary" 
+        <button class="neo-dashboard-btn neo-dashboard-btn-secondary" 
                 id="showFilter"
                 title="@ViewTexts.Filter">
-            <svg class="cando-dashboard-btn-icon" viewBox="0 0 16 16">
+            <svg class="neo-dashboard-btn-icon" viewBox="0 0 16 16">
             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
         </svg>
             <span>@ViewTexts.Filter</span>
@@ -127,7 +127,7 @@ new
     }
     else
     {
-        <div class="cando-dashboard-error">
+        <div class="neo-dashboard-error">
             <p>خطا: ساختار داشبورد موجود نیست.</p>
         </div>
     }
@@ -287,7 +287,7 @@ new
                         }
 
                         // به‌روزرسانی در design overlay هم اگر وجود دارد
-                        const configItem = document.querySelector(`.cando-dashboard-config-item[data-config-id="${configId}"] .cando-dashboard-config-item-name`);
+                        const configItem = document.querySelector(`.neo-dashboard-config-item[data-config-id="${configId}"] .neo-dashboard-config-item-name`);
                         if (configItem) {
                             configItem.textContent = newName;
                         }
@@ -464,7 +464,7 @@ new
                 .then(result => {
                     if (result) {
                         // Remove config item with animation
-                        const configItem = element.closest('.cando-dashboard-config-item');
+                        const configItem = element.closest('.neo-dashboard-config-item');
                         if (configItem) {
                             configItem.style.transition = 'all 0.3s ease';
                             configItem.style.transform = 'translateX(-100%)';

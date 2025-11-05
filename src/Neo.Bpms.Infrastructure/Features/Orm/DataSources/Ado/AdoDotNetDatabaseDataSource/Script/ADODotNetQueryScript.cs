@@ -10,8 +10,8 @@ public abstract partial class AdoDotNetDatabaseDataSource
     private string GenerateQuery(Connection dbConnection, DataSource dataSource, bool bRoot)
     {
         ClearExtractedParentEntities(dataSource);
-        CandoStringBuilder sqlOrderBy = new();
-        CandoStringBuilder sqlGroupBy = new();
+        NeoStringBuilder sqlOrderBy = new();
+        NeoStringBuilder sqlGroupBy = new();
         bool beGenerateGroupBy = CheckMustBeGenerateGroupBy(dataSource);
         if (beGenerateGroupBy)
         {
@@ -20,7 +20,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
         GenerateQuery_FetchOrderBys(dataSource, ref sqlOrderBy);
 
-        CandoStringBuilder sql = new();
+        NeoStringBuilder sql = new();
         GenerateQuery_WriteSelect(dataSource, ref sql);
 
         bool isFirstColumn = true;
@@ -86,7 +86,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    private static void GenerateQuery_WriteFilter(DataSource dataSource, ref CandoStringBuilder sql,
+    private static void GenerateQuery_WriteFilter(DataSource dataSource, ref NeoStringBuilder sql,
         bool writeJoinsInFrom, string prefix)
     {
         FilterItems filterItems = new();
@@ -94,8 +94,8 @@ public abstract partial class AdoDotNetDatabaseDataSource
         GenerateQuery_FilterItems(ref sql, filterItems, prefix);
     }
 
-    private static void GenerateQuery_WriteGroupBy(DataSource dataSource, CandoStringBuilder sqlGroupBy,
-        bool bMustGenerateGroupBy, ref CandoStringBuilder sql)
+    private static void GenerateQuery_WriteGroupBy(DataSource dataSource, NeoStringBuilder sqlGroupBy,
+        bool bMustGenerateGroupBy, ref NeoStringBuilder sql)
     {
         if (!bMustGenerateGroupBy)
         {
@@ -112,7 +112,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         GenerateQuery_FilterItems(ref sql, havingItems, "\n HAVING ");
     }
 
-    private static void GenerateQuery_FilterItems(ref CandoStringBuilder sql, FilterItems havingItems, string prefix)
+    private static void GenerateQuery_FilterItems(ref NeoStringBuilder sql, FilterItems havingItems, string prefix)
     {
         if (!havingItems.Any())
         {
@@ -132,7 +132,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private void GenerateQuery_WriteSelect(DataSource dataSource,
-        ref CandoStringBuilder sql)
+        ref NeoStringBuilder sql)
     {
         if (!dataSource.OnlyRecordCount &&
             dataSource.HasPaging)
@@ -199,7 +199,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_WriteTopRowColumn(DataSource dataSource,
-        CandoStringBuilder sqlOrderBy, ref CandoStringBuilder sql, bool firstColumn)
+        NeoStringBuilder sqlOrderBy, ref NeoStringBuilder sql, bool firstColumn)
     {
         if (dataSource.OnlyRecordCount || (dataSource.TopRows <= 0 && dataSource.StartIndex <= 0))
         {
@@ -220,7 +220,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private void GenerateQuery_WriteOrderBy(DataSource dataSource, bool bRoot,
-        CandoStringBuilder sqlOrderBy, ref CandoStringBuilder sql)
+        NeoStringBuilder sqlOrderBy, ref NeoStringBuilder sql)
     {
         if (dataSource.OnlyRecordCount || !bRoot)
         {
@@ -251,7 +251,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    private void GenerateQuery_Unions(Connection dbConnection, DataSource dataSource, ref CandoStringBuilder sql)
+    private void GenerateQuery_Unions(Connection dbConnection, DataSource dataSource, ref NeoStringBuilder sql)
     {
         foreach (SubDataSource sub in dataSource.SubTables?.Values ?? Enumerable.Empty<SubDataSource>())
         {
@@ -263,7 +263,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private void GenerateQuery_FetchAdditionOrderBy(DataSource dataSource,
-        ref CandoStringBuilder sqlOrderBy, CandoStringBuilder sqlGroupBy, bool bMustGenerateGroupBy)
+        ref NeoStringBuilder sqlOrderBy, NeoStringBuilder sqlGroupBy, bool bMustGenerateGroupBy)
     {
         GenerateOrderByOfGroupBy(dataSource, ref sqlOrderBy);
         if (sqlOrderBy.Length == 0 && bMustGenerateGroupBy && sqlGroupBy.Length != 0)
@@ -311,7 +311,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    private static void GenerateOrderByOfGroupBy(DataSource dataSource, ref CandoStringBuilder sqlOrderBy)
+    private static void GenerateOrderByOfGroupBy(DataSource dataSource, ref NeoStringBuilder sqlOrderBy)
     {
         foreach (AggregateDefinition gItem in dataSource.Aggregates?.Where(g => g.function == eAggregationFunctions.GroupByItem) ??
                               [])
@@ -326,7 +326,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    public override void GenerateQuery_WriteJoins(DataSource dataSource, ref CandoStringBuilder sql,
+    public override void GenerateQuery_WriteJoins(DataSource dataSource, ref NeoStringBuilder sql,
         ref Dictionary<string, string> tables)//todo no need ref
     {
         GenerateQuery_WriteParentJoins(dataSource, sql, tables);
@@ -366,7 +366,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    private void GenerateQuery_WriteParentJoins(DataSource dataSource, CandoStringBuilder sql,
+    private void GenerateQuery_WriteParentJoins(DataSource dataSource, NeoStringBuilder sql,
         IDictionary<string, string> tables)
     {
         if (dataSource.ExtractedParentEntities == null)
@@ -456,7 +456,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         havingItemList.Add(filter);
     }
 
-    private static void GenerateQuery_FetchGroupBy(DataSource dataSource, ref CandoStringBuilder sqlGroupBy)
+    private static void GenerateQuery_FetchGroupBy(DataSource dataSource, ref NeoStringBuilder sqlGroupBy)
     {
         if (dataSource.Aggregates != null)
         {
@@ -484,7 +484,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_WriteColumns(DataSource dataSource,
-        bool beGenerateGroupBy, ref CandoStringBuilder sql, ref bool firstColumn, bool bRoot)
+        bool beGenerateGroupBy, ref NeoStringBuilder sql, ref bool firstColumn, bool bRoot)
     {
         if (dataSource.OnlyRecordCount && !dataSource.Distinct)
         {
@@ -516,7 +516,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         firstColumn = false;
     }
 
-    private static void GenerateQuery_WriteAggregates(DataSource dataSource, ref CandoStringBuilder sql,
+    private static void GenerateQuery_WriteAggregates(DataSource dataSource, ref NeoStringBuilder sql,
         ref bool firstColumn)
     {
         foreach (AggregateDefinition gItem in dataSource.Aggregates ?? Enumerable.Empty<AggregateDefinition>())
@@ -596,7 +596,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_WriteFields(DataSource dataSource,
-        ref CandoStringBuilder sql, ref bool firstColumn)
+        ref NeoStringBuilder sql, ref bool firstColumn)
     {
         foreach (ColumnDefinition item in dataSource.Fields?.Values ?? Enumerable.Empty<ColumnDefinition>())
         {
@@ -668,7 +668,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_WriteFormulaColumns(DataSource dataSource,
-        ref CandoStringBuilder sql, ref bool firstColumn)
+        ref NeoStringBuilder sql, ref bool firstColumn)
     {
         if (dataSource.Formulas == null)
         {
@@ -693,7 +693,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_WriteFrom(DataSource dataSource,
-        ref CandoStringBuilder sql, ref bool writeFrom,
+        ref NeoStringBuilder sql, ref bool writeFrom,
         bool includeJoins, ref Dictionary<string, string> tables)
     {
         string tableName = GetTableDbName(dataSource.DataSrcDefinition);
@@ -785,7 +785,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         }
     }
 
-    private static void GenerateQuery_FetchOrderBys(DataSource dataSource, ref CandoStringBuilder sqlOrderBy)
+    private static void GenerateQuery_FetchOrderBys(DataSource dataSource, ref NeoStringBuilder sqlOrderBy)
     {
         List<OrderByItem> orders = [];
         GenerateQuery_FetchOrderByItems(orders, dataSource);
@@ -796,7 +796,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private static void GenerateQuery_FetchOrderBy(DataSource dataSource,
-        OrderByDefinition orderBy, ref CandoStringBuilder sqlOrderBy)
+        OrderByDefinition orderBy, ref NeoStringBuilder sqlOrderBy)
     {
         sqlOrderBy += sqlOrderBy.Length == 0 ? "\nORDER BY " : ",";
 

@@ -14,7 +14,7 @@ public class FormTemplate(Form form, string culture)
 
     private void CreateTables(FormStructRoutines formStructRoutines, StreamWriter stream, FormField tableField)
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         Form tableForm = FormStructRoutines.GetForm(tableField.TableEntity.NamespaceId, tableField.TableEntity.Id, null,
             Form.eFormType.Detail, null/*todo*/);
         result += $"<table style =\"margin-left:auto; margin-right:0; border: 1px solid black;\"  dir = \"rtl\"> <caption>{tableForm.GetName(Culture)}</caption> <thead> <tr>";
@@ -34,7 +34,7 @@ public class FormTemplate(Form form, string culture)
 
     private void CreateFormFields(FormStructRoutines formStructRoutines, StreamWriter stream)
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         result += "<!DOCTYPE html> <html> <head> </head> <body>";
         foreach (FormField field in Form.formFields)
         {

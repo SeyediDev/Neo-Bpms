@@ -8,7 +8,7 @@ namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper formLogicHelper,
     InputFieldDefinition field, ControlsRendererData controlsRendererData,
     ILogger logger, IConfiguration configuration, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
     private bool _withAnotherUploader;
     public bool StreamerIsAvailable => !string.IsNullOrEmpty(configuration["MediaStreamingRootUrl"]);
@@ -19,9 +19,9 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return this;
     }
 
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         List<DocumentView> documents = (List<DocumentView>)ControlsRendererData.Record[Field.FieldName];
         if (documents != null)
         {
@@ -37,9 +37,9 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderOneDocument(ref CandoStringBuilder result, DocumentView? document)
+    private NeoStringBuilder RenderOneDocument(ref NeoStringBuilder result, DocumentView? document)
     {
-        CandoStringBuilder controlHtml = new();
+        NeoStringBuilder controlHtml = new();
         controlHtml += $"<div data-id=\"{Field.FieldName}\" title=\"{CommonProperties.Tooltip}\" class=\"" +
                   ControlsRendererData.ControlsClassString +
                   CalculateWidthClasses() + " " +
@@ -78,7 +78,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
                Form.eFormType.ProcessCreate;
     }
 
-    private CandoStringBuilder RenderUploadButton(CandoStringBuilder result, DocumentView? document)
+    private NeoStringBuilder RenderUploadButton(NeoStringBuilder result, DocumentView? document)
     {
         //todo span -> label
         string label = Field.Label;
@@ -133,14 +133,14 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderHiddenInputs(CandoStringBuilder result, DocumentView? document)
+    private NeoStringBuilder RenderHiddenInputs(NeoStringBuilder result, DocumentView? document)
     {
         result += $"<input name=\"{Field.FieldName}\" type=\"hidden\" value=\"{document?.Id}\" />";
         result += $"<input name=\"{Field.FieldName}__Action\" type=\"hidden\" value=\"{FileSubmitAction.Nothing}\" />";
         return result;
     }
 
-    private CandoStringBuilder RenderFileContent(CandoStringBuilder result, DocumentView? document)
+    private NeoStringBuilder RenderFileContent(NeoStringBuilder result, DocumentView? document)
     {
         FilePrimaryType fileType = ObtainFileType(document);
         bool showDocumentInPage = Field.PropertyBoolean(eControlPropertyId.ShowDocumentInPage);
@@ -204,7 +204,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderDirectDownloadLink(CandoStringBuilder result, DocumentView? document, FilePrimaryType fileType)
+    private NeoStringBuilder RenderDirectDownloadLink(NeoStringBuilder result, DocumentView? document, FilePrimaryType fileType)
     {
         result += $@"<div style=""margin-bottom: 5px;"">
                            <a id=""{FileContentId(document)}"" class=""btn btn-light""
@@ -219,7 +219,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderVideo(CandoStringBuilder result, DocumentView? document, string url)
+    private NeoStringBuilder RenderVideo(NeoStringBuilder result, DocumentView? document, string url)
     {
         if (Field.PropertyBoolean(eControlPropertyId.UseFileServer) &&
             StreamerIsAvailable)
@@ -236,7 +236,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderAudio(CandoStringBuilder result, DocumentView? document, string url)
+    private NeoStringBuilder RenderAudio(NeoStringBuilder result, DocumentView? document, string url)
     {
         if (Field.PropertyBoolean(eControlPropertyId.UseFileServer) &&
             StreamerIsAvailable)
@@ -255,7 +255,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return result;
     }
 
-    private CandoStringBuilder RenderJwPlayer(CandoStringBuilder result, DocumentView? document, string url)
+    private NeoStringBuilder RenderJwPlayer(NeoStringBuilder result, DocumentView? document, string url)
     {
         ControlsRendererData.AddIncludeNeed(PluginInclude.JwPlayer);
         result += $@"<div class=""col-lg-12""><div id=""{FileContentId(document)}"" data-video-stream=""{url}""></div></div>";
@@ -300,7 +300,7 @@ public class FileHtmlControl(ICmmnDocument cmmnFileManager, IFormLogicHelper for
         return $"{Field.FieldName}{(document != null ? "-" + document.Id : "")}-file-content";
     }
 
-    private CandoStringBuilder RenderDownloadBox(CandoStringBuilder result, DocumentView? document, string href)
+    private NeoStringBuilder RenderDownloadBox(NeoStringBuilder result, DocumentView? document, string href)
     {
             result += $@"<a class=""tiket-uploaded-document-a"" href=""{href}"" download=""{document.FullFileName}"">
                     <div class=""col-12 tiket-uploaded-document"">

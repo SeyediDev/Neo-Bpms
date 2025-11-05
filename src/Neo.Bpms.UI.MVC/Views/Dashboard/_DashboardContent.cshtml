@@ -16,7 +16,7 @@
 @* ===== DASHBOARD CONTENT AREA ===== *@
 @if (hasWidgets)
 {
-    <div class="cando-dashboard-grid" id="ReportBody">
+    <div class="neo-dashboard-grid" id="ReportBody">
         @{
             await RenderDashboardWidgets(currentConfig.Divs, canDesign);
         }
@@ -24,12 +24,12 @@
 }
 else
 {
-    <div class="cando-dashboard-empty">
+    <div class="neo-dashboard-empty">
         <svg viewBox="0 0 24 24">
             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#file-icon" />
         </svg>
-        <h3 class="cando-dashboard-empty-title">هیچ ویجتی موجود نیست</h3>
-        <p class="cando-dashboard-empty-description">برای شروع، اولین ویجت خود را اضافه کنید</p>
+        <h3 class="neo-dashboard-empty-title">هیچ ویجتی موجود نیست</h3>
+        <p class="neo-dashboard-empty-description">برای شروع، اولین ویجت خود را اضافه کنید</p>
     </div>
 }
 
@@ -49,7 +49,7 @@ else
             {
                 if (divConfig.IsRow)
                 {
-                    <div class="cando-dashboard-row">
+                    <div class="neo-dashboard-row">
                         
                         @{
                             await RenderDiv(divConfig, canDesign);
@@ -66,7 +66,7 @@ else
         catch (Exception ex)
         {
             // Log error but don't break the page
-            <div class="cando-dashboard-error">
+            <div class="neo-dashboard-error">
                 <p>خطا در نمایش ویجت: @ex.Message</p>
             </div>
         }
@@ -103,7 +103,7 @@ else
             var maxRecord = widget != null ? DashboardDataRoutines.GetWidgetMaxRecord(widget, ReportViewType.Chart) : 15;
             ReportData reportData = GetReportData(widget, maxRecord);
 
-        <div class="cando-dashboard-widget-container cando-dashboard-column-@divConfig.Width" 
+        <div class="neo-dashboard-widget-container neo-dashboard-column-@divConfig.Width" 
              widgetId="@divConfig.WidgetId"
              data-widget-height="@widgetHeight px">
             
@@ -113,7 +113,7 @@ else
             }
 
             @* Widget Content *@
-            <div class="cando-dashboard-widget-content">
+            <div class="neo-dashboard-widget-content">
                 @if (reportData != null && reportData.structure != null)
                 {
                      await WidgetContent(divConfig, canDesign, reportData);
@@ -137,14 +137,14 @@ else
         }
         catch (Exception ex)
         {
-            <div class="cando-dashboard-widget-container cando-dashboard-column-@divConfig.Width" 
+            <div class="neo-dashboard-widget-container neo-dashboard-column-@divConfig.Width" 
                  widgetId="@divConfig.WidgetId">
-                <div class="cando-dashboard-widget-title-bar">
-                    <div class="cando-dashboard-widget-title-content">
-                        <h4 class="cando-dashboard-widget-title-text">خطا در ویجت</h4>
+                <div class="neo-dashboard-widget-title-bar">
+                    <div class="neo-dashboard-widget-title-content">
+                        <h4 class="neo-dashboard-widget-title-text">خطا در ویجت</h4>
                     </div>
                 </div>
-                <div class="cando-dashboard-widget-content">
+                <div class="neo-dashboard-widget-content">
                     <svg viewBox="0 0 24 24">
                         <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#error-icon" />
                     </svg>
@@ -158,20 +158,20 @@ else
     {
         var divTitle = divConfig.Title ?? reportData?.structure?.Name ?? divConfig.Id;
 
-        <div class="cando-dashboard-widget-title-bar">
-            <div class="cando-dashboard-widget-title-content">
-                <svg class="cando-dashboard-widget-title-icon" viewBox="0 0 24 24">
+        <div class="neo-dashboard-widget-title-bar">
+            <div class="neo-dashboard-widget-title-content">
+                <svg class="neo-dashboard-widget-title-icon" viewBox="0 0 24 24">
                     <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#chart-icon" />
                 </svg>
-                <h4 class="cando-dashboard-widget-title-text">@divTitle</h4>
+                <h4 class="neo-dashboard-widget-title-text">@divTitle</h4>
             </div>
             @if (canDesign && !string.IsNullOrEmpty(divConfig.WidgetId))
             {
-                <div class="cando-dashboard-widget-title-actions dashboard-design-only" style="display: none;">
+                <div class="neo-dashboard-widget-title-actions dashboard-design-only" style="display: none;">
                     @if (reportData?.structure != null)
                     {
                         <a href="@("Report/Index?NamespaceId=" + reportData.structure.NamespaceId + "&EntityId=" + reportData.structure.EntityId + "&ReportId=" + reportData.structure.Form_ReportId + "&ConfigId=" + reportData.structure.ConfigId)"
-                           class="cando-dashboard-widget-title-action"
+                           class="neo-dashboard-widget-title-action"
                            target="_blank"
                            title="باز کردن گزارش">
                             <svg viewBox="0 0 24 24">
@@ -179,7 +179,7 @@ else
                             </svg>
                         </a>
                     }
-                    <button class="cando-dashboard-widget-title-action"
+                    <button class="neo-dashboard-widget-title-action"
                             data-toggle="modal"
                             data-target="#widgetSettingsModal-@divConfig.WidgetId"
                             title="@ViewTexts.WidgetSettings">
@@ -187,7 +187,7 @@ else
                             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-dashboard" />
                         </svg>
                     </button>
-                    <button class="cando-dashboard-widget-title-action cando-dashboard-widget-delete"
+                    <button class="neo-dashboard-widget-title-action neo-dashboard-widget-delete"
                             widgetId="@divConfig.WidgetId"
                             onclick="dashboard_removeWidget(this)"
                             title="@ViewTexts.Delete">
@@ -228,7 +228,7 @@ else
     }
     async Task WidgetEmpty(ConfiguredDashboard.ConfigDiv divConfig, bool canDesign, ConfiguredDashboard.ConfigWidget widget)
     {
-        <div class="cando-dashboard-widget-error">
+        <div class="neo-dashboard-widget-error">
             <svg viewBox="0 0 24 24">
                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#error-icon" />
             </svg>

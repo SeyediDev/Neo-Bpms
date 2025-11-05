@@ -72,9 +72,9 @@ internal sealed partial class IntervalVisitor : Visitor
         }
     }
 
-    private void JobScheduleParse(string candoConvention)
+    private void JobScheduleParse(string neoConvention)
     {
-        tokens = [.. candoConvention.Skip(1)];
+        tokens = [.. neoConvention.Skip(1)];
 
         //"E1DT13H40M00S"
         //"E1DE13H40M00S|13H40M00S|13H40M00S"

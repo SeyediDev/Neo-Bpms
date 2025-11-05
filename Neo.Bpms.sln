@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Bpms.UI.Resources", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Bpms.UI.MVC", "src\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj", "{CBCB046F-B202-4BFC-8AB8-E33D2E3EC8A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,5 +112,8 @@ Global
 		{578E24DD-8BB7-4E86-97BE-BCDDE3C34120} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{37847E23-0A9E-47A2-B47D-611DCFFE2D4A} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{CBCB046F-B202-4BFC-8AB8-E33D2E3EC8A6} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0947127E-E7C5-48A5-B624-F6CA8ED963A1}
 	EndGlobalSection
 EndGlobal

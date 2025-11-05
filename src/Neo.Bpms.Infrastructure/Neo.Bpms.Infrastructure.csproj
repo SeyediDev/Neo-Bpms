@@ -16,8 +16,8 @@
     <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>
   <ItemGroup>
-    <!-- Neo Framework from NuGet -->
-    <PackageReference Include="Neo.Infrastructure" />
+    <!-- Neo Framework - using project references for development -->
+    <ProjectReference Include="..\..\..\Neo\src\Neo.Infrastructure\Neo.Infrastructure.csproj" />
     
     <!-- Local project references -->
     <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />

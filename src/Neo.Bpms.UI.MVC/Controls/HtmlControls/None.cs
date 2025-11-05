@@ -1,10 +1,10 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
-public class None(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) : BaseCandoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
+public class None(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        return ControlsRendererData.Options.IsInToolBox ? BlackBox() : new CandoStringBuilder();
+        return ControlsRendererData.Options.IsInToolBox ? BlackBox() : new NeoStringBuilder();
     }
 
 }

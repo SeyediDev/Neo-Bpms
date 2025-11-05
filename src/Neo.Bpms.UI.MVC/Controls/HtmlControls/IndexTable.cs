@@ -5,9 +5,9 @@ namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 public class IndexTable(IFormLogicHelper formLogicHelper, 
     FormStructRoutines formStructRoutines, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, IControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render() //todo caller, pid, wid, taskId, processId
+    public override NeoStringBuilder Render() //todo caller, pid, wid, taskId, processId
     {
         if (ControlsRendererData.Options.IsInToolBox)
             return BlackBox();
@@ -15,7 +15,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         CommonFormStructure structure = ControlsRendererData.Structure;
 
         TableDefinition table = (TableDefinition)Field;
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         record.GetField(table.FieldName, out object tableData);
 
         string recordId = record.GetString("Ids");
@@ -156,7 +156,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         return result;
     }
 
-    protected override CandoStringBuilder RenderDesignIcons(CandoStringBuilder result)
+    protected override NeoStringBuilder RenderDesignIcons(NeoStringBuilder result)
     {
         base.RenderDesignIcons(result);
         if (ControlsRendererData.Options.IsDesignMode)
@@ -172,7 +172,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
     }
 
     private void RenderSubject(TableDefinition table, IndexFormSubjectId subjectInfo,
-        ElasticObject rowData, string rowIds, ref CandoStringBuilder result)
+        ElasticObject rowData, string rowIds, ref NeoStringBuilder result)
     {
         object subjectText = "";
         bool subjectTextExists = subjectInfo.HasText && rowData.GetField(subjectInfo.Name, out subjectText);
@@ -229,7 +229,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         return ControlsRendererData.Options.IsIframe ? "IframeForm" : normalAction;
     }
 
-    private void RenderLinks(CandoStringBuilder result, TableDefinition table, CommonFormStructure structure,
+    private void RenderLinks(NeoStringBuilder result, TableDefinition table, CommonFormStructure structure,
         string recordId, string rowIds, bool isInDetailsForm, bool isEditable)
     {
         result.Append("<td class=\"cColumn\">");
@@ -260,7 +260,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
 
     private void RenderColumn(TableDefinition table, ColumnFieldDefinition col, Dictionary<string, string> logics,
         ElasticObject row,
-        bool isEditable, int counter, CandoStringBuilder result)
+        bool isEditable, int counter, NeoStringBuilder result)
     {
         bool isNull = false;
         string logicKey = table.FieldName + '_' + col.ColumnName;
@@ -284,7 +284,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         }
     }
 
-    private void RenderReadOnlyColumn(TableDefinition table, ColumnFieldDefinition col, CandoStringBuilder result,
+    private void RenderReadOnlyColumn(TableDefinition table, ColumnFieldDefinition col, NeoStringBuilder result,
         object cellValue)
     {
         bool cell = false;
@@ -374,7 +374,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
     }
 
     private void RenderEditableColumn(TableDefinition table, ColumnFieldDefinition col, int counter,
-        CandoStringBuilder result, bool isNull, object cellValue, string colLogicEvent, ElasticObject record)
+        NeoStringBuilder result, bool isNull, object cellValue, string colLogicEvent, ElasticObject record)
     {
         string value = "";
         CommonProperties commonProperties = new(col.GetProperties());
@@ -395,7 +395,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
 
     private ControlsRendererData controlsRendererData;
 
-    private void RenderCellControl(TableDefinition table, ColumnFieldDefinition col, CandoStringBuilder result,
+    private void RenderCellControl(TableDefinition table, ColumnFieldDefinition col, NeoStringBuilder result,
         object cellValue, string colLogicEvent, CommonProperties commonProperties, string rowColId,
         string fullColumnName,
         string rowColName, ElasticObject record)

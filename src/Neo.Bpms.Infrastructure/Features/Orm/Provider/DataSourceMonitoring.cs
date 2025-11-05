@@ -4,7 +4,7 @@ public class DataSourceMonitoring
 {
     #region LastCommand
 
-    public ConcurrentDictionary<string, CandoTableConnection> CandoTableConnections =
+    public ConcurrentDictionary<string, NeoTableConnection> NeoTableConnections =
         new();
 
     public static ILogger Logger => DependencyInjectionHolder.Instance.Logger;
@@ -22,7 +22,7 @@ public class DataSourceMonitoring
 
         lock (_lock)
         {
-            var tableConnection = FetchCandoTableConnection(tableName);
+            var tableConnection = FetchNeoTableConnection(tableName);
             if (tableConnection == null) return;
             tableConnection.LastCommand = command;
             tableConnection.LastDuration = duration;
@@ -37,21 +37,21 @@ public class DataSourceMonitoring
         lock (_lock)
         {
             ConnectionsCounter++;
-            var tableConnection = FetchCandoTableConnection(tableName);
+            var tableConnection = FetchNeoTableConnection(tableName);
             if (tableConnection != null)
                 tableConnection.ClientConnectionId = clientConnectionId;
         }
     }
 
-    private CandoTableConnection FetchCandoTableConnection(string tableName)
+    private NeoTableConnection FetchNeoTableConnection(string tableName)
     {
-        CandoTableConnections.TryGetValue(tableName, out var tableConnection);
+        NeoTableConnections.TryGetValue(tableName, out var tableConnection);
         if (tableConnection != null)
             return tableConnection;
         if (tableName.IndexOf(".", StringComparison.Ordinal) >= 0)
             return null;
-        tableConnection = new CandoTableConnection(tableName);
-        CandoTableConnections.TryAdd(tableName, tableConnection);
+        tableConnection = new NeoTableConnection(tableName);
+        NeoTableConnections.TryAdd(tableName, tableConnection);
         return tableConnection;
     }
 

@@ -1,6 +1,6 @@
 /**
  * Filter Parameter Tooltip Implementation
- * Cando BPMS - Modern Filter Parameters
+ * Neo BPMS - Modern Filter Parameters
  * Version: 1.0.0
  */
 

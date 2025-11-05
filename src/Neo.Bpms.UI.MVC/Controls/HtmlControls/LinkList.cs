@@ -2,11 +2,11 @@
 
 public class LinkList(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         List<LinkDefinition> linkItems = [.. GetChildrenOfType(eControlTypeId.LinkListItem)
             .Select(ifd => new LinkDefinition(ifd, ControlsRendererData.Url))
             .Where(l => l.IsAccessibleFor(ControlsRendererData.User))];
@@ -41,7 +41,7 @@ public class LinkList(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         return result;
     }
 
-    private static CandoStringBuilder AddPropertiesEffect(CandoStringBuilder result, CommonProperties properties)
+    private static NeoStringBuilder AddPropertiesEffect(NeoStringBuilder result, CommonProperties properties)
     {
         if (!string.IsNullOrEmpty(properties.Color))
             result += $" style=\"color:{properties.Color}\"";

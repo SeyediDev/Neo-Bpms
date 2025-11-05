@@ -2,11 +2,11 @@
 
 public class Card(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, IControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         List<LinkDefinition> linkItems = [.. GetChildrenOfType(eControlTypeId.Link)
             .Select(ifd => new LinkDefinition(ifd, ControlsRendererData.Url))
             .Where(l => l.IsAccessibleFor(ControlsRendererData.User))];
@@ -46,7 +46,7 @@ public class Card(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
         return result;
     }
 
-    private static CandoStringBuilder RenderCardAction(CandoStringBuilder result, LinkDefinition link)
+    private static NeoStringBuilder RenderCardAction(NeoStringBuilder result, LinkDefinition link)
     {
         CommonProperties properties = new(link.ControlDefinition.GetProperties());
 

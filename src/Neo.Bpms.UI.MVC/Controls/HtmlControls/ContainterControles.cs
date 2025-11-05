@@ -3,16 +3,16 @@
 public class ContainersControls(
     IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRendererData,
     IControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer)
-    : BaseCandoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
+    : BaseNeoHtmlControl(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         throw new NotImplementedException();
     }
 
-    public CandoStringBuilder RenderAccordion()
+    public NeoStringBuilder RenderAccordion()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder.Append("<div class=\"w-100\"></div>"); // Force new line
         stringBuilder.Append($"<div data-id=\"{Field.FieldName}\" class=\"{CommonProperties.WideColumnClasses} {ControlsClassString}\">");
         RenderDesignIcons(stringBuilder);
@@ -47,9 +47,9 @@ public class ContainersControls(
         return stringBuilder;
     }
 
-    public CandoStringBuilder RenderMultiTab()
+    public NeoStringBuilder RenderMultiTab()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder.Append("<div class=\"w-100\"></div>"); // Force new line
         stringBuilder.Append(
             $"<div data-id=\"{Field.FieldName}\" class=\"{ControlsClassString} {CommonProperties.WideColumnClasses}\" >");
@@ -87,9 +87,9 @@ public class ContainersControls(
         stringBuilder.Append("</div>");
         return stringBuilder;
     }
-    public CandoStringBuilder RenderFieldSet()
+    public NeoStringBuilder RenderFieldSet()
     {
-        CandoStringBuilder stringBuilder = new();
+        NeoStringBuilder stringBuilder = new();
         stringBuilder += "<div class=\"w-100\"></div>"; // Force new line
         stringBuilder +=
             $"<div id=\"{Field.FieldName}\" " +
@@ -111,7 +111,7 @@ public class ContainersControls(
         stringBuilder += "</fieldset></div>";
         return stringBuilder;
     }
-    private static CandoStringBuilder AddPropertiesEfect(CandoStringBuilder result, CommonProperties properties)
+    private static NeoStringBuilder AddPropertiesEfect(NeoStringBuilder result, CommonProperties properties)
     {
         if (!string.IsNullOrEmpty(properties.Color))
             result += $" style=\"color:{properties.Color}\"";

@@ -16,12 +16,12 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateDeleteScript(string keyValue, string keyFilterValues, Entity entity)
     {
-        var commands = new CandoStringBuilder();
+        var commands = new NeoStringBuilder();
         GenerateDeleteScript(keyValue, keyFilterValues, entity, commands);
         return commands.ToString();
     }
 
-    private void GenerateDeleteScript(string keyValue, string keyFilterValues, Entity entity, CandoStringBuilder commands)
+    private void GenerateDeleteScript(string keyValue, string keyFilterValues, Entity entity, NeoStringBuilder commands)
     {
         var dbTableName = GetTableDbName(entity, DataSrcDefinition.connection.DatabaseName);
         var command = $"DELETE{(TopRows > 0 ? $" TOP({TopRows})" : "")} {dbTableName} " +
@@ -30,7 +30,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
     }
 
     private void GenerateParentDeleteScript(Entity entity, string keyFilterValues,
-        CandoStringBuilder commandString)
+        NeoStringBuilder commandString)
     {
         var parents = Parents(entity)?.ToList();
         if (parents == null || parents.Count == 0) return;

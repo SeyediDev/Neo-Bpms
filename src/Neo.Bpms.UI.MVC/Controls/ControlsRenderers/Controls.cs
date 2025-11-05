@@ -27,10 +27,10 @@ public partial class ControlsRenderer
         return html.ToString();
     }
 
-    public CandoStringBuilder CreateControl(ControlsRendererData data, string parentControlId, InputFieldDefinition fieldInfo)
+    public NeoStringBuilder CreateControl(ControlsRendererData data, string parentControlId, InputFieldDefinition fieldInfo)
     {
         if (fieldInfo == null || (fieldInfo.parentControlId ?? "") != (parentControlId ?? ""))
-            return new CandoStringBuilder();
+            return new NeoStringBuilder();
 
         CommonProperties commonProperties = new(fieldInfo.GetProperties(),
             data.Options.IsReadOnly || (data.IsBulk && !fieldInfo.PropertyBoolean(eControlPropertyId.Required)));
@@ -66,10 +66,10 @@ public partial class ControlsRenderer
             case eControlTypeId.BooleanRadioButtons:
                 return new BooleanRadioButtons(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
             case eControlTypeId.CheckBox:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderCheckBox(value?.ToString());
             case eControlTypeId.CheckBoxList:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderCheckBoxList(value?.ToString());
             case eControlTypeId.ComboBox:
                 return new ComboBox(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
@@ -81,20 +81,20 @@ public partial class ControlsRenderer
                 return new DatePicker(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
 
             case eControlTypeId.File:
-                if (data.IsBulk) return new CandoStringBuilder();
+                if (data.IsBulk) return new NeoStringBuilder();
                 return new FileHtmlControl(cmmnFileManager, formLogicHelper, fieldInfo, data, logger, configuration, _sbvrRenderer).Render();
             case eControlTypeId.AdvancedUpload:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderAdvancedUpload(cmmnFileManager, logger, configuration);
             case eControlTypeId.Image:
-                return new CandoImage(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
+                return new NeoImage(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
 
             case eControlTypeId.Form:
                 return new FormIframe(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
             case eControlTypeId.GridColumn:
                 return new GridColumn(formLogicHelper, fieldInfo, data, this, _sbvrRenderer).Render();
             case eControlTypeId.IndexTable:
-                if (data.IsBulk) return new CandoStringBuilder();
+                if (data.IsBulk) return new NeoStringBuilder();
                 return new IndexTable(formLogicHelper, formStructRoutines, fieldInfo, data, this, _sbvrRenderer).Render();
             case eControlTypeId.LinkList:
                 return new LinkList(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
@@ -102,18 +102,18 @@ public partial class ControlsRenderer
             case eControlTypeId.MapPointInput:
             case eControlTypeId.MapRegionInput:
             case eControlTypeId.MapRoutingView:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer).RenderMap();
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer).RenderMap();
             case eControlTypeId.None:
                 return new None(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
             case eControlTypeId.NumberInput:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderNumberInput(value?.ToString());
             case eControlTypeId.OperationButton:
                 data.AddIncludeNeed(PluginInclude.OperationButton);
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderOperationButton();
             case eControlTypeId.RadioButton: // todo It's useless
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderRadioButton(value?.ToString());
             case eControlTypeId.RadioButtons:
                 return new RadioButtons(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
@@ -121,21 +121,21 @@ public partial class ControlsRenderer
                 data.AddIncludeNeed(PluginInclude.ReportControl);
                 return new ReportControl(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
             case eControlTypeId.MultilineTextInput:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderMultilineTextInput(value?.ToString());
             case eControlTypeId.SystemPageLink:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderSystemPageLink();
             case eControlTypeId.Terminal:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderTerminal();
             case eControlTypeId.TextInput:
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderTextInput(value?.ToString());
             case eControlTypeId.DurationInput: //todo should be separated from time input!
             case eControlTypeId.TimeInput:
                 data.AddIncludeNeed(PluginInclude.InputMask);
-                return new CandoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
+                return new NeoHtmlControl(formLogicHelper, fieldInfo, data, _sbvrRenderer)
                     .RenderTimeInput(value?.ToString());
             case eControlTypeId.Toggle:
                 if (!data.Options.IsDesignMode)
@@ -143,7 +143,7 @@ public partial class ControlsRenderer
                 return new Toggle(formLogicHelper, fieldInfo, data, _sbvrRenderer).Render();
         }
 
-        return new CandoStringBuilder();
+        return new NeoStringBuilder();
     }
     private static eControlTypeId DetermineControlType(ControlsRendererData data, InputFieldDefinition fieldInfo)
     {

@@ -2,14 +2,14 @@
 
 namespace Neo.Bpms.Domain.Utility;
 
-public class CandoStringBuilder
+public class NeoStringBuilder
 {
 
-    public CandoStringBuilder()
+    public NeoStringBuilder()
     {
         _stringBuilder = new StringBuilder();
     }
-    public CandoStringBuilder(string initialValue)
+    public NeoStringBuilder(string initialValue)
     {
         _stringBuilder = new StringBuilder(initialValue);
     }
@@ -17,30 +17,30 @@ public class CandoStringBuilder
     private readonly StringBuilder _stringBuilder;
     public StringBuilder StringBuilder=> _stringBuilder;
 
-    public CandoStringBuilder Append(string s)
+    public NeoStringBuilder Append(string s)
     {
         _stringBuilder.Append(s);
         return this;
     }
 
-    public CandoStringBuilder Append(CandoStringBuilder s)
+    public NeoStringBuilder Append(NeoStringBuilder s)
     {
         _stringBuilder.Append(s.StringBuilder);
         return this;
     }
 
-    public CandoStringBuilder Append(StringBuilder s)
+    public NeoStringBuilder Append(StringBuilder s)
     {
         _stringBuilder.Append(s);
         return this;
     }
 
-    public static CandoStringBuilder operator +(CandoStringBuilder tsb, string s)
+    public static NeoStringBuilder operator +(NeoStringBuilder tsb, string s)
     {
         return tsb.Append(s);
     }
 
-    public static CandoStringBuilder operator +(CandoStringBuilder tsb, CandoStringBuilder s)
+    public static NeoStringBuilder operator +(NeoStringBuilder tsb, NeoStringBuilder s)
     {
         return tsb.Append(s.StringBuilder);
     }

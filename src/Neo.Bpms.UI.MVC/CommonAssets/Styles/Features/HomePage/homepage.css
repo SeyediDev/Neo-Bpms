@@ -23,13 +23,13 @@
         flex-direction: column !important;
     }
 
-    #main-part > .cando-control:nth-of-type(4n + 1) { order: 1; }
+    #main-part > .neo-control:nth-of-type(4n + 1) { order: 1; }
 
-    #main-part > .cando-control:nth-of-type(4n + 2) { order: 2; }
+    #main-part > .neo-control:nth-of-type(4n + 2) { order: 2; }
 
-    #main-part > .cando-control:nth-of-type(4n + 3) { order: 3; }
+    #main-part > .neo-control:nth-of-type(4n + 3) { order: 3; }
 
-    #main-part > .cando-control:nth-of-type(4n) { order: 4; }
+    #main-part > .neo-control:nth-of-type(4n) { order: 4; }
 
     .break {
         flex-basis: 100%;

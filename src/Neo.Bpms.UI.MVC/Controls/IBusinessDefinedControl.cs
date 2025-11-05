@@ -29,12 +29,12 @@ public interface IBusinessDefinedControl
     /// <summary>
     /// آنچه در قسمتِ مارک‌آپِ فرم برایِ این کنترل تولید می‌شود 
     /// </summary>
-    CandoStringBuilder RenderHtml(InputFieldDefinition fieldDefinition,
+    NeoStringBuilder RenderHtml(InputFieldDefinition fieldDefinition,
         ControlsRendererData controlsRendererData);
     /// <summary>
     /// آنچه در قسمتِ اسکریپت‌ها برایِ این کنترل تولید می‌شود 
     /// </summary>
-    CandoStringBuilder RenderScript(InputFieldDefinition fieldDefinition,
+    NeoStringBuilder RenderScript(InputFieldDefinition fieldDefinition,
         ControlsRenderer controlsRenderer);
     /// <summary>
     /// اینکلود‌هایِ موردِ نیازِ کنترل

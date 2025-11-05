@@ -1,4 +1,4 @@
-/* Modern Controls Framework - Cando BPMS */
+/* Modern Controls Framework - Neo BPMS */
 /* Version: 1.0.0 */
 
 /* ===== CSS Variables ===== */
@@ -89,13 +89,13 @@ body {
 }
 
 /* ===== Modern Control Container ===== */
-.cando-control-modern {
+.neo-control-modern {
   position: relative;
   margin-bottom: var(--spacing-lg);
   transition: all var(--transition-normal);
 }
 
-.cando-control-modern:hover {
+.neo-control-modern:hover {
   transform: translateY(-1px);
 }
 
@@ -808,7 +808,7 @@ body {
 }
 
 /* Additional ComboBox vertical alignment fixes */
-.modern-form .cando-control select {
+.modern-form .neo-control select {
   display: block !important;
   width: 100% !important;
   height: 60px !important;
@@ -932,7 +932,7 @@ body {
   display: block !important;
 }
 
-.modern-form .cando-control {
+.modern-form .neo-control {
   width: 100% !important;
   display: block !important;
 }
@@ -1072,7 +1072,7 @@ body {
 }
 
 /* Ensure controls take full width of their container */
-#main-part .cando-control {
+#main-part .neo-control {
   flex: 1;
   min-width: 300px;
   max-width: 100%;
@@ -1407,7 +1407,7 @@ body {
 }
 
 /* ===== Filter Field Layout - Like Edit Page (Vertical) ===== */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   display: flex !important;
   flex-direction: column !important; /* عمودی مثل Edit */
   align-items: stretch !important;
@@ -1501,7 +1501,7 @@ body {
 }
 
 /* ===== Related Links Container ===== */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   position: relative;
 }
 
@@ -1903,7 +1903,7 @@ body {
 }
 
 /* Reduce margin for filter controls */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   margin-bottom: 0.75rem !important; /* Reduced from 1.5rem */
   /* Ensure proper width in grid */
   width: 100% !important;
@@ -1912,13 +1912,13 @@ body {
 }
 
 /* Fix Select2 width in grid layout */
-.modern-filter-wrapper .cando-control .select2-container {
+.modern-filter-wrapper .neo-control .select2-container {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
-.modern-filter-wrapper .cando-control .dWrapper {
+.modern-filter-wrapper .neo-control .dWrapper {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;

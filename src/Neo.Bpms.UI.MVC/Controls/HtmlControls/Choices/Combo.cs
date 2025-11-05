@@ -4,7 +4,7 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)
     : Choice(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    protected virtual void RenderHeader(CandoStringBuilder result, bool isRemoteData,
+    protected virtual void RenderHeader(NeoStringBuilder result, bool isRemoteData,
         bool isMultiple, List<string> idsList, bool isSubTable, string defaultValue = null)
     {
         result.Append($"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip + "\" class=\"" +
@@ -39,7 +39,7 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
         result.Append(" >");
     }
     
-    protected override void RenderInnerOfLabel(CandoStringBuilder result, InputFieldDefinition field)
+    protected override void RenderInnerOfLabel(NeoStringBuilder result, InputFieldDefinition field)
     {
         RenderRelatedLinks(result, true);
     }
@@ -51,7 +51,7 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
         return controller == null || action == null ? null : $"data-remote-url=\"{Url.Action(action, controller, url)}\"";
     }
 
-    protected CandoStringBuilder RenderFooter(CandoStringBuilder result)
+    protected NeoStringBuilder RenderFooter(NeoStringBuilder result)
     {
         result.Append("</select>");
         
@@ -68,7 +68,7 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
         result.Append("</div>");
         return result;
     }
-    protected static CandoStringBuilder RenderFooterEnd(CandoStringBuilder result)
+    protected static NeoStringBuilder RenderFooterEnd(NeoStringBuilder result)
     {
         result.Append("</div>");
         return result;

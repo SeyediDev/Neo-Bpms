@@ -598,7 +598,7 @@ public static class EntityConversions
             tables.Add(tableName, tableName);
         }
         positionalParameters.Add(new ListExpressionNode(entitiesItems));
-        var joins = new CandoStringBuilder();
+        var joins = new NeoStringBuilder();
         if (selectQueryDef?.subQuerys != null)
         {
             selectQueryDef.PreProcessQuery(null);

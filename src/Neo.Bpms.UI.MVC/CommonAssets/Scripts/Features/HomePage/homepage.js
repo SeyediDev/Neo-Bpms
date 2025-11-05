@@ -9,9 +9,9 @@
 
     function addBreaks() {
         var $mainPart = $('#main-part');
-        $mainPart.append($('<span />', { 'class': 'break cando-control' }));
-        $mainPart.append($('<span />', { 'class': 'break cando-control' }));
-        $mainPart.append($('<span />', { 'class': 'break cando-control' }));
+        $mainPart.append($('<span />', { 'class': 'break neo-control' }));
+        $mainPart.append($('<span />', { 'class': 'break neo-control' }));
+        $mainPart.append($('<span />', { 'class': 'break neo-control' }));
     }
 
     function updateHeightIfNeeded() {

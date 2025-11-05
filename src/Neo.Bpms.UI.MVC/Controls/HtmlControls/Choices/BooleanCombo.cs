@@ -7,7 +7,7 @@ public class BooleanCombo(IFormLogicHelper formLogicHelper, InputFieldDefinition
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer) 
     : Combo(formLogicHelper, field, controlsRendererData, sbvrRenderer)
 {
-    public override CandoStringBuilder Render()
+    public override NeoStringBuilder Render()
     {
         ElasticObject record = ControlsRendererData.Record;
         string value = record?.GetString(Field.FieldName) ??
@@ -20,7 +20,7 @@ public class BooleanCombo(IFormLogicHelper formLogicHelper, InputFieldDefinition
             for (int ii = 1; ii < fieldIds.Length; ii++)
                 field = field?.AssociationEntity?.Entity()?.GetField(fieldIds[ii]);
         }
-        CandoStringBuilder result = new();
+        NeoStringBuilder result = new();
         RenderHeader(result, false, false, [value], false, ((int)BooleanItem.All).ToString());
         RenderOptions(result, value);
         RenderFooter(result);
@@ -28,7 +28,7 @@ public class BooleanCombo(IFormLogicHelper formLogicHelper, InputFieldDefinition
     }
 
 
-    private CandoStringBuilder RenderOptions(CandoStringBuilder result, object value)
+    private NeoStringBuilder RenderOptions(NeoStringBuilder result, object value)
     {
         if (value == null && ControlsRendererData.Options.IsFilter)
             value = (int)BooleanItem.All;
@@ -53,7 +53,7 @@ public class BooleanCombo(IFormLogicHelper formLogicHelper, InputFieldDefinition
         return result;
     }
 
-    private static CandoStringBuilder AddOption(CandoStringBuilder result, BooleanItem valueItem, string optionName, BooleanItem optionValue)
+    private static NeoStringBuilder AddOption(NeoStringBuilder result, BooleanItem valueItem, string optionName, BooleanItem optionValue)
     {
         result += "<option";
         if (valueItem == optionValue)

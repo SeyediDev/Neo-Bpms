@@ -1,6 +1,6 @@
 /**
  * Report Filter Modern Multi-Select Initialization
- * Cando BPMS - Report Page
+ * Neo BPMS - Report Page
  * Version: 1.0.0
  */
 
