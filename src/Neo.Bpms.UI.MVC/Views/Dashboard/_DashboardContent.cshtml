@@ -103,9 +103,9 @@ else
             var maxRecord = widget != null ? DashboardDataRoutines.GetWidgetMaxRecord(widget, ReportViewType.Chart) : 15;
             ReportData reportData = GetReportData(widget, maxRecord);
 
-        <div class="neo-dashboard-widget-container neo-dashboard-column-@divConfig.Width" 
-             widgetId="@divConfig.WidgetId"
-             data-widget-height="@widgetHeight px">
+        <div class="neo-dashboard-widget-container neo-dashboard-column-@divConfig.Width"
+                 data-widget-height="@(widgetHeight)px"
+                 widgetId="@divConfig.WidgetId">
             
             @* Widget Title (Always Visible) *@
             @{
@@ -113,7 +113,7 @@ else
             }
 
             @* Widget Content *@
-                <div class="neo-dashboard-widget-content" style="@(widgetHeight > 0 ? $"min-height: {widgetHeight}px" : "")">
+                <div class="neo-dashboard-widget-content" style="min-height: @(widgetHeight)px;">
                 @if (reportData != null && reportData.structure != null)
                 {
                      await WidgetContent(divConfig, canDesign, reportData);
