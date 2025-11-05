@@ -113,7 +113,7 @@ else
             }
 
             @* Widget Content *@
-            <div class="neo-dashboard-widget-content" style="@(widgetHeight <50 ? $"min-height: {widgetHeight}px;" : "")">
+                <div class="neo-dashboard-widget-content" style="@(widgetHeight > 0 ? $"min-height: {widgetHeight}px" : "")">
                 @if (reportData != null && reportData.structure != null)
                 {
                      await WidgetContent(divConfig, canDesign, reportData);
@@ -302,3 +302,19 @@ else
     }
 }
 
+<script>
+    // Apply widget height from data-widget-height attribute
+    document.addEventListener('DOMContentLoaded', function() {
+        const widgets = document.querySelectorAll('.neo-dashboard-widget-container[data-widget-height]');
+        widgets.forEach(function(widget) {
+            const height = widget.getAttribute('data-widget-height');
+            if (height) {
+                const contentDiv = widget.querySelector('.neo-dashboard-widget-content');
+                if (contentDiv) {
+                    contentDiv.style.minHeight = height;
+                    contentDiv.style.height = height;
+                }
+            }
+        });
+    });
+</script>
