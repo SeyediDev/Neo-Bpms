@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
     
     <!-- Package Metadata (Private) -->
