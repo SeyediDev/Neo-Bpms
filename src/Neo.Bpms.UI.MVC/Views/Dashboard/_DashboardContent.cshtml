@@ -99,7 +99,7 @@ else
 
             var widgetHeight = widget?.GetPropertyValueInt(eControlPropertyId.HeightInPixels)??0;
             if (widgetHeight == 0) widgetHeight = 300;
-
+            
             var maxRecord = widget != null ? DashboardDataRoutines.GetWidgetMaxRecord(widget, ReportViewType.Chart) : 15;
             ReportData reportData = GetReportData(widget, maxRecord);
 
@@ -113,7 +113,7 @@ else
             }
 
             @* Widget Content *@
-            <div class="neo-dashboard-widget-content" style="@(widgetHeight > 0 ? $"min-height: {widgetHeight}px;" : "")">
+            <div class="neo-dashboard-widget-content" style="@(widgetHeight <50 ? $"min-height: {widgetHeight}px;" : "")">
                 @if (reportData != null && reportData.structure != null)
                 {
                      await WidgetContent(divConfig, canDesign, reportData);
