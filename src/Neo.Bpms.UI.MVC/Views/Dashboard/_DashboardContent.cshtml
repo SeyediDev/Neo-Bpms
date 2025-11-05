@@ -113,7 +113,7 @@ else
             }
 
             @* Widget Content *@
-            <div class="neo-dashboard-widget-content">
+            <div class="neo-dashboard-widget-content" style="@(widgetHeight > 0 ? $"min-height: {widgetHeight}px;" : "")">
                 @if (reportData != null && reportData.structure != null)
                 {
                      await WidgetContent(divConfig, canDesign, reportData);
@@ -130,7 +130,7 @@ else
                 ViewBag.Widget = widget;
                 ViewBag.ReportData = reportData;
                 ViewBag.MaxRecord = maxRecord;
-                ViewBag.WidgetHeight = widgetHeight;
+                ViewBag.widgetHeight = widgetHeight;
             }
             <partial name="~/Views/Dashboard/_WidgetSettingsModal.cshtml" />
         </div>
