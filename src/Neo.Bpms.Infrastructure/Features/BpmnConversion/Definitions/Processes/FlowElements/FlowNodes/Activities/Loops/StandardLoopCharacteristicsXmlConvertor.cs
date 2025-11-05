@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.LoopCharacteristic;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities.Loops;
 
 internal class StandardLoopCharacteristicsXmlConvertor
 {

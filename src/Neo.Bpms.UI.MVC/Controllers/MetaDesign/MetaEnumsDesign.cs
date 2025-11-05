@@ -1,10 +1,4 @@
-﻿using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EnumModels;
-using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
-using Neo.Bpms.Domain.Modeling.CodeFirst;
-using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Base;
-
-namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
+﻿namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
 
 public partial class MetaDesignController
 {
@@ -79,7 +73,7 @@ public partial class MetaDesignController
         }
         ProjectEnum.Save(enumeration);
 
-        Domain.Entities.Cmmn.Entities.Entity entity = ProjectDefinition.Project.GetEntity(enumViewModel.namespaceId, prevEnumId);
+        Entity entity = ProjectDefinition.Project.GetEntity(enumViewModel.namespaceId, prevEnumId);
         entity.Id = enumViewModel.id;
         entity.Name = enumViewModel.name;
         if (!Equals(enumViewModel.id, prevEnumId))

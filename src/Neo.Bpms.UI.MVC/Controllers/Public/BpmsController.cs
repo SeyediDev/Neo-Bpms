@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
 
 namespace Neo.Bpms.UI.MVC.Controllers.Public;
 

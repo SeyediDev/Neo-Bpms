@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Auditing;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Auditing;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 internal static class AuditingXmlConvertor
 {

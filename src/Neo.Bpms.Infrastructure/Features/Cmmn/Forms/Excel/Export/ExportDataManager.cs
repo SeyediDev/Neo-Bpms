@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Export;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Export;
 
 public class ExportDataManager(ElasticObject filterValues, IdentityUser user,
     CancellationToken cancellationToken, string culture, Dictionary<string, FormSheet> formSheets)

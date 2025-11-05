@@ -1,5 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.OpenApi;
 

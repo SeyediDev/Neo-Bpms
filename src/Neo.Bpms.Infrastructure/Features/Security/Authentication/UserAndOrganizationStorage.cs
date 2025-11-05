@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authorization;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Models.Security.Authorization;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.Storage;
 
 namespace Neo.Bpms.Infrastructure.Features.Security.Authentication;

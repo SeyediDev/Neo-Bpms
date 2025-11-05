@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Controller;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Controller;
 
 public class ControllerEventViewModel
 {

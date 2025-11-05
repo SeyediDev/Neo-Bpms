@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
 
 internal partial class ReadSheetHeader(Entity entity, CommonFormStructure structure)
 {

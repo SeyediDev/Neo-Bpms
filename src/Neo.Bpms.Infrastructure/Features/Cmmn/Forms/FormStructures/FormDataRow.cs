@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures;
 
 public class FormDataRow
 {

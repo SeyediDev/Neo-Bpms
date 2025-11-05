@@ -1,5 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions.Extensions;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 
@@ -85,10 +88,10 @@ public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinit
 
     protected virtual List<string> GatherIdsList(ElasticObject record)
     {
-        Domain.Entities.Cmmn.Entities.Entity entity = ProjectDefinition.Project.GetEntity(ControlsRendererData.Structure.NamespaceId,
+        Entity entity = ProjectDefinition.Project.GetEntity(ControlsRendererData.Structure.NamespaceId,
             ControlsRendererData.Structure.EntityId);
         string[] fieldIds = Field.FieldName.Split('.');
-        Domain.Entities.Cmmn.Fields.EntityField field = entity?.GetField(fieldIds[0]);
+        EntityField field = entity?.GetField(fieldIds[0]);
         string fieldId;
         if (fieldIds.Length > 1)
         {
@@ -108,7 +111,7 @@ public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinit
         {
             idsList = [];
             string rowIds = "";
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in field.AssociationEntity.Maps)
+            foreach (EntityRelationMap map in field.AssociationEntity.Maps)
             {
                 string rowId;
                 try

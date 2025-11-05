@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Modeling.Entities.CmmnConfig;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.JobScheduler;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.QueryUtilities;
 
@@ -48,7 +49,7 @@ public class ReportTimer(
 
     protected override async Task<IEnumerable<Job>> FetchSchedulesList(DateTime currentDate, CancellationToken cancellationToken)
     {
-        List<Domain.Entities.Cmmn.UI.ConfiguredItems.ScheduledReport.ConfiguredScheduledReport> items = await scheduledReportConfigBackupRestore.Configurations(currentDate, cancellationToken);
+        List<ConfiguredScheduledReport> items = await scheduledReportConfigBackupRestore.Configurations(currentDate, cancellationToken);
         return [.. items.Select(c => new Job { JobSchedule = c })];
     }
 

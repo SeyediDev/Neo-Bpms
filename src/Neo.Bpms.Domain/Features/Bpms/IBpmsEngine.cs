@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Audit;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
 
 namespace Neo.Bpms.Domain.Features.Bpms;
 public interface IBpmsEngine

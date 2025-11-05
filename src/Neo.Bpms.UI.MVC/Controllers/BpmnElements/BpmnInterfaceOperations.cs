@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnInterfaceOperationsController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -10,9 +12,9 @@ public class BpmnInterfaceOperationsController(IProjectBpmn projectBpmn) : BpmsC
         if (isNew)
             viewModel.id = "Operation" + Guid.NewGuid().ToString("N");
 
-        Domain.Entities.Bpmn.Core.Services.Interface @interface = ProjectDefinition.Project.GetInterface(viewModel.interfaceId) ?? throw new ValidationException("inteface id must be determind.");
-        Domain.Entities.Bpmn.Core.Services.Operation newItem = viewModel.ToOperation(@interface);
-        Domain.Entities.Bpmn.Core.Services.Operation item = isNew ? newItem : ProjectDefinition.Project.GetOperation(id);
+        Interface @interface = ProjectDefinition.Project.GetInterface(viewModel.interfaceId) ?? throw new ValidationException("inteface id must be determind.");
+        Operation newItem = viewModel.ToOperation(@interface);
+        Operation item = isNew ? newItem : ProjectDefinition.Project.GetOperation(id);
         if (item == null)
         {
             isNew = true;

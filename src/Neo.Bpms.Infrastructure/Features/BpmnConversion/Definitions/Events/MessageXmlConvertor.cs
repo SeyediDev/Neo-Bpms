@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Events;
 
 internal static class MessageXmlConvertor
 {

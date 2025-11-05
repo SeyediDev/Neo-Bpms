@@ -1,10 +1,11 @@
-﻿using Task = Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.Task;
-using Neo.Bpms.Domain.Entities.Bpmn.Collaborations;
-using Neo.Bpms.Domain.Entities.Bpmn.Collaborations.MessageFlows;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
+﻿using Task = Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.Task;
+using Neo.Bpms.Domain.Models.Bpmn.Collaborations;
+using Neo.Bpms.Domain.Models.Bpmn.Collaborations.MessageFlows;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Collaborations;
 
 public class MessageFlowXmlConvertor
 {

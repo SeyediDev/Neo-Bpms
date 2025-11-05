@@ -15,7 +15,7 @@ public class SBVRRenderer : ISBVRRenderer
     /// <returns>HTML string containing SBVR icon</returns>
     public string RenderSBVRIcon(InputFieldDefinition field)
     {
-        if (field.SBVRs == null || field.SBVRs.Count == 0 || field.FormFieldType == Domain.Entities.Cmmn.UI.Forms.FormField.Type.FilterField)
+        if (field.SBVRs == null || field.SBVRs.Count == 0 || field.FormFieldType == FormField.Type.FilterField)
             return string.Empty;
 
         // Find the highest priority modality (Obligatory > Prohibited > Necessary > Permitted)

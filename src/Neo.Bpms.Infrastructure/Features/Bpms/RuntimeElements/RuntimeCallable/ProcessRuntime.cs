@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 

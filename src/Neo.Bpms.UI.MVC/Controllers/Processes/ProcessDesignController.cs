@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessModel;
+﻿using Neo.Bpms.Domain.Entities.ProcessModel;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion;
+using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 
 
 namespace Neo.Bpms.UI.MVC.Controllers;
@@ -14,7 +15,7 @@ public partial class ProcessController
         IdentityUser user = GetUser();
         if (!CheckProcessAccess(user, processId))
             CheckProcessesDesignAccess(user, false);
-        Domain.Entities.Bpmn.Core.Infrastructure.BpmnDefinitions bpmnDefinition = ProjectDefinition.Project.GetBpmnDefinition(processId, versionId) ?? throw new Exception($"فرآیند {processId} از پیش تعریف نشده است. DownloadProcess");
+        BpmnDefinitions bpmnDefinition = ProjectDefinition.Project.GetBpmnDefinition(processId, versionId) ?? throw new Exception($"فرآیند {processId} از پیش تعریف نشده است. DownloadProcess");
         versionId = bpmnDefinition.exporterVersion;
         ElasticObject diagramBpmnDefinition = ProjectProcess.GetDiagramBpmnDefinition(processId, versionId);
         string result = BpmnExporter.Export(bpmnDefinition, diagramBpmnDefinition,
@@ -34,7 +35,7 @@ public partial class ProcessController
         if (!CheckProcessAccess(user, processVersion.ProcessId))
             CheckProcessesDesignAccess(user, false);
         ElasticObject diagramBpmnDefinition = ProjectProcess.GetDiagramBpmnDefinition(processVersion.ProcessId, processVersion.VersionNo);
-        Domain.Entities.Bpmn.Core.Infrastructure.BpmnDefinitions bpmnDefinition = processVersion.BusinessProcessVersion.BpmnDefinitions;
+        BpmnDefinitions bpmnDefinition = processVersion.BusinessProcessVersion.BpmnDefinitions;
         string result = BpmnExporter.Export(bpmnDefinition, diagramBpmnDefinition,
              BpmnExporter.ExportType.Bpmn);
         return Json(new { xml = result, errors = bpmnDefinition.ErrorInfos, processName = bpmnDefinition.Name });

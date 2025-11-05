@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.CallActivity;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 
@@ -17,10 +17,10 @@ public class CallActivityRuntime(ProcessVersionRuntime processVersion, CallActiv
             var bFound = false;
             switch (CallActivity.ActivityType)
             {
-                case Domain.Entities.Bpmn.Processes.Activities.Activity.eActivityType.CallActivitySubProcess:
+                case Domain.Models.Bpmn.Processes.Activities.Activity.eActivityType.CallActivitySubProcess:
                     bFound = CallActivitySubProcess(ai, inputData, CallActivity.CalledElementId);
                     break;
-                case Domain.Entities.Bpmn.Processes.Activities.Activity.eActivityType.CallActivityGlobalTask:
+                case Domain.Models.Bpmn.Processes.Activities.Activity.eActivityType.CallActivityGlobalTask:
                     if (!ProcessVersion.repository.globalTasks.TryGetValue(CallActivity.CalledElementId, out var gt) ||
                         gt == null) break;
                     var versionRuntime = gt.versions.Values.FirstOrDefault();

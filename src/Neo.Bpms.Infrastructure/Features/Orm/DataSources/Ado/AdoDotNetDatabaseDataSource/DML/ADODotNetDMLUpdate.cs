@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
 
 namespace Neo.Bpms.Engine.Data.ADODotNet;
 

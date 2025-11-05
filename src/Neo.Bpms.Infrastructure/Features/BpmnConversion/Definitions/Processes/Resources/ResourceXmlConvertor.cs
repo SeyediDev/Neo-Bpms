@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+﻿using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
+
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Resources;
 
 internal static class ResourceXmlConvertor
 {

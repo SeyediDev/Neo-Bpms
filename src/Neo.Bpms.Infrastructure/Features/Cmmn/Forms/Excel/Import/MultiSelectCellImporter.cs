@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
 
 internal class MultiSelectCellImporter(FormField tableTableDef, EntityField field)
 {

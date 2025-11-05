@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.LoopCharacteristic;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms;

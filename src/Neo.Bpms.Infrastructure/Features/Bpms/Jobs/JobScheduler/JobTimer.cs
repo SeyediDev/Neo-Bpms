@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.JobScheduling;
+﻿using Neo.Bpms.Domain.Models.JobScheduling;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.Scheduler;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.JobScheduler;

@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
-using Neo.Bpms.Domain.Model.BPMN.Processes;
+﻿using Neo.Bpms.Domain.Model.BPMN.Processes;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.MenuModels;
 

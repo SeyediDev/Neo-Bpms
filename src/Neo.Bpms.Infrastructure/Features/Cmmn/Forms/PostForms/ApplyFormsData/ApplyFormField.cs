@@ -1,4 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms.UIRules;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms.ApplyFormsData;
@@ -176,7 +182,7 @@ public class ApplyFormField: IApplyFormField
                 string ids = string.Empty;
                 bool first = true;
                 bool existMapValue = false;
-                foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in field.AssociationEntity.Maps)
+                foreach (EntityRelationMap map in field.AssociationEntity.Maps)
                 {
                     EntityField ef = entity.GetField(map.SourceField);
                     if (ef == null)

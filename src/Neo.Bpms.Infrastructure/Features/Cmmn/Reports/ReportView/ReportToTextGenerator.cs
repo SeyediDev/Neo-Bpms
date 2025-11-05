@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;
+﻿using Neo.Bpms.Domain.Extensions;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;
 
 public class ReportToTextGenerator : ReportViewGenerator
 {

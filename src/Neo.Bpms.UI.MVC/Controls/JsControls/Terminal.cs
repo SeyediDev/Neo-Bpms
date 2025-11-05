@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.JsControls;
+﻿using Neo.Bpms.Domain.Extensions;
+
+namespace Neo.Bpms.UI.MVC.Controls.JsControls;
 
 public class Terminal : CabdoJsControl
 {

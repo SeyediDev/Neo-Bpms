@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
+﻿using Neo.Bpms.Domain.Extensions;
+
+namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 public class GridColumn(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, ControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer) 

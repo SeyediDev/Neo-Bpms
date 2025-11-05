@@ -1,7 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.DataStores;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
 
 internal static class DataFlowElementXmlConvertor
 {

@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 

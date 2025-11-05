@@ -1,4 +1,4 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Diagrams;
 
 internal class LanePostionFinder
 {

@@ -4,6 +4,8 @@ using System.Data.SqlTypes;
 using Neo.Bpms.Engine.Data.ADODotNet;
 using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 using Microsoft.Data.SqlClient;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.SqlServer;
 

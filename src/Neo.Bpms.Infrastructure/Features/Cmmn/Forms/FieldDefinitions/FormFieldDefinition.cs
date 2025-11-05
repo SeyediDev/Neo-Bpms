@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions;
 
 public class FormFieldDefinition(string alias)
 {

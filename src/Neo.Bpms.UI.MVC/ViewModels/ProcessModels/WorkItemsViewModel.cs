@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.WorkManagement;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.WorkManagement;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ProcessModels;

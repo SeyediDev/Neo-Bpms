@@ -1,9 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.CallActivity;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.SubProcess;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeActivity;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeActivity.RuntimeSubProcess;
@@ -71,7 +71,7 @@ public partial class Repository
 
                 result = rt;
                 break;
-            case Domain.Entities.Bpmn.Processes.Activities.Tasks.Task task:
+            case Domain.Models.Bpmn.Processes.Activities.Tasks.Task task:
                 result = new TaskRuntime(processVersion, task);
                 break;
             case TransactionSubProcess transactionSubProcess:

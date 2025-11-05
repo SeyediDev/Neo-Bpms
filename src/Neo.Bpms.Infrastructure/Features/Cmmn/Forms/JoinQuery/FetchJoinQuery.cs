@@ -1,4 +1,8 @@
-﻿using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.JoinQuery;
 
@@ -59,7 +63,7 @@ public static class FetchJoinQuery
             string fkIds = "";
             if (field.AssociationEntity.Maps != null)
             {
-                foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in field.AssociationEntity.Maps)
+                foreach (EntityRelationMap map in field.AssociationEntity.Maps)
                 {
                     string overFieldName = overFieldIds.Length > 1
                         ? string.Join(".", overFieldIds.Take(overFieldIds.Length - 1)) + "." + map.SourceField

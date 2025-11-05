@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Bpms.MicroServices
+﻿using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
+
+namespace Neo.Bpms.Infrastructure.Features.Bpms.MicroServices
 {
     public enum ResourceStates
     {

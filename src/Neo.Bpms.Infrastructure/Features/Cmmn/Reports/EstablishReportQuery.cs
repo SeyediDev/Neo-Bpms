@@ -1,6 +1,14 @@
 ﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
@@ -154,7 +162,7 @@ public static class EstablishReportQuery
                 EntityField relField = qd.Entity.GetField(subReport.AssociationName);
                 if (relField?.AssociationEntity?.Maps != null)
                 {
-                    foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in relField.AssociationEntity.Maps)
+                    foreach (EntityRelationMap map in relField.AssociationEntity.Maps)
                     {
                         AddParentReportFilter(qd, ids, ref j, qd.Entity.GetField(map.SourceField));
                         if (j >= ids.Count) break;
@@ -174,7 +182,7 @@ public static class EstablishReportQuery
                         {
                             if (colField.AssociationEntity.Maps != null)
                             {
-                                foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in colField.AssociationEntity.Maps) AddParentReportFilter(colQuery, ids, ref j, colField.Entity.GetField(map.SourceField));
+                                foreach (EntityRelationMap map in colField.AssociationEntity.Maps) AddParentReportFilter(colQuery, ids, ref j, colField.Entity.GetField(map.SourceField));
                             }
                         }
                         else
@@ -314,7 +322,7 @@ public static class EstablishReportQuery
                         });
                     if (!isTotalQuery && colField.AssociationEntity.Maps != null)
                     {
-                        foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in colField.AssociationEntity.Maps)
+                        foreach (EntityRelationMap map in colField.AssociationEntity.Maps)
                         {
                             if (viewType == ReportViewType.List)
                                 colQuery?.SelectField(map.SourceField, item.AssociationPrefix + map.SourceField);

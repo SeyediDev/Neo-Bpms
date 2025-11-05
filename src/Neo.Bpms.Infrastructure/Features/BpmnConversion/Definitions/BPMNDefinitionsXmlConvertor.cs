@@ -1,10 +1,18 @@
 ﻿global using Neo.Bpms.Domain.Features.Dynamic;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Diagrams;
-using Neo.Bpms.Domain.Entities.Bpmn.Diagrams.DiagramGraphics;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Diagrams;
+using Neo.Bpms.Domain.Models.Bpmn.Diagrams.DiagramGraphics;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Collaborations;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.DataStores;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Events;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Interfaces;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Resources;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements.CorrelationProperties;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions;
 
 /// <summary>
 /// 14.4

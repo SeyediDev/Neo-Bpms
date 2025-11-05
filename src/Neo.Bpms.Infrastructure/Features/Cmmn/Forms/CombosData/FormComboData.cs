@@ -1,4 +1,9 @@
-﻿using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions.Extensions;
+﻿using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
 
@@ -145,7 +150,7 @@ public static class FormComboData
         if (record != null && !field.AssociationEntity?.CheckFlag(EntityFieldFlags.IsBitMask) is true)
         {
             string selectedIds = "";
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in field.AssociationEntity.Maps)
+            foreach (EntityRelationMap map in field.AssociationEntity.Maps)
             {
                 if (!string.IsNullOrEmpty(selectedIds))
                     selectedIds += "#";

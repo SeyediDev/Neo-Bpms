@@ -1,10 +1,12 @@
 ﻿@using System.Globalization
+@using Microsoft.AspNetCore.Html
+@using Microsoft.Extensions.Configuration
 @using Neo.Bpms.Domain.Entities.Cmmn.UI
-@using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems
-@using Neo.Bpms.Domain.Entities.Security.Authentication
 @using Neo.Bpms.Domain.Model.Project
 @using Neo.Bpms.Domain.Model.UI
-@using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Models.Security.Authentication
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
@@ -15,8 +17,6 @@
 @using Neo.Bpms.UI.MVC.PartialModels.Common
 @using Neo.Bpms.UI.MVC.PartialModels.Filter
 @using Neo.Bpms.UI.MVC.PartialModels.Report
-@using Microsoft.AspNetCore.Html
-@using Microsoft.Extensions.Configuration
 @using Newtonsoft.Json
 @inject ReportConfigBackupRestore reportConfigBackupRestore;
 @inject ControllerMethods controllerMethods;

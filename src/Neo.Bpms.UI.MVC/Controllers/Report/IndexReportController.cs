@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
 using Neo.Bpms.Domain.Features.Security;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -149,7 +148,7 @@ public partial class ReportController
         string configId, long scheduleId)
     {
         IdentityUser user = GetUser();
-        (_, Domain.Entities.Cmmn.UI.ConfiguredItems.ScheduledReport.ConfiguredScheduledReport configuredScheduledReport, string errorString, bool Result) =
+        (_, ConfiguredScheduledReport configuredScheduledReport, string errorString, bool Result) =
             await scheduledReportLoader.FetchScheduledReport(configId, scheduleId, user);
         if (!Result)
         {
@@ -237,7 +236,7 @@ public partial class ReportController
         ElasticObject filterValues, bool isDrillDown, int page, bool persistentIsNull, ReportData result,
         ConfiguredFilter configuredFilter)
     {
-        foreach (Domain.Entities.Base.ErrorInformation error in result.Errors)
+        foreach (ErrorInformation error in result.Errors)
         {
             ModelState.AddModelError(error.For, error.Text);
         }

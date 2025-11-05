@@ -1,5 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Modeling.Entities.Cmmn;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 namespace Neo.Bpms.Infrastructure.Features.MetaLoader;
 

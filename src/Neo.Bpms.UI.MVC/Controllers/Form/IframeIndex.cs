@@ -1,7 +1,5 @@
 ﻿#pragma warning disable 1573
 
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-
 namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class FormController

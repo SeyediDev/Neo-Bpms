@@ -1,6 +1,8 @@
 ﻿using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
+using Neo.Bpms.Domain.Extensions;
 
 namespace Neo.Bpms.UI.MVC;
 internal interface IApplicationSetup
@@ -22,7 +24,7 @@ internal class ApplicationSetup(IHostApplicationLifetime lifetime) : IApplicatio
     {
         ILogger<LogContainer> logger = app.Inject<ILogContainer<LogContainer>>().Logger;
         logger.LogTrace("Application Stopping");
-        foreach (Domain.Entities.Cmmn.Data.Provider.IDataProvider dataProvider in DataSourceProviderManager.ProviderContainer)
+        foreach (IDataProvider dataProvider in DataSourceProviderManager.ProviderContainer)
         {
             dataProvider.Dispose();
         }

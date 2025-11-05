@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Audit;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Entities.Service.ServiceOperation;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Service.ServiceOperation;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

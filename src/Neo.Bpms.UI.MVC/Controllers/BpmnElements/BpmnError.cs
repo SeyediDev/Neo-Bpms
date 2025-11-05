@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnErrorController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -19,9 +21,9 @@ public class BpmnErrorController(IProjectBpmn projectBpmn) : BpmsController
 
         if (string.IsNullOrEmpty(viewModel.namespaceId))
             viewModel.namespaceId = "ProcessEntities";
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Error newItem = viewModel.ToError();
+        Error newItem = viewModel.ToError();
 
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Error item = isNew ? newItem : ProjectDefinition.Project.GetError(id);
+        Error item = isNew ? newItem : ProjectDefinition.Project.GetError(id);
         if (item == null)
         {
             isNew = true;

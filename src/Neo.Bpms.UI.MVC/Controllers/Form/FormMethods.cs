@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Audit;
-using Neo.Bpms.Domain.Entities.Cmmn.Entities;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
 
@@ -19,7 +19,7 @@ public partial class FormController
         {
             ElasticObject record = await formDataRoutines.GetRecord(form.entity, ids, structure, culture, form, user, cancellationToken) ??
                          new ElasticObject();
-            Domain.Entities.Cmmn.Fields.EntityField keyField = form.entity.KeyFields.FirstOrDefault();
+            EntityField keyField = form.entity.KeyFields.FirstOrDefault();
             if (string.IsNullOrEmpty(ids) && keyField != null)
             {
                 ids = record.GetString(keyField.Id);

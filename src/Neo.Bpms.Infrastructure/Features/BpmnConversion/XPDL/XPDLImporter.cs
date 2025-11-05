@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.XPDL;
 
 internal class XPDLImporter
 {

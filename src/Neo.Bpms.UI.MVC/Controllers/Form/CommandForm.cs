@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers;
+﻿using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
+
+namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class FormController
 {
@@ -45,7 +47,7 @@ public partial class FormController
         LocalParameters lp = GetLocalParameters(user, null);
         if (!string.IsNullOrEmpty(__parentIds))
         {
-            Domain.Entities.Cmmn.Entities.Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
+            Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
             ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, true, culture,
                  FormDataRoutines.GetPKFilter(__parentIds, parentEntity), 1, "", "", lp);
             ViewBag.ParentDisplay = newComboData.Rows.Count > 0 ? newComboData.Rows[0].DisplayValue : "";

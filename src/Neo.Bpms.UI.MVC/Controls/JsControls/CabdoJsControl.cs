@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
 
 namespace Neo.Bpms.UI.MVC.Controls.JsControls;
 

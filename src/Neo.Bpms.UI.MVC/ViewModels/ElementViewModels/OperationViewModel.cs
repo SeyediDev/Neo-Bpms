@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Services;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ElementViewModels;
 

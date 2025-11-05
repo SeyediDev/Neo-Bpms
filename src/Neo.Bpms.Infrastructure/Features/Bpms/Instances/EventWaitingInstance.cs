@@ -1,7 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeEvent.Catch;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Instances;

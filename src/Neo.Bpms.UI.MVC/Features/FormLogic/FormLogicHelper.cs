@@ -1,11 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Entities.Cmmn.Fields;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
-using Neo.Bpms.Domain.Expressions.Parsers;
 using Microsoft.AspNetCore.Html;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Extensions;
 
 namespace Neo.Bpms.UI.MVC.Features.FormLogic;
 public class FormLogicHelper(ILogger<FormLogicHelper> logger): IFormLogicHelper

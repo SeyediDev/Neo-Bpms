@@ -1,4 +1,6 @@
 ﻿global using OfficeOpenXml;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
@@ -39,7 +41,7 @@ public class ExcelColumnValue
             return null;
 
         Type type = headerColumn.Field?.CSharpType;
-        Domain.Entities.Cmmn.Relationship.Association associationEntity = headerColumn.Field?.AssociationEntity;
+        Association associationEntity = headerColumn.Field?.AssociationEntity;
         string sheetName = cell.Worksheet.Name; // نام برگه از خود سلول
         int rowNumber = cell.Start.Row; // شماره ردیف
 
@@ -174,7 +176,7 @@ public class ExcelColumnValue
         if (Value is string strVal)
             Value = ImportUtils.Normalize(strVal);
 
-        Domain.Entities.Cmmn.Relationship.Association associationEntity = field?.AssociationEntity;
+        Association associationEntity = field?.AssociationEntity;
         if (associationEntity != null)
         {
             relationsData.AddRelationsDataRequest(

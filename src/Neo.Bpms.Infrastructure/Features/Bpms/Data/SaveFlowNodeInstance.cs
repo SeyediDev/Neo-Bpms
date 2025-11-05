@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Data;
 
@@ -85,7 +85,7 @@ public static partial class DataStorage
             air.Description = air.Description[..1023];
         }
 
-        if (ai.activity is Domain.Entities.Bpmn.Processes.Activities.Tasks.Task task)
+        if (ai.activity is Domain.Models.Bpmn.Processes.Activities.Tasks.Task task)
         {
             air.Priority = task.priorityLevel;
             if (!string.IsNullOrEmpty(task.priorityLevelProperty))

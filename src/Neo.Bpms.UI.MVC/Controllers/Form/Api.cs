@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
@@ -68,10 +67,10 @@ public partial class FormController
                     ElasticObject record = bodyDictionary?.ToElastic();
                     PostFormData submitResult = await SubmitForm(form, Id, record, user, null, null, null,
                         false, structure, cancellationToken);
-                    Domain.Entities.Cmmn.ExceptionInfos errors = submitResult.errors;
+                    ExceptionInfos errors = submitResult.errors;
                     if (errors != null)
                     {
-                        foreach (Domain.Entities.Cmmn.ExceptionInfo error in errors)
+                        foreach (ExceptionInfo error in errors)
                         {
                             return Problem(error.Exception.Message, null, 400, error.ForField);
                         }

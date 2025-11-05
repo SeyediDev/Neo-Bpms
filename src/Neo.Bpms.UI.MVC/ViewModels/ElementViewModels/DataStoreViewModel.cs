@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems.DataFlow;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ElementViewModels;
 

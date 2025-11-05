@@ -1,6 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
-using static Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

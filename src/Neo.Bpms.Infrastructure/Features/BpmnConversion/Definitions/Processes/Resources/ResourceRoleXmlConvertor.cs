@@ -1,10 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions.ResourceRoles;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.ResourceAssignment;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Lanes;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.ResourceRoles;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.ResourceAssignment;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Lanes;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Resources;
 
 /// <summary>
 /// 14.5

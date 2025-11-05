@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices;
 using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.Definitions;
 using Neo.Bpms.UI.MVC.ViewModels.MicroServices;
 
@@ -12,7 +13,7 @@ public class MicroServicesController : ControllerBase
 
     internal static MicroServiceManager GetInterface() // todo access
     {
-        Domain.Entities.Bpmn.Core.Services.Interface intfc = ProjectDefinition.Project.GetInterface("MicroServiceManager");
+        Interface intfc = ProjectDefinition.Project.GetInterface("MicroServiceManager");
         return intfc.implementation as MicroServiceManager;
     }
 

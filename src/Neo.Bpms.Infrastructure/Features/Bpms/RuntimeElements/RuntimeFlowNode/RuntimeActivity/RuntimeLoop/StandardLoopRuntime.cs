@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Expressions;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.LoopCharacteristic;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms;
 

@@ -1,8 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Instances;
 

@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
+
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.DataStores;
 
 internal static class DataStoreXmlConvertor
 {

@@ -1,5 +1,7 @@
-﻿using Neo.Bpms.Domain.Model.BPMN.Processes;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Model.BPMN.Processes;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -16,7 +18,7 @@ public partial class ProcessController
                 $"(ProcessInstanceId=={pi.Id})", 0,
                 "CreationTime" /*todo*/, null, null);
         ActivityInstanceRecord ai = activityInstances.FirstOrDefault(a => a.Id == aiId);
-        Domain.Entities.Bpmn.Core.CommonElements.FlowElements.FlowNode task = ((BpmsEngine)DependencyInjectionHolder.Instance.BpmsEngine).Repository.GetFlowNodeRunTime(ai.BPMNFlowNodeId)?.flowNode;
+        FlowNode task = ((BpmsEngine)DependencyInjectionHolder.Instance.BpmsEngine).Repository.GetFlowNodeRunTime(ai.BPMNFlowNodeId)?.flowNode;
         if (ai.ActualOwnerId != user.Id && !user.CheckProcessAccess(processDefinition.Id))
             throw new Exception("Access denied!");// todo specific exception for this.
         TaskSummaryViewModel taskSummary = new()

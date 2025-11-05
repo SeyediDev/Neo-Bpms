@@ -1,6 +1,5 @@
-﻿
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.Scheduler;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 

@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
-
-namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
+﻿namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
 
 public partial class MetaDesignController
 {

@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Modeling.Entities.Cmmn;
+﻿using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.QueryUtilities;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.MetaDb;

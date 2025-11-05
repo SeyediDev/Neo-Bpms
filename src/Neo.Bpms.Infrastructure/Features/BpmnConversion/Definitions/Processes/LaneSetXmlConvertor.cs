@@ -1,8 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Lanes;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Lanes;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes;
 
 internal static class LaneSetXmlConvertor
 {

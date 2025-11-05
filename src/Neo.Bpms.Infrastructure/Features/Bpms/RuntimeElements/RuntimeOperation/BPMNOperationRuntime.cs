@@ -1,8 +1,12 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Services;
-using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeEvent.Catching;
 

@@ -1,8 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Collaborations;
-using Neo.Bpms.Domain.Entities.Bpmn.Collaborations.PoolAndParticipant;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Collaborations;
+using Neo.Bpms.Domain.Models.Bpmn.Collaborations.PoolAndParticipant;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Diagrams;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

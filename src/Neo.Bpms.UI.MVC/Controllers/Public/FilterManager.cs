@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-
-namespace Neo.Bpms.UI.MVC.Controllers.Public;
+﻿namespace Neo.Bpms.UI.MVC.Controllers.Public;
 
 public class FilterManager(FilterConfigBackupRestore filterConfigBackupRestore)
 {

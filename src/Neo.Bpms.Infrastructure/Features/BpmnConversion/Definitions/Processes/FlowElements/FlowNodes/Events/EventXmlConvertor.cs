@@ -1,9 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.ThrowEvent;
-using Event = Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events.Event;
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
+using Event = Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events.Event;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Events;
 
 internal static class EventXmlConvertor
 {

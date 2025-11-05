@@ -1,7 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Common;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.UI.MVC.Features;
+﻿using Neo.Bpms.UI.MVC.Features;
 using Microsoft.Extensions.Options;
+using Neo.Bpms.Domain.Models.Cmmn.Common;
 namespace Neo.Bpms.UI.MVC.Controllers;
 
 public class DesktopController(

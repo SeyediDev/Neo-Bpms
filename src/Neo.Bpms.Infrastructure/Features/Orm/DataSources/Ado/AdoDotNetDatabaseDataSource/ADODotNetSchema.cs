@@ -1,4 +1,7 @@
 ﻿using System.Data;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 
 namespace Neo.Bpms.Engine.Data.ADODotNet;
 

@@ -1,10 +1,12 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.LoopCharacteristic;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.ThrowEvent;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Events;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities.Loops;
 
 internal class ComplexBehaviorDefinitionXmlConvertor
 {

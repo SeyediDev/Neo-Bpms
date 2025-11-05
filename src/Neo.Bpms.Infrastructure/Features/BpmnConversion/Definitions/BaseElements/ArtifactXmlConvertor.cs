@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Artifacts;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Artifacts;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 internal static class ArtifactXmlConvertor
 {
@@ -21,7 +21,7 @@ internal static class ArtifactXmlConvertor
                         break;
                     }
 
-                case Association a:
+                case Domain.Models.Bpmn.Core.CommonElements.Artifacts.Association a:
                     {
                         element = containerElement.association();
                         var association = a;
@@ -59,12 +59,12 @@ internal static class ArtifactXmlConvertor
                             element.GetString("textFormat") ?? "text/plain");
                         break;
                     case "association":
-                        artifact = new Association(artifactContainer, "",
+                        artifact = new Domain.Models.Bpmn.Core.CommonElements.Artifacts.Association(artifactContainer, "",
                                             element.GetString("sourceRef"),
                                             element.GetString("targetRef"))
                         {
                             associationDirection = element.GetEnumText("associationDirection",
-                                                Association.AssociationDirection.One)
+                                                Domain.Models.Bpmn.Core.CommonElements.Artifacts.Association.AssociationDirection.One)
                         };
                         break;
                     case "group":

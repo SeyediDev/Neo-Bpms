@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
+﻿using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.GlobalTasks;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.GlobalTasks;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 
 

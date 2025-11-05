@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Utils;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
+﻿using Neo.Bpms.Domain.Models.Base.Utils;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
 

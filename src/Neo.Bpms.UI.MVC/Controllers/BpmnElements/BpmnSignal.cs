@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnSignalController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -18,9 +20,9 @@ public class BpmnSignalController(IProjectBpmn projectBpmn) : BpmsController
             viewModel.id = "Signal" + Guid.NewGuid().ToString("N");
         if (string.IsNullOrEmpty(viewModel.namespaceId))
             viewModel.namespaceId = "ProcessEntities";
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Signal newItem = viewModel.ToSignal();
+        Signal newItem = viewModel.ToSignal();
 
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Signal item = isNew ? newItem : ProjectDefinition.Project.GetSignal(id);
+        Signal item = isNew ? newItem : ProjectDefinition.Project.GetSignal(id);
         if (item == null)
         {
             isNew = true;

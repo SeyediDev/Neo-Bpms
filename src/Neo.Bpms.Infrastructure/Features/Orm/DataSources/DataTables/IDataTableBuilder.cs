@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataTables;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
+
+namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataTables;
 
 public interface IDataTableBuilder<T>
 {

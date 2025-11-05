@@ -1,6 +1,8 @@
 ﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 

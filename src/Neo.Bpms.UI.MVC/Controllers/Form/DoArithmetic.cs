@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class FormController
 {
@@ -9,12 +11,12 @@ public partial class FormController
         if (indexForm?.formFields == null)
             throw new Exception("Invalid form.");
         IdentityUser user = GetUserAndCheckFormAccess(indexForm);
-        List<Domain.Entities.Cmmn.UI.Forms.FormField> arithmeticFields = indexForm.formFields.Where(f => f.GetProperty(eControlPropertyId.Summable) != null)
+        List<FormField> arithmeticFields = indexForm.formFields.Where(f => f.GetProperty(eControlPropertyId.Summable) != null)
             .ToList();
         if (arithmeticFields.Count == 0)
             throw new Exception("Invalid form arithmetic fields.");
         Dictionary<string, double> results = [];
-        foreach (Domain.Entities.Cmmn.UI.Forms.FormField arithmeticField in arithmeticFields)
+        foreach (FormField arithmeticField in arithmeticFields)
         {
             results.Add(arithmeticField.Id, 0);
         }
@@ -28,7 +30,7 @@ public partial class FormController
         FormDataFilter.AddFilters(q, indexForm as Form, indexFormFilterValues, out _);
         int? maxRows = 5000;//todo ali please.
         q.SetPage(1, maxRows.Value);
-        foreach (Domain.Entities.Cmmn.UI.Forms.FormField arithmeticField in arithmeticFields)
+        foreach (FormField arithmeticField in arithmeticFields)
             q.Sum(arithmeticField.Id, arithmeticField.Id);
         // ReSharper disable once InvertIf
         if (!q.GetDocuments(localParameters))
@@ -41,7 +43,7 @@ public partial class FormController
         }
 
         ElasticObject record = q.GetRecord();
-        foreach (Domain.Entities.Cmmn.UI.Forms.FormField arithmeticField in arithmeticFields)
+        foreach (FormField arithmeticField in arithmeticFields)
             results[arithmeticField.Id] = record.GetDouble(arithmeticField.Id);
 
         return Json(results);

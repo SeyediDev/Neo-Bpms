@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Infrastructure.Features.Orm.Command.Sql;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Infrastructure.Features.Orm.Command.Sql;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Command.TSQL;
 

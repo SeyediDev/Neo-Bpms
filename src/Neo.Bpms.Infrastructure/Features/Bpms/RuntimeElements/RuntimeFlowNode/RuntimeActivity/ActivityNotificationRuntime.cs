@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.ResourceAssignment;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.ResourceAssignment;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms;
 

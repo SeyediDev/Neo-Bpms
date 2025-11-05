@@ -1,5 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.Provider;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.Transaction;
+﻿using Neo.Bpms.Domain.Models.Base.Exceptions;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Transaction;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.Base;
 

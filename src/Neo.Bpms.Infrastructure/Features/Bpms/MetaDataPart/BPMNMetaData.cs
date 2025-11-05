@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.Entities.ProcessModel;
+﻿using Neo.Bpms.Domain.Entities.ProcessModel;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.MetaDataPart;
 

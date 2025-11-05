@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 using Task = System.Threading.Tasks.Task;
 

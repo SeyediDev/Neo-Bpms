@@ -2,6 +2,8 @@
 // First Sample of Builder Design Pattern
 // </summary>
 
+using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
+
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataTables;
 
 public class DataTable<T> : IDataTable<T>

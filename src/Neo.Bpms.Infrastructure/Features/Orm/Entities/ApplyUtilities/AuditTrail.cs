@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.Transaction;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.ApplyUtilities;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.ApplyUtilities;
 
 public static class AuditTrail<T> where T : new()
 {

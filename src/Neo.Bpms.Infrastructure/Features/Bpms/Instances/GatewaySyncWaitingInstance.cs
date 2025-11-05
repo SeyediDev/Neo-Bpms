@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Gateways;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeGateway;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Instances;

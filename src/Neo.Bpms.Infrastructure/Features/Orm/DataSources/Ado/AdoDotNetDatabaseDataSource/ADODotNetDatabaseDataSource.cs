@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Data.Common;
 using System.Data.SqlTypes;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 
 namespace Neo.Bpms.Engine.Data.ADODotNet;

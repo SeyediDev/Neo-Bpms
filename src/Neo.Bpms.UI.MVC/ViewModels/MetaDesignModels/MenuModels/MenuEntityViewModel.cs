@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.HumanTasks;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.MenuModels;
 
@@ -23,7 +24,7 @@ public class MenuEntityViewModel
 
     private static IEnumerable<MenuViewModel> GetProcessCreateForms(UiEntity entity)
     {
-        List<Domain.Entities.Bpmn.Core.Infrastructure.BpmnDefinitions> processes = ProjectDefinition.Project.BusinessProcesses?.Values.SelectMany(p => p.Versions)
+        List<BpmnDefinitions> processes = ProjectDefinition.Project.BusinessProcesses?.Values.SelectMany(p => p.Versions)
             .Select(pv => pv.Value.BpmnDefinitions)
             .Where(b => b.Process.EntityId == entity.Id).ToList();
         IEnumerable<UserTask> createProcessTasks = processes?.SelectMany(p => p.Process.flowElements.Values)

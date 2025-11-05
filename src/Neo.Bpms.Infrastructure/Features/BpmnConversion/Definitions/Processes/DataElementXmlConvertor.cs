@@ -1,7 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.DataStores;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes;
 
 internal static class DataElementXmlConvertor
 {

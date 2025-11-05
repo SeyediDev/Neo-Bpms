@@ -1,4 +1,9 @@
 ﻿using Neo.Bpms.Domain.Expressions.FunctionImplementations;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
 
@@ -124,7 +129,7 @@ public static class FormDataFilter
         {
             string[] ids = value?.ToString().Split('#');
             int iId = 0;
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in field.AssociationEntity.Maps)
+            foreach (EntityRelationMap map in field.AssociationEntity.Maps)
             {
                 EntityField sf = field.Entity.GetField(map.SourceField);
                 if (sf != null)

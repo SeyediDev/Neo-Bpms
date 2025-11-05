@@ -1,6 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
@@ -190,7 +195,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
                 joinQueries.TryGetValue(rField.AssociationEntity, out JoinQueryData joinQueryData);
                 if (joinQueryData == null) continue;
                 string fkIds = "";
-                foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap fkField in rField.AssociationEntity.Maps)
+                foreach (EntityRelationMap fkField in rField.AssociationEntity.Maps)
                 {
                     r.GetField(referField.AssociationPrefix + fkField.SourceField, out object fk);
                     fkIds += (string.IsNullOrEmpty(fkIds) ? "" : "#") + fk;
@@ -251,7 +256,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
                 continue;
             object value = null;
             string fieldName = "";
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in fe.AssociationEntity.Maps)
+            foreach (EntityRelationMap map in fe.AssociationEntity.Maps)
             {
                 r.GetField(map.SourceField, out value);
                 fieldName = map.SourceField;

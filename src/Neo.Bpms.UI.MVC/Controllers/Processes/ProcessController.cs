@@ -1,12 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Audit;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Entities.WorkManagement;
-using Neo.Bpms.Domain.Features.Bpms;
+﻿using Neo.Bpms.Domain.Features.Bpms;
 using Neo.Bpms.Domain.Model.BPMN.Processes;
-using Neo.Bpms.Domain.Modeling.Entities.ProcessData;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
@@ -14,6 +7,17 @@ using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeOperation;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms.ApplyFormsData;
 using Neo.Bpms.UI.MVC.Features;
 using Microsoft.Extensions.Options;
+using Neo.Bpms.Domain.Entities.ProcessData;
+using Neo.Bpms.Domain.Models.WorkManagement;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
+using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -132,7 +136,7 @@ public partial class ProcessController(IBpmsEngine bpmsEngine, IApplyFormData ap
         foreach (ActivityInstanceRecordDb air in airs ?? Enumerable.Empty<ActivityInstanceRecordDb>())
         {
             IBPMNOperationRuntime runTime = (IBPMNOperationRuntime)((BpmsEngine)DependencyInjectionHolder.Instance.BpmsEngine).Repository.GetFlowNodeRunTime(air.BPMNFlowNodeId);
-            Infrastructure.Utility.Interfaces.OperationResourceRuntime allocatedResource = runTime?.BPMNOperationRuntime.GetAllocatedResource(air.Id);
+            OperationResourceRuntime allocatedResource = runTime?.BPMNOperationRuntime.GetAllocatedResource(air.Id);
             try
             {
                 result.Add(new ServiceStateResult
@@ -272,7 +276,7 @@ public partial class ProcessController(IBpmsEngine bpmsEngine, IApplyFormData ap
         ViewBag.Page = filter.Page;
         ViewBag.recordsPerPage = RecordsPerPage;
         ViewBag.ProcessId = filter.ProcessId;
-        Domain.Entities.Bpmn.Core.Infrastructure.BpmnDefinitions bpmnDefinitions = !string.IsNullOrEmpty(filter.ProcessId)
+        BpmnDefinitions bpmnDefinitions = !string.IsNullOrEmpty(filter.ProcessId)
             ? ProjectDefinition.Project.GetBpmnDefinition(filter.ProcessId, filter.ProcessVersionId)
             : null;
         ViewBag.processName = bpmnDefinitions?.Name;

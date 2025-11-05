@@ -1,11 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
-using Neo.Bpms.UI.MVC.ViewModels.FormDesignModels;
-using Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Control;
-using Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Controller;
-
-namespace Neo.Bpms.UI.MVC.Controllers;
+﻿namespace Neo.Bpms.UI.MVC.Controllers;
 
 public class SaveTheFormModel
 {

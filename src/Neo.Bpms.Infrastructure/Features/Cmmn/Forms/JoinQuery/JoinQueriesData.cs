@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.JoinQuery;
 

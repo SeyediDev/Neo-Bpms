@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authorization;
+﻿using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
@@ -44,7 +44,7 @@ public partial class FormController
         LocalParameters lp = GetLocalParameters(user, null);
         if (!string.IsNullOrEmpty(__parentIds))
         {
-            Domain.Entities.Cmmn.Entities.Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
+            Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
             ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, true, culture,
                  FormDataRoutines.GetPKFilter(__parentIds, parentEntity), 1, "", "", lp);
             ViewBag.ParentDisplay = newComboData.Rows.Count > 0 ? newComboData.Rows[0].DisplayValue : "";
@@ -113,7 +113,7 @@ public partial class FormController
             await postForm.PostCreateForm(postFormData, wid, TaskId, ProcessId, user, createType, userGroupId);
             if (postFormData.errors != null)
             {
-                foreach (Domain.Entities.Cmmn.ExceptionInfo error in postFormData.errors)
+                foreach (ExceptionInfo error in postFormData.errors)
                 {
                     ModelState.AddModelError(error.ForField ?? "", error.Exception.Message);
                 }

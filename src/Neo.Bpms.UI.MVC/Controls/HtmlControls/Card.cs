@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 public class Card(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, IControlsRenderer controlsRenderer, ISBVRRenderer sbvrRenderer)

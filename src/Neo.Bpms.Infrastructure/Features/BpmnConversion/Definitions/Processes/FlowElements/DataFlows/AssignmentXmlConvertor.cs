@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Expressions;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems.DataAssociation;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
 
 internal static class AssignmentXmlConvertor
 {

@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn;
+
+namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
 
 public static partial class ApplyUtility<T>
 {

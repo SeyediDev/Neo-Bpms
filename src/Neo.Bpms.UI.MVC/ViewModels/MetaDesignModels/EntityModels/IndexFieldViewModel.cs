@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
 
 public class IndexFieldViewModel
 {

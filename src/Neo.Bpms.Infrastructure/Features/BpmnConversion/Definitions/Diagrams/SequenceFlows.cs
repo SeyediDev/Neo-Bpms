@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

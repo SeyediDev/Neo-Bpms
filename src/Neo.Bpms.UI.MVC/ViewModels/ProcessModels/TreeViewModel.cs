@@ -1,6 +1,6 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-using Neo.Bpms.Domain.Modeling.Entities.CmmnConfig;
+using Neo.Bpms.Domain.Entities.CmmnConfig;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ProcessModels;
 

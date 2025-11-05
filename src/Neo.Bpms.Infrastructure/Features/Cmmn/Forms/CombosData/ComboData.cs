@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
 
 public class ComboData
 {

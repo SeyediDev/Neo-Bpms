@@ -1,5 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Fields;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Control;
 
@@ -122,7 +123,7 @@ public class ControlModel
     private FormField ToSubTableField(Form form)
     {
         UiEntity tableEntity = ProjectDefinition.Project.GetUiEntity(SubTable.NamespaceId, SubTable.EntityId) ?? throw new ValidationException($"موجودیت مربوط به جدول {ControlId} یافت نشد.");
-        Domain.Entities.Cmmn.Relationship.Association tableAssociation = (tableEntity.GetField(SubTable.TableAssociationId)?.AssociationEntity) ?? throw new ValidationException($"فیلد ارتباطی مربوط به موجودیت {SubTable.EntityId} یافت نشد.");
+        Association tableAssociation = (tableEntity.GetField(SubTable.TableAssociationId)?.AssociationEntity) ?? throw new ValidationException($"فیلد ارتباطی مربوط به موجودیت {SubTable.EntityId} یافت نشد.");
         FormField formField = FormField.NewSubTableInstance(form, ParentControlId, SubTable.EntityId,
                 SubTable.TableAssociationId, SubTable.IndexFormSubjectId, SubTable.AssociationId,
                 tableEntity, tableAssociation, Label, null);

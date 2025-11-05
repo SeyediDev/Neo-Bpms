@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EnumModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EnumModels;
 
 public class EnumViewModel
 {

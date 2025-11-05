@@ -1,7 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.ThrowEvent;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
 using Neo.Bpms.Infrastructure.Features.Bpms.Loader.Dto;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeEvent.Catch;

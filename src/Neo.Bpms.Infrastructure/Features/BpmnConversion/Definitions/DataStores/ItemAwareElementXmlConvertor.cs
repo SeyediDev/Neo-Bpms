@@ -1,8 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Foundation;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Foundation;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.DataStores;
 
 /// <summary>
 /// 14.0.

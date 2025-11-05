@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Fields;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
@@ -12,7 +13,7 @@ public class BooleanCombo(IFormLogicHelper formLogicHelper, InputFieldDefinition
         ElasticObject record = ControlsRendererData.Record;
         string value = record?.GetString(Field.FieldName) ??
                         $"{(ControlsRendererData.Options.IsFilter ? BooleanItem.All : BooleanItem.False):D}";
-        Domain.Entities.Cmmn.Entities.Entity entity = ProjectDefinition.Project.GetEntity(ControlsRendererData.Structure.NamespaceId, ControlsRendererData.Structure.EntityId);
+        Entity entity = ProjectDefinition.Project.GetEntity(ControlsRendererData.Structure.NamespaceId, ControlsRendererData.Structure.EntityId);
         string[] fieldIds = Field.FieldName.Split('.');
         EntityField field = entity?.GetField(fieldIds[0]);
         if (fieldIds.Length > 1)

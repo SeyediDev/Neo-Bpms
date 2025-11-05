@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.Query;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Query;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Command.Sql;
 

@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnEscalateController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -18,9 +20,9 @@ public class BpmnEscalateController(IProjectBpmn projectBpmn) : BpmsController
             viewModel.id = "Escalate" + Guid.NewGuid().ToString("N");
         if (string.IsNullOrEmpty(viewModel.namespaceId))
             viewModel.namespaceId = "ProcessEntities";
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Escalation newItem = viewModel.ToEscalation();
+        Escalation newItem = viewModel.ToEscalation();
 
-        Domain.Entities.Bpmn.Core.CommonElements.Events.Escalation item = isNew ? newItem : ProjectDefinition.Project.GetEscalation(id);
+        Escalation item = isNew ? newItem : ProjectDefinition.Project.GetEscalation(id);
         if (item == null)
         {
             isNew = true;

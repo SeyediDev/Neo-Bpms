@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Cmmn.ScheduledReports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
@@ -259,7 +257,7 @@ public partial class ReportController(
         ReportColumnDisplayEditor currentSetting = ReportStructRoutines.GetColumnProperties(field);
         if (string.IsNullOrEmpty(currentSetting.aliasValue))
         {
-            Domain.Entities.Cmmn.Fields.EntityField efld = entity.GetField(ColumnName);
+            EntityField efld = entity.GetField(ColumnName);
             if (efld != null)
                 currentSetting.aliasValue = efld.Name;
         }
@@ -396,8 +394,8 @@ public partial class ReportController(
 
     private static string GetFieldName(ReportStructure structure, string fieldId)
     {
-        Domain.Entities.Cmmn.Entities.Entity entity = ProjectDefinition.Project.GetEntity(structure.NamespaceId, structure.EntityId);
-        Domain.Entities.Cmmn.Fields.EntityField fld = entity?.GetField(fieldId);
+        Entity entity = ProjectDefinition.Project.GetEntity(structure.NamespaceId, structure.EntityId);
+        EntityField fld = entity?.GetField(fieldId);
         return fld != null ? fld.Name : fieldId;
     }
 }

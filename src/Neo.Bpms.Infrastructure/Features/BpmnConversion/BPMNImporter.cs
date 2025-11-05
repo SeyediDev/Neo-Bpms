@@ -1,5 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.XPDL;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

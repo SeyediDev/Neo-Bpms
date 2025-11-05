@@ -1,6 +1,4 @@
-﻿//using MediatR;
-
-namespace Neo.Bpms.Infrastructure.Features;
+﻿namespace Neo.Bpms.Infrastructure.Features;
 public class SendFormCommand(/*IMediator mediator*/) : ISendFormCommand
 {
     public async Task<(bool result, string message)> Send(ElasticObject record, Type commandType)

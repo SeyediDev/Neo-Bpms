@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
 
 public class BooleanTitles
 {

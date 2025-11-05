@@ -1,12 +1,13 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Expressions;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.SubProcess;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Gateways;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Events;
 
 internal static class TimerEventDefinitionXmlConvertor
 {

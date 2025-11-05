@@ -1,8 +1,9 @@
 ﻿using System.Net;
-using Neo.Bpms.Domain.Entities.Service.External;
-using Neo.Bpms.Domain.Entities.Service.Internal;
-using Neo.Bpms.Domain.Entities.Service.ServiceEndPoint;
-using Neo.Bpms.Domain.Entities.Service.ServiceOperation;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Service.External;
+using Neo.Bpms.Domain.Models.Service.Internal;
+using Neo.Bpms.Domain.Models.Service.ServiceEndPoint;
+using Neo.Bpms.Domain.Models.Service.ServiceOperation;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
 

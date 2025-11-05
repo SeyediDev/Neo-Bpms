@@ -1,5 +1,12 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
@@ -410,10 +417,10 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
                     new FormLinkId(f.NamespaceId, f.EntityId, f.Id, f.Name))];
             SetBulkProcessLinks(structure, form);
             Form entityForm = form;
-            List<Domain.Entities.Cmmn.UI.ConfiguredItems.ConfiguredFilter> configuredFilters = await filterConfigBackupRestore.Configurations("Form", namespaceId, entityId, form.Id);
+            List<ConfiguredFilter> configuredFilters = await filterConfigBackupRestore.Configurations("Form", namespaceId, entityId, form.Id);
             structure.ConfiguredFilters = configuredFilters?.Where(cfg =>
                 cfg.CheckAccess(user)).ToList();
-            List<Domain.Entities.Cmmn.UI.ConfiguredItems.ConfiguredFolder> configuredFolders = await folderConfigBackupRestore.Configurations("Form", namespaceId, entityId, form.Id);
+            List<ConfiguredFolder> configuredFolders = await folderConfigBackupRestore.Configurations("Form", namespaceId, entityId, form.Id);
             structure.ConfiguredFolders = configuredFolders?.Where(cfg =>
                 cfg.CheckAccess(user)).ToList();
 
@@ -482,9 +489,9 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
     private void SetBulkProcessLinks(CommonFormStructure structure, Form form)
     {
         structure.BulkProcessCreates = [];
-        foreach (Domain.Entities.Bpmn.Extensions.BusinessProcesses.BusinessProcess businessProcess in ProjectDefinition.Project.BusinessProcesses.Values)
+        foreach (BusinessProcess businessProcess in ProjectDefinition.Project.BusinessProcesses.Values)
         {
-            foreach (Domain.Entities.Bpmn.Extensions.BusinessProcesses.BusinessProcessVersion businessProcessVersion in businessProcess.Versions.Values.Where(v => v.IsActive))
+            foreach (BusinessProcessVersion businessProcessVersion in businessProcess.Versions.Values.Where(v => v.IsActive))
             {
                 if (businessProcessVersion.BpmnDefinitions.GetRootElement(businessProcess.Id) is not Process
                     processDefinition)
@@ -492,7 +499,7 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
                     continue;
                 }
 
-                foreach (Domain.Entities.Bpmn.Core.CommonElements.FlowElements.FlowElement flowElement in processDefinition.flowElements.Values)
+                foreach (FlowElement flowElement in processDefinition.flowElements.Values)
                 {
                     if (flowElement is not UserTask userTask)
                     {

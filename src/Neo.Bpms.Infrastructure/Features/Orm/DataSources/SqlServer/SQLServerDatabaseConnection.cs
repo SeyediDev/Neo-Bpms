@@ -1,7 +1,8 @@
 ﻿using System.Data.Common;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.Provider;
 using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 using Microsoft.Data.SqlClient;
+using Neo.Bpms.Domain.Models.Base.Exceptions;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.SqlServer;
 

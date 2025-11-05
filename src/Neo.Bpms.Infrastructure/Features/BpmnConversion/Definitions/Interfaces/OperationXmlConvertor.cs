@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Services;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Interfaces;
 
 internal static class OperationXmlConvertor
 {

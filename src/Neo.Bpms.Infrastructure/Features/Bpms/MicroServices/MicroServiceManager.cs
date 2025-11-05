@@ -1,7 +1,7 @@
 ﻿global using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.Definitions;
 global using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.MonitoringInfo;
-global using Neo.Bpms.Infrastructure.Utility.Interfaces;
-global using Neo.Bpms.Infrastructure.Utility.Interfaces.Operation;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
 using Newtonsoft.Json;
 using RestSharp;
 

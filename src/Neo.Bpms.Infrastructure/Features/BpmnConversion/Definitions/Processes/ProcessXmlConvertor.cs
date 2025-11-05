@@ -1,8 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Entities.Bpmn.Collaborations;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Bpmn.Collaborations;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Correlations;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Resources;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes;
 
 /// <summary>
 /// 14.9

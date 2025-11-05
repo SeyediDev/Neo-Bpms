@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Entities.Cmmn.Fields;
-using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
 

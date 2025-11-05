@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Fields;
-using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
 
@@ -82,7 +82,7 @@ public class RelationItemViewModel : DestEntityViewModel
         //if (notNull)
         //	fieldFlags |= eEntityFieldFlags.NotNull;
         Association association = null;
-        Domain.Entities.Cmmn.Entities.Entity relatedEntity = ProjectDefinition.Project.GetEntity(destNamespaceId, destEntityId);
+        Entity relatedEntity = ProjectDefinition.Project.GetEntity(destNamespaceId, destEntityId);
         switch (relationType)
         {
             case TVariableTypes.BaseEntity:

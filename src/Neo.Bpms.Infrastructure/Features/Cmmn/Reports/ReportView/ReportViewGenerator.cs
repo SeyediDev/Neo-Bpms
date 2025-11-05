@@ -1,4 +1,8 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;
 
 public abstract class ReportViewGenerator
 {

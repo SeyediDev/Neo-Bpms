@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.ItemAware;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 internal static class DataStateXmlConvertor
 {

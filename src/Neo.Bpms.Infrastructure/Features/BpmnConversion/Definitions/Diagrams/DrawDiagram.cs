@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Collaborations.PoolAndParticipant;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Collaborations.PoolAndParticipant;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

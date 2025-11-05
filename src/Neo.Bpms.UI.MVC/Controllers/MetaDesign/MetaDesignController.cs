@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
-using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
+﻿using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
 using Microsoft.AspNetCore.Antiforgery;
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
 
@@ -90,14 +88,14 @@ public partial class MetaDesignController(
     {
         CheckEntityDesignAccess(false);
         ProjectDefinition.Project.Namespaces.TryGetValue("ProcessEntities", out ModelNamespace @namespace);
-        List<Domain.Entities.Cmmn.Entities.Entity> structures = @namespace?.GetEntities()?.Values.ToList();
+        List<Entity> structures = @namespace?.GetEntities()?.Values.ToList();
         return Json(structures?.Select(e => new EntityRecognizer(e)));
     }
 
     public JsonResult MessageStructure(string entityId)
     {
         CheckEntityDesignAccess(false);
-        Domain.Entities.Cmmn.Entities.Entity structure = ProjectDefinition.Project.Namespaces?["ProcessEntities"]?.GetEntity(entityId);
+        Entity structure = ProjectDefinition.Project.Namespaces?["ProcessEntities"]?.GetEntity(entityId);
         return Json(new { fields = structure?.entityFields.Select(f => f.Key) });
     }
 

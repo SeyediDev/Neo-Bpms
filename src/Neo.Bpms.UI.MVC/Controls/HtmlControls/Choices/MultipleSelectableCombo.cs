@@ -1,4 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Fields;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 
@@ -13,7 +16,7 @@ public class MultipleSelectableCombo(IFormLogicHelper formLogicHelper, InputFiel
         ElasticObject record = ControlsRendererData.Record;
         TableDefinition table = (TableDefinition)Field;
         string multipleForeignKeyFieldId = Field.GetProperty(eControlPropertyId.MultipleForeignKeyFieldId)?.Value?.ToString();
-        Domain.Entities.Cmmn.Entities.Entity entity = ProjectDefinition.Project.GetEntity(table.NamespaceId, table.EntityId);
+        Entity entity = ProjectDefinition.Project.GetEntity(table.NamespaceId, table.EntityId);
         EntityField multipleForeignKeyField = entity?.GetField(multipleForeignKeyFieldId);
         bool isRemoteData = Field.PropertyBoolean(eControlPropertyId.RemoteData);
         Dictionary<string, string> idsList = GetIdsList(record, table, multipleForeignKeyField);
@@ -63,7 +66,7 @@ public class MultipleSelectableCombo(IFormLogicHelper formLogicHelper, InputFiel
             foreach (ElasticObject row in tableDataRows)
             {
                 string rowIds = "";
-                foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in multipleForeignKeyField.AssociationEntity.Maps)
+                foreach (EntityRelationMap map in multipleForeignKeyField.AssociationEntity.Maps)
                 {
                     string rowId = row.GetString(map.SourceField);
                     if (string.IsNullOrEmpty(rowId)) continue;

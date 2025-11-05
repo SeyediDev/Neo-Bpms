@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
-
-namespace Neo.Bpms.UI.MVC.Controllers.Public;
+﻿namespace Neo.Bpms.UI.MVC.Controllers.Public;
 
 public class FilterController(
     ControllerMethods controllerMethods,

@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.ReportModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.ReportModels;
 
 public class ReportViewModel
 {

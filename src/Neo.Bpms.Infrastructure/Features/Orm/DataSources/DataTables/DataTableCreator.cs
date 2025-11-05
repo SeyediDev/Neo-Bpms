@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataFilterings;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
+using Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataFilterings;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataTables;
 

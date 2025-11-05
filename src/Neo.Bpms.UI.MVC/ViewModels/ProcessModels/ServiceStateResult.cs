@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Execution;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Execution;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ProcessModels;
 

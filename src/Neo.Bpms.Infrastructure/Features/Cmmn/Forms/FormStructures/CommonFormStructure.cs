@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+using Neo.Bpms.Domain.Models.Security.Authorization;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic;
 

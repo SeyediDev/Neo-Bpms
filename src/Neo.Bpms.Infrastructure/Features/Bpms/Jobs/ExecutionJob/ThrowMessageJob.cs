@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 

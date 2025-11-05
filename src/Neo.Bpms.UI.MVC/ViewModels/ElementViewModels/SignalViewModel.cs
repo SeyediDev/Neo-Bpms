@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ElementViewModels;
 

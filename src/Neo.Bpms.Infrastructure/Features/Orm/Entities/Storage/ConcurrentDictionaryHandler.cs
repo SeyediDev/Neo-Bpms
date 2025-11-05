@@ -1,5 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.DataSynchronization;
-using Neo.Bpms.Domain.Entities.Cmmn.Storage;
+﻿using Neo.Bpms.Domain.Models.Cmmn.DataSynchronization;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Storage;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.Storage;
 

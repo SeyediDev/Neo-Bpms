@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controls;
 
 public class LinkDefinition(InputFieldDefinition controlDefinition, IUrlHelper urlHelper)
 {

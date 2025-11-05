@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.Entities.Cmmn;
-
-namespace Neo.Bpms.Infrastructure.Features.MetaLoader;
+﻿namespace Neo.Bpms.Infrastructure.Features.MetaLoader;
 
 public class EntityMetaData : MetaData
 {

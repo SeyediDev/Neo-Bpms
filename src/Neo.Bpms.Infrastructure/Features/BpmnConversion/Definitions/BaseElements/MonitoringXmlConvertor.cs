@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Monitoring;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Monitoring;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 internal static class MonitoringXmlConvertor
 {

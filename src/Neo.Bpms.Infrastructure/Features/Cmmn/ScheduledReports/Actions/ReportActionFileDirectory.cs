@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Infrastructure.Utility.FTP;
+﻿using Neo.Bpms.Infrastructure.Features.Cmmn.FTP;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.ScheduledReports.Actions;
 

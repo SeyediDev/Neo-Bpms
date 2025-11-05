@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
+﻿using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Base.Audit;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.QueryUtilities;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.Entities;

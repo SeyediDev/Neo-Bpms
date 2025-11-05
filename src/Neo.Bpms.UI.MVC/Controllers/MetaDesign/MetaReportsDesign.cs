@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.ReportModels;
 
 
@@ -80,7 +79,7 @@ public partial class MetaDesignController
         Report report = ProjectDefinition.Project.GetUiEntity(reportNamespaceId, reportEntityId)?.GetReport(reportId);
         if (uiEntity == null || report == null)
             return Json(new { Success = false });
-        Domain.Entities.Cmmn.Fields.EntityFields entityFields = uiEntity.entityFields;
+        EntityFields entityFields = uiEntity.entityFields;
         PossibleColumunsViewModel ret = new()
         {
             fields = entityFields?.Values.Where(f => !report.reportFields.ContainsKey(f.Id)).Select(f => new PossibleFieldViewModel
@@ -112,9 +111,9 @@ public partial class MetaDesignController
              .ToList();
         foreach (Entity e in entities ?? Enumerable.Empty<Entity>())
         {
-            Domain.Entities.Cmmn.Fields.EntityFields entityFields = e?.entityFields;
+            EntityFields entityFields = e?.entityFields;
             if (entityFields == null) continue;
-            foreach (Domain.Entities.Cmmn.Fields.EntityField rf in entityFields.Values.Where(f =>
+            foreach (EntityField rf in entityFields.Values.Where(f =>
                  (!f?.NotMapped ?? false) &&
                  f.AssociationEntity?.DestEntityId == entityId &&
                  f.AssociationEntity?.DestNamespaceId == namespaceId))

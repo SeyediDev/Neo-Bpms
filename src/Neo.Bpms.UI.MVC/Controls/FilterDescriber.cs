@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+
+namespace Neo.Bpms.UI.MVC.Controls;
 
 public class FilterDescriber
 {
@@ -24,7 +27,7 @@ public class FilterDescriber
             if (process != null)
             {
                 result += $"فرآیند: {process.Name} ";
-                Domain.Entities.Bpmn.Processes.Activities.Activity activity = process.GetActivity(filter.Activity);
+                Activity activity = process.GetActivity(filter.Activity);
                 if (activity != null)
                     result += $"فعالیت: {activity.Name} ";
             }

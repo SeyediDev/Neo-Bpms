@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Storage;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Storage;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.Storage;
 public abstract class StorageContainer

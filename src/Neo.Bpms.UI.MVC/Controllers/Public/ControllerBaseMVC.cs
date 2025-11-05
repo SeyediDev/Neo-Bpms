@@ -1,5 +1,4 @@
 ﻿using System.Security.Principal;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
 using Neo.Domain.Features.Client;
 
 namespace Neo.Bpms.UI.MVC.Controllers.Public;

@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.DML;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DML;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Command.Sql;
 

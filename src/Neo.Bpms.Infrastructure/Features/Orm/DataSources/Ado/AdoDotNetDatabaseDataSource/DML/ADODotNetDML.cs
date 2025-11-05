@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
-
-namespace Neo.Bpms.Engine.Data.ADODotNet;
+﻿namespace Neo.Bpms.Engine.Data.ADODotNet;
 
 /// <summary>
 /// The ado dot net database data source that implement dml functions.

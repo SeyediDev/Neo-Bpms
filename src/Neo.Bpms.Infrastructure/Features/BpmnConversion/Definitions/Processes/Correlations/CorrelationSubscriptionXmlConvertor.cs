@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Collaborations;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Correlation;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Collaborations;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Correlations;
 
 internal static class CorrelationSubscriptionXmlConvertor
 {

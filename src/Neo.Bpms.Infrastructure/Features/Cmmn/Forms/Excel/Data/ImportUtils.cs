@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Data;
+﻿using Neo.Bpms.Domain.Extensions;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Data;
 
 class ImportUtils
 {

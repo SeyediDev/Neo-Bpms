@@ -1,5 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions.ResourceRoles;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.ResourceAssignment;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Extensions.ResourceRoles;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.ResourceAssignment;
+using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;

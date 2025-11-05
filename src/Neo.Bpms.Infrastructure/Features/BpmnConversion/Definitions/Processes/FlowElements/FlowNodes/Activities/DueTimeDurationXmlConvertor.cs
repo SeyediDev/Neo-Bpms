@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities;
 
 internal class DueTimeDurationXmlConvertor
 {

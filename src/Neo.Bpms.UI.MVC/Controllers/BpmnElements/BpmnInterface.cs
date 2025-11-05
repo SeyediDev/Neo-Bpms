@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnInterfaceController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -16,9 +18,9 @@ public class BpmnInterfaceController(IProjectBpmn projectBpmn) : BpmsController
         bool isNew = string.IsNullOrEmpty(id);
         if (isNew)
             viewModel.id = "Interface" + Guid.NewGuid().ToString("N");
-        Domain.Entities.Bpmn.Core.Services.Interface newItem = viewModel.ToInterface();
+        Interface newItem = viewModel.ToInterface();
 
-        Domain.Entities.Bpmn.Core.Services.Interface item = isNew ? newItem : ProjectDefinition.Project.GetInterface(id);
+        Interface item = isNew ? newItem : ProjectDefinition.Project.GetInterface(id);
         if (item == null)
         {
             isNew = true;

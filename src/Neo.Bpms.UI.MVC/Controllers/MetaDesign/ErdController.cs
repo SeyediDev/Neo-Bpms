@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Entities.Cmmn.Fields;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.VuerdModels;
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
@@ -62,7 +62,7 @@ public class ErdController : BpmsController
         model.table.tables.Add(ToTable(rootEntity, ref tableLeft, grid,
             Math.Pow(model.canvas.zoomLevel, -1), zIndex));
 
-        foreach (Domain.Entities.Cmmn.Relationship.Association association in rootEntity.Associations)
+        foreach (Association association in rootEntity.Associations)
         {
             if (seenEntities.Contains(association.DestEntity.Id) || depth != 1)
             {

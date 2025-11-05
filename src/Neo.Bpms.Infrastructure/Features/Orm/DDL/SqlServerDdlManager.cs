@@ -1,6 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.DatabaseModels;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.DDL;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.Provider;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
+using Neo.Bpms.Domain.Models.Cmmn.Data.DDL;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DDL;
 

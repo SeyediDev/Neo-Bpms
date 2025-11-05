@@ -1,6 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Correlation;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements.CorrelationProperties;
 
 internal static class CorrelationPropertyXmlConvertor
 {

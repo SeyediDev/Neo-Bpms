@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Choreographies;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Choreographies;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Collaborations;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes;
 
 internal static class ChoreographyActivityXmlConvertor
 {

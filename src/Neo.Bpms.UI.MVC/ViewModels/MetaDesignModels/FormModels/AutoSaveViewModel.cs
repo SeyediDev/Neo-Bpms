@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Expressions.Parsers;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.FormModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.FormModels;
 
 public class AutoSaveViewModel
 {

@@ -1,5 +1,13 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions.Extensions;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions.Extensions;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms.ApplyFormsData;
 
@@ -63,7 +71,7 @@ public class ApplyFormData(IApplyFormField applyFormField, IApplyFormDocuments a
             return false;
         }
 
-        Domain.Entities.Cmmn.UI.UiEntity entity = form.entity;
+        UiEntity entity = form.entity;
         localParameters ??= GetLocalParamValues(auditTrail, namespaceId, entityId, form, record);
         apply ??= new ApplyUtility(entity, auditTrail, localParameters);
 
@@ -664,7 +672,7 @@ public class ApplyFormData(IApplyFormField applyFormField, IApplyFormDocuments a
             return;
         }
 
-        Domain.Entities.Cmmn.UI.UiEntity parentEntity =
+        UiEntity parentEntity =
             ProjectDefinition.Project.GetUiEntity(parentNamespaceId.ToString(), parentEntityId.ToString());
         if (parentEntity == null)
         {

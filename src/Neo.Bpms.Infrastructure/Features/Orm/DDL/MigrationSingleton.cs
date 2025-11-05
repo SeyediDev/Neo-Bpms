@@ -1,6 +1,7 @@
 ﻿using System.Text;
-using Neo.Bpms.Domain.Entities.Cmmn.Data;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.DatabaseModels;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Data;
+using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
 using Neo.Bpms.Engine.DDL;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 

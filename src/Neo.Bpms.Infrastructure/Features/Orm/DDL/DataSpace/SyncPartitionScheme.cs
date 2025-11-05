@@ -1,6 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.DatabaseModels;
-using Neo.Bpms.Domain.Entities.Cmmn.Partitions;
-using PartitionScheme = Neo.Bpms.Domain.Entities.Cmmn.Partitions.PartitionScheme;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
+using Neo.Bpms.Domain.Models.Cmmn.Partitions;
+using PartitionScheme = Neo.Bpms.Domain.Models.Cmmn.Partitions.PartitionScheme;
 
 namespace Neo.Bpms.Engine.DDL;
 

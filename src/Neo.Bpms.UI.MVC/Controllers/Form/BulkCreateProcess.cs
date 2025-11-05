@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authorization;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 using Neo.Bpms.UI.MVC.ViewModels.Forms;
 
@@ -81,7 +81,7 @@ public partial class FormController
         structure.FormType = formType;
         if (!ModelState.IsValid)
             goto returnBulk;
-        Domain.Entities.Cmmn.Fields.EntityField associationField =
+        EntityField associationField =
             string.IsNullOrEmpty(associationFieldId) ? null : form.entity.GetField(associationFieldId);
         if (associationField != null)
             indexEntity = associationField.AssociationEntity.Entity() as UiEntity ?? form.entity;

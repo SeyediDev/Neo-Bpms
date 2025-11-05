@@ -1,4 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FieldDefinitions;
 

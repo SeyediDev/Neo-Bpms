@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.Security.Authentication;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
+using Neo.Bpms.Domain.Models.Security.Authentication;
 
 namespace Neo.Bpms.Domain.Features.Security;
 

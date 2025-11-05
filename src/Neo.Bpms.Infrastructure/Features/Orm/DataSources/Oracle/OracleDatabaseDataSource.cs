@@ -1,5 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.OracleClient;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Engine.Data.ADODotNet;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.Oracle;

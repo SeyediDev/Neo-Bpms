@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Engine.Data.ADODotNet;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
+
+namespace Neo.Bpms.Engine.Data.ADODotNet;
 
 /// <summary>
 /// The ado dot net database data source that implement update script functions.

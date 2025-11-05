@@ -1,16 +1,17 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions.ResourceRoles;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Gateways;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Expressions;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.CallActivity;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.ResourceAssignment;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.SubProcess;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.ThrowEvent;
-using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
+﻿using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.ResourceRoles;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Lanes;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.ResourceAssignment;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Processes;
 
@@ -47,8 +48,8 @@ public static class ProcessViewModelManager
                 };
                 processViewModel.Managers.Add(managerViewModel);
             }
-            foreach (Domain.Entities.Bpmn.Processes.Lanes.LaneSet laneSet in process.definition.laneSets)
-                foreach (Domain.Entities.Bpmn.Processes.Lanes.Lane lane in laneSet.lanes)
+            foreach (LaneSet laneSet in process.definition.laneSets)
+                foreach (Lane lane in laneSet.lanes)
                 {
                     LaneViewModel laneViewModel = new()
                     {
@@ -116,8 +117,8 @@ public static class ProcessViewModelManager
                     }
                     processViewModel.Lanes.Add(laneViewModel);
                 }
-            foreach (Domain.Entities.Bpmn.Processes.Lanes.LaneSet laneSet in process.definition.laneSets)
-                foreach (Domain.Entities.Bpmn.Processes.Lanes.Lane lane in laneSet.lanes)
+            foreach (LaneSet laneSet in process.definition.laneSets)
+                foreach (Lane lane in laneSet.lanes)
                 {
                     foreach (string flowNodeRef in lane.flowNodeRefs)
                     {

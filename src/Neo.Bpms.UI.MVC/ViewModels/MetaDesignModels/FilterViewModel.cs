@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Expressions.Parsers;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
 
 public class FilterViewModel
 {

@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.Resources;
-using Neo.Bpms.Domain.Model.BPMN.Core.CommonElements;
+﻿using Neo.Bpms.Domain.Model.BPMN.Core.CommonElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Resources;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
 

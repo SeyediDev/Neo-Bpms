@@ -1,5 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Service.Internal;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.BpmnDefinitions.InternalServiceOperations.Orm.ProcessEntities;
+﻿using Neo.Bpms.Domain.Features.MetaDefinitions.BpmnDefinitions.InternalServiceOperations.Orm.ProcessEntities;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Service.Internal;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.ServiceOperations.Data;
 

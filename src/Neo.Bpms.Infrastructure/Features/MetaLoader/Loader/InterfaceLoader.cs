@@ -1,6 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Services;
-using Neo.Bpms.Domain.Entities.Service.ServiceOperation;
-using Neo.Bpms.Domain.Modeling.Definitions.Entities.Processes;
+﻿using Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+using Neo.Bpms.Domain.Models.Service.ServiceOperation;
+using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
 
 namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
 

@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.Provider;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.Interfaces;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.Projects;
+﻿using Neo.Bpms.Domain.Features.MetaDefinitions.Interfaces;
+using Neo.Bpms.Domain.Features.MetaDefinitions.Projects;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 
 namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;

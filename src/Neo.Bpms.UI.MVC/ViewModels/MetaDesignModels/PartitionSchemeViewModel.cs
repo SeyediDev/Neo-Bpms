@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Cmmn.Partitions;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Partitions;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
 

@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Control;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.Controls;
 
@@ -34,13 +34,13 @@ public class FormDesignHelper(FormStructRoutines formStructRoutines, IControlsRe
         List<OtherInputField> result = [];
         UiEntity entity =
             ProjectDefinition.Project.GetUiEntity(structure.NamespaceId, structure.EntityId);
-        Domain.Entities.Cmmn.Fields.EntityFields entityFields = entity?.entityFields;
+        EntityFields entityFields = entity?.entityFields;
         if (entityFields == null) return result;
-        foreach (Domain.Entities.Cmmn.Fields.EntityField field in entityFields.Values)
+        foreach (EntityField field in entityFields.Values)
         {
             if (field.AuditField || field.IsStatic)
                 continue;
-            Domain.Entities.Cmmn.Fields.EntityField classField = entityFields.Values.FirstOrDefault(
+            EntityField classField = entityFields.Values.FirstOrDefault(
                 f => f.AssociationEntity?.Maps?.FirstOrDefault(
                     map => map.SourceField == field.Id) != null);
             bool alreadyInTheForm =

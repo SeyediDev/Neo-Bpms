@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.SqlServer;
 

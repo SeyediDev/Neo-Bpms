@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Extensions;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.PostForms;
 

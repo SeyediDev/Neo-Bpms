@@ -49,10 +49,10 @@ public partial class FormController
         ElasticObject clonedRecord = record.Clone();
         PostFormData result = await SubmitForm(form, ids, record, user, ProcessId, TaskId, wid,
             form.FormType == Form.eFormType.ProcessCreate, structure, cancellationToken);
-        Domain.Entities.Cmmn.ExceptionInfos errors = result.errors;
+        ExceptionInfos errors = result.errors;
         if (errors != null)
         {
-            foreach (Domain.Entities.Cmmn.ExceptionInfo error in errors)
+            foreach (ExceptionInfo error in errors)
             {
                 ModelState.AddModelError(error.ForField ?? "", error.Exception.Message);
             }

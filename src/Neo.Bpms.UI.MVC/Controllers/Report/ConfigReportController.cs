@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using static Neo.Bpms.Domain.Entities.Cmmn.UI.Report;
 
 namespace Neo.Bpms.UI.MVC.Controllers;

@@ -1,7 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Entities.Cmmn.Fields;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
-using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EnumModels;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityModels;
 
@@ -30,7 +29,7 @@ public class EntityViewModel
         indexes = entity.indexes?.Select(i => new IndexViewModel(i));//todo
         fields = entity.entityFields?.Values.Where(f => !f.IsRelationShipField).Select(f => new FieldViewModel(f)) ?? [];
         allFields = [];
-        Domain.Entities.Cmmn.Relationship.BaseEntity baseEntity = entity.BaseEntities?.Values.FirstOrDefault(b => b.RelationshipField == null);
+        BaseEntity baseEntity = entity.BaseEntities?.Values.FirstOrDefault(b => b.RelationshipField == null);
         relationship = new RelationshipViewModel
         {
             extension = entity.BaseExtension != null ? new BaseExtensionViewModel
@@ -79,7 +78,7 @@ public class EntityViewModel
             if (!string.IsNullOrEmpty(stateEnumId))
             {
                 entity.SetStateCollection(new StateDictionary(stateEnumId));
-                Domain.Entities.Cmmn.Enumeration enumeration = entity.model.GetEnum(stateEnumId); //todo enum may not be in the same model
+                Enumeration enumeration = entity.model.GetEnum(stateEnumId); //todo enum may not be in the same model
                 if (enumeration?.items != null)
                 {
                     entity.GetStateCollection().AddStates(enumeration.items.Values.Select(i => new EntityState(entity,

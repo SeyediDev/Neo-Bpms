@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authorization;
-using Neo.Bpms.UI.MVC.ViewModels.Forms;
+﻿using Neo.Bpms.UI.MVC.ViewModels.Forms;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
 
@@ -45,9 +46,9 @@ public partial class MetaDesignController
     public JsonResult MetaResource(string id, int? justToMakeADifference)
     {
         CheckEntityDesignAccess(true);
-        foreach (Domain.Entities.Bpmn.Extensions.BusinessProcesses.BusinessProcess businessProcess in ProjectDefinition.Project.BusinessProcesses.Values)
+        foreach (BusinessProcess businessProcess in ProjectDefinition.Project.BusinessProcesses.Values)
         {
-            foreach (Domain.Entities.Bpmn.Extensions.BusinessProcesses.BusinessProcessVersion businessProcessVersion in businessProcess.Versions.Values)
+            foreach (BusinessProcessVersion businessProcessVersion in businessProcess.Versions.Values)
             {
                 Domain.Model.BPMN.Processes.Process process = businessProcessVersion.BpmnDefinitions.Process;
 

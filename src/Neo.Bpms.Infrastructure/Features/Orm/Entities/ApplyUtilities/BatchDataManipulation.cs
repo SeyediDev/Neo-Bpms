@@ -1,4 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.Transaction;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Transaction;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.ApplyUtilities;
 

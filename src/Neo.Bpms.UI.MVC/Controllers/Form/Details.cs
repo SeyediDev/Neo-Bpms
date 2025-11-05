@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authorization;
-
-namespace Neo.Bpms.UI.MVC.Controllers;
+﻿namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class FormController
 {

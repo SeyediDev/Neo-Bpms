@@ -1,7 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.CallActivity;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.ioSpecification;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes;
 
 internal static class CallableElementXmlConvertor
 {

@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms.UIRules;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic;
 

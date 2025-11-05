@@ -1,6 +1,7 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems.DataAssociation;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems.ioSpecification;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms;
 public abstract partial class FlowNodeRunTime

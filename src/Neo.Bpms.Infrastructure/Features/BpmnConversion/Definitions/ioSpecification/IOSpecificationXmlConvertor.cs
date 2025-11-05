@@ -1,8 +1,9 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Foundation;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems.ioSpecification;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Foundation;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.ioSpecification;
 
 internal static class IoSpecificationXmlConvertor
 {

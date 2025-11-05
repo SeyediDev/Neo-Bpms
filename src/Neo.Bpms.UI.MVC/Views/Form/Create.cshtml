@@ -1,4 +1,6 @@
-﻿@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
+﻿@using Microsoft.Extensions.Options
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Forms.UIRules
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
 @using Neo.Bpms.UI.MVC.Controllers
@@ -8,9 +10,7 @@
 @using Neo.Bpms.UI.MVC.PartialModels
 @using Neo.Bpms.UI.MVC.PartialModels.Common
 @using Neo.Bpms.UI.MVC.PartialModels.FormDesign
-@using Microsoft.Extensions.Options
 @using static Neo.Bpms.Domain.Model.UI.Forms.Form
-@using Neo.Bpms.Domain.Entities.Cmmn.UI.Forms.UIRules
 
 @inject IFormLogicHelper formLogicHelper;
 @inject IControlsRenderer controlsRenderer;

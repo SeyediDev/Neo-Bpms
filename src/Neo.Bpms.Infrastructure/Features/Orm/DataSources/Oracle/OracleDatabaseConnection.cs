@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 using System.Data.OracleClient;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.Provider;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.Oracle;

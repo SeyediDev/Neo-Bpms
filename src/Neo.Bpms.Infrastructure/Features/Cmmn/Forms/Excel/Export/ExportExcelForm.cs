@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Export;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Export;
 public class ExportExcelForm(Form form, CommonFormStructure formStructure, ElasticObject filterValues,
     IdentityUser user, bool setData, string culture, bool isRightToLeft, ExportType exportType,
     CancellationToken cancellationToken)

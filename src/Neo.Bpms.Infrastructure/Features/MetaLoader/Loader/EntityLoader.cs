@@ -1,10 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Modeling.CodeFirst;
-using Neo.Bpms.Domain.Modeling.Definitions.Entities;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.Entities;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.Projects;
-
-namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
+﻿namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
 
 public interface IEntityLoader<TProjectMetaDefinition>
 {

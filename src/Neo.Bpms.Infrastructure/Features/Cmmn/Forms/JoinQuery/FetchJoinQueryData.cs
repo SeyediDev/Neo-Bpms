@@ -1,4 +1,8 @@
-﻿using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
+﻿using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.JoinQuery;
 
@@ -17,7 +21,7 @@ public class FetchJoinQueryData
         Query = new QueryUtility(JoinQueryData.Association.Entity(), "FetchJoinQueryData.1");
         int i = 0;
         if (JoinQueryData.Association.Maps != null)
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in JoinQueryData.Association.Maps)
+            foreach (EntityRelationMap map in JoinQueryData.Association.Maps)
             {
                 Query.SelectField(map.DestField);
                 i++;
@@ -118,7 +122,7 @@ public class FetchJoinQueryData
         }
         else if (JoinQueryData.Association.Maps != null)
         {
-            foreach (Domain.Entities.Cmmn.Relationship.EntityRelationMap map in JoinQueryData.Association.Maps)
+            foreach (EntityRelationMap map in JoinQueryData.Association.Maps)
             {
                 record.GetField(map.DestField, out object obj);
                 ids += (string.IsNullOrEmpty(ids) ? "" : "#") + obj;

@@ -1,9 +1,13 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Entities.Bpmn.Execution;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Activities.Auditing;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.DataItems;
-using Neo.Bpms.Domain.Entities.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
+using Neo.Bpms.Domain.Models.Bpmn.Execution;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Auditing;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
+using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Instances;
 

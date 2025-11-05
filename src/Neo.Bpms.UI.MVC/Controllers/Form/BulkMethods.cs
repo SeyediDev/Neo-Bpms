@@ -1,7 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Base.Audit;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions;
-using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Model.BPMN.Processes;
+﻿using Neo.Bpms.Domain.Model.BPMN.Processes;
+using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -116,7 +117,7 @@ public partial class FormController
             formData[keyId] = entityPkv;
         }
 
-        Domain.Entities.Bpmn.Processes.DataItems.Property keyProperty = process?.properties?.FirstOrDefault(p => p.fieldId == keyId);
+        Property keyProperty = process?.properties?.FirstOrDefault(p => p.fieldId == keyId);
         if (keyProperty != null)
         {
             record[keyProperty.fieldId] = record.GetString(keyProperty.Name);
@@ -179,7 +180,7 @@ public partial class FormController
         q.AddPkFields();
         if (maxRows != null)
             q.SetPage(1, maxRows.Value);
-        foreach (Domain.Entities.Cmmn.UI.Forms.FormField mapFormField in form.formFields.Where(ff => !(ff.Field?.NotMap ?? true)))
+        foreach (FormField mapFormField in form.formFields.Where(ff => !(ff.Field?.NotMap ?? true)))
             q.SelectField(mapFormField.Field);
         // ReSharper disable once InvertIf
         if (!q.GetDocuments(localParameters))

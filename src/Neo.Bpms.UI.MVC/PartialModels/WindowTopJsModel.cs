@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
-
-namespace Neo.Bpms.UI.MVC.PartialModels;
+﻿namespace Neo.Bpms.UI.MVC.PartialModels;
 
 public class WindowTopJsModel
 {

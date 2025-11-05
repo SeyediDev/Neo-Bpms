@@ -1,9 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Extensions.BusinessProcesses;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Lanes;
-using Neo.Bpms.Domain.Modeling.Definitions.Entities.Processes;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
+using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Lanes;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Infrastructure.Features.MetaLoader.MetaProcess;
 

@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.Entities.CmmnConfig;
-
-namespace Neo.Bpms.Infrastructure.Features.SystemConfigs;
+﻿namespace Neo.Bpms.Infrastructure.Features.SystemConfigs;
 
 public static class TreeConfigManager
 {

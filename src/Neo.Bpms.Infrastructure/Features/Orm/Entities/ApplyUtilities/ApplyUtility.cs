@@ -1,4 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.DataSynchronization;
+﻿using Neo.Bpms.Domain.Models.Base.Audit;
+using Neo.Bpms.Domain.Models.Base.Exceptions;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
+using Neo.Bpms.Domain.Models.Cmmn.DataSynchronization;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.ApplyUtilities;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 

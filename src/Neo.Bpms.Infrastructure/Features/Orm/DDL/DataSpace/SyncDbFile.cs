@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Data.DatabaseModels;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
 
 namespace Neo.Bpms.Engine.DDL;
 

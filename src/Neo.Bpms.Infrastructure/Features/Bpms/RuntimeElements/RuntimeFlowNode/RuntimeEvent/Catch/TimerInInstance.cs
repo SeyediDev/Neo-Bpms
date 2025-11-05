@@ -1,5 +1,5 @@
 ﻿using System.Xml;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.EventDefinition;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeEvent.Catch;
 internal class TimerInInstance(ProcessInstance pi, FlowNodeInstance ai, DueTimeDuration dueDuration)

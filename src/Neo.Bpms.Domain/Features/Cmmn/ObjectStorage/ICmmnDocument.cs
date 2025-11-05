@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage.Dto;
+﻿using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage.Dto;
 
 namespace Neo.Bpms.Domain.Features.Cmmn.ObjectStorage;
 

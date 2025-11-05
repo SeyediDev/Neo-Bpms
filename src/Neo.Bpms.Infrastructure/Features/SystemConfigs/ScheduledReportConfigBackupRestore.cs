@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems.ScheduledReport;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
 using Neo.Bpms.Domain.Repository.Entities;
 namespace Neo.Bpms.Infrastructure.Features.SystemConfigs;
 

@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+
+namespace Neo.Bpms.UI.MVC.Controllers.BpmnElements;
 
 public class BpmnDataStoreController(IProjectBpmn projectBpmn) : BpmsController
 {
@@ -16,9 +18,9 @@ public class BpmnDataStoreController(IProjectBpmn projectBpmn) : BpmsController
         bool isNew = string.IsNullOrEmpty(id);
         if (isNew)
             viewModel.id = $"DataStore.{viewModel.namespaceId}.{viewModel.entityId}";
-        Domain.Entities.Bpmn.Processes.DataItems.DataFlow.DataStore newItem = viewModel.ToDataStore();
+        DataStore newItem = viewModel.ToDataStore();
 
-        Domain.Entities.Bpmn.Processes.DataItems.DataFlow.DataStore item = isNew ? newItem : ProjectDefinition.Project.GetDataStore(id);
+        DataStore item = isNew ? newItem : ProjectDefinition.Project.GetDataStore(id);
         if (item == null)
         {
             isNew = true;

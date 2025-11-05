@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Neo.Bpms.Domain.Entities.Cmmn.Storage;
+﻿using Neo.Bpms.Domain.Models.Base;
+using Neo.Bpms.Domain.Models.Cmmn.Storage;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.Storage;
 

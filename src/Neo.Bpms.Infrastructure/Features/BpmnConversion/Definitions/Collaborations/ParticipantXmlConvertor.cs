@@ -1,9 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Collaborations;
-using Neo.Bpms.Domain.Entities.Bpmn.Collaborations.PoolAndParticipant;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Services;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Collaborations;
+using Neo.Bpms.Domain.Models.Bpmn.Collaborations.PoolAndParticipant;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Collaborations;
 
 internal static class ParticipantXmlConvertor
 {

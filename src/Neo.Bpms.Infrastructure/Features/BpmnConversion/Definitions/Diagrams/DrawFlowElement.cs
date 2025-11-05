@@ -1,5 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.CommonElements.FlowElements;
-using Neo.Bpms.Domain.Entities.Bpmn.Processes.Events.CatchEvent;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
+using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

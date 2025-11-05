@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
 
 public class JsBindingControl
 {

@@ -1,6 +1,8 @@
 ﻿global using System.Xml.Linq;
 global using Neo.Bpms.Infrastructure.Features.BpmnConversion;
-using Neo.Bpms.Domain.Entities.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions;
+using Neo.Bpms.Infrastructure.Features.BpmnConversion.XPDL;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
 

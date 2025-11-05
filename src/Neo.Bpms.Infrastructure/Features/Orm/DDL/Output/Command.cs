@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.Engine.DDL;
+﻿using Neo.Bpms.Domain.Models.Base.Exceptions;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+
+namespace Neo.Bpms.Engine.DDL;
 
 public abstract partial class DDLManager
 {

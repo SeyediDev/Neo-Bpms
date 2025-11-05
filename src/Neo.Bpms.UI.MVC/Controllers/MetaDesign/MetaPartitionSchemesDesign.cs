@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Partitions;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
 
 
@@ -11,7 +11,7 @@ public partial class MetaDesignController
     {
         CheckEntityDesignAccess(false);
 
-        List<Domain.Entities.Cmmn.Partitions.PartitionScheme> partitionSchemes = ProjectDefinition.Project.Namespaces?.Values.Where(n => n.PartitionSchemes?.Values != null).SelectMany(n => n.PartitionSchemes?.Values).ToList();
+        List<PartitionScheme> partitionSchemes = ProjectDefinition.Project.Namespaces?.Values.Where(n => n.PartitionSchemes?.Values != null).SelectMany(n => n.PartitionSchemes?.Values).ToList();
         return Json(partitionSchemes?.Select(e => new PartitionSchemeViewModel(e)));
     }
 
@@ -20,7 +20,7 @@ public partial class MetaDesignController
     {
         CheckEntityDesignAccess(false);
 
-        Domain.Entities.Cmmn.Partitions.PartitionScheme partitionScheme = ProjectDefinition.Project.GetModel(namespaceId)?.PartitionSchemes[partitionSchemeId];
+        PartitionScheme partitionScheme = ProjectDefinition.Project.GetModel(namespaceId)?.PartitionSchemes[partitionSchemeId];
         return Json(new PartitionSchemeViewModel(partitionScheme));
     }
 
@@ -29,7 +29,7 @@ public partial class MetaDesignController
     {
         CheckEntityDesignAccess(true);
 
-        Domain.Entities.Cmmn.ModelNamespace modelNamespace = ProjectDefinition.Project.GetModel(namespaceId);
+        ModelNamespace modelNamespace = ProjectDefinition.Project.GetModel(namespaceId);
         if (modelNamespace == null)
             return Json(new { Success = false });
         _ = GenerateNewId(namespaceId, "Form");
@@ -46,10 +46,10 @@ public partial class MetaDesignController
     {
         CheckEntityDesignAccess(true);
 
-        Domain.Entities.Cmmn.ModelNamespace modelNamespace = ProjectDefinition.Project.GetModel(partitionSchemeViewModel.namespaceId);
+        ModelNamespace modelNamespace = ProjectDefinition.Project.GetModel(partitionSchemeViewModel.namespaceId);
         if (modelNamespace == null)
             return Json(new { Success = true });
-        Domain.Entities.Cmmn.Partitions.PartitionScheme partitionScheme = modelNamespace.GetPartitionScheme(prevPartitionSchemeId);
+        PartitionScheme partitionScheme = modelNamespace.GetPartitionScheme(prevPartitionSchemeId);
         partitionSchemeViewModel.Modify(partitionScheme);
         if (partitionScheme.Id != prevPartitionSchemeId)
         {

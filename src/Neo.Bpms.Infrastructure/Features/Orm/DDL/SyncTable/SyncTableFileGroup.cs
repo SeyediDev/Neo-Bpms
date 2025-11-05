@@ -1,5 +1,6 @@
 ﻿global using Neo.Bpms.Infrastructure.Features.Orm.DDL;
-using Neo.Bpms.Domain.Entities.Cmmn.Data.DatabaseModels;
+using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Engine.DDL;
 public abstract partial class DDLManager

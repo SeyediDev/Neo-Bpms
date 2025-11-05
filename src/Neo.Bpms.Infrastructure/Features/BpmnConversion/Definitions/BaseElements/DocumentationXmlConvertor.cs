@@ -1,6 +1,6 @@
-﻿using Neo.Bpms.Domain.Entities.Bpmn.Core.Foundation;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Foundation;
 
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion;
+namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 internal static class DocumentationXmlConvertor
 {

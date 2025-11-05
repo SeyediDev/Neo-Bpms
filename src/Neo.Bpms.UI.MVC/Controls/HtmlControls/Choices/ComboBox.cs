@@ -1,4 +1,7 @@
-﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 
 public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer)

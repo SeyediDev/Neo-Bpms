@@ -1,8 +1,8 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Repository.Entities;
 using Neo.Domain.Entities.Common;
-using static Neo.Bpms.Domain.Entities.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
+using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
 
 namespace Neo.Bpms.Infrastructure.Features.SystemConfigs;
 
