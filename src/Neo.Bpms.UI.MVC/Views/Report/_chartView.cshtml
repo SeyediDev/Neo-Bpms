@@ -63,14 +63,25 @@ var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type ==
 
 <partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drillDownSubReports, reportKey = reportInfo.structure.ConfigId, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}" />
 
-@if (ViewBag.ChartsAssetsIncluded == null)
+@if (ViewBag.ChartsAssetsIncluded == null || bFromDashboard)
 {
-    ViewBag.ChartsAssetsIncluded = true;
+    if (!bFromDashboard)
+    {
+        ViewBag.ChartsAssetsIncluded = true;
+    }
+    <script>
+        // Prevent Highcharts from being loaded multiple times (Error #16)
+        if (typeof window.HighchartsLoaded === 'undefined') {
+            window.HighchartsLoaded = true;
+    </script>
     <script src="@CommonBundles.ChartsJsBundle" asp-append-version="true"></script>
     if (!bFromDashboard && !isIframeReport)
     {
         <script src="@CommonBundles.HighChartsExportJsBundle" asp-append-version="true"></script>
     }
+    <script>
+        }
+    </script>
 }
 
 @if (isDrillDown && !Model.Config.IsInlineSubReport)

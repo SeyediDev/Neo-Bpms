@@ -20,7 +20,7 @@ public class HighchartRenderer(ReportData reportInfo)
         _aggrColumns = [.. reportInfo.AggregationColumns];
         List<ColumnFieldDefinition> categoryFields = [.. reportInfo.InColumns.Where(col => !col.IsTooltip)];
         if (categoryFields.Count == 0)
-            return null;
+            return new HtmlString("[]");
         _groupByRecords = [];
         int rowIndex = 0;
         foreach (ReportRowInfo row in reportInfo.Rows)
@@ -90,7 +90,7 @@ public class HighchartRenderer(ReportData reportInfo)
     public HtmlString GetYAxisName()
     {
         return _aggrColumns == null || !_aggrColumns.Any()
-            ? null
+            ? new HtmlString("\"\"")
             : new HtmlString(JsonConvert.SerializeObject(string.Join(" - ",
             _aggrColumns.Where(ac => !ac.IsTooltip).Select(col => col.Alias))));
     }
@@ -102,9 +102,9 @@ public class HighchartRenderer(ReportData reportInfo)
     public HtmlString GetSeries()
     {
         if (_aggrColumns == null || !_aggrColumns.Any())
-            return null;
+            return new HtmlString("[]");
         if (_groupByRecords == null)
-            return null;
+            return new HtmlString("[]");
         if (_aggrColumns.Count() > 1)
         {
             return HtmlStringFromObject(
@@ -116,7 +116,7 @@ public class HighchartRenderer(ReportData reportInfo)
         List<ColumnFieldDefinition> inColumns = reportInfo.InColumns.ToList();
         ColumnFieldDefinition aggrColumn = _aggrColumns.FirstOrDefault();
         if (inColumns.Count == 0 || aggrColumn == null)
-            return null;
+            return new HtmlString("[]");
         if (inColumns.Count == 1)
         {
             return HtmlStringFromObject(new[]
