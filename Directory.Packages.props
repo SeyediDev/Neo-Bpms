@@ -1,0 +1,42 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Neo Framework - from NuGet.org -->
+    <PackageVersion Include="Neo.Common" Version="1.0.0" />
+    <PackageVersion Include="Neo.Domain" Version="1.0.0" />
+    <PackageVersion Include="Neo.Application" Version="1.0.0" />
+    <PackageVersion Include="Neo.Infrastructure" Version="1.0.0" />
+    <PackageVersion Include="Neo.Endpoint" Version="1.0.0" />
+    
+    <!-- Infrastructure packages -->
+    <PackageVersion Include="EPPlus" Version="7.5.2" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.22" />
+    <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.0" />
+    <PackageVersion Include="System.Data.OracleClient" Version="1.0.8" />
+    <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+    <PackageVersion Include="Microsoft.SqlServer.SqlManagementObjects" Version="171.30.0" />
+    <PackageVersion Include="RestSharp" Version="112.1.0" />
+    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+    
+    <!-- UI.MVC packages - matched with Neo Framework -->
+    <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
+    <PackageVersion Include="BuildBundlerMinifier2022" Version="2.9.10" />
+    <PackageVersion Include="Captcha" Version="3.0.14.6" />
+    <PackageVersion Include="Markdig" Version="0.38.0" />
+    <PackageVersion Include="MediatR" Version="12.5.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.15" />
+    <PackageVersion Include="NWebsec.AspNetCore.Middleware" Version="3.0.0" />
+    <PackageVersion Include="System.Diagnostics.PerformanceCounter" Version="9.0.0" />
+    
+    <!-- SourceLink -->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+</Project>
+

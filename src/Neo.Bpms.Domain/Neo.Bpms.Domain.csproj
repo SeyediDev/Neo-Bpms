@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Content Include="Expressions\Parsers\Grammar.txt" />
+    <Content Include="Entities\Cmmn\Data\TODOList.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Neo Framework packages from NuGet.org or local Nexus -->
+    <PackageReference Include="Neo.Common" />
+    <PackageReference Include="Neo.Domain" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Entities\Cmmn\Data\Resources\DataTexts.Designer.cs">
+      <DependentUpon>DataTexts.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Entities\Cmmn\Data\Resources\DataTexts.en.Designer.cs">
+      <DependentUpon>DataTexts.en.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Entities\Cmmn\UI\Resources\Texts.Designer.cs">
+      <DependentUpon>Texts.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Entities\Cmmn\UI\Resources\Texts.en.Designer.cs">
+      <DependentUpon>Texts.en.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Entities\Cmmn\Data\Resources\DataTexts.en.resx">
+      <LastGenOutput>DataTexts.en.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Entities\Cmmn\Data\Resources\DataTexts.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>DataTexts.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Entities\Cmmn\UI\Resources\Texts.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Entities\Cmmn\UI\Resources\Texts.en.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Texts.en.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
