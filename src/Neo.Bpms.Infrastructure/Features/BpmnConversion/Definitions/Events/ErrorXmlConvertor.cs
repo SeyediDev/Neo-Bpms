@@ -1,8 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
-
-namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Events;
+﻿namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Events;
 
 internal static class ErrorXmlConvertor
 {

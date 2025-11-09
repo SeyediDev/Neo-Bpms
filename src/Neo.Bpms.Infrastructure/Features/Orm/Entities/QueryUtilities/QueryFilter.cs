@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Base;
-using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
 
 namespace Neo.Bpms.Engine.Entities;
 

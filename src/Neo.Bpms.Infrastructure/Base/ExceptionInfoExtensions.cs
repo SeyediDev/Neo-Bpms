@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Exceptions;
-
-namespace Neo.Bpms.Infrastructure.Base;
+﻿namespace Neo.Bpms.Infrastructure.Base;
 
 public static class ExceptionInfoExtensions
 {

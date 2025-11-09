@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 
 namespace Neo.Bpms.Engine.DDL;
 public abstract partial class DDLManager

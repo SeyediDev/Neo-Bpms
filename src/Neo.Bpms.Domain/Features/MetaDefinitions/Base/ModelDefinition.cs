@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Features.Cmmn.CodeFirst;
-
-namespace Neo.Bpms.Domain.Features.Definitions.Entities;
+﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities;
 
 public abstract partial class ModelDefinition<TNamespace> : ModelDefinition
 {

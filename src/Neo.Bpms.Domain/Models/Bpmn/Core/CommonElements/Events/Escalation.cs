@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 /// <summary>
 /// An Escalation identifies a business situation that a Process might need to react to.

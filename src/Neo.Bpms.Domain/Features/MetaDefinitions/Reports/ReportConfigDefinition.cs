@@ -318,7 +318,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="field">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void GroupBy(string field, string alias = null)
+    protected void GroupBy(string field, string alias = null, bool addAsDisplayColumn=true)
     {
         string[] fieldIds = field.Split('.');
         if (fieldIds.Length > 2)
@@ -347,6 +347,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
 
             AddIncludedField(ConfiguredReport.eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id
                 , associationField.Id, alias);
+        }
+        if(addAsDisplayColumn)
+        {
+            DisplayColumn(field, alias);
         }
     }
 

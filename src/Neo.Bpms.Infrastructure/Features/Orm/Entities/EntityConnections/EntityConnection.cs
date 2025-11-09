@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 

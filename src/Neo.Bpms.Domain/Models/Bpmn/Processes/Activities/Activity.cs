@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;

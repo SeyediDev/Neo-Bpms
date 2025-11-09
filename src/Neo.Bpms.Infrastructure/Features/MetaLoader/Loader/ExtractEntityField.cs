@@ -1,8 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
-
-namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
+﻿namespace Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
 
 public class ExtractEntityField(ProjectContext project, Entity entity)
 {

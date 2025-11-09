@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 
 /// <summary>
 /// Catch only in start in event sub process(interrupting), boundary(interrupting)

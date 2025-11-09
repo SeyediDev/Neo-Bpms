@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 /// <summary>
 /// A Message represents the content of a communication between two Participants. In BPMN 2.0, a Message is a 

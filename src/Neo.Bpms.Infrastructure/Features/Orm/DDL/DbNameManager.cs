@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.DDL;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.DDL;
 
 public static class DbNameManager
 {

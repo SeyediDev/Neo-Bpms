@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 

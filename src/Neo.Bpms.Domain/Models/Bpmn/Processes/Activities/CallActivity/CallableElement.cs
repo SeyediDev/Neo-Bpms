@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
 

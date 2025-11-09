@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Execution;

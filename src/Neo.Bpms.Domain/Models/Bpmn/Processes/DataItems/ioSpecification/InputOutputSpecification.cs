@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
 
 // Certain Activities and CallableElements contain a InputOutputSpecification element to describe their data requirements. 
 // Execution semantics are defined for the InputOutputSpecification and they apply the same way to all elements that extend it. 

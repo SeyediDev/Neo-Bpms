@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-
-namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
+﻿namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 
 public class ExecutionInstance(AuditTrail auditTrail, string description)
 {

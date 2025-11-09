@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.Ado.Connection;
 public abstract class AdoDotNetDatabaseConnectionDefinition : ConnectionDefinition
 {
     public AdoDotNetDatabaseConnectionDefinition(IConfiguration configuration, string providerName)

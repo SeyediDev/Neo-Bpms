@@ -1,6 +1,5 @@
 ﻿using System.Data.SqlTypes;
 using Neo.Bpms.Domain.Expressions;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 
 namespace Neo.Bpms.Engine.Data.ADODotNet;
 

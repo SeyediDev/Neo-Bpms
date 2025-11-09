@@ -1,11 +1,14 @@
 ﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
 
-public interface IEntityDefinition { }
+public interface IEntityDefinition 
+{ 
+}
 /// <summary>
 /// Base class to define entities and their details. All entity definitions in the business and meta models are sub classes of this object.
 /// </summary>
 public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefinition
 {
+    public virtual List<string>? Roles { get; }
     public ModelNamespace Model { get; set; }
     public UiEntity Entity { get; set; }
     public virtual Type DefinitionEntity { get; }
@@ -73,8 +76,8 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     /// <returns></returns>
     public void DefineUI()
     {
+        DefineSubjectsForms();
         Forms();
-        DefineExtraForms();
         foreach (ReportDefinition report in ExtractSubsInstances<ReportDefinition>())
         {
             _ = report.DefineReport(Entity, this);
@@ -281,6 +284,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
             }
 
             _form = formDef.DefineForm(Entity, this);
+            _form.Roles ??= Roles;
             Entity.AddForm(_form);
         }
 
@@ -862,21 +866,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     {
     }
 
-    protected void DefineAllForms()
-    {
-        foreach (FormDefinition form in ExtractSubsInstances<FormDefinition>())
-        {
-            if (form is ReportDefinition)
-            {
-                continue;
-            }
-
-            _form = form.DefineForm(Entity, this);
-            Entity.AddForm(_form);
-        }
-    }
-    
-    protected void DefineExtraForms()
+    protected void DefineSubjectsForms()
     {
         foreach (FormDefinition form in ExtractSubsInstances<FormDefinition>())
         {
@@ -884,12 +874,13 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
             {
                 continue;
             }
-            if(form is not IExtraFormDefinition)
+            if(form is not ISubjectFormDefinition)
             {
                 continue;
             }
 
             _form = form.DefineForm(Entity, this);
+            _form.Roles ??= Roles;
             Entity.AddForm(_form);
         }
     }

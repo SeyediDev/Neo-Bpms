@@ -1,13 +1,10 @@
 ﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities;
-
-public interface IExtraFormDefinition 
-{
-}
 /// <summary>
 /// Base class to define forms and their details. All form definitions in the business and meta models are sub classes of this object.
 /// </summary>
 public abstract partial class FormDefinition : BaseModelingDefinition, IUIRuleDefinition
 {
+    public virtual List<string>? Roles { get; }
     protected UiEntity entity;
 
     public Form form;
@@ -35,6 +32,7 @@ public abstract partial class FormDefinition : BaseModelingDefinition, IUIRuleDe
     private Form DefineAll(Form uiForm)
     {
         form = uiForm;
+        form.Roles = Roles;
         DefineFilters();
         Filters();
         DefineViewModel();

@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.MetaDb;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.MetaDb;
 
 public abstract class BaseMetaData
 {

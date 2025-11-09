@@ -2,8 +2,6 @@
 using Neo.Bpms.Domain.Models.Bpmn.Extensions.ResourceRoles;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.ResourceAssignment;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Domain.Models.WorkManagement;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeActivity.RuntimeTask;
 

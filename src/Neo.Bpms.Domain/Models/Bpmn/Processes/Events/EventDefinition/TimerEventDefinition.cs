@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.JobScheduling;
+﻿using Neo.Bpms.Domain.Models.JobScheduling;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 

@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Features.MetaDefinitions.Interfaces;
-using Neo.Bpms.Domain.Features.MetaDefinitions.Projects;
 using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 

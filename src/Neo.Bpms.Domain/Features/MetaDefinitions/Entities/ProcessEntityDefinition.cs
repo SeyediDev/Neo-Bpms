@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Features.Cmmn.CodeFirst;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
 
 public class ProcessEntityDefinition
 {

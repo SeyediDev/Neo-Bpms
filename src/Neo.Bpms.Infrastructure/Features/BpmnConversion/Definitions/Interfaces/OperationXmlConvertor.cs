@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Interfaces;

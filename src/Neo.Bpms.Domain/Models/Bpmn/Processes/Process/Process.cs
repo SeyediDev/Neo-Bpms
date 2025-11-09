@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Artifacts;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Auditing;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Monitoring;

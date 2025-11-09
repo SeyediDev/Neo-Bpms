@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Relationship;
-
-namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.JoinQuery;
+﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.JoinQuery;
 
 public class JoinQueriesData : ConcurrentDictionary<string, JoinQueryData>
 {

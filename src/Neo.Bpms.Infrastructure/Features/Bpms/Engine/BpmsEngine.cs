@@ -1,7 +1,5 @@
 ﻿using Neo.Bpms.Domain.Entities.ProcessData;
 using Neo.Bpms.Domain.Models.Base;
-using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;

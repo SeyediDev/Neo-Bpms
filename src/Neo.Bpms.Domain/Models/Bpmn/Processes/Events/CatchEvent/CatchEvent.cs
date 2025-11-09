@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
 

@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;

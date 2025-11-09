@@ -3,7 +3,6 @@ using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.ioSpecification;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities.Loops;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.Resources;
 using Task = Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.Task;

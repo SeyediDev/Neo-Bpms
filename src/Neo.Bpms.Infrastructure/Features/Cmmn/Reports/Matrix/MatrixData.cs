@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-
-namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix;
+﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix;
 
 public class MatrixData
 {

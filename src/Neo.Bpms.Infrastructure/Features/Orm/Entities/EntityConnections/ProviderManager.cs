@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 

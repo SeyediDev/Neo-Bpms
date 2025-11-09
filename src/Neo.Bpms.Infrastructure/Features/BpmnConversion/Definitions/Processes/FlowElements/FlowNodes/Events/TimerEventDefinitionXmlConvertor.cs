@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
 using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;

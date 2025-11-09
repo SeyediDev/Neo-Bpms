@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Choreographies;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Artifacts;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Auditing;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Monitoring;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;

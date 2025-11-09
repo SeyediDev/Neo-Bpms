@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataFilterings;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.DataSources.DataFilterings;
 
 public interface IDataFilteringBuilder<T>
 {

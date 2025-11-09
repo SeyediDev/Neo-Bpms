@@ -1,8 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.DataSynchronization;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
+﻿using Neo.Bpms.Domain.Models.Cmmn.DataSynchronization;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
 public static partial class ApplyUtility<T>

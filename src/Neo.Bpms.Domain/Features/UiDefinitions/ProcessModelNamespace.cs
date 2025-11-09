@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions;
 
 public class ProcessModelNamespace : ModelDefinition
 {

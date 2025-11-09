@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Collaborations.MessageFlows;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Collaborations.MessageFlows;
 
 /// <summary>
 /// A Message Flow is used to show the flow of Messages between two Participants that are prepared to send and receive them.

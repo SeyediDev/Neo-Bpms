@@ -1,11 +1,6 @@
 ﻿using Neo.Bpms.Domain.Entities.ProcessData;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.FilterModels;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;

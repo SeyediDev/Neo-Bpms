@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-
-namespace Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
+﻿namespace Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
 
 public class RunOperationCallBackParams(string operationImplementationRef, long id, string machineId, AuditTrail auditTrail) : IOperationUserParams
 {

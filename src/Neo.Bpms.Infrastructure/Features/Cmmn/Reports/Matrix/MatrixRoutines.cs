@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix;
 

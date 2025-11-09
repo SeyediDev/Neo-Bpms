@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.Services;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 
 /// <summary>
 /// An Operation defines Messages that are consumed and, optionally, produced when the Operation is called. 

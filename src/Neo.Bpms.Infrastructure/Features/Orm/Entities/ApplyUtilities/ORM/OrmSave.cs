@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-
-namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
+﻿namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
 
 public partial class ApplyUtility
 {

@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Interfaces;
 

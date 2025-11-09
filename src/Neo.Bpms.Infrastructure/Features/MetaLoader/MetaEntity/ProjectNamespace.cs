@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn;
-
-namespace Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
+﻿namespace Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
 
 public interface IProjectNamespace
 {

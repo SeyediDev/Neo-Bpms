@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
 using Neo.Bpms.Infrastructure.Features.Bpms.Loader.Dto;

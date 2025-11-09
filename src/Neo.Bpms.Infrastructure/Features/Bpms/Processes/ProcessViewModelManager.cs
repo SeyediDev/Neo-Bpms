@@ -4,7 +4,6 @@ using Neo.Bpms.Domain.Models.Bpmn.Extensions.ResourceRoles;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Gateways;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Lanes;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.CallActivity;

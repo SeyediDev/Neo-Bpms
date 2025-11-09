@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
 
 /// <summary>
 /// The DataOutputAssociation can be used to associate a DataOutput contained within an ACTIVITY with any BaseElement accessible in the scope the 

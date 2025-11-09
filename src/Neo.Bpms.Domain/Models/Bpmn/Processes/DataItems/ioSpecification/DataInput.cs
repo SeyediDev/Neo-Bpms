@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
 
 public class DataInput : DataElement
 {

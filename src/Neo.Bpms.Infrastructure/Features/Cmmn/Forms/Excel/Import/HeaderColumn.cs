@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-
-namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
+﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
 
 public class HeaderColumn
 {

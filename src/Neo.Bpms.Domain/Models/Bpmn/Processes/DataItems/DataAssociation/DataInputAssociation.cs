@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
 
 /// <summary>
 /// The DataInputAssociation can be used to associate an DataFlowElement element with a DataInput contained in an Activity. 

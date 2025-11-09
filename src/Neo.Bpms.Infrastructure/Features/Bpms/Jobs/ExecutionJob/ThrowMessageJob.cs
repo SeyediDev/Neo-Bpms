@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
+﻿namespace Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 
 internal class ThrowMessageJob : ExecutionJob
 {

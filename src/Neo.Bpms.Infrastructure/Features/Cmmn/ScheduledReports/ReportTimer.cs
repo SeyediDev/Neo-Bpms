@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.JobScheduler;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.QueryUtilities;
 

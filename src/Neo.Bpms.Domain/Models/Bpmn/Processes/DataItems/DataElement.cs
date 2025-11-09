@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 
 public class DataElement(IDataElementContainer parent, string id, string name, DataElement.eDataElementTypes dataElementType) : BaseElement(parent as BaseElement, id, name), IFieldAwareElement
 {

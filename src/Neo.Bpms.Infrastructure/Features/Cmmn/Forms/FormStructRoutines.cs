@@ -1,9 +1,6 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
 using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
@@ -486,7 +483,7 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
             : null;
     }
 
-    private void SetBulkProcessLinks(CommonFormStructure structure, Form form)
+    private static void SetBulkProcessLinks(CommonFormStructure structure, Form form)
     {
         structure.BulkProcessCreates = [];
         foreach (BusinessProcess businessProcess in ProjectDefinition.Project.BusinessProcesses.Values)

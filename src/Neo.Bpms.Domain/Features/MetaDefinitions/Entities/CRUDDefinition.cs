@@ -185,6 +185,7 @@ public abstract class CRUDDefinition : EntityDefinition
     public abstract class CUDForm : FormDefinition
     {
         protected CRUDDefinition CrudDefinition => (CRUDDefinition)entityDefinition;
+        public override List<string>? Roles => entityDefinition.Roles;
         public virtual string SubjectId => null;
         /// <summary>
         /// Defines Form View Model

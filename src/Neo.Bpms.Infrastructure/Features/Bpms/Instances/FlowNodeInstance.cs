@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Entities.ProcessData;
-using Neo.Bpms.Domain.Models.Base.Audit;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
 using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;

@@ -20,9 +20,10 @@ public abstract class ReportDefinition : FormDefinition
     {
         entityDefinition = definition;
         entity = uiEntity;
-        var identify = IdentifyReport();
-        if (identify == null) return null;
-        entity.AddReport(identify);
+        report = IdentifyReport();
+        if (report == null) return null;
+        entity.AddReport(report);
+        report.Roles = Roles;
 
         DefineFilters();
         Filters();
@@ -35,7 +36,7 @@ public abstract class ReportDefinition : FormDefinition
         ReportLayouts();
         DefineConfigs();
         PossibleSubReports();
-        return identify;
+        return report;
     }
 
     /// <summary>

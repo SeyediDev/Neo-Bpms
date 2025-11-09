@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataAssociation;
 

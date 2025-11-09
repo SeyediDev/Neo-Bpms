@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Auditing;
-
-namespace Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
+﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
 
 public abstract partial class BpmnDefinitionsDefinition
 {

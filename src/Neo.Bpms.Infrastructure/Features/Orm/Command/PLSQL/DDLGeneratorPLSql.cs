@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DDL;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Orm.Command.Sql;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Command.PLSQL;

@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;

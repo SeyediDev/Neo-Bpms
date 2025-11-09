@@ -3,7 +3,6 @@ using Neo.Bpms.Domain.Models.Bpmn.Core.Foundation;
 using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.DataFlows;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Activities;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Events;

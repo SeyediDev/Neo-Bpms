@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 public class Signal(BpmnDefinitions bpmn, string id, string name, ItemDefinition structureRef) : RootElement(bpmn, id, name), IStructureDefinition
 {

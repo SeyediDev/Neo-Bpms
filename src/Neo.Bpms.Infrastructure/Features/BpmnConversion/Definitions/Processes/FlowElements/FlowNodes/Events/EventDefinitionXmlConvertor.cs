@@ -1,8 +1,6 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.BaseElements;
-using Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.RootElements;
 
 namespace Neo.Bpms.Infrastructure.Features.BpmnConversion.Definitions.Processes.FlowElements.FlowNodes.Events;
 

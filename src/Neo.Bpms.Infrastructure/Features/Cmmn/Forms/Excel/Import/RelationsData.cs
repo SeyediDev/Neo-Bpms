@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
-using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;
+﻿using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Excel.Import;
 

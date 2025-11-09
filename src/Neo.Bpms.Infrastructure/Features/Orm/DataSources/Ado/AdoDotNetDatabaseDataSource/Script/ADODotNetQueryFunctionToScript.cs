@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-
-namespace Neo.Bpms.Engine.Data.ADODotNet;
+﻿namespace Neo.Bpms.Engine.Data.ADODotNet;
 
 public abstract partial class AdoDotNetDatabaseDataSource
 {

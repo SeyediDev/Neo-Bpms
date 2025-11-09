@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Features.MetaDefinitions.BpmnDefinitions.InternalServiceOperations.TestEngine.ProcessEntities;
-using Neo.Bpms.Domain.Models.Base.Audit;
 using Neo.Bpms.Domain.Models.Service.Internal;
 using Neo.Bpms.Domain.Models.Service.ServiceOperation;
 

@@ -1,5 +1,4 @@
 ﻿global using Neo.Bpms.Domain.Model.BPMN.Core.Foundation;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Events.EventDefinition;
 

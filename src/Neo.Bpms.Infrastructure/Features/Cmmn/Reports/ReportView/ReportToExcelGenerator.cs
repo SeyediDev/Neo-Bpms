@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using OfficeOpenXml.Style;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;

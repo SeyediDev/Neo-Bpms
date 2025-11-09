@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-using Neo.Bpms.Domain.Models.Bpmn.Diagrams;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Diagrams;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Core.Infrastructure;
 

@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.LoopCharacteristic;
 
 /// <summary>
 /// This element controls when and which Events are thrown in case behavior of the Multi-Instance Activity is set to complex

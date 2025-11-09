@@ -1,9 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-
-namespace Neo.Bpms.Engine.Entities;
+﻿namespace Neo.Bpms.Engine.Entities;
 
 public partial class QueryUtility
 {

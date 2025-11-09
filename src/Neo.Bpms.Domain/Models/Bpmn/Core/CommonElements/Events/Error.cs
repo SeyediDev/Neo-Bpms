@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 
 /// <summary>
 /// An Error represents the content of an Error Event or the Fault of a failed Operation

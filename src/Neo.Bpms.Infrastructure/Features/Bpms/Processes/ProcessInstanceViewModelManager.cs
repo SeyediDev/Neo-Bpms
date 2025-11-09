@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Base.Audit;
-using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
+﻿using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeCallable;
 

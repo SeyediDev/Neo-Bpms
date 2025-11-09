@@ -80,6 +80,7 @@ public abstract class DashboardDefinition : FormDefinition
         dashboard = (Dashboard)Identify();
         if (dashboard == null) return null;
         entity.AddDashboard(dashboard);
+        dashboard.Roles = Roles;
 
         Filters();
         if (!DefineUIRules()) return null;

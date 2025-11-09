@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Task = Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.Task;
+﻿using Task = Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.Task;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Collaborations.MessageFlows;
 

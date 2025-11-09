@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Execution;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;

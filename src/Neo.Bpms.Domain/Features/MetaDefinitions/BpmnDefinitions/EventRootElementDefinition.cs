@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
+﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
 
 public abstract partial class BpmnDefinitionsDefinition
 {

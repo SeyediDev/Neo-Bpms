@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.UI;
-
-namespace Neo.Bpms.Infrastructure.Features.MetaLoader;
+﻿namespace Neo.Bpms.Infrastructure.Features.MetaLoader;
 
 public interface IProjectMenu
 {

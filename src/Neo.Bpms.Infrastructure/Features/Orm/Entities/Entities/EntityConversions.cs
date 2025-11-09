@@ -1,8 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
-using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
+﻿using Neo.Bpms.Infrastructure.Features.Orm.Entities.EntityConnections;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities.Entities;
 

@@ -4,7 +4,6 @@ using Neo.Bpms.Domain.Models.Cmmn.Data.DDL;
 using Neo.Bpms.Domain.Models.Cmmn.Data.DML;
 using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
 using Neo.Bpms.Domain.Models.Cmmn.Data.Query;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
 namespace Neo.Bpms.Engine.DDL;
 

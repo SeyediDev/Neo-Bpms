@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data.DatabaseModels;
 using Neo.Bpms.Domain.Models.Cmmn.Partitions;
 using PartitionScheme = Neo.Bpms.Domain.Models.Cmmn.Partitions.PartitionScheme;
 

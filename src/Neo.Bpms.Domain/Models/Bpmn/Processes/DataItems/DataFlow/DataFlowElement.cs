@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 
 public class DataFlowElement(IFlowElementsContainer flowElementsContainer, string id, string name, DataFlowElement.eDataFlowElementTypes type) : FlowElement(flowElementsContainer, id, name, (eFlowElementType)type), IItemAwareElement
 {

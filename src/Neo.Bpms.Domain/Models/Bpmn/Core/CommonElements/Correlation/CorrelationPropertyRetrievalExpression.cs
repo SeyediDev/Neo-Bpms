@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
 
 public class CorrelationPropertyRetrievalExpression(CorrelationProperty correlationProperty, string id,
     FormalExpression messagePath, Message messageRef) : BaseElement(correlationProperty, id)

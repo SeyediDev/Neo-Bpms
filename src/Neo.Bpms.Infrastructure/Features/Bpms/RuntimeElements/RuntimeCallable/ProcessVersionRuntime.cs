@@ -1,11 +1,8 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Execution;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.ioSpecification;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Bpms.Jobs.ExecutionJob;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeEvent.Catch;
 using Neo.Bpms.Infrastructure.Features.Bpms.RuntimeElements.RuntimeFlowNode.RuntimeGateway;

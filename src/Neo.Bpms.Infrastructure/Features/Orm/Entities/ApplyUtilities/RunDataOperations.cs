@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Entities;
-using Neo.Bpms.Domain.Models.Security.Authorization;
+﻿using Neo.Bpms.Domain.Models.Security.Authorization;
 
 namespace Neo.Bpms.Infrastructure.Features.Orm.Entities;
 

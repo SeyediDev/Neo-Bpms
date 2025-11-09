@@ -284,6 +284,14 @@ public abstract partial class FormDefinition
             _parentControlId = parent?.ParentControlId;
         }
     }
+    
+    public FormField AddSubjectColumn<TForm>()
+        where TForm : FormDefinition, ISubjectFormDefinition, new()
+    {
+        var name = typeof(TForm).Name;
+        var subjectForm = entity.GetEntityForm(name);
+        return AddSubjectColumn(subjectForm?.Name??name, true, false, name, subjectForm?.EnName??name);
+    }
     /// <summary>
     /// Adds the subject column.
     /// </summary>

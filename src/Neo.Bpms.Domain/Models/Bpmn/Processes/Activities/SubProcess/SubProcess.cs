@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Artifacts;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.CatchEvent;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Events.ThrowEvent;
 
 namespace Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.SubProcess;
 

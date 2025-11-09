@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Expressions;
 
 /// <summary>
 /// The FormalExpression class is used to specify an executable Expression using a specified Expression language. 

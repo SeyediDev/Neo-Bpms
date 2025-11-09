@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Neo.Bpms.Domain.Models.Base.Audit;
 using Neo.Bpms.Domain.Models.Service.External;
 using Neo.Bpms.Domain.Models.Service.Internal;
 using Neo.Bpms.Domain.Models.Service.ServiceEndPoint;

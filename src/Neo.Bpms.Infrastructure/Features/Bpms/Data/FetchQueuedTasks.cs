@@ -2,8 +2,6 @@
 using Neo.Bpms.Domain.Entities.ProcessModel;
 using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 using Neo.Bpms.Domain.Models.Bpmn.Execution;
-using Neo.Bpms.Domain.Models.Cmmn;
-using Neo.Bpms.Domain.Models.Cmmn.Data.Base;
 using Neo.Bpms.Domain.Models.WorkManagement;
 using Neo.Bpms.Infrastructure.Features.Orm.Entities.QueryUtilities;
 

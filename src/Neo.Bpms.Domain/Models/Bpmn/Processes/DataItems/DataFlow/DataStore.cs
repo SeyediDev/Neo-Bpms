@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
-
-namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
+﻿namespace Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 
 public class DataStore(BpmnDefinitions bpmnDefinitions, string id, string name,
     ItemDefinition itemSubjectRef, bool isUnlimited, int capacity) : RootElement(bpmnDefinitions, id, name), IItemAwareElement

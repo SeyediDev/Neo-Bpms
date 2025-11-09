@@ -1,6 +1,4 @@
 ﻿using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Correlation;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
-using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.ItemAware;
 using Neo.Bpms.Domain.Models.Bpmn.Core.Services;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.DataItems.DataFlow;
 
