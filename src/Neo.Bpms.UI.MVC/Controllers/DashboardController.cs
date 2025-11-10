@@ -622,7 +622,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
             if (report == null)
                 return Json(new { success = false, error = "گزارش یافت نشد" });
 
-            ConfiguredReport reportConfig = await reportConfigBackupRestore.GetConfig(report, widget.ReportConfigId);
+            ConfiguredReport reportConfig = await reportConfigBackupRestore.GetConfig(report, widget.ReportConfigId, cancellationToken);
             if (reportConfig == null)
                 return Json(new { success = false, error = "کانفیگ گزارش یافت نشد" });
 
@@ -636,8 +636,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
 
             // Get report data
             ReportDataRoutines reportDataRoutines = HttpContext.RequestServices.GetRequiredService<ReportDataRoutines>();
-            ReportData reportResult = await reportDataRoutines.GetReportData(
-                reportConfig, true, filterValues, 1, null, null, null, null, culture, false, user, maxRecord);
+            ReportData reportResult = await reportDataRoutines.GetReportData(reportConfig, true, filterValues, 1, null, null, null, null, culture, false, user, maxRecord, cancellationToken: cancellationToken);
 
             // For now, just return success - full HTML rendering would need a different approach
             // Client-side can trigger a full page refresh if needed
