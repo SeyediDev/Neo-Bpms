@@ -1,0 +1,185 @@
+@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model ChartScriptModel
+
+@{
+    var idx = Model.Idx;
+    var reportInfo = Model.ReportInfo;
+    var structure = Model.Structure;
+    var chartTitle = Model.ChartTitle;
+    var showTitle = Model.ShouldShowTitle;
+    var levelIndex = 0;
+    var row = reportInfo.Rows.Count > 0 ? reportInfo.Rows[0] : null;
+    var gaugeValueColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s =>
+        s.aggrType != eAggregationFunctions.GroupByItem &&
+        s.aggrType != eAggregationFunctions.InColumn);
+    double gaugeValue = 0;
+    if (gaugeValueColumn != null && row != null)
+    {
+        gaugeValue = (gaugeValueColumn.aggrType == eAggregationFunctions.Formula)
+            ? Convert.ToDouble(row.Data[gaugeValueColumn.ColumnTypeName] ?? 0)
+            : row.Data.GetDouble(gaugeValueColumn.ColumnTypeName);
+    }
+
+    var categoryColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(
+        col => col.aggrType == eAggregationFunctions.InColumn);
+
+    var categoryValue = "";
+    if (categoryColumn != null && row != null)
+    {
+        categoryValue = (row.Data[categoryColumn.ColumnTypeName] ?? "").ToString();
+    }
+}
+
+<script type="text/javascript">
+	var gaugeInfo = {};
+	gaugeInfo.levels = [];
+	gaugeInfo.data = [];
+	gaugeInfo.range = { from: 0, to: 100 };
+	gaugeInfo.unit = '';
+	gaugeInfo.categoryName = '';
+
+	gaugeInfo.data = [@gaugeValue.ToString("#.##")];
+	gaugeInfo.categoryName = '@categoryValue';
+	@{
+	if (structure.Levels != null)
+	{
+		foreach (var level in structure.Levels)
+		{
+			double minValue = 0;
+			double maxValue = 0;
+			if (row != null)
+			{
+				minValue = level.MinType == ValueRange.ValueType.Field
+					? row.Data.GetDouble(level.MinValue)
+					: Convert.ToDouble(level.MinValue);
+				maxValue = level.MaxType == ValueRange.ValueType.Field
+					? row.Data.GetDouble(level.MaxValue)
+					: Convert.ToDouble(level.MaxValue);
+			}
+			<text>gaugeInfo.levels[@levelIndex] =
+	{
+		from: @minValue,
+		to: @maxValue,
+		color: '@level.Color'
+	};</text>
+
+			levelIndex++;
+		}
+	}
+
+	if (structure.ValueRange != null)
+	{
+		double minValue = 0;
+		double maxValue = 100;
+		if (row != null)
+		{
+			minValue = structure.ValueRange.MinType == ValueRange.ValueType.Field
+				? row.Data.GetDouble(structure.ValueRange.MinValue)
+				: Convert.ToDouble(structure.ValueRange.MinValue);
+			maxValue = structure.ValueRange.MaxType == ValueRange.ValueType.Field
+				? row.Data.GetDouble(structure.ValueRange.MaxValue)
+				: Convert.ToDouble(structure.ValueRange.MaxValue);
+		}
+		@:gaugeInfo.range = { from: @minValue, to: @maxValue };
+	}
+
+	var unit = structure.GetReportProperty((long) ReportConfigProperty.Unit);
+	if (unit != null)
+	{
+		@:gaugeInfo.unit = '@unit';
+	}
+	}
+
+
+	$(function() {
+		Highcharts.chart("container_@(idx)",
+			{
+				credits: {
+					enabled: false
+				},
+				chart: {
+					type: 'gauge',
+					plotBackgroundColor: null,
+					plotBackgroundImage: null,
+					plotBorderWidth: 0,
+					plotShadow: false
+				},
+				title: {
+					text: '@(showTitle ? chartTitle : "")'
+				},
+				pane: {
+					startAngle: -150,
+					endAngle: 150,
+					background: [
+						{
+							backgroundColor: {
+								linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								stops: [
+									[0, '#FFF'],
+									[1, '#333']
+								]
+							},
+							borderWidth: 0,
+							outerRadius: '109%'
+						}, {
+							backgroundColor: {
+								linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								stops: [
+									[0, '#333'],
+									[1, '#FFF']
+								]
+							},
+							borderWidth: 1,
+							outerRadius: '107%'
+						}, {
+						}, {
+							backgroundColor: '#DDD',
+							borderWidth: 0,
+							outerRadius: '105%',
+							innerRadius: '103%'
+						}
+					]
+				},
+				tooltip: {
+					formatter: function() {
+						var tooltipsObj =
+							window.top.reportsData['@idx'][parseInt(this.point.index)]["tooltipValues"][parseInt(
+								this.point.colorIndex)];
+						return tooltipFormatter(tooltipsObj);
+					},
+					useHTML: true
+				},
+				yAxis: {
+					min: gaugeInfo.range.from,
+					max: gaugeInfo.range.to,
+					minorTickInterval: 'auto',
+					minorTickWidth: 1,
+					minorTickLength: 10,
+					minorTickPosition: 'inside',
+					minorTickColor: '#666',
+					tickPixelInterval: 30,
+					tickWidth: 2,
+					tickPosition: 'inside',
+					tickLength: 10,
+					tickColor: '#666',
+					labels: {
+						step: 2,
+						rotation: 'auto'
+					},
+					title: {
+						text: gaugeInfo.unit
+					},
+					plotBands: gaugeInfo.levels
+				},
+				series: [
+					{
+						name: gaugeInfo.categoryName,
+						data: gaugeInfo.data
+					}
+				]
+			});
+	});
+</script>

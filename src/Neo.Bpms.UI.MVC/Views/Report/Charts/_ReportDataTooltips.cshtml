@@ -1,0 +1,71 @@
+@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model ChartScriptModel
+
+@{
+    var idx = Model.Idx;
+    var reportInfo = Model.ReportInfo;
+    var calendar = Model.Calendar;
+}
+
+<script>
+	var reportData = grabReportData('@idx');
+	@{
+	var ii = 0;
+	foreach (var row in reportInfo.Rows)
+	{
+		var rowIds = row.Data["Ids"];
+		<text>
+	var rowData = reportData[@ii] = {};
+		rowData['ids'] = '@rowIds';
+		rowData['tooltipValues'] = [];</text>
+
+
+		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+			s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn
+			).ToList();
+		var tooltips = reportInfo.structure.SelectedColumns.Where(s =>
+			s.aggrType != eAggregationFunctions.GroupByItem && s.IsTooltip).ToList();
+		var columnTitles = reportInfo.structure.SelectedColumns
+			.Where(s => s.aggrType == eAggregationFunctions.InColumn).ToList();
+
+		var columnIndex = -1;
+		foreach (var colInfo in columns)
+		{
+			columnIndex++;
+
+			if (colInfo.IsTooltip)
+			{
+				continue;
+			}
+			@:rowData['tooltipValues'][@columnIndex] = {};
+
+
+			foreach (var columnTitle in columnTitles)
+			{
+				var titleValue = ReportRenderer.GetCelValue(columnTitle, row);
+				var titleVal =
+					TableHelper.CreateCellElement(titleValue, columnTitle, true, calendar);
+				@:rowData['tooltipValues'][@columnIndex]['@columnTitle.Alias'] = '@titleVal';
+			}
+
+			var value = ReportRenderer.GetCelValue(colInfo, row);
+			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			@:rowData['tooltipValues'][@columnIndex]['@colInfo.Alias'] = '@val';
+
+
+			foreach (var tooltipField in tooltips)
+			{
+				var tooltipValue = ReportRenderer.GetCelValue(tooltipField, row);
+				var tooltipVal = TableHelper.CreateCellElement(tooltipValue, tooltipField, true,
+					calendar);
+				@:rowData['tooltipValues'][@columnIndex]['@tooltipField.Alias'] = '@tooltipVal';
+			}
+		}
+
+		ii++;
+	}
+	}
+</script>

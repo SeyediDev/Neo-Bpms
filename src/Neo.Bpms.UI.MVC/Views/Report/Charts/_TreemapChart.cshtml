@@ -1,0 +1,145 @@
+@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model ChartScriptModel
+
+@{
+    var idx = Model.Idx;
+    var reportInfo = Model.ReportInfo;
+    var calendar = Model.Calendar;
+    var chartTitle = Model.ChartTitle;
+    var showTitle = Model.ShouldShowTitle;
+    var colorColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s =>
+        s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
+    var categoryColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(
+        col => col.aggrType == eAggregationFunctions.InColumn);
+    var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+    var categoryColumnTypeName = categoryColumn != null ? categoryColumn.ColumnTypeName : null;
+    var ii = 0;
+}
+
+<script>
+	var reportData = grabReportData('@idx');
+
+	@foreach (var row in reportInfo.Rows)
+	{
+		var rowIds = row.Data["Ids"];
+		double colorValue = 0;
+		var categoryValue = "";
+		if (categoryColumnTypeName != null)
+		{
+			categoryValue = (row.Data[categoryColumnTypeName] ?? "").ToString();
+		}
+
+		if (colorColumn != null)
+		{
+			colorValue = row.Data.GetDouble(colorColumn.ColumnTypeName);
+		}
+
+		<text>
+	var rowData = reportData[@ii] = {};
+		rowData['name'] = '@categoryValue';
+		rowData['value'] = @colorValue;
+		rowData['colorValue'] = @colorValue;
+		rowData['ids'] = '@rowIds';
+		rowData['tooltipValues'] = {};</text>
+
+		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+			s.aggrType != eAggregationFunctions.GroupByItem);
+		foreach (var colInfo in columns)
+		{
+			var value = ReportRenderer.GetCelValue(colInfo, row);
+			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			@:rowData['tooltipValues']['@colInfo.Alias'] = '@val';
+		}
+
+		ii++;
+	}
+
+	$(document)
+		.ready(function() {
+			var a = new Highcharts.Chart({
+				credits: {
+					enabled: false
+				},
+				chart: {
+					renderTo: 'container_@(idx)',
+					type: 'treemap'
+				},
+				title: {
+					text: '@(showTitle ? chartTitle : "")'
+				},
+				tooltip: {
+					formatter: function() {
+						var tooltipsObj = this.point.tooltipValues;
+						return tooltipFormatter(tooltipsObj);
+					},
+					useHTML: true
+				},
+				colorAxis: {
+					minColor: '#FFFFFF',
+					maxColor: Highcharts.getOptions().colors[0],
+					labels: {
+						formatter: function() {
+							var xMillion = (+this.value) / 1000000;
+							if (xMillion >= 1) {
+								return Math.round(xMillion) + "m";
+							}
+							var xKilo = (+this.value) / 1000;
+							if (xKilo >= 1) {
+								return Math.round(xKilo) + "k";
+							}
+							return ((Math.round(this.value) == this.value) ? this.value : this.value.toFixed(2));
+						}
+					}
+				},
+				plotOptions: {
+					series: {
+						events: {
+							click: function(event) {
+								openSubReportFrame2(@subReportsCount,
+									event.point.ids,
+									'@reportInfo.structure.ConfigId',
+									window.top.reportInfo['@reportInfo.structure.ConfigId']["parentFilter"],
+									event.toElement,
+									event);
+							}
+						}
+					}
+				},
+				series: [
+					{
+						layoutAlgorithm: 'squarified',
+						data: window.top.reportsData['@idx'],
+						dataLabels: {
+							formatter: function() {
+								if (this.point.node.pointValues) {
+									var heightDependentSize = Math.round(this.point.node.pointValues.height * 0.5);
+									var pointName = this.point.name;
+									var constDesiredRatio = 1;
+									var maxCharsLength = this.point.node.pointValues.width / constDesiredRatio;
+
+									if (pointName.length > maxCharsLength) {
+										pointName = pointName.substr(0, (maxCharsLength - 2) || 1);
+									}
+									var heightFontSize = heightDependentSize;
+									var fontSize = heightFontSize > 14 ? heightFontSize : 14;
+
+									fontSize = (fontSize > 20 ? 20 : fontSize);
+
+									return "<div style='direction:ltr;'><span style='font-size:" +
+										+ fontSize +
+										"px;'>" +
+										pointName +
+										"</span></div>";
+								}
+								return "";
+							},
+							useHTML: true
+						}
+					}
+				]
+			});
+		});
+</script>

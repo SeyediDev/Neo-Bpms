@@ -1,0 +1,106 @@
+@using Neo.Bpms.Domain.Entities.Cmmn
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model ChartScriptModel
+
+@{
+    var idx = Model.Idx;
+    var reportInfo = Model.ReportInfo;
+    var chartTitle = Model.ChartTitle;
+    var showTitle = Model.ShouldShowTitle;
+    var hr = new HighchartRenderer(reportInfo);
+    var chartType = reportInfo.structure.ChartType.ToString().ToLower();
+    var hasSingleAggregation = reportInfo.AggregationColumns.Count() == 1;
+    var isMatrix = reportInfo.structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.InColumn) > 1 &&
+                   reportInfo.structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.GroupByItem) > 0;
+}
+
+<script type="text/javascript">
+	var rotateVal = -40;
+	var chartType = '@chartType';
+	if (chartType == 'bar') {
+		rotateVal = -1;
+	}
+	(function() {
+		var container_chartCorrectiveAction = new Highcharts.Chart({
+			credits: {
+				enabled: false
+			},
+			chart: {
+				renderTo: "container_@(idx)",
+				type: '@chartType',
+				marginBottom: 150
+			},
+			title: {
+				text: '@(showTitle ? chartTitle : "")'
+			},
+			xAxis: {
+				categories: @hr.GetCategories(),
+				labels: {
+					rotation: rotateVal,
+					align: '',
+					direction: 'rtl',
+					useHTML: true
+				}
+			},
+			legend: {
+				enabled: false
+			},
+			tooltip: {
+				formatter: function() {
+					var tooltipsObj = {};
+					var hasAgg = @(hasSingleAggregation ? "true" : "false");
+					var isMatrix = @(isMatrix ? "true" : "false");
+					if (isMatrix && hasAgg) {
+						var seriesElement = @(hr.GetSeries())[parseInt(this.point.colorIndex)];
+						var rowIdIndex = seriesElement.rowIdsIndex[parseInt(this.point.index)];
+						var tooltipsFormatter = "";
+						if (rowIdIndex >= 0) {
+							var idx = '@idx';
+							var tooltipsObjs = window.top.reportsData[idx][rowIdIndex]["tooltipValues"];
+							var tooltipsObjsLength = tooltipsObjs.length;
+							for (var itooltipsObj = 0; itooltipsObj < tooltipsObjsLength; itooltipsObj++) {
+								tooltipsFormatter += tooltipFormatter(tooltipsObjs[itooltipsObj]);
+							}
+						} else {
+							tooltipsFormatter +=
+								tooltipFormatterItem(seriesElement.fieldName, seriesElement.name) +
+								tooltipFormatterItem("", window.tetaI18n.t('No Record'));
+						}
+						return tooltipsFormatter;
+					} else {
+						tooltipsObj =
+							window.top.reportsData['@idx'][parseInt(this.point.index)]["tooltipValues"][
+								parseInt(
+									this.point.colorIndex)];
+					}
+					return tooltipFormatter(tooltipsObj);
+				},
+				useHTML: true
+			},
+			yAxis: {
+				@if (hr.YAxisIsTimespan)
+				{
+					<text>
+				labels: {
+					formatter: function() {
+						return window.TimeSpanManager.toDisplayText(this.value, { displayMilliseconds: false });
+					}
+				},
+					</text>
+				}
+				title: {
+					text: @hr.GetYAxisName()
+				}
+			},
+			colors: ['#6366f1', '#fe6a35', '#eeca34', '#06aed4', '#2b72fb' ,'#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+			series: @hr.GetSeries(),
+			plotOptions: {
+				column: {
+					colorByPoint: true
+				}
+			}
+		});
+	})();
+</script>

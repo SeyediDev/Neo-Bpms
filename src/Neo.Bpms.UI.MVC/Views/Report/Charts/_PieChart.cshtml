@@ -1,0 +1,69 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@model ChartScriptModel
+
+@{
+    var idx = Model.Idx;
+    var reportInfo = Model.ReportInfo;
+    var chartTitle = Model.ChartTitle;
+    var showTitle = Model.ShouldShowTitle;
+    var hr = new HighchartRenderer(reportInfo);
+}
+
+<script type="text/javascript">
+	$(document)
+		.ready(function() {
+			var colors = Highcharts.getOptions().colors,
+				categories = @hr.GetCategories(),
+				data = @hr.GetSeries(),
+				browserData = [],
+				i,
+				dataLen = data.length > 0 ? data[0].data.length : null;
+			var newColor = ['#6366f1', '#fe6a35', '#eeca34', '#06aed4', '#2b72fb','#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+			if (data.length > 0) {
+				for (i = 0; i < dataLen; i += 1) {
+					browserData.push({
+						name: categories[i],
+						y: data[0].data[i],
+						color: newColor[i]
+					});
+				}
+				var container_chartCorrectiveAction = new Highcharts.Chart({
+					credits: {
+						enabled: false
+					},
+					chart: {
+						renderTo: "container_@(idx)",
+						type: 'pie'
+					},
+					title: {
+						text: '@(showTitle ? chartTitle : "")'
+					},
+					ooltip: {
+						formatter: function() {
+							var tooltipsObj = window.top.reportsData['@idx'][parseInt(this.point.index)][
+								"tooltipValues"][0];
+							return tooltipFormatter(tooltipsObj);
+						},
+						useHTML: true
+					},
+					legend: {
+						enabled: false
+					},
+					series: [
+						{
+							name: data[0].name,
+							data: browserData,
+							useHTML: true,
+							dataLabels: {
+								formatter: function() {
+									return this.point.name;
+								}
+							}
+						}
+					]
+				});
+			}
+		});
+</script>
