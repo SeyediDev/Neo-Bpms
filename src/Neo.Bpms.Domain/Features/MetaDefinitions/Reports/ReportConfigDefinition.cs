@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using System;
+using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
@@ -19,7 +20,6 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         DefineGroupBy();
         DefineColumns();
         DefineOrderBy();
-        DefineSubReports();
         DefineFilter();
         return true;
     }
@@ -44,6 +44,11 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
 
     protected virtual void DefineSubReports()
     {
+    }
+    
+    public void SetSubReports()
+    {
+        DefineSubReports();
     }
 
     protected virtual void DefineFilter()
@@ -501,6 +506,33 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         return reportConfig != null && (subReportId == report.Id
             ? AddSubReportConfigFromThisReport(subConfigId, type)
             : AddSubReportConfigFromOtherReports(subConfigId, type, subReportId));
+    }
+
+    /// <summary>
+    /// Register a sub report config by referencing its definition type.
+    /// </summary>
+    /// <typeparam name="TReportConfig">The report config definition class that should be used as the sub report.</typeparam>
+    /// <param name="type">Sub report type (DrillDown / inline / ...).</param>
+    /// <param name="subReportId">
+    /// Optional report id. If not provided we consider the current report definition as the parent container.
+    /// </param>
+    protected bool AddSubReport<TReportConfig>(Report.SubReportType type = Report.SubReportType.DrillDown,
+        string subReportId = null)
+        where TReportConfig : ReportConfigDefinition
+    {
+        if (reportConfig == null || report == null)
+        {
+            throw new InvalidOperationException("Report configuration has not been defined yet.");
+        }
+
+        string targetReportId = subReportId ?? report.Id;
+        if (string.IsNullOrWhiteSpace(targetReportId))
+        {
+            throw new InvalidOperationException("Target report id cannot be resolved for sub report registration.");
+        }
+
+        string subConfigId = typeof(TReportConfig).Name;
+        return AddSubReportConfig(subConfigId, type, targetReportId);
     }
 
     private bool AddSubReportConfigFromOtherReports(string subConfigId, Report.SubReportType type, string subReportId)

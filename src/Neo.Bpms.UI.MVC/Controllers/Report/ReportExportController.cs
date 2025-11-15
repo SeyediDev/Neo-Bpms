@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.UI.MVC.Controllers;
+﻿using System.Threading.Tasks;
+
+namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class ReportController
 {
@@ -36,7 +38,7 @@ public partial class ReportController
         ReportToExcelGenerator reportViewGenerator = new(cancellationToken,
             takeConfigQuery.Structure, [.. takeConfigQuery.Structure.Columns], culture, calendar);
         MemoryStream stream =
-            (MemoryStream) FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
+            (MemoryStream) await FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
         return GetFileStreamResult(EntityId, ".xlsx", stream,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
@@ -59,7 +61,7 @@ public partial class ReportController
             FilterValues, user, culture, structure, reportDataRoutines);
         ReportToHtmlGenerator reportViewGenerator = new(cancellationToken,
             takeConfigQuery.Structure, [.. takeConfigQuery.Structure.Columns], culture, calendar);
-        object content = FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
+        object content = await FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
         return CreateTextFile(EntityId, ".html", content?.ToString());
     }
 
@@ -80,11 +82,11 @@ public partial class ReportController
             FilterValues, user, culture, structure, reportDataRoutines);
         ReportToCSVGenerator reportViewGenerator = new(cancellationToken,
             takeConfigQuery.Structure, [.. takeConfigQuery.Structure.Columns], culture, calendar);
-        object content = FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
+        object content = await FetchReportViewGeneratorContent(takeConfigQuery, reportViewGenerator, ExcelMaxRecordsCount);
         return CreateTextFile(EntityId, ".csv", content?.ToString());
     }
 
-    private static object FetchReportViewGeneratorContent(TakeConfigQuery takeConfigQuery,
+    private static async Task<object> FetchReportViewGeneratorContent(TakeConfigQuery takeConfigQuery,
         ReportViewGenerator reportViewGenerator, int recordsCount)
     {
         reportViewGenerator.Init();
@@ -92,7 +94,7 @@ public partial class ReportController
         ElasticObject totalRecord = takeConfigQuery.FetchTotalRecord();
         if (totalRecord != null)
             reportViewGenerator.GenerateTotalRow(totalRecord);
-        takeConfigQuery.TakeQueryPageByPage(recordsCount, reportViewGenerator.GenerateRows);
+        await takeConfigQuery.TakeQueryPageByPage(recordsCount, reportViewGenerator.GenerateRows);
         reportViewGenerator.GenerateFooter();
         object content = reportViewGenerator.Content;
         reportViewGenerator.Release();

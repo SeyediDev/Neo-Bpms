@@ -54,7 +54,7 @@ public class TakingScheduledReport(
         ElasticObject totalRecord = takeConfigQuery.FetchTotalRecord();
         if (totalRecord != null)
             reportAction.ReportView.GenerateTotalRow(totalRecord);
-        takeConfigQuery.TakeQueryPageByPage(recordsCount, reportAction.AddRows);
+        await takeConfigQuery.TakeQueryPageByPage(recordsCount, reportAction.AddRows);
         reportAction.ReportView.GenerateFooter();
         reportAction.ReportView.Release();
         (bool, LocalParameters) result = await reportAction.DoAction();

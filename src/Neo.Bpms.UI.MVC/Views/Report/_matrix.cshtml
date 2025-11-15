@@ -1,0 +1,460 @@
+@using System.Globalization
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix
+@using Neo.Bpms.UI.MVC.Controls
+@model ReportData
+
+@{
+    Layout = null;
+    var structure = Model?.Structure;
+    var calendar = ViewBag.calendar as string ?? ProjectDefinition.Project.DefaultCalendar;
+    var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
+    var rowDimensions = selectedColumns
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical &&
+                     sc.aggrType == eAggregationFunctions.InColumn)
+        .ToList();
+    var columnDimensions = selectedColumns
+        .Where(sc => sc.MatrixType != ConfiguredReport.ReportMatrixType.Vertical &&
+                     sc.aggrType == eAggregationFunctions.InColumn)
+        .ToList();
+    var valueColumns = selectedColumns
+        .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
+                     sc.aggrType != eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    Func<IEnumerable<ColumnFieldDefinition>, string, string> formatDimensions = (cols, fallback) =>
+    {
+        if (cols == null)
+        {
+            return fallback;
+        }
+
+        var aliases = cols
+            .Where(c => c != null)
+            .Select(c => string.IsNullOrWhiteSpace(c.Alias) ? c.ColumnName : c.Alias.Trim())
+            .Where(alias => !string.IsNullOrWhiteSpace(alias))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return aliases.Any() ? string.Join("، ", aliases) : fallback;
+    };
+
+    var rowLabel = formatDimensions(rowDimensions, "گروه‌بندی سطر");
+    var columnLabel = formatDimensions(columnDimensions, "گروه‌بندی ستون");
+    var metricLabel = formatDimensions(valueColumns, "شاخص‌های ماتریس");
+    var reportKey = structure?.ConfigId ?? structure?.Form_ReportId ?? Model?.Config?.ConfigId ?? Guid.NewGuid().ToString("N");
+    var recordCount = Model?.RecordCount ?? (Model?.Rows?.Count ?? 0);
+    var recordCountText = recordCount.ToString("N0", CultureInfo.InvariantCulture);
+    var hasMatrixDefinition = rowDimensions.Any() && columnDimensions.Any();
+
+    MatrixData matrixData = null;
+    if (hasMatrixDefinition && Model?.Rows?.Any() == true)
+    {
+        matrixData = new MatrixRoutines(Model).GetMatrixData();
+    }
+
+    var hasMatrixData = matrixData?.Horizontals?.Any(h => h?.Values?.Count > 0) == true ||
+                        matrixData?.Verticals?.Any(v => v?.Values?.Count > 0) == true;
+
+    var emptyMessage = !hasMatrixDefinition
+        ? "برای ساخت ماتریس باید حداقل یک بعد سطر و یک بعد ستون انتخاب شود."
+        : "داده‌ای برای نمایش یافت نشد. فیلترها یا بازه زمانی را بررسی کنید.";
+
+    var matrixInsight = $"تحلیل تقاطع «{rowLabel}» با «{columnLabel}» بر اساس «{metricLabel}».";
+    var isFromDashboard = ViewBag.bFromDashboard == true;
+
+    string pivotMaxHeight = Convert.ToString(ViewBag.widgetHeight);
+    if (string.IsNullOrWhiteSpace(pivotMaxHeight))
+    {
+        pivotMaxHeight = isFromDashboard ? "460px" : "640px";
+    }
+    else
+    {
+        pivotMaxHeight = pivotMaxHeight.Trim();
+        if (!pivotMaxHeight.EndsWith("px", StringComparison.OrdinalIgnoreCase) &&
+            !pivotMaxHeight.EndsWith("vh", StringComparison.OrdinalIgnoreCase) &&
+            !pivotMaxHeight.EndsWith("%", StringComparison.OrdinalIgnoreCase))
+        {
+            pivotMaxHeight += "px";
+        }
+    }
+}
+
+<section class="matrix-pivot-card" data-report-key="@reportKey">
+    <header class="matrix-pivot-card__header">
+        <div class="matrix-pivot-card__title-group">
+            <p class="matrix-pivot-card__eyebrow">Pivot Matrix</p>
+            <h3 class="matrix-pivot-card__title">
+                @(Model?.Config?.Name ?? "ماتریس گزارش")
+            </h3>
+            <p class="matrix-pivot-card__subtitle">
+                @matrixInsight
+            </p>
+        </div>
+
+        <div class="matrix-pivot-pill-group" aria-label="Pivot dimensions summary">
+            <div class="matrix-pivot-pill matrix-pivot-pill--row">
+                <span>سطر</span>
+                <strong>@rowLabel</strong>
+            </div>
+            <div class="matrix-pivot-pill matrix-pivot-pill--column">
+                <span>ستون</span>
+                <strong>@columnLabel</strong>
+            </div>
+            <div class="matrix-pivot-pill matrix-pivot-pill--value">
+                <span>مقدار</span>
+                <strong>@metricLabel</strong>
+            </div>
+        </div>
+    </header>
+
+    <div class="matrix-pivot-meta">
+        <div class="matrix-pivot-meta__item">
+            <span>تعداد رکورد</span>
+            <strong>@recordCountText</strong>
+        </div>
+        <div class="matrix-pivot-meta__item">
+            <span>ابعاد سطر × ستون</span>
+            <strong>@rowDimensions.Count × @columnDimensions.Count</strong>
+        </div>
+        <div class="matrix-pivot-meta__item">
+            <span>تعداد شاخص</span>
+            <strong>@valueColumns.Count</strong>
+        </div>
+    </div>
+
+    <div class="matrix-pivot-card__body">
+        @if (!hasMatrixDefinition || !hasMatrixData)
+        {
+            <div class="matrix-pivot-empty @(hasMatrixDefinition ? "" : "matrix-pivot-empty--warning")">
+                <strong>@(hasMatrixDefinition ? "داده‌ای برای نمایش نیست" : "پیکربندی ناقص")</strong>
+                <span>@emptyMessage</span>
+            </div>
+        }
+        else
+        {
+            <div class="matrix-pivot-scroll" style="--matrix-scroll-max:@pivotMaxHeight">
+                @MatrixReportRenderer.DrawMatrix(matrixData, reportKey, calendar)
+            </div>
+            <footer class="matrix-pivot-footnote">
+                <span>فرمت تاریخ بر اساس تقویم @calendar است.</span>
+                <span>برای تغییر ابعاد، از تنظیمات گزارش استفاده کنید.</span>
+            </footer>
+        }
+    </div>
+</section>
+
+@if (ViewBag.MatrixPivotStyles == null)
+{
+    ViewBag.MatrixPivotStyles = true;
+    <style>
+        .matrix-pivot-card {
+            direction: rtl;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.10), transparent 55%), #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 28px;
+            padding: clamp(20px, 3vw, 32px);
+            box-shadow: 0 30px 80px -50px rgba(15, 23, 42, 0.45);
+            margin-bottom: 32px;
+        }
+
+        .matrix-pivot-card__header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .matrix-pivot-card__eyebrow {
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            color: #2563eb;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .matrix-pivot-card__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: #0f172a;
+            margin: 0.3rem 0;
+            font-weight: 700;
+        }
+
+        .matrix-pivot-card__subtitle {
+            margin: 0;
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .matrix-pivot-pill-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            min-width: min(280px, 100%);
+        }
+
+        .matrix-pivot-pill {
+            border-radius: 18px;
+            padding: 0.55rem 0.95rem;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #1d4ed8;
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+            gap: 0.15rem;
+        }
+
+        .matrix-pivot-pill--row {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: rgba(99, 102, 241, 0.25);
+            color: #4c1d95;
+        }
+
+        .matrix-pivot-pill--column {
+            background: rgba(14, 165, 233, 0.10);
+            border-color: rgba(14, 165, 233, 0.25);
+            color: #0e7490;
+        }
+
+        .matrix-pivot-pill--value {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: #065f46;
+        }
+
+        .matrix-pivot-pill span {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .matrix-pivot-pill strong {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+        }
+
+        .matrix-pivot-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .matrix-pivot-meta__item {
+            flex: 1 1 160px;
+            padding: 0.9rem 1.1rem;
+            border-radius: 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .matrix-pivot-meta__item span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .matrix-pivot-meta__item strong {
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+
+        .matrix-pivot-card__body {
+            margin-top: 1rem;
+        }
+
+        .matrix-pivot-scroll {
+            overflow: auto;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.15);
+            max-height: var(--matrix-scroll-max, 640px);
+        }
+
+        .matrix-pivot-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            direction: rtl;
+            color: #0f172a;
+            font-size: 0.9rem;
+            min-width: 600px;
+        }
+
+        .matrix-pivot-table th,
+        .matrix-pivot-table td {
+            border-bottom: 1px solid #eef2ff;
+            border-left: 1px solid #f8fafc;
+            padding: 0.6rem 0.75rem;
+            text-align: center;
+            min-width: 120px;
+            background: #ffffff;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .matrix-pivot-table th:first-child,
+        .matrix-pivot-table td:first-child {
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .matrix-head--horizontal,
+        .matrix-head--vertical,
+        .matrix-head--vertical-value {
+            background: #f8fafc;
+            font-weight: 700;
+        }
+
+        .matrix-head--horizontal {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            box-shadow: inset 0 -1px 0 rgba(148, 163, 184, 0.25);
+        }
+
+        .matrix-head--row-value,
+        .matrix-head--row-title {
+            position: sticky;
+            right: 0;
+            text-align: right;
+            z-index: 4;
+            background: #f1f5f9;
+        }
+
+        .matrix-cell__value {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .matrix-highlight {
+            background: #eef2ff !important;
+            color: #312e81;
+        }
+
+        .matrix-row-hover td {
+            background: #fefce8;
+        }
+
+        .matrix-pivot-empty {
+            border-radius: 20px;
+            border: 1px dashed #e2e8f0;
+            padding: 1.5rem;
+            text-align: center;
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .matrix-pivot-empty--warning {
+            border-color: rgba(248, 113, 113, 0.45);
+            background: rgba(254, 226, 226, 0.4);
+            color: #b91c1c;
+        }
+
+        .matrix-pivot-empty strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .matrix-pivot-footnote {
+            margin-top: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        @@media (max-width: 768px) {
+            .matrix-pivot-pill {
+                flex: 1 1 calc(50% - 0.75rem);
+            }
+
+            .matrix-pivot-meta {
+                flex-direction: column;
+            }
+        }
+    </style>
+}
+
+@if (ViewBag.MatrixPivotScripts == null)
+{
+    ViewBag.MatrixPivotScripts = true;
+    <script>
+        (function () {
+            const cssEscape = window.CSS && window.CSS.escape
+                ? window.CSS.escape
+                : function (value) {
+                    if (value === undefined || value === null) {
+                        return '';
+                    }
+
+                    return value.toString().replace(/["\\]/g, '\\$&');
+                };
+
+            function highlightColumn(table, value) {
+                table.querySelectorAll('.matrix-highlight').forEach(el => el.classList.remove('matrix-highlight'));
+                if (!value) {
+                    return;
+                }
+
+                const selector = `[data-colname="${cssEscape(value)}"]`;
+                table.querySelectorAll(selector).forEach(el => el.classList.add('matrix-highlight'));
+            }
+
+            function highlightRow(row, table) {
+                const hostTable = table || (row ? row.closest('table') : null);
+                if (!hostTable) {
+                    return;
+                }
+
+                hostTable.querySelectorAll('.matrix-row-hover').forEach(r => r.classList.remove('matrix-row-hover'));
+                if (row && row.closest('tbody')) {
+                    row.classList.add('matrix-row-hover');
+                }
+            }
+
+            function attachMatrixPivotBehaviors(table) {
+                if (table.dataset.matrixPivotEnhanced === 'true') {
+                    return;
+                }
+
+                table.dataset.matrixPivotEnhanced = 'true';
+
+                table.addEventListener('pointerover', function (event) {
+                    const target = event.target.closest('[data-colname]');
+                    const colName = target ? target.getAttribute('data-colname') : null;
+                    highlightColumn(table, colName);
+
+                    const row = event.target.closest('tr');
+                    highlightRow(row, table);
+                });
+
+                table.addEventListener('pointerleave', function () {
+                    table.querySelectorAll('.matrix-highlight').forEach(el => el.classList.remove('matrix-highlight'));
+                    highlightRow(null, table);
+                });
+            }
+
+            window.MatrixPivotEnhancer = {
+                init(scope) {
+                    (scope || document).querySelectorAll('.matrix-pivot-table')
+                        .forEach(attachMatrixPivotBehaviors);
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', function () {
+                window.MatrixPivotEnhancer.init();
+            });
+        })();
+    </script>
+}
+

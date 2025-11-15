@@ -76,18 +76,16 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
                 ids, config, parentReportConfig, subReport, lp);
         }
 
-        _ = await RunQueryPage(cancellationToken,
-            reportData, config, parentReportConfig, subReport, ids, 
-            recordsPerPage, pageNumber, culture, forPrint, lp, user, entity);
+        await RunQueryPage(reportData, config, parentReportConfig, subReport, ids, 
+            recordsPerPage, pageNumber, culture, forPrint, lp, user, entity, cancellationToken);
     }
 
-    public async Task<(int recordsPerPage, int pageNumber)>
-        RunQueryPage(CancellationToken cancellationToken,
+    public async Task RunQueryPage(
         ReportData result, ConfiguredReport config,
         ConfiguredReport parentReportConfig, 
         ConfiguredReport.ConfiguredSubReport subReport, IList<object> ids,
         int recordsPerPage, int pageNumber,
-        string culture, bool forPrint, LocalParameters lp, IdentityUser user, UiEntity entity)
+        string culture, bool forPrint, LocalParameters lp, IdentityUser user, UiEntity entity, CancellationToken cancellationToken)
     {
         JoinQueriesData joinQueries = new(config.UniqueId);
         QueryUtility qd = EstablishReportQuery.GetQuery(cancellationToken,
@@ -99,10 +97,9 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         }
         catch (Exception e)
         {
-            result.Errors.AddError(e.Message, "Query", "13.2.0", e.ToString());
+            result.Errors.AddError(e.Message, config.ConfigId, "13.2.0", e.ToString());
         }
         qd.ReleaseQuery();
-        return (recordsPerPage, pageNumber);
     }
 
     private static void NormalizeFormValues(ElasticObject filterValues, UiEntity entity)
@@ -142,9 +139,11 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
 
         ConcurrentDictionary<string, BitmaskData> bitmaskData = new();
         var rows = GetRecords(q, result).ToList();
-        await Task.WhenAll(rows.Select(
-            async row => await RunQueryRecord(q, result, config, referFields, culture,
-                forPrint, lp, user, joinQueries, row, bitmaskData, cancellationToken)));
+        foreach (var row in rows)
+        {
+            await RunQueryRecord(q, result, config, referFields, culture,
+                forPrint, lp, user, joinQueries, row, bitmaskData, cancellationToken);
+        }
         result.QueryInfo.AddByQueryUtility(q);
         q.ReleaseQuery();
         if (result.Rows.Count <= 0)
@@ -164,7 +163,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         }
     }
 
-    private Task RunQueryRecord(QueryUtility q, ReportData result, ConfiguredReport config,
+    private async Task RunQueryRecord(QueryUtility q, ReportData result, ConfiguredReport config,
         ReferFields referFields, string culture, bool forPrint, LocalParameters lp, IdentityUser user,
         JoinQueriesData joinQueries, ReportRowInfo row, 
         ConcurrentDictionary<string, BitmaskData> bitmaskData, CancellationToken cancellationToken)
@@ -172,7 +171,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         SetReferFieldsPerRecord(q, referFields, joinQueries, row.Data, culture);
         SetRecordIds(q, result, config, culture, row.Data, bitmaskData);
         FormDataRoutines.SetEnumValues(culture, row.Data, q.Entity);
-        return subReportData.RunSubQueries(this, culture, result, config, row, forPrint, lp, user, cancellationToken);
+        await subReportData.RunSubQueries(this, culture, result, config, row, forPrint, lp, user, cancellationToken);
     }
 
     private static void SetReferFieldsPerRecord(QueryUtility q, ReferFields referFields,

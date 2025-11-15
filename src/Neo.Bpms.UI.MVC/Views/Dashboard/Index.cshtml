@@ -1,0 +1,176 @@
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.UI.MVC.Controllers
+@using Neo.Bpms.UI.MVC.Controls
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.Models.Dashboard
+@using Neo.Bpms.UI.MVC.PartialModels
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+
+@inject ControllerMethods controllerMethods;
+@inject DashboardStructRoutines dashboardStructRoutines;
+@inject DashboardDataRoutines dashboardDataRoutines;
+@inject IFormLogicHelper formLogicHelper;
+@inject IControlsRenderer controlsRenderer;
+
+@model DashboardData
+
+@{
+    // ===== DASHBOARD CONFIGURATION =====
+    var structure = Model?.Structure;
+    var canDesign = ViewBag.CanDesign ?? false;
+    canDesign = true; // Enable design mode for development
+    var calendar = ProjectDefinition.Project.DefaultCalendar;
+    
+    // ===== RENDERER CONFIGURATION =====
+    var options = new RendererOptions { IsFilter = true };
+    var controlsRendererData = structure != null 
+        ? new ControlsRendererData(structure, structure.FilterValues, options, ViewBag.user, Url)
+        : null;
+    
+    // ===== DASHBOARD STATE =====
+    var currentConfig = structure?.ActiveConfig;
+    var availableConfigs = structure?.Configs ?? new List<ConfiguredDashboard>();
+    var reports = structure?.Reports ?? new List<DashboardConfigViewModel.ReportViewModel>();
+    
+    // ===== UI STATE =====
+    var hasFilters = structure?.Fields?.Count > 0;
+    
+    // ===== DASHBOARD GENERATOR STATE =====
+    var activeTab = ViewBag.ActiveTab ?? (canDesign ? "display" : "display"); // Always display tab if no design access
+    var selectedConfigId = ViewBag.SelectedConfigId ?? currentConfig?.ConfigId;
+    
+    // Ensure users without design access can't access settings tab
+    if (!canDesign && activeTab == "settings") {
+        activeTab = "display";
+    }
+    
+    // ===== DASHBOARD TABS DATA =====
+    var clientOnlyTabs = new List<string>();
+    var dashboardTabs = availableConfigs.Select((config, index) => new {
+        ConfigId = config.ConfigId,
+        Name = string.IsNullOrEmpty(config.Name) ? config.ConfigId : config.Name,
+        IsActive = config.ConfigId == selectedConfigId,
+        IsDefault = config.IsDefault,
+        IsMeta = config.IsMeta,
+        Icon = DashboardRenderHelpers.ResolveDashboardIcon(config),
+        Order = index,
+        IsClientOnly = false
+    }).ToList();
+
+    dashboardTabs = dashboardTabs
+        .OrderByDescending(t => t.IsDefault)
+        .ThenBy(t => t.Order)
+        .ToList();
+
+    var persistentIsNull = ViewBag.PersistentIsNull == null || ViewBag.PersistentIsNull == true;
+
+    var scriptModel = new DashboardPageScriptModel
+    {
+        CanDesign = canDesign,
+        ActiveTab = activeTab,
+        SelectedConfigId = selectedConfigId,
+        PersistentIsNull = persistentIsNull,
+        ClientOnlyConfigIds = clientOnlyTabs
+    };
+}
+
+@* ===== TOOLBAR ===== *@
+<div class="neo-dashboard-header-toolbar">
+    @* ===== FILTER TOGGLE ===== *@
+    @if (hasFilters)
+    {
+        <button class="neo-dashboard-btn neo-dashboard-btn-secondary" 
+                id="showFilter"
+                title="@ViewTexts.Filter">
+            <svg class="neo-dashboard-btn-icon" viewBox="0 0 16 16">
+            <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
+        </svg>
+            <span>@ViewTexts.Filter</span>
+        </button>
+    }
+</div>
+
+<script>
+    @await Html.PartialAsync("Common/SetPageAddress", structure);
+</script>
+@using (Html.BeginForm("Index", "Dashboard",
+new
+{
+    structure.NamespaceId,
+    structure.EntityId,
+    DashboardId = structure.Form_ReportId
+}, FormMethod.Post, true, new { enctype = "multipart/form-data", id = "filter-form" }))
+{
+    @Html.Hidden("ConfigId", structure.ConfigId)
+    @Html.Hidden("ParentReportId", ViewBag.ParentReportId as string)
+    @Html.Hidden("ParentReportConfigId", ViewBag.ParentReportConfigId as string)
+    @Html.Hidden("ParentReportIds", ViewBag.ParentReportIds as string)
+    @Html.Hidden("ParentFilterValues", ViewBag.ParentFilterValues as string)
+
+    @Html.Hidden("calendar", calendar)
+
+    <script src="@CommonBundles.FlagsJsBundle" asp-append-version="true"></script>
+
+    if (canDesign)
+    {
+        <script src="@CommonBundles.JqueryUiJsBundle" asp-append-version="true"></script>
+
+        <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/animate/animate.css" />
+    }
+
+    @* Tabs Navigation *@
+    @if (structure != null)
+    {
+        <div class="dashboard-tabs-container" @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+            @{
+                ViewBag.DashboardTabs = dashboardTabs;
+                ViewBag.Reports = reports;
+                ViewBag.CanDesign = canDesign;
+            }
+            <partial name="~/Views/Dashboard/_DashboardTabs.cshtml" />
+        </div>
+
+        string fStr = await dashboardStructRoutines.GetFilterNames(
+            Model.Structure,
+            ViewBag.ParentReportId, ViewBag.ParentReportConfigId,
+            ViewBag.ParentReportIds, controllerMethods.DecodeFilterValues(ViewBag.ParentFilterValues),
+            ViewBag.user, CultureHelper.GetCurrentNeutralCulture());
+            ViewBag.Structure = structure;
+                ViewBag.ControlsRendererData = controlsRendererData;
+        <partial name="~/Views/Dashboard/_DashboardFilter.cshtml" />
+    }
+    else
+    {
+        <div class="neo-dashboard-error">
+            <p>خطا: ساختار داشبورد موجود نیست.</p>
+        </div>
+    }
+
+    @* ===== MODERN DASHBOARD MAIN CONTENT ===== *@
+    <div id="dashboard-main-content">
+        <partial name="~/Views/Dashboard/_DashboardContent.cshtml" model="Model" />
+    </div>
+
+    @if (structure != null)
+    {
+        <partial name="Logic/_Logic" model="structure" />
+        @if (controlsRendererData?.IncludeNeedingControls != null)
+        {
+            <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+        }
+    }
+
+        @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardScripts.cshtml", scriptModel)
+        <script src="~/Scripts/common-assets-includes/features/dashboard/Dashboard.js">
+        </script>
+        <script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+        <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+        <script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
+}
+

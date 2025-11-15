@@ -375,9 +375,15 @@ public abstract class ReportDefinition : FormDefinition
     /// <returns></returns>
     private void DefineConfigs()
     {
+        List<ReportConfigDefinition> configDefinitions = [];
         foreach (var configDefinition in ExtractSubsInstances<ReportConfigDefinition>())
         {
             configDefinition?.DefineAll(report);
+            configDefinitions.Add(configDefinition);
+        }
+        foreach (var configDefinition in configDefinitions)
+        {
+            configDefinition?.SetSubReports();
         }
     }
 }

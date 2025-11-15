@@ -1,0 +1,127 @@
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@model ReportData
+
+@{
+    ViewBag.bFromDashboard = true;
+    ViewBag.CanDesign = false;
+    var structure = Model.Structure;
+    var rowDimensions = structure.SelectedColumns
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical && sc.aggrType == eAggregationFunctions.InColumn)
+        .ToList();
+    var columnDimensions = structure.SelectedColumns
+        .Where(sc => sc.MatrixType != ConfiguredReport.ReportMatrixType.Vertical && sc.aggrType == eAggregationFunctions.InColumn)
+        .ToList();
+    var valueColumns = structure.SelectedColumns
+        .Where(sc => sc.aggrType != eAggregationFunctions.GroupByItem)
+        .ToList();
+    var rewardPlanCaption = rowDimensions.Any()
+        ? string.Join("، ", rowDimensions.Select(d => d.Alias))
+        : "پلن‌های وفاداری";
+    var rewardChannelCaption = columnDimensions.Any()
+        ? string.Join("، ", columnDimensions.Select(d => d.Alias))
+        : "کانال‌های فروش و ردم ریوارد";
+    var metricCaption = valueColumns.Any()
+        ? string.Join("، ", valueColumns.Select(d => d.Alias))
+        : "ارزش/تعداد تراکنش";
+}
+
+@if (ViewBag.ClubMatrixSampleStyles == null)
+{
+    ViewBag.ClubMatrixSampleStyles = true;
+    <style>
+        .club-matrix-sample-card {
+            direction: rtl;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 55%),
+                #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: 0 25px 65px -45px rgba(15, 23, 42, 0.7);
+            margin-bottom: 32px;
+        }
+
+        .club-matrix-sample-card__eyebrow {
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            color: #1d4ed8;
+            margin: 0 0 0.4rem;
+            font-weight: 600;
+        }
+
+        .club-matrix-sample-card__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin: 0 0 0.85rem;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .club-matrix-sample-card__description {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #475569;
+        }
+
+        .club-matrix-chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.75rem 0;
+        }
+
+        .club-matrix-chip {
+            border-radius: 18px;
+            padding: 0.55rem 0.95rem;
+            background: rgba(79, 70, 229, 0.08);
+            border: 1px solid rgba(79, 70, 229, 0.16);
+            color: #3730a3;
+            font-size: 0.9rem;
+            display: inline-flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .club-matrix-chip strong {
+            font-weight: 700;
+            color: #312e81;
+        }
+
+        .club-matrix-sample-card__matrix {
+            margin-top: 1.5rem;
+        }
+    </style>
+}
+
+<div class="club-matrix-sample-card">
+    <p class="club-matrix-sample-card__eyebrow">Club Insight</p>
+    <h3 class="club-matrix-sample-card__title">ماتریس «ریوارد × پلن × کانال»</h3>
+    <p class="club-matrix-sample-card__description">
+        این ماتریس برای تیم کلاب نشان می‌دهد هر پلن وفاداری چگونه در کانال‌های فروش مختلف
+        عملکرد دارد و چه الگوی قیمتی/تخفیفی روی ریواردها پیاده شده است.
+        با اضافه شدن فیلد طرح در جدول قیمت ریوارد (RewardPrice)، حالا می‌توان ترکیب «@rewardPlanCaption» و «@rewardChannelCaption»
+        را کنار شاخص «@metricCaption» به‌صورت دیداری رصد کرد و تشخیص داد کدام پلن، چه نوع ریواردی را
+        به شکل موثرتری می‌فروشد یا ردم می‌کند.
+    </p>
+
+    <div class="club-matrix-chip-group">
+        <span class="club-matrix-chip">
+            <strong>سطر</strong>
+            <span>@rewardPlanCaption</span>
+        </span>
+        <span class="club-matrix-chip">
+            <strong>ستون</strong>
+            <span>@rewardChannelCaption</span>
+        </span>
+        <span class="club-matrix-chip">
+            <strong>مقدار</strong>
+            <span>@metricCaption</span>
+        </span>
+    </div>
+
+    <div class="club-matrix-sample-card__matrix">
+        <partial name="~/Views/Report/_matrix.cshtml" model="Model" />
+    </div>
+</div>
+
