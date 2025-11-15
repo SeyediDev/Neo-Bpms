@@ -1,8 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;

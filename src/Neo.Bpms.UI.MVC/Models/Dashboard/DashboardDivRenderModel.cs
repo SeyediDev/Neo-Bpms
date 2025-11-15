@@ -1,7 +1,3 @@
-using System;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
-
 namespace Neo.Bpms.UI.MVC.Models.Dashboard
 {
     public class DashboardDivRenderModel
