@@ -8,7 +8,7 @@
     var reportData = Model.ReportData;
     var widgetHeight = Model.WidgetHeight;
     var width = DashboardRenderHelpers.ResolveWidth(divConfig);
-    var isMetricWidget = reportData?.structure?.ChartType == Report.ChartType.MetricBox;
+    var isMetricWidget = reportData?.Structure?.ChartType == Report.ChartType.MetricBox;
     var contentClasses = "neo-dashboard-widget-content" + (isMetricWidget ? " neo-dashboard-widget-content--metric" : string.Empty);
 }
 
@@ -19,7 +19,7 @@
     @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidgetTitle.cshtml", Model)
 
     <div class="@contentClasses" style="--neo-dashboard-widget-min-height: @(widgetHeight)px; min-height: @(widgetHeight)px; height: @(widgetHeight)px;">
-        @if (reportData != null && reportData.structure != null)
+        @if (reportData != null && reportData.Structure != null)
         {
             @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidgetContent.cshtml", Model)
         }

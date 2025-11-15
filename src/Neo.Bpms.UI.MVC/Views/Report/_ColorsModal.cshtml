@@ -3,9 +3,9 @@
 @using Neo.Bpms.UI.Resources.Resources
 @model             ReportData
 @{
-    var structure = Model.structure;
+    var structure = Model.Structure;
     var modalKey = structure.ConfigId;
-    var config = Model.structure.Configs.FirstOrDefault(cfg => cfg.ConfigId == Model.structure.ConfigId);
+    var config = Model.Structure.Configs.FirstOrDefault(cfg => cfg.ConfigId == Model.Structure.ConfigId);
     var format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-success") : null;
     var successFilter = format != null ? format.Filter : "";
     format = config != null && config.Formats != null ? config.Formats.FirstOrDefault(f => f.ClassName == "table-danger") : null;

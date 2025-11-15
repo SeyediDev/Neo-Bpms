@@ -10,7 +10,7 @@ public static class ReportTotalRecord
         ConfiguredReport parentReportConfig, ConfiguredReport.ConfiguredSubReport subReport,
         LocalParameters lp)
     {
-        if (config.ViewType == ReportViewType.List || !result.structure.SelectedColumns.Any(col =>
+        if (config.ViewType == ReportViewType.List || !result.Structure.SelectedColumns.Any(col =>
                 col.aggrType != eAggregationFunctions.InColumn &&
                 col.aggrType != eAggregationFunctions.GroupByItem))
             return;
@@ -18,7 +18,7 @@ public static class ReportTotalRecord
         q.CancellationToken = cancellationToken;
         try
         {
-            if (q.GetDocuments(result.structure.FilterValues, lp))
+            if (q.GetDocuments(result.Structure.FilterValues, lp))
             {
                 ElasticObject r = q.GetRecord();
                 if (r != null)
@@ -45,7 +45,7 @@ public static class ReportTotalRecord
         {
             QueryUtility qCount = EstablishReportQuery.GetRecordCountQuery(result, entity, ids, config, lp);
             qCount.CancellationToken = cancellationToken;
-            result.RecordCount = (int)qCount.GetRecordCount(result.structure.FilterValues, lp);
+            result.RecordCount = (int)qCount.GetRecordCount(result.Structure.FilterValues, lp);
             if (result.RecordCount == 0 && !string.IsNullOrEmpty(qCount.ErrorText))
                 result.Errors.AddError(qCount.ErrorText, "Query", "13.0.2", qCount.ErrorText);
         }

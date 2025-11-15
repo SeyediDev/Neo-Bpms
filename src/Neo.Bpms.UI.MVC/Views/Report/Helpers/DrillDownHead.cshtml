@@ -8,11 +8,11 @@
     <div class="row">
         <div class="col-sm-2 col-lg-1 float-end reportSettingBtn">
             <a class="top-bar-anchor-icon" target="_blank"
-               href="@(Url.Action("PrintPreview", new {Model.reportInfo.structure.NamespaceId, Model.reportInfo.structure.EntityId, ReportId = Model.reportInfo.structure.Form_ReportId, Model.reportInfo.structure.ConfigId, Model.reportInfo.structure.ParentReportIds}))">
+               href="@(Url.Action("PrintPreview", new {Model.reportInfo.Structure.NamespaceId, Model.reportInfo.Structure.EntityId, ReportId = Model.reportInfo.Structure.Form_ReportId, Model.reportInfo.Structure.ConfigId, Model.reportInfo.Structure.ParentReportIds}))">
                 <i title="@ViewTexts.Print" class="fa fa-print"></i>
             </a>
 
-            <partial name="~/Views/Report/Helpers/ExportExcelIcon.cshtml" model="Model.reportInfo.structure"/>
+            <partial name="~/Views/Report/Helpers/ExportExcelIcon.cshtml" model="Model.reportInfo.Structure"/>
 
             @if (Model.canDesign)
             {
@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-sm-10 col-lg-11 float-start">
-            <partial name="~/Views/Report/Helpers/DrillDownFilteredBy.cshtml" model="new DrillDownFilteredByModel {structure = Model.reportInfo.structure, user = ViewBag.User, parentFilterValues = ViewBag.ParentFilterValues}"/>
+            <partial name="~/Views/Report/Helpers/DrillDownFilteredBy.cshtml" model="new DrillDownFilteredByModel {structure = Model.reportInfo.Structure, user = ViewBag.User, parentFilterValues = ViewBag.ParentFilterValues}"/>
         </div>
     </div></div>
 
@@ -29,10 +29,10 @@
     using (Html.BeginForm("Index", "Report", FormMethod.Post,
         new {enctype = "multipart/form-data", id = "filter-form"}))
     {
-        @Html.Hidden("NamespaceId", Model.reportInfo.structure.NamespaceId)
-        @Html.Hidden("EntityId", Model.reportInfo.structure.EntityId)
-        @Html.Hidden("ReportId", Model.reportInfo.structure.Form_ReportId)
-        @Html.Hidden("ConfigId", Model.reportInfo.structure.ConfigId)
+        @Html.Hidden("NamespaceId", Model.reportInfo.Structure.NamespaceId)
+        @Html.Hidden("EntityId", Model.reportInfo.Structure.EntityId)
+        @Html.Hidden("ReportId", Model.reportInfo.Structure.Form_ReportId)
+        @Html.Hidden("ConfigId", Model.reportInfo.Structure.ConfigId)
 
         <input type="hidden" name="ParentReportIds" value="@ViewBag.ParentReportIds"/>
         <input type="hidden" name="DrillDown" value="1"/>

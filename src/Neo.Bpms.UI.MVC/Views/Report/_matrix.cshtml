@@ -13,10 +13,10 @@
     var reportInfo = Model;
     var matrixRoutines = new Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix.MatrixRoutines(reportInfo);
     var matrixData = matrixRoutines.GetMatrixData();
-    var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+    var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
     var isDrillDown = ViewBag.DrillDown ?? false;
     var canDesign = ViewBag.CanDesign ?? false;
-    var reportKey = reportInfo.structure.ConfigId;
+    var reportKey = reportInfo.Structure.ConfigId;
     var bFromDashboard = ViewBag.bFromDashboard ?? false;
 }
 

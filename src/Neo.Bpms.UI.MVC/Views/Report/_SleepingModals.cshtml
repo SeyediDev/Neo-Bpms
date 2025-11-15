@@ -68,7 +68,7 @@
 							</label>
 							<select class="form-control" id="config-config-userGroup" name="userGroup">
 								<option value="0"></option>
-								@foreach (var userGroup in Model.structure.UserGroups)
+								@foreach (var userGroup in Model.Structure.UserGroups)
 								{
 									<option value="@userGroup.Id">
 										@userGroup.Name
@@ -95,7 +95,7 @@
 	<div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
 	<div class="modal-header">
-		<h4 class="modal-title">@ViewTexts.ScheduleSettings @Model.structure.Name</h4>
+		<h4 class="modal-title">@ViewTexts.ScheduleSettings @Model.Structure.Name</h4>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</button>

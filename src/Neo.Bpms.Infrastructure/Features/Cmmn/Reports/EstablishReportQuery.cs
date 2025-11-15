@@ -18,7 +18,7 @@ public static class EstablishReportQuery
             if (config.Parent?.ParentConfiguredReport != null && ids != null)
                 AddParentReportJoinsAndFilters(qCount, config, ids, config.Parent.ParentConfiguredReport, config.Parent);
             AddReportFiltersAndHavings(result, config, qCount, lp);
-            SelectReportFields(qCount, result.structure.SelectedColumns,
+            SelectReportFields(qCount, result.Structure.SelectedColumns,
                 entity, config.ViewType, joinQueries);
         }
         catch (Exception e)
@@ -41,7 +41,7 @@ public static class EstablishReportQuery
             else if (config.Parent?.ParentConfiguredReport != null && ids != null)
                 AddParentReportJoinsAndFilters(q, config, ids, config.Parent.ParentConfiguredReport, config.Parent);
             AddReportFiltersAndHavings(result, config, q, lp);
-            SelectReportFields(q, result.structure.SelectedColumns, entity, config.ViewType, joinQueries, true);
+            SelectReportFields(q, result.Structure.SelectedColumns, entity, config.ViewType, joinQueries, true);
         }
         catch (Exception e)
         {
@@ -65,7 +65,7 @@ public static class EstablishReportQuery
         };
         try
         {
-            referFields = SelectReportFields(qd, result.structure.SelectedColumns,
+            referFields = SelectReportFields(qd, result.Structure.SelectedColumns,
                 entity, config.ViewType, joinQueries);
             AddReportFormats(qd, config);
             if (parentReportConfig != null && ids != null)
@@ -105,11 +105,11 @@ public static class EstablishReportQuery
     {
         Report report = config.Report;
         LocalParameters el = FormDataRoutines.GetLocalParamValues(lp["user"], qd.Entity.model.Id, qd.Entity.Id, report.Id,
-            result.structure.FilterValues);
-        if (result.structure.FilterValues != null)
-            lp.AddOrUpdate("q", result.structure.FilterValues);
-        result.structure.FilterValues?.AddIfNot("user", lp["user"]);
-        FormDataFilter.AddFilters(qd, report, result.structure.FilterValues, out _);
+            result.Structure.FilterValues);
+        if (result.Structure.FilterValues != null)
+            lp.AddOrUpdate("q", result.Structure.FilterValues);
+        result.Structure.FilterValues?.AddIfNot("user", lp["user"]);
+        FormDataFilter.AddFilters(qd, report, result.Structure.FilterValues, out _);
 
         if (!string.IsNullOrEmpty(config.WhereCondition))
             qd.Where(config.WhereCondition);
@@ -432,9 +432,9 @@ public static class EstablishReportQuery
 
     private static void AddOrderBys(ReportData result, QueryUtility qd)
     {
-        foreach (ReportOrderInfo item in result.structure.OrderInfos)
+        foreach (ReportOrderInfo item in result.Structure.OrderInfos)
         {
-            if (item.EntityId == result.structure.EntityId)
+            if (item.EntityId == result.Structure.EntityId)
             {
                 //					if(/*item.Alias!=null && */
                 //						(result.structure.ReportViewType == eReportViewType.Chart ||
@@ -445,7 +445,7 @@ public static class EstablishReportQuery
                 //					}
                 qd.OrderBy(item.ColumnName,
                     item.Descending ? SortType.Descending : SortType.Ascending,
-                    item.orderById);
+                    item.OrderById);
             }
             else
             {
@@ -454,14 +454,14 @@ public static class EstablishReportQuery
                     continue;
                 colQuery.OrderBy(item.ColumnName,
                     item.Descending ? SortType.Descending : SortType.Ascending,
-                    item.orderById);
-                if (result.structure.ReportViewType == ReportViewType.Chart ||
-                    result.structure.ReportViewType == ReportViewType.GroupByList)
+                    item.OrderById);
+                if (result.Structure.ReportViewType == ReportViewType.Chart ||
+                    result.Structure.ReportViewType == ReportViewType.GroupByList)
                     colQuery.GroupBy(item.ColumnName, eAggregationFunctions.GroupByItem);
             }
         }
 
-        if (result.structure.OrderInfos.Count == 0 && qd.topRows > 0 && result.structure.ReportViewType == ReportViewType.List)
+        if (result.Structure.OrderInfos.Count == 0 && qd.topRows > 0 && result.Structure.ReportViewType == ReportViewType.List)
         {
             EntityField key = qd.Entity.KeyFields?.FirstOrDefault();
             if (key != null)

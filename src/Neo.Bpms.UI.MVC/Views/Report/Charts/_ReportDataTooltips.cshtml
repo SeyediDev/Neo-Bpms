@@ -23,12 +23,12 @@
 		rowData['tooltipValues'] = [];</text>
 
 
-		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
 			s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn
 			).ToList();
-		var tooltips = reportInfo.structure.SelectedColumns.Where(s =>
+		var tooltips = reportInfo.Structure.SelectedColumns.Where(s =>
 			s.aggrType != eAggregationFunctions.GroupByItem && s.IsTooltip).ToList();
-		var columnTitles = reportInfo.structure.SelectedColumns
+		var columnTitles = reportInfo.Structure.SelectedColumns
 			.Where(s => s.aggrType == eAggregationFunctions.InColumn).ToList();
 
 		var columnIndex = -1;

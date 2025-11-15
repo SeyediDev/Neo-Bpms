@@ -21,6 +21,6 @@ namespace Neo.Bpms.UI.MVC.PartialModels.Report
 
         public bool ShouldShowTitle { get; }
 
-        public ReportStructure Structure => ReportInfo?.structure;
+        public ReportStructure Structure => ReportInfo?.Structure;
     }
 }

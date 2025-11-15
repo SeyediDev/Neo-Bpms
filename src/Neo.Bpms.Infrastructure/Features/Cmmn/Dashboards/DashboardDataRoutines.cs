@@ -29,13 +29,13 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines)
             ConfiguredReport reportConfig = await reportConfigBackupRestore.GetConfig(report, widget.ReportConfigId);
             if (reportConfig == null) continue;
             int maxRecord = GetWidgetMaxRecord(widget, reportConfig.ViewType);
-            ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => rd.structure.ConfigId == reportConfig.ConfigId);
+            ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => rd.Structure.ConfigId == reportConfig.ConfigId);
             if (reportData != null)
                 continue;
             reportData = await reportDataRoutines.GetReportData(
                 reportConfig, true, dashboardData.Structure.FilterValues, 1, null,
                 parentReportConfig, subReport, parentReportIdList, culture, forPrint, user, maxRecord);
-            reportData.structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+            reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
             dashboardData.ReportsData.Add(reportData);
         }
 

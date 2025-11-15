@@ -449,12 +449,12 @@
 
                                             @if (hasDetailsForm)
                                             {
-                                                RenderDetailsLink(rowIds, subjectInfo.Name, subjectInfo.DetailFormId);
+                                                RenderDetailsLink(rowIds, subjectInfo.Name, subjectInfo.DetailFormId, subjectInfo.DetailAction);
                                             }
 
                                             @if (hasEditForm)
                                             {
-                                                RenderEditLink(rowIds, subjectInfo.Name, subjectInfo.EditFormId);
+                                                RenderEditLink(rowIds, subjectInfo.Name, subjectInfo.EditFormId, subjectInfo.EditAction);
                                             }
                                         </td>
                                     }
@@ -502,12 +502,12 @@
 
                                     @if (structure.HasDetails)
                                     {
-                                        RenderDetailsLink(rowIds, structure.FormSubjectId, structure.DetailFormId);
+                                        RenderDetailsLink(rowIds, structure.FormSubjectId, structure.DetailFormId, structure.DetailAction);
                                     }
 
                                     @if (structure.HasEdit)
                                     {
-                                        RenderEditLink(rowIds, structure.FormSubjectId, structure.EditFormId);
+                                        RenderEditLink(rowIds, structure.FormSubjectId, structure.EditFormId, structure.EditAction);
                                     }
 
                                     @if (structure.HasDelete)
@@ -612,24 +612,24 @@
         }
     }
 
-    void RenderDetailsLink(string rowIds, string formSubjectId, string formId, string target = "_self")
+    void RenderDetailsLink(string rowIds, string formSubjectId, string formId, string action = "Details", string target = "_self")
     {
         RenderActionLink(rowIds, formSubjectId, formId,
-            "IframeForm", ViewTexts.Details,
+            ResolveIframeAction(action), ViewTexts.Details,
             "fa-info", "text-info", target);
     }
 
-    void RenderEditLink(string rowIds, string formSubjectId, string formId, string target = "_self")
+    void RenderEditLink(string rowIds, string formSubjectId, string formId, string action = "Edit", string target = "_self")
     {
         RenderActionLink(rowIds, formSubjectId, formId,
-            "IframeForm", ViewTexts.Edit,
+            ResolveIframeAction(action), ViewTexts.Edit,
             "fa-pencil", "text-success", target);
     }
 
     void RenderDeleteLink(string rowIds, string formSubjectId, string formId, string target = "_self")
     {
         RenderActionLink(rowIds, formSubjectId, formId,
-            "IframeForm", ViewTexts.Delete,
+            ResolveIframeAction("Delete"), ViewTexts.Delete,
             "fa-times", "text-danger", target);
     }
 
@@ -644,6 +644,18 @@
                 <i class="fa @icon"></i>
             </span>
         </a>
+    }
+
+    string ResolveIframeAction(string action)
+    {
+        if (string.IsNullOrWhiteSpace(action))
+        {
+            return "IframeForm";
+        }
+
+        return action is "Edit" or "Details" or "Delete"
+            ? "IframeForm"
+            : action;
     }
 
 }

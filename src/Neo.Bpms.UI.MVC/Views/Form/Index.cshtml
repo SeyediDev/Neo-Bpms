@@ -439,11 +439,11 @@ new
                                                         &nbsp;
                                                         @if (hasDetailsForm)
                                             {
-                                                RenderDetailsLink(rowIds, subjectInfo.Name, subjectInfo.DetailFormId);
+                                                RenderDetailsLink(rowIds, subjectInfo.Name, subjectInfo.DetailFormId, subjectInfo.DetailAction);
                                             }
                                                         @if (hasEditForm)
                                             {
-                                                RenderEditLink(rowIds, subjectInfo.Name, subjectInfo.EditFormId);
+                                                RenderEditLink(rowIds, subjectInfo.Name, subjectInfo.EditFormId, subjectInfo.EditAction);
                                             }
                                                     </td>
                                     }
@@ -490,12 +490,12 @@ new
 
                                             @if (structure.HasDetails)
                                     {
-                                        RenderDetailsLink(rowIds, structure.FormSubjectId, structure.DetailFormId);
+                                        RenderDetailsLink(rowIds, structure.FormSubjectId, structure.DetailFormId, structure.DetailAction);
                                     }
 
                                             @if (structure.HasEdit)
                                     {
-                                        RenderEditLink(rowIds, structure.FormSubjectId, structure.EditFormId);
+                                        RenderEditLink(rowIds, structure.FormSubjectId, structure.EditFormId, structure.EditAction);
                                     }
 
                                             @if (structure.HasDelete)
@@ -649,17 +649,17 @@ new
         }
     }
 
-    void RenderDetailsLink(string rowIds, string formSubjectId, string formId)
+    void RenderDetailsLink(string rowIds, string formSubjectId, string formId, string action = "Details")
     {
         RenderSvgActionLink(rowIds, formSubjectId, formId,
-            "Details", ViewTexts.Details,
+            string.IsNullOrWhiteSpace(action) ? "Details" : action, ViewTexts.Details,
             "#info-icon");
     }
 
-    void RenderEditLink(string rowIds, string formSubjectId, string formId)
+    void RenderEditLink(string rowIds, string formSubjectId, string formId, string action = "Edit")
     {
         RenderSvgActionLink(rowIds, formSubjectId, formId,
-            "Edit", ViewTexts.Edit,
+            string.IsNullOrWhiteSpace(action) ? "Edit" : action, ViewTexts.Edit,
             "#edit-icon");
     }
 

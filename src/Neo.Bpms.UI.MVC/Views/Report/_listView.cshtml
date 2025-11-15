@@ -12,9 +12,9 @@
 	bool canDesign = ViewBag.CanDesign ?? false;
 	Func<ReportData, HelperResult> RenderGrid = @<text>
 			<div>
-				@if (item.structure.SelectedColumns.Count(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical
+				@if (item.Structure.SelectedColumns.Count(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical
 																	 && sc.aggrType == eAggregationFunctions.InColumn) > 0
-			&& item.structure.SelectedColumns.Count(sc => sc.aggrType == eAggregationFunctions.InColumn) > 1)
+			&& item.Structure.SelectedColumns.Count(sc => sc.aggrType == eAggregationFunctions.InColumn) > 1)
 				{
 					<partial name="~/Views/Report/_matrix.cshtml" model="item" />
 				}

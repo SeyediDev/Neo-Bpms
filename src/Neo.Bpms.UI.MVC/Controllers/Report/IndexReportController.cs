@@ -68,10 +68,10 @@ public partial class ReportController
         ViewBag.ParentFilterValues = ParentFilterValues; //todo
         if (config.Parent == null)
             SetPagePackId(report);
-        result.structure.ParentReportIds = ParentReportIds;
+        result.Structure.ParentReportIds = ParentReportIds;
         if (config.Parent == null)
         {
-            if (result.structure.ChartType == Report.ChartType.WorldMap)
+            if (result.Structure.ChartType == Report.ChartType.WorldMap)
             {
                 ViewBag.ContainerClass = "container-fluid";
             }
@@ -130,7 +130,7 @@ public partial class ReportController
             culture, false, user, ReportPerPageCount, false, cancellationToken);
         if (!string.IsNullOrEmpty(SelectedChartType))
         {
-            result.structure.ChartType =
+            result.Structure.ChartType =
                 (Report.ChartType)Enum.Parse(typeof(Report.ChartType), SelectedChartType);
         }
 
@@ -227,7 +227,7 @@ public partial class ReportController
             filters, drillDown == 1, pageNo,
             po == null, result, configuredFilter);
         ViewBag.ParentFilterValues = parentFilterValues; //todo
-        result.structure.ParentReportIds = parentReportIds;
+        result.Structure.ParentReportIds = parentReportIds;
 
         return View(result);
     }
@@ -248,7 +248,7 @@ public partial class ReportController
         ViewBag.CanDesignFilter = CanDesignForms(user); // todo OK?
         ViewBag.CanPublishConfigs = CheckAccess(user, SystemFeatureId.PublishConfigs);
         ViewBag.CanScheduleReports = CheckAccess(user, SystemFeatureId.ScheduledReportDesign);
-        ViewBag.recordsPerPage = result.recordsPerPage;
+        ViewBag.recordsPerPage = result.RecordsPerPage;
         ViewBag.Page = page;
         ViewBag.SortFields = sortFields;
         ViewBag.FilterValues = filterValues;
@@ -257,7 +257,7 @@ public partial class ReportController
         ViewBag.PersistentIsNull = persistentIsNull;
         ViewBag.FilterId = configuredFilter?.Id;
         ViewBag.FilterName = configuredFilter?.Name;
-        if (!isDrillDown && result.structure.ChartType == Report.ChartType.WorldMap)
+        if (!isDrillDown && result.Structure.ChartType == Report.ChartType.WorldMap)
         {
             ViewBag.ContainerClass = "container-fluid";
         }

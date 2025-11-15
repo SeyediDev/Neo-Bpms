@@ -17,16 +17,16 @@
 	var reportInfo = Model;
 	var canDesign = ViewBag.CanDesign ?? false;
 	var isDrillDown = ViewBag.DrillDown ?? false;
-	var reportKey = reportInfo.structure.ConfigId;
+	var reportKey = reportInfo.Structure.ConfigId;
 	var bFromDashboard = ViewBag.bFromDashboard ?? false;
-	var drilldownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+	var drilldownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 
-	var process = Model.structure.FilterValues.GetString("Process");
+	var process = Model.Structure.FilterValues.GetString("Process");
 	if (string.IsNullOrEmpty(process))
 	{
 		//throw new Exception("Bpmn diagram needs WorkflowId in its filter.");
 	}
-	var processVersion = Model.structure.FilterValues.GetString("ProcessVersion");
+	var processVersion = Model.Structure.FilterValues.GetString("ProcessVersion");
 }
 
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/design/bpmn/css/diagram-js.css"/>
@@ -41,7 +41,7 @@
 }
 
 @{
-	var parameters = reportInfo.structure.SelectedColumns.Where(s =>
+	var parameters = reportInfo.Structure.SelectedColumns.Where(s =>
 		//s.aggrType != eAggregationFunctions.InColumn &&
 		s.aggrType != eAggregationFunctions.GroupByItem &&
 		s.ColumnName != "FlowNodeId").Select(sc => new
@@ -58,7 +58,7 @@
 	{
 		//        id = r.Data[nodeIdColumn != null ? nodeIdColumn.ColumnTypeName : "FlowNodeId"]
 		id = r.Data["Ids"],
-		parameters = reportInfo.structure.SelectedColumns.Where(s =>
+		parameters = reportInfo.Structure.SelectedColumns.Where(s =>
 			//s.aggrType != eAggregationFunctions.InColumn &&
 			s.aggrType != eAggregationFunctions.GroupByItem &&
 			s.ColumnName != "FlowNodeId").Select(columnInfo => new
@@ -112,8 +112,8 @@
 
 	@{
 		//var heatColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
-		var nodeIdColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "FlowNodeId");
-		var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+		var nodeIdColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "FlowNodeId");
+		var subReportsCount = reportInfo.Structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
 	}
 	var subReportsCount = @subReportsCount;
 	var reportKey = "@reportKey";
@@ -136,7 +136,7 @@
 		str += "diagramInfo['" + nodeId + "']={};\n";
 		str += "diagramInfo['" + nodeId + "']['ids']='" + rowIds + "';\n";
 		str += "diagramInfo['" + nodeId + "']['tooltipValues']={};\n";
-		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
 			//s.aggrType != eAggregationFunctions.InColumn &&
 			s.aggrType != eAggregationFunctions.GroupByItem &&
 			s.ColumnName != "Iso2");

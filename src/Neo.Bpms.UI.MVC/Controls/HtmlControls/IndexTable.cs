@@ -191,7 +191,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             result.Append(
                 "<a " +
                 FormLinkClass("text-info") +
-                $" href=\"{GetFormLink("Details", table, subjectInfo.DetailFormId, subjectInfo.Name, rowIds)}\">" +
+                $" href=\"{GetFormLink(subjectInfo.DetailAction, table, subjectInfo.DetailFormId, subjectInfo.Name, rowIds)}\">" +
                 $"<span class=\"text-info\" title=\"{ViewTexts.Details}\">" +
                 "<i class=\"fa fa-info\"></i>" +
                 "</span>" +
@@ -202,7 +202,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         {
             result.Append("<a " +
                       FormLinkClass("text-success") +
-                      $"href=\"{GetFormLink("Edit", table, subjectInfo.EditFormId, subjectInfo.Name, rowIds)}\">" +
+                      $"href=\"{GetFormLink(subjectInfo.EditAction, table, subjectInfo.EditFormId, subjectInfo.Name, rowIds)}\">" +
                           $"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">" +
                                 "<i class=\"fa fa-pencil\"></i>" +
                           "</span>" +
@@ -211,9 +211,9 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
 
         result.Append("</td>");
     }
-    private string GetFormLink(string normalAction, TableDefinition table, string formId, string formSubjectId, string rowIds)
+    private string GetFormLink(string requestedAction, TableDefinition table, string formId, string formSubjectId, string rowIds)
     {
-        string action = ControlsRendererData.Options.IsIframe ? "IframeForm" : normalAction;
+        string action = ResolveAction(requestedAction);
 
         return Url.Action(action, "Form", ControlsRendererData.Url, new
         {
@@ -226,10 +226,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             isReturnable = true
         });
     }
-    private string GetAction(string normalAction)
-    {
-        return ControlsRendererData.Options.IsIframe ? "IframeForm" : normalAction;
-    }
+    private string GetAction(string requestedAction) => ResolveAction(requestedAction);
 
     private void RenderLinks(NeoStringBuilder result, TableDefinition table, CommonFormStructure structure,
         string recordId, string rowIds, bool isInDetailsForm, bool isEditable)
@@ -237,12 +234,12 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         result.Append("<td class=\"cColumn\">");
         if (table.HasDetailsForm)
         { 
-            result.Append($"<a {FormLinkClass("text-info")} href=\"{Url.Action(GetAction("Details"), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
+            result.Append($"<a {FormLinkClass("text-info")} href=\"{Url.Action(GetAction(table.DetailAction), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
                           $"<span class=\"text-info\" title=\"{ViewTexts.Details}\"><i class=\"fa fa-info\"></i></span></a>");
         }
         if (table.HasEditForm && !isInDetailsForm && !isEditable)
         {
-            result.Append($"<a {FormLinkClass("text-success")} href=\"{Url.Action(GetAction("Edit"), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
+            result.Append($"<a {FormLinkClass("text-success")} href=\"{Url.Action(GetAction(table.EditAction), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
                   .Append($"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">")
                   .Append("<i class=\"fa fa-pencil\"></i></span></a>");
         }
@@ -258,6 +255,19 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         }
 
         result.Append("</td>");
+    }
+
+    private string ResolveAction(string requestedAction)
+    {
+        string action = string.IsNullOrWhiteSpace(requestedAction) ? "Edit" : requestedAction;
+        if (!ControlsRendererData.Options.IsIframe)
+        {
+            return action;
+        }
+
+        return action is "Edit" or "Details" or "Delete" or "Create"
+            ? "IframeForm"
+            : action;
     }
 
     private void RenderColumn(TableDefinition table, ColumnFieldDefinition col, Dictionary<string, string> logics,

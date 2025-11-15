@@ -25,10 +25,10 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         if (config.Parent?.ParentConfiguredReport == null)
         {
             LocalParameters lp = GetLocalParameters(user);
-            FormComboData.SetCombosData(config.Report, reportData.structure, culture, null, lp);
+            FormComboData.SetCombosData(config.Report, reportData.Structure, culture, null, lp);
             if (filterValues != null)
             {
-                ComboDataRoutines.SetComboDataSelectedId(reportData.structure, filterValues, true, config.Report.entity);
+                ComboDataRoutines.SetComboDataSelectedId(reportData.Structure, filterValues, true, config.Report.entity);
             }
         }
 
@@ -44,13 +44,13 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
     {
         ReportData reportData = new(config, structure, filterValues, giveQueryTexts)
         {
-            recordsPerPage = recordsPerPage
+            RecordsPerPage = recordsPerPage
         };
         if (loadData)
         {
             LocalParameters lp = GetLocalParameters(user);
             await GetReportRecords(reportData, config, parentReportConfig, subReport, ids,
-                reportData.recordsPerPage, pageNo, culture, forPrint, lp, user,
+                reportData.RecordsPerPage, pageNo, culture, forPrint, lp, user,
                 cancellationToken);
         }
 
@@ -65,10 +65,10 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         string culture, bool forPrint, LocalParameters lp, IdentityUser user,
         CancellationToken cancellationToken)
     {
-        if (reportData.structure.SelectedColumns.Count == 0) return;
+        if (reportData.Structure.SelectedColumns.Count == 0) return;
         UiEntity entity = config.Report.entity;
 
-        if (reportData.structure.ReportViewType != ReportViewType.Chart)
+        if (reportData.Structure.ReportViewType != ReportViewType.Chart)
         {
             if (ReportTotalRecord.GetRecordCount(cancellationToken, reportData, entity, ids, config, lp) == 0)
                 return;
@@ -127,7 +127,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         string culture, bool forPrint, LocalParameters lp, IdentityUser user,
         JoinQueriesData joinQueries, CancellationToken cancellationToken)
     {
-        if (!q.GetDocuments(result.structure.FilterValues, lp))
+        if (!q.GetDocuments(result.Structure.FilterValues, lp))
         {
             result.QueryInfo.AddByQueryUtility(q);
             return;
@@ -212,7 +212,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
                              select r.GetField(key.Id, out obj1) ? obj1 : null);
         else
         {
-            foreach (ColumnFieldDefinition field in result.structure.SelectedColumns)
+            foreach (ColumnFieldDefinition field in result.Structure.SelectedColumns)
             {
                 if (field.aggrType != eAggregationFunctions.GroupByItem)
                     continue;
@@ -237,7 +237,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
     private static void SetBitmaskValues(QueryUtility q, ReportData result, string culture,
         ConcurrentDictionary<string, BitmaskData> bitmaskData, ElasticObject r)
     {
-        foreach (ColumnFieldDefinition field in result.structure.SelectedColumns)
+        foreach (ColumnFieldDefinition field in result.Structure.SelectedColumns)
         {
             Entity entity1 = q.Entity.Id == field.entityId
                 ? q.Entity

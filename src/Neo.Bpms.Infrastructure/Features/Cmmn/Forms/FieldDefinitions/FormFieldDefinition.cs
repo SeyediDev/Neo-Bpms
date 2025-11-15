@@ -8,7 +8,9 @@ public class FormFieldDefinition(string alias)
     protected List<UIComponentProperty> Properties { get; set; }
     public string CreateFormId { get; set; }
     public string DetailFormId { get; set; }
+    public string DetailAction { get; set; } = "Details";
     public string EditFormId { get; set; }
+    public string EditAction { get; set; } = "Edit";
     public string DeleteFormId { get; set; }
     public string IndexFormId { get; set; }
 

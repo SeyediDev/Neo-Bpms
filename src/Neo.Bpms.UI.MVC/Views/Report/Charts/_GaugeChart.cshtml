@@ -12,7 +12,7 @@
     var showTitle = Model.ShouldShowTitle;
     var levelIndex = 0;
     var row = reportInfo.Rows.Count > 0 ? reportInfo.Rows[0] : null;
-    var gaugeValueColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s =>
+    var gaugeValueColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(s =>
         s.aggrType != eAggregationFunctions.GroupByItem &&
         s.aggrType != eAggregationFunctions.InColumn);
     double gaugeValue = 0;
@@ -23,7 +23,7 @@
             : row.Data.GetDouble(gaugeValueColumn.ColumnTypeName);
     }
 
-    var categoryColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(
+    var categoryColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(
         col => col.aggrType == eAggregationFunctions.InColumn);
 
     var categoryValue = "";

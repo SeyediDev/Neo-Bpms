@@ -242,11 +242,15 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
 
         ReformFieldDefinition(formField, culture, false, out EntityField field, out string label);
         string fieldSubjectId = formField.GetProperty(eControlPropertyId.Subject)?.value?.ToString() ?? formField.Id;
+        Form detailForm = FetchAccessedForm(form, user, Form.eFormType.Detail, fieldSubjectId);
+        Form editForm = FetchAccessedForm(form, user, Form.eFormType.Edit, fieldSubjectId);
         IndexFormSubjectId ifs = new(label)
         {
             Name = formField.Id,
-            DetailFormId = FetchAccessedFormId(form, user, Form.eFormType.Detail, fieldSubjectId),
-            EditFormId = FetchAccessedFormId(form, user, Form.eFormType.Edit, fieldSubjectId),
+            DetailFormId = detailForm?.Id,
+            DetailAction = ResolveFormAction(detailForm, "Details"),
+            EditFormId = editForm?.Id,
+            EditAction = ResolveFormAction(editForm, "Edit"),
             HasText = field != null
         };
         FillProperties(ifs, formField, field);
@@ -372,11 +376,22 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
         fieldDefinition.AddProperty(eControlPropertyId.NamespaceId, referNamespaceId);
         fieldDefinition.AddProperty(eControlPropertyId.EntityId, referEntityId);
 
-        fieldDefinition.CreateFormId = FetchAccessedFormId(entity, user, Form.eFormType.Create, formSubjectId);
-        fieldDefinition.EditFormId = FetchAccessedFormId(entity, user, Form.eFormType.Edit, formSubjectId);
-        fieldDefinition.DeleteFormId = FetchAccessedFormId(entity, user, Form.eFormType.Delete, formSubjectId);
-        fieldDefinition.DetailFormId = FetchAccessedFormId(entity, user, Form.eFormType.Detail, formSubjectId);
-        fieldDefinition.IndexFormId = FetchAccessedFormId(entity, user, Form.eFormType.Index, formSubjectId);
+        Form createForm = FetchAccessedForm(entity, user, Form.eFormType.Create, formSubjectId);
+        fieldDefinition.CreateFormId = createForm?.Id;
+
+        Form editForm = FetchAccessedForm(entity, user, Form.eFormType.Edit, formSubjectId);
+        fieldDefinition.EditFormId = editForm?.Id;
+        fieldDefinition.EditAction = ResolveFormAction(editForm, "Edit");
+
+        Form deleteForm = FetchAccessedForm(entity, user, Form.eFormType.Delete, formSubjectId);
+        fieldDefinition.DeleteFormId = deleteForm?.Id;
+
+        Form detailForm = FetchAccessedForm(entity, user, Form.eFormType.Detail, formSubjectId);
+        fieldDefinition.DetailFormId = detailForm?.Id;
+        fieldDefinition.DetailAction = ResolveFormAction(detailForm, "Details");
+
+        Form indexForm = FetchAccessedForm(entity, user, Form.eFormType.Index, formSubjectId);
+        fieldDefinition.IndexFormId = indexForm?.Id;
         if (formField?.CheckProperty(eControlPropertyId.ReadOnly) == true)
         {
             fieldDefinition.CreateFormId = fieldDefinition.DeleteFormId = fieldDefinition.EditFormId = null;
@@ -446,10 +461,19 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
             }
         }
 
-        structure.CreateFormId = FetchAccessedFormId(form, user, Form.eFormType.Create);
-        structure.DeleteFormId = FetchAccessedFormId(form, user, Form.eFormType.Delete);
-        structure.EditFormId = FetchAccessedFormId(form, user, Form.eFormType.Edit);
-        structure.DetailFormId = FetchAccessedFormId(form, user, Form.eFormType.Detail);
+        Form createForm = FetchAccessedForm(form, user, Form.eFormType.Create);
+        structure.CreateFormId = createForm?.Id;
+
+        Form deleteForm = FetchAccessedForm(form, user, Form.eFormType.Delete);
+        structure.DeleteFormId = deleteForm?.Id;
+
+        Form editForm = FetchAccessedForm(form, user, Form.eFormType.Edit);
+        structure.EditFormId = editForm?.Id;
+        structure.EditAction = ResolveFormAction(editForm, "Edit");
+
+        Form detailForm = FetchAccessedForm(form, user, Form.eFormType.Detail);
+        structure.DetailFormId = detailForm?.Id;
+        structure.DetailAction = ResolveFormAction(detailForm, "Details");
         structure.HasServiceOperation = !string.IsNullOrEmpty(form?.GetServiceOperation) ||
                                         !string.IsNullOrEmpty(form?.ApplyServiceOperation);
         structure.HasTemplate = form?.HasTemplateFile ?? false;
@@ -457,30 +481,101 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
         return structure;
     }
 
+    private Form FetchAccessedForm(Form form, IdentityUser user, Form.eFormType formType)
+    {
+        return FetchAccessedForm(form?.Entity, user, formType, form?.FormSubjectId);
+    }
+
+    private Form FetchAccessedForm(IEntityPage form, IdentityUser user, Form.eFormType formType,
+        string formSubjectId)
+    {
+        return FetchAccessedForm(form?.Entity, user, formType, formSubjectId);
+    }
+
+    private static Form FetchAccessedForm(UiEntity entity, IdentityUser user,
+        Form.eFormType formType, string formSubjectId)
+    {
+        if (entity == null)
+        {
+            return null;
+        }
+
+        Form linkForm = entity.GetEntityForm(null, formType, formSubjectId);
+        if (linkForm == null && formType == Form.eFormType.Delete)
+        {
+            linkForm = entity.GetEntityForm(null, Form.eFormType.VirtualDelete, formSubjectId);
+        }
+
+        if (linkForm == null)
+        {
+            foreach (Form.eFormType alternative in GetAlternativeFormTypes(formType))
+            {
+                linkForm = entity.GetEntityForm(null, alternative, formSubjectId);
+                if (linkForm != null)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (linkForm == null)
+        {
+            return null;
+        }
+
+        bool hasAccess = (user?.CheckFormAccess(entity.NamespaceId, entity.Id, linkForm.FormType,
+            formSubjectId, linkForm.Id, linkForm) ?? false) || linkForm.AllowAnonymous;
+        return hasAccess ? linkForm : null;
+    }
+
     private string FetchAccessedFormId(Form form, IdentityUser user, Form.eFormType formType)
     {
-        return FetchAccessedFormId(form, user, formType, form.FormSubjectId);
+        return FetchAccessedForm(form, user, formType)?.Id;
     }
 
     private string FetchAccessedFormId(IEntityPage form, IdentityUser user, Form.eFormType formType,
         string formSubjectId)
     {
-        return FetchAccessedFormId(form?.Entity, user, formType, formSubjectId);
+        return FetchAccessedForm(form, user, formType, formSubjectId)?.Id;
     }
 
     private static string FetchAccessedFormId(UiEntity entity, IdentityUser user,
         Form.eFormType formType, string formSubjectId)
     {
-        Form linkForm = entity?.GetEntityForm(null, formType, formSubjectId) ??
-                       (formType == Form.eFormType.Delete
-                           ? entity?.GetEntityForm(null, Form.eFormType.VirtualDelete, formSubjectId)
-                           : null);
-        return linkForm != null &&
-               ((user?.CheckFormAccess(entity.NamespaceId, entity.Id, linkForm.FormType, formSubjectId,
-                   linkForm.Id,
-                   linkForm) ?? false) || linkForm.AllowAnonymous)
-            ? linkForm.Id
-            : null;
+        return FetchAccessedForm(entity, user, formType, formSubjectId)?.Id;
+    }
+
+    private static IEnumerable<Form.eFormType> GetAlternativeFormTypes(Form.eFormType formType)
+    {
+        switch (formType)
+        {
+            case Form.eFormType.Edit:
+                yield return Form.eFormType.SpecificURL;
+                yield return Form.eFormType.SpecificURLForRecord;
+                break;
+            case Form.eFormType.Detail:
+                yield return Form.eFormType.SpecificURLForRecord;
+                break;
+        }
+    }
+
+    private static string ResolveFormAction(Form linkForm, string defaultAction)
+    {
+        if (linkForm == null)
+        {
+            return defaultAction;
+        }
+
+        return linkForm.FormType switch
+        {
+            Form.eFormType.Edit => "Edit",
+            Form.eFormType.Detail => "Details",
+            Form.eFormType.Delete => "Delete",
+            Form.eFormType.Create => "Create",
+            Form.eFormType.SpecificURL => "SpecificURL",
+            Form.eFormType.SpecificURLForRecord => "SpecificURLForRecord",
+            _ => defaultAction
+        };
     }
 
     private static void SetBulkProcessLinks(CommonFormStructure structure, Form form)

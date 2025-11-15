@@ -347,14 +347,14 @@ public partial class ReportController(
         List<object> arr = ParentReportIds != null ? [.. ParentReportIds.Split(',')] : null;
         ReportData result = await reportDataRoutines.GetReportData(config, true, filterValues, 0,
             po?.SortFields, null, null, arr, culture, true, user);
-        ViewBag.recordsPerPage = result.recordsPerPage;
+        ViewBag.recordsPerPage = result.RecordsPerPage;
         ViewBag.SortFields = po?.SortFields;
         ViewBag.FilterValues = filterValues;
         ViewBag.ParentReportIds = ParentReportIds;
         if (config.Parent == null)
             SetPagePackId(report);
-        result.structure.ParentReportIds = ParentReportIds;
-        result.structure.FilterValues = filterValues;
+        result.Structure.ParentReportIds = ParentReportIds;
+        result.Structure.FilterValues = filterValues;
         return View(result);
     }
 

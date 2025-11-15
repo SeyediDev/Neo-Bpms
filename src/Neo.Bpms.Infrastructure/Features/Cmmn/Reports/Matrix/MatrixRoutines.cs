@@ -19,7 +19,7 @@ public class MatrixRoutines
             Verticals = [],
             Horizontals = [],
         };
-        IEnumerable<ColumnFieldDefinition> cols = _reportInfo.structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
+        IEnumerable<ColumnFieldDefinition> cols = _reportInfo.Structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
         foreach (ColumnFieldDefinition col in cols)
         {
             MatrixItem matrixItem = new() { Column = col };
@@ -95,7 +95,7 @@ public class MatrixRoutines
             ReadHorizontalValue(matrixData, row, matrixValue, vIndex + 1);
         else
         {
-            IEnumerable<ColumnFieldDefinition> cols = _reportInfo.structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
+            IEnumerable<ColumnFieldDefinition> cols = _reportInfo.Structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
             foreach (ColumnFieldDefinition col in cols.Where(col =>
                     col.aggrType != eAggregationFunctions.InColumn &&
                     col.MatrixType != ConfiguredReport.ReportMatrixType.Vertical))

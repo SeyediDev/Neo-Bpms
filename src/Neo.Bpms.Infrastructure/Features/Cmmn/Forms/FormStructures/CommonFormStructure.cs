@@ -29,8 +29,10 @@ public class CommonFormStructure
     public List<FormLinkId> BulkEdits { get; set; }
     public List<ProcessCreateFormLinkId> BulkProcessCreates { get; set; }
     public string EditFormId { get; set; }
+    public string EditAction { get; set; } = "Edit";
     public string DeleteFormId { get; set; }
     public string DetailFormId { get; set; }
+    public string DetailAction { get; set; } = "Details";
     public string CreateFormId { get; set; }
 
     public bool HasEdit => !string.IsNullOrEmpty(EditFormId);

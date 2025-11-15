@@ -137,7 +137,7 @@
 
 @model ReportData
 @{
-    var structure = Model.structure;
+    var structure = Model.Structure;
     var modalKey = structure.ConfigId;
     var calendar = ProjectDefinition.Project.DefaultCalendar;
 }
@@ -203,7 +203,7 @@
                 <span class="report-info-value">@filterText</span>
             </div>
         }
-        @if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+        @if (Model.Structure.ReportViewType == ReportViewType.GroupByList)
         {
             var groupByNames = ReportController.GetGroupBys(structure);
             <div class="report-info-item">

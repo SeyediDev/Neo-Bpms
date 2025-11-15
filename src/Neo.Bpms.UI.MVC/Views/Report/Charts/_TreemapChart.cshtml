@@ -10,11 +10,11 @@
     var calendar = Model.Calendar;
     var chartTitle = Model.ChartTitle;
     var showTitle = Model.ShouldShowTitle;
-    var colorColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s =>
+    var colorColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(s =>
         s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
-    var categoryColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(
+    var categoryColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(
         col => col.aggrType == eAggregationFunctions.InColumn);
-    var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+    var subReportsCount = reportInfo.Structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
     var categoryColumnTypeName = categoryColumn != null ? categoryColumn.ColumnTypeName : null;
     var ii = 0;
 }
@@ -45,7 +45,7 @@
 		rowData['ids'] = '@rowIds';
 		rowData['tooltipValues'] = {};</text>
 
-		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
 			s.aggrType != eAggregationFunctions.GroupByItem);
 		foreach (var colInfo in columns)
 		{
@@ -100,8 +100,8 @@
 							click: function(event) {
 								openSubReportFrame2(@subReportsCount,
 									event.point.ids,
-									'@reportInfo.structure.ConfigId',
-									window.top.reportInfo['@reportInfo.structure.ConfigId']["parentFilter"],
+									'@reportInfo.Structure.ConfigId',
+									window.top.reportInfo['@reportInfo.Structure.ConfigId']["parentFilter"],
 									event.toElement,
 									event);
 							}

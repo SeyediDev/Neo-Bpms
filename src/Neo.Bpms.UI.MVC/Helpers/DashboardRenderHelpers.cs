@@ -74,32 +74,32 @@ namespace Neo.Bpms.UI.MVC.Helpers
             var reportsData = dashboardData.ReportsData;
 
             var reportData = reportsData.FirstOrDefault(rd =>
-                rd.structure?.NamespaceId == widget.ReportNamespaceId &&
-                rd.structure?.EntityId == widget.ReportEntityId &&
-                rd.structure?.Form_ReportId == widget.ReportId &&
-                rd.structure?.ConfigId == widget.ReportConfigId &&
+                rd.Structure?.NamespaceId == widget.ReportNamespaceId &&
+                rd.Structure?.EntityId == widget.ReportEntityId &&
+                rd.Structure?.Form_ReportId == widget.ReportId &&
+                rd.Structure?.ConfigId == widget.ReportConfigId &&
                 rd.RecordCount == maxRecord);
 
             if (reportData == null)
             {
                 reportData = reportsData.FirstOrDefault(rd =>
-                    rd.structure?.NamespaceId == widget.ReportNamespaceId &&
-                    rd.structure?.EntityId == widget.ReportEntityId &&
-                    rd.structure?.Form_ReportId == widget.ReportId &&
-                    rd.structure?.ConfigId == widget.ReportConfigId);
+                    rd.Structure?.NamespaceId == widget.ReportNamespaceId &&
+                    rd.Structure?.EntityId == widget.ReportEntityId &&
+                    rd.Structure?.Form_ReportId == widget.ReportId &&
+                    rd.Structure?.ConfigId == widget.ReportConfigId);
             }
 
             if (reportData == null)
             {
                 reportData = reportsData.FirstOrDefault(rd =>
-                    rd.structure?.NamespaceId == widget.ReportNamespaceId &&
-                    rd.structure?.EntityId == widget.ReportEntityId &&
-                    rd.structure?.Form_ReportId == widget.ReportId);
+                    rd.Structure?.NamespaceId == widget.ReportNamespaceId &&
+                    rd.Structure?.EntityId == widget.ReportEntityId &&
+                    rd.Structure?.Form_ReportId == widget.ReportId);
             }
 
             if (reportData == null)
             {
-                reportData = reportsData.FirstOrDefault(rd => rd.structure?.Form_ReportId == widget.ReportId);
+                reportData = reportsData.FirstOrDefault(rd => rd.Structure?.Form_ReportId == widget.ReportId);
             }
 
             return reportData;

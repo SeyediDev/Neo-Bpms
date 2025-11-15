@@ -12,36 +12,36 @@ public class ReportData
         ElasticObject filterValues, bool shouldGiveQueries = false)
     {
         Config = config;
-        this.structure = structure;
-        this.structure.FilterValues = filterValues;
+        Structure = structure;
+        Structure.FilterValues = filterValues;
         QueryInfo = new QueryInfo(shouldGiveQueries);
     }
 
-    public ReportStructure structure { get; set; }
+    public ReportStructure Structure { get; set; }
     public ConfiguredReport Config { get; set; }
-    public IList<ReportRowInfo> Rows = [];
+    public IList<ReportRowInfo> Rows { get; set; } = [];
 
     public int RecordCount { get; set; }
     public ElasticObject TotalRecord { get; set; }
 
     public QueryInfo QueryInfo { get; }
-    public int recordsPerPage;
+    public int RecordsPerPage { get; set; }
     public readonly ErrorInformationList Errors = [];
 
     public IEnumerable<ColumnFieldDefinition> InColumns =>
-        structure.SelectedColumns.Where(
+        Structure.SelectedColumns.Where(
             col => col.aggrType == eAggregationFunctions.InColumn);
 
     public IEnumerable<ColumnFieldDefinition> AggregationColumns =>
-        structure.SelectedColumns.Where(col =>
+        Structure.SelectedColumns.Where(col =>
             col.aggrType != eAggregationFunctions.GroupByItem &&
             col.aggrType != eAggregationFunctions.InColumn);
-    public double GetMetricBoxValue()
+    public string GetMetricBoxValue()
     {
         double singleValue = 0;
         var singleColumnAlias = "";
         var row = Rows!=null && Rows.Count > 0 ? Rows[0] : null;
-        var singleValueColumn = structure.SelectedColumns.FirstOrDefault(s =>
+        var singleValueColumn = Structure.SelectedColumns.FirstOrDefault(s =>
             s.aggrType != eAggregationFunctions.GroupByItem &&
             s.aggrType !=
             eAggregationFunctions
@@ -56,26 +56,29 @@ public class ReportData
                     ? Convert.ToDouble(row.Data[singleValueColumn.ColumnTypeName] ?? 0)
                     : row.Data.GetDouble(singleValueColumn.ColumnTypeName);
         }
-        return singleValue;
+        var culture = CultureInfo.InvariantCulture;
+        var hasFraction = Math.Abs(singleValue % 1) > double.Epsilon;
+        var format = hasFraction ? "#,0.00" : "#,0";
+        return singleValue.ToString(format, culture);
     }
 }
 
 public class ReportOrderInfo
 {
-    public string Alias;
-    public string ColumnName;
-    public bool Descending;
-    public bool orderById;
+    public string Alias { get; set; }
+    public string ColumnName { get; set; }
+    public bool Descending { get; set; }
+    public bool OrderById { get; set; }
 
-    public string EntityId { get; internal set; }
+    public string EntityId { get; set; }
     public string AssociationName { get; set; }
-    public bool FromPersistence { get; internal set; }
+    public bool FromPersistence { get; set; }
 }
 
 public class ReportRowInfo
 {
-    public ElasticObject Data;
-    public List<ReportData> SubReports = null;
+    public ElasticObject Data { get; set; }
+    public List<ReportData> SubReports { get; set; } = null;
 }
 
 public enum eExportType
@@ -105,11 +108,11 @@ public class ReportSelectedGroupBy
 
 public class SubReportConfigData
 {
-    public ReportViewType ViewType;
-    public string NamespaceId;
-    public string EntityId;
-    public string DashboardId;
-    public string DashboardConfigId;
+    public ReportViewType ViewType { get; set; }
+    public string NamespaceId { get; set; }
+    public string EntityId { get; set; }
+    public string DashboardId { get; set; }
+    public string DashboardConfigId { get; set; }
 }
 
 public class ReportColumnDisplayEditor

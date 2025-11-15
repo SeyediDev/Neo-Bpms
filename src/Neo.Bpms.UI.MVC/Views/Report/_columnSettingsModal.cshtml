@@ -13,7 +13,7 @@
 @model ReportData
 
 @{
-	var structure = Model.structure;
+	var structure = Model.Structure;
 	var availableColumns = structure.ColumnInfos;
 	var selectedColumns = structure.SelectedColumns;
 	var remainingColumns = availableColumns.Except(selectedColumns, new ColumnFieldDefinitionComparerBasedOnName()).ToList();
@@ -277,7 +277,7 @@
 			<span class="alias">
 				@column.Alias
 			</span>
-			@if (Model.structure.ReportViewType == ReportViewType.Chart)
+			@if (Model.Structure.ReportViewType == ReportViewType.Chart)
 			{
 				<div class="float-left">
 					<i class="fa tooltip-boolean fa-comment @isTooltipClass"
@@ -286,7 +286,7 @@
 					</i>
 				</div>
 			}
-			@if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+			@if (Model.Structure.ReportViewType == ReportViewType.GroupByList)
 			{
 				<div class="float-left">
 					<i class="fa matrixType-item fa-cube @matrixType"

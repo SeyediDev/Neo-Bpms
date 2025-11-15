@@ -213,7 +213,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                     Descending = col.Descending,
                     EntityId = sortFieldEntityId,
                     AssociationName = associationName,
-                    orderById = orderById,
+                    OrderById = orderById,
                     FromPersistence = isFromPersistence,
                 });
         }

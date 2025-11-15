@@ -51,8 +51,8 @@
 
 Layout = null;
 var reportInfo = Model;
-var structure = reportInfo.structure;
-var chartTitle = reportInfo.structure.Name;
+var structure = reportInfo.Structure;
+var chartTitle = reportInfo.Structure.Name;
 var isPrintPreview = ViewBag.IsPrintPreview ?? false;
 var isDrillDown = ViewBag.DrillDown ?? false;
 var bFromDashboard = ViewBag.bFromDashboard ?? false;
@@ -60,13 +60,13 @@ bool isIframeReport = ViewBag.IsIframeReport ?? false;
 var widgetHeight = ViewBag.widgetHeight ?? 450;
 var selectedColumns = structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
 var canDesign = ViewBag.CanDesign ?? false;
-string idx = reportInfo.structure.ConfigId + "CNT" + (ViewBag.Counter ?? '0');
+string idx = reportInfo.Structure.ConfigId + "CNT" + (ViewBag.Counter ?? '0');
 var calendar = ProjectDefinition.Project.DefaultCalendar;
 
-var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 }
 
-<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drillDownSubReports, reportKey = reportInfo.structure.ConfigId, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}" />
+<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drillDownSubReports, reportKey = reportInfo.Structure.ConfigId, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}" />
 
 @if (ViewBag.ChartsAssetsIncluded == null || bFromDashboard)
 {
@@ -142,7 +142,7 @@ var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type ==
                                         @{
                                             var str = ReportController.GetGroupByNames(structure);
                                         }
-                                        @if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+                                        @if (Model.Structure.ReportViewType == ReportViewType.GroupByList)
                                         {
                                             <span class="titleSpan">@ViewTexts.GroupedBy: </span>
                                             <span class="valueSpan">@str</span>
@@ -189,7 +189,7 @@ var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type ==
     var chartScriptModel = new ChartScriptModel(idx, reportInfo, calendar, chartTitle, shouldShowChartTitle);
 }
 
-@if (reportInfo.structure.ChartType == Report.ChartType.Treemap)
+@if (reportInfo.Structure.ChartType == Report.ChartType.Treemap)
 {
     <partial name="~/Views/Report/Charts/_TreemapChart.cshtml" model="chartScriptModel" />
 }
@@ -197,15 +197,15 @@ else
 {
     <partial name="~/Views/Report/Charts/_ReportDataTooltips.cshtml" model="chartScriptModel" />
 
-    if (reportInfo.structure.ChartType == Report.ChartType.Gauge)
+    if (reportInfo.Structure.ChartType == Report.ChartType.Gauge)
     {
         <partial name="~/Views/Report/Charts/_GaugeChart.cshtml" model="chartScriptModel" />
     }
-    else if (reportInfo.structure.ChartType == Report.ChartType.MetricBox)
+    else if (reportInfo.Structure.ChartType == Report.ChartType.MetricBox)
     {
         <partial name="~/Views/Report/Charts/_MetricBoxChart.cshtml" model="chartScriptModel" />
     }
-    else if (reportInfo.structure.ChartType == Report.ChartType.Pie)
+    else if (reportInfo.Structure.ChartType == Report.ChartType.Pie)
     {
         <partial name="~/Views/Report/Charts/_PieChart.cshtml" model="chartScriptModel" />
     }

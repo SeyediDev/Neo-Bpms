@@ -13,7 +13,7 @@
 @model             ReportData
 
 @{
-	var structure = Model.structure;
+	var structure = Model.Structure;
 	var modalKey = structure.ConfigId;
 	var columnInfos = structure.ColumnInfos;
 	var selectedColumns = structure.SelectedColumns;
@@ -34,7 +34,7 @@
 		{
 			col = selectedColumns.FirstOrDefault(s => s.entityId == item.EntityId && s.GetColumnOrderName() == item.ColumnName) ??
 			      columnInfos.FirstOrDefault(s => s.entityId == item.EntityId && s.GetColumnOrderName() == item.ColumnName),
-			item.orderById
+			item.OrderById
 		}).Where(orderedColumn => orderedColumn != null).ToList();
 	var allOrderableColumns = new List<ColumnFieldDefinition>();
 	foreach (var column in orderableColumns)

@@ -63,9 +63,9 @@
 		window.top.reportInfo['@Model.reportKey']["ReportViewType"] =
 			'@string.Join(",", subReportConfigData.Select(sr => sr.ViewType.ToString()))';
 		window.top.reportInfo['@Model.reportKey']["NamespaceId"] =
-			'@Model.reportInfo.structure.NamespaceId';
+			'@Model.reportInfo.Structure.NamespaceId';
 		window.top.reportInfo['@Model.reportKey']["EntityId"] =
-			'@Model.reportInfo.structure.EntityId';
+			'@Model.reportInfo.Structure.EntityId';
 
 	</script>
 }

@@ -17,8 +17,8 @@
 @model ReportData
 @{
     var ReportInfo = Model;
-    var structure = ReportInfo.structure;
-    var hasSubReportCount = ReportInfo.structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
+    var structure = ReportInfo.Structure;
+    var hasSubReportCount = ReportInfo.Structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
     Layout = null;
     var calendar = ProjectDefinition.Project.DefaultCalendar;
     var selectedColumns = structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
@@ -58,7 +58,7 @@
                                 @{
                                     var str = ReportController.GetGroupByNames(structure);
                                 }
-                                @if (Model.structure.ReportViewType == ReportViewType.GroupByList)
+                                @if (Model.Structure.ReportViewType == ReportViewType.GroupByList)
                                 {
                                     <span class="titleSpan">@ViewTexts.GroupBy: </span>
                                     <span class="valueSpan">@str</span>

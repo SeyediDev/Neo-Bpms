@@ -1,4 +1,3 @@
-@using System.Globalization
 @using System.Text.Encodings.Web
 @using Neo.Bpms.Domain.Entities.Cmmn
 @using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
@@ -12,7 +11,7 @@
     var idx = Model.Idx;
     var reportInfo = Model.ReportInfo;
     var structure = Model.Structure;
-    var singleValue = reportInfo.GetMetricBoxValue();
+    var metricValue = reportInfo.GetMetricBoxValue();
     var widget = ViewBag.CurrentWidget as ConfiguredDashboard.ConfigWidget;
     var iconClass = structure.GetReportProperty((long)ReportConfigProperty.IconClass);
     if (string.IsNullOrWhiteSpace(iconClass))
@@ -33,7 +32,6 @@
     }
     textsColor ??= "#ffffff";
     var metricTitle = structure?.Name;
-    var metricValue = singleValue.ToString("0.##", CultureInfo.InvariantCulture);
     var encodedIconClass = JavaScriptEncoder.Default.Encode(iconClass);
     var encodedMetricTitle = JavaScriptEncoder.Default.Encode(metricTitle ?? string.Empty);
 }

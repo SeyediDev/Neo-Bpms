@@ -8,7 +8,7 @@
     var divConfig = Model.DivConfig;
     var widget = Model.Widget;
     var reportData = Model.ReportData;
-    var divTitle = divConfig.Title ?? reportData?.structure?.Name ?? divConfig.Id;
+    var divTitle = divConfig.Title ?? reportData?.Structure?.Name ?? divConfig.Id;
     var widgetIcon = !string.IsNullOrWhiteSpace(widget?.Icon) ? widget.Icon : DashboardRenderHelpers.ResolveWidgetIcon(widget?.Id);
     var fallbackIconClass = widget?.GetPropertyValue(eControlPropertyId.IconClass);
 }
@@ -36,9 +36,9 @@
     @if (Model.CanDesign && !string.IsNullOrEmpty(divConfig.WidgetId))
     {
         <div class="neo-dashboard-widget-title-actions dashboard-design-only" style="display: none;">
-            @if (reportData?.structure != null)
+            @if (reportData?.Structure != null)
             {
-                <a href="@("Report/Index?NamespaceId=" + reportData.structure.NamespaceId + "&EntityId=" + reportData.structure.EntityId + "&ReportId=" + reportData.structure.Form_ReportId + "&ConfigId=" + reportData.structure.ConfigId)"
+                <a href="@("Report/Index?NamespaceId=" + reportData.Structure.NamespaceId + "&EntityId=" + reportData.Structure.EntityId + "&ReportId=" + reportData.Structure.Form_ReportId + "&ConfigId=" + reportData.Structure.ConfigId)"
                    class="neo-dashboard-widget-title-action"
                    target="_blank"
                    title="باز کردن گزارش">

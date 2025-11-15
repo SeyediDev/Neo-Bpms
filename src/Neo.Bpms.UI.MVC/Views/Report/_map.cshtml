@@ -14,9 +14,9 @@
 	var reportInfo = Model;
 	var canDesign = ViewBag.CanDesign ?? false;
 	var isDrillDown = ViewBag.DrillDown ?? false;
-	var reportKey = reportInfo.structure.ConfigId;
+	var reportKey = reportInfo.Structure.ConfigId;
 	var bFromDashboard = ViewBag.bFromDashboard ?? false;
-	var drilldownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+	var drilldownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 }
 @if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
 {
@@ -29,11 +29,11 @@
 <script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.min.js"></script> *@
 <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.css"/>
 <script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.min.js"></script>
-@if (Model.structure.ChartType == Report.ChartType.WorldMap)
+@if (Model.Structure.ChartType == Report.ChartType.WorldMap)
 {
 	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-world-mill.js"></script>
 }
-else if (Model.structure.ChartType == Report.ChartType.IranMap)
+else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 {
 	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-iran-mill.js"></script>
 }
@@ -45,15 +45,15 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 </div>
 
 <script>
-	var isWorldMap = @((Model.structure.ChartType == Report.ChartType.WorldMap).ToString().ToLower());
+	var isWorldMap = @((Model.Structure.ChartType == Report.ChartType.WorldMap).ToString().ToLower());
 	var mapData = {};
 	var mapInfo = {};
 
 	@{
-		var colorColumn = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
-		var iso2Column = reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "Iso2")
-			?? reportInfo.structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.Alias == "Iso2");
-		var subReportsCount = reportInfo.structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
+		var colorColumn = reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType != eAggregationFunctions.InColumn);
+		var iso2Column = reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "Iso2")
+			?? reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.Alias == "Iso2");
+		var subReportsCount = reportInfo.Structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
 
 		bool isValidIranProvinceIso2(object iso2)
 		{
@@ -70,7 +70,7 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 	@foreach (var row in reportInfo.Rows)
 	{
 		var iso2 = row.Data[iso2Column != null ? iso2Column.ColumnTypeName : "Iso2"];
-		if (Model.structure.ChartType == Report.ChartType.IranMap)
+		if (Model.Structure.ChartType == Report.ChartType.IranMap)
 		{
 			if(!isValidIranProvinceIso2(iso2))
 				iso2 = "iran";
@@ -88,7 +88,7 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 		str += "mapInfo['" + iso2 + "']={};\n";
 		str += "mapInfo['" + iso2 + "']['ids']='" + rowIds + "';\n";
 		str += "mapInfo['" + iso2 + "']['tooltipValues']={};\n";
-		var columns = reportInfo.structure.SelectedColumns.Where(s =>
+		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
 			//s.aggrType != eAggregationFunctions.InColumn &&
 			s.aggrType != eAggregationFunctions.GroupByItem &&
 			s.ColumnName != "Iso2");
@@ -104,7 +104,7 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 	//todo read mapMarkers from mapInfo
 
 	var iso2sWhichShouldBeMarkers = [
-		@if (Model.structure.ChartType == Report.ChartType.WorldMap)
+		@if (Model.Structure.ChartType == Report.ChartType.WorldMap)
 		{
 			<text>
 				{ markerType: 'satellite', iso2: '3ry', latLng: [-51, -130], name: 'ماهواره ثریا' },
@@ -137,7 +137,7 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 				{ markerType: 'country', iso2: 'ST', latLng: [0.33, 6.73], name: 'São Tomé and Príncipe' }
 			</text>
 		}
-		@if (Model.structure.ChartType == Report.ChartType.IranMap)
+		@if (Model.Structure.ChartType == Report.ChartType.IranMap)
 		{
 			<text>
 				{ markerType: 'iran', iso2: 'iran', latLng: [50, -10], name: 'تعیین نشده' },
@@ -244,7 +244,7 @@ else if (Model.structure.ChartType == Report.ChartType.IranMap)
 
 	$('#world-map')
 		.vectorMap({
-			map: '@(Model.structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
+			map: '@(Model.Structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
 			markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
 //            labels: {
 //                markers: {

@@ -10,10 +10,10 @@
     var chartTitle = Model.ChartTitle;
     var showTitle = Model.ShouldShowTitle;
     var hr = new HighchartRenderer(reportInfo);
-    var chartType = reportInfo.structure.ChartType.ToString().ToLower();
+    var chartType = reportInfo.Structure.ChartType.ToString().ToLower();
     var hasSingleAggregation = reportInfo.AggregationColumns.Count() == 1;
-    var isMatrix = reportInfo.structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.InColumn) > 1 &&
-                   reportInfo.structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.GroupByItem) > 0;
+    var isMatrix = reportInfo.Structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.InColumn) > 1 &&
+                   reportInfo.Structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.GroupByItem) > 0;
 }
 
 <script type="text/javascript">

@@ -31,7 +31,7 @@
                 </div>
                 
                 <div class="modal-body">
-                    @if (reportData?.structure?.ReportViewType == ReportViewType.Chart)
+                    @if (reportData?.Structure?.ReportViewType == ReportViewType.Chart)
                     {
                         <div class="neo-dashboard-form-group">
                             <label for="selectChart-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
@@ -40,7 +40,7 @@
                             <select id="selectChart-@divConfiguration.WidgetId" class="neo-dashboard-form-input">
                                 @foreach (Report.ChartType chartType in Enum.GetValues<Report.ChartType>())
                                 {
-                                    <option value="@chartType" selected="@(reportData.structure.ChartType == chartType)">
+                                    <option value="@chartType" selected="@(reportData.Structure.ChartType == chartType)">
                                         @chartType
                                     </option>
                                 }

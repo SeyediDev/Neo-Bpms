@@ -20,13 +20,13 @@
 	}
 	var pageLinkCount = 10;
 	int pageNo = ViewBag.Page ?? 1;
-	var hasSubReportCount = reportInfo.structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
+	var hasSubReportCount = reportInfo.Structure.SubReports.Any(sr => sr.Type != Report.SubReportType.DrillDown);
 	var isDrillDown = ViewBag.DrillDown ?? false;
 	var canDesign = ViewBag.CanDesign ?? false;
 	var bFromDashboard = ViewBag.bFromDashboard ?? false;
 	var hasDetailsForm = true; //todo
-	var reportKey = reportInfo.structure.ConfigId;
-	var drillDownSubReports = reportInfo.structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+	var reportKey = reportInfo.Structure.ConfigId;
+	var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 	var drillDownCount = drillDownSubReports.Count;
 }
 
@@ -62,7 +62,7 @@
 			{
 				rowNumber = 1;
 			}
-			var selectedColumns = reportInfo.structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
+			var selectedColumns = reportInfo.Structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
 		}
 		@if (!hasSubReportCount && reportInfo.TotalRecord != null)
 		{
@@ -114,9 +114,9 @@
 			row.Data.GetField("Ids", out ids);
 			<tr @((drillDownCount >= 1) ? "ondblclick=openSubReportFrame(this,event) sReportCount=" + drillDownCount + " style='cursor:pointer;'" : "") class="@rowClassNames" ids="@ids">
 				<td class="table-col-value" style="text-align: center; direction: rtl;">
-					@if (reportInfo.structure.ReportViewType == ReportViewType.List && hasDetailsForm)
+					@if (reportInfo.Structure.ReportViewType == ReportViewType.List && hasDetailsForm)
 					{
-						<a href="~/Form/Details?NamespaceId=@(reportInfo.structure.NamespaceId)&EntityId=@(reportInfo.structure.EntityId)&ids=@(ids)">@rowNumber</a>
+						<a href="~/Form/Details?NamespaceId=@(reportInfo.Structure.NamespaceId)&EntityId=@(reportInfo.Structure.EntityId)&ids=@(ids)">@rowNumber</a>
 					}
 					else
 					{
@@ -182,7 +182,7 @@
 				var listReports = new List<ReportData>();
 				foreach (var sReport in row.SubReports)
 				{
-					if (sReport.structure.ReportViewType == ReportViewType.Chart)
+					if (sReport.Structure.ReportViewType == ReportViewType.Chart)
 					{
 						chartReports.Add(sReport);
 					}
@@ -204,8 +204,8 @@
 						@foreach (var cReport in chartReports)
 						{
 							ViewBag.Counter = co;
-							if (cReport.structure.ChartType == Report.ChartType.WorldMap ||
-							    cReport.structure.ChartType == Report.ChartType.IranMap)
+							if (cReport.Structure.ChartType == Report.ChartType.WorldMap ||
+							    cReport.Structure.ChartType == Report.ChartType.IranMap)
 							{
 								@Html.Partial("_map", cReport)
 							}
@@ -276,7 +276,7 @@
 				@ViewTexts.Row
 			</th>
 
-			@foreach (var colth in reportInfo.structure.SelectedColumns)
+			@foreach (var colth in reportInfo.Structure.SelectedColumns)
 			{
 				if (colth.aggrType != eAggregationFunctions.GroupByItem)
 				{

@@ -39,7 +39,7 @@ public class SubReportData(ReportStructRoutines reportStructRoutines)
             {
                 if (config.ViewType != ReportViewType.List)
                 {
-                    foreach (ColumnFieldDefinition field in result.structure.SelectedColumns)
+                    foreach (ColumnFieldDefinition field in result.Structure.SelectedColumns)
                     {
                         if (field.aggrType != eAggregationFunctions.GroupByItem) continue;
                         object obj;
@@ -60,7 +60,7 @@ public class SubReportData(ReportStructRoutines reportStructRoutines)
             if (subReport.Type == Report.SubReportType.DrillDown)
                 continue;
             ReportData subQuery = await RunSubQuery(reportDataRoutines,
-                idArray, config, subReport, culture, forPrint, lp, user, result.structure.FilterValues, cancellationToken);
+                idArray, config, subReport, culture, forPrint, lp, user, result.Structure.FilterValues, cancellationToken);
             if (subQuery == null)
                 continue;
             row.SubReports ??= [];
@@ -81,7 +81,7 @@ public class SubReportData(ReportStructRoutines reportStructRoutines)
         ReportData subQuery = new(parentConfig, structure, parentFilterValues)
         {
             Config = subReport.ConfiguredReport,
-            recordsPerPage = subConfigRecordsPerPage
+            RecordsPerPage = subConfigRecordsPerPage
         };
         await reportDataRoutines.GetReportRecords(subQuery, subReport.ConfiguredReport,
             parentConfig, subReport,
