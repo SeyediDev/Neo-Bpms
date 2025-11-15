@@ -12,18 +12,7 @@ public class ReportRenderer
     public static object GetCelValue(ColumnFieldDefinition colInfo, ElasticObject data)
     {
         object value = GetValue(colInfo, data);
-        if (value == null)
-        {
-            if (colInfo.aggrType == eAggregationFunctions.InColumn ||
-                colInfo.aggrType == eAggregationFunctions.Formula)
-            {
-                value = " ";
-            }
-            else
-            {
-                value = 0;
-            }
-        }
+        value ??= colInfo.aggrType == eAggregationFunctions.InColumn ? " " : 0;
         return value;
     }
 
@@ -31,14 +20,12 @@ public class ReportRenderer
     {
         if (data == null)
         {
-            return colInfo.aggrType == eAggregationFunctions.InColumn ||
-                colInfo.aggrType == eAggregationFunctions.Formula
+            return colInfo.aggrType == eAggregationFunctions.InColumn
                 ? string.Empty
                 : 0;
         }
         object value;
-        if (colInfo.aggrType == eAggregationFunctions.InColumn ||
-            colInfo.aggrType == eAggregationFunctions.Formula)
+        if (colInfo.aggrType == eAggregationFunctions.InColumn )
         {
             bool hasvalue = data.GetField(colInfo.ColumnTypeName, out value);
             if (!hasvalue)

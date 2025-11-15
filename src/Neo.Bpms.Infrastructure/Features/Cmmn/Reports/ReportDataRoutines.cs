@@ -130,6 +130,13 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         if (!q.GetDocuments(result.Structure.FilterValues, lp))
         {
             result.QueryInfo.AddByQueryUtility(q);
+            result.Errors.Add(new Domain.Models.Base.ErrorInformation()
+            {
+                Code = "1211",
+                For = config.ConfigId,
+                GeneralText = q.CommandTxt,
+                Text = q.ErrorText
+            });
             return;
         }
 

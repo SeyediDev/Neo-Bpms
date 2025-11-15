@@ -8,11 +8,11 @@ public class ColumnFieldDefinition(string alias) : InputFieldDefinition(alias)
     public string entityId { get; set; }
     public string AssociationName { get; set; }
     public string ColumnName { get; set; }
-    public string formula;
+    public string Formula { get; set; }
     public bool IsSorted => (SortOrder ?? 0) > 0;
     public bool Descending { get; set; }
     public int? SortOrder { get; set; }
-    public bool IsTooltip;
+    public bool IsTooltip { get; set; }
     public ConfiguredReport.ReportMatrixType? MatrixType { get; set; }
     public eAggregationFunctions aggrType = eAggregationFunctions.InColumn;
 
@@ -37,14 +37,13 @@ public class ColumnFieldDefinition(string alias) : InputFieldDefinition(alias)
 
         string orderName = aggrType switch
         {
-            eAggregationFunctions.Formula => "(" + formula + ")",
-            //???
+            eAggregationFunctions.AggregationFormula => "(" + Formula + ")",
             eAggregationFunctions.First => "Min(" + colName + ")",
-            //???
             eAggregationFunctions.Last => "Max(" + colName + ")",
-            eAggregationFunctions.Sum or eAggregationFunctions.Avg or eAggregationFunctions.Min or eAggregationFunctions.Max or eAggregationFunctions.Count or eAggregationFunctions.StDev or eAggregationFunctions.StDevP or eAggregationFunctions.Var or eAggregationFunctions.VarP or eAggregationFunctions.CHECKSUM_AGG or eAggregationFunctions.GROUPING => $"{aggrType}(" + colName + ")",
-            //case eAggregationFunctions.GroupByItem:
-            //case eAggregationFunctions.InColumn:
+            eAggregationFunctions.Sum or eAggregationFunctions.Avg or eAggregationFunctions.Min or 
+            eAggregationFunctions.Max or eAggregationFunctions.Count or eAggregationFunctions.StDev or 
+            eAggregationFunctions.StDevP or eAggregationFunctions.Var or eAggregationFunctions.VarP or 
+            eAggregationFunctions.CHECKSUM_AGG or eAggregationFunctions.GROUPING => $"{aggrType}(" + colName + ")",
             _ => colName,
         };
         return orderName.Replace(" ", "");

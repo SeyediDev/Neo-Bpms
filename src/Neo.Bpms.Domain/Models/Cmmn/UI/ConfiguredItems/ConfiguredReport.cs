@@ -210,6 +210,7 @@ public class ConfiguredReport : ConfiguredItem
         asAggregation_Mode,
         asAggregation_Trend,
         asAggregation_Count,
+        asAggregation,
     }
 
     public enum eHAlign

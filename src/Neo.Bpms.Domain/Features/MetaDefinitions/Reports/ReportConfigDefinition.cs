@@ -181,7 +181,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <returns></returns>
     protected void DisplayColumnFormula(string formula, string alias = null)
     {
-        AddFormulaField(ConfiguredReport.eFieldSelectionType.asColumn, formula, alias);
+        AddFormulaField(ConfiguredReport.eFieldSelectionType.asColumn, null, formula, alias);
     }
 
     /// <summary>
@@ -207,7 +207,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     protected void AggregationFormula(string formula, AggregationType aggregationType, string alias = null,
         params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AddFormulaField((ConfiguredReport.eFieldSelectionType)aggregationType, formula, alias, properties);
+        AddFormulaField((ConfiguredReport.eFieldSelectionType)aggregationType, null, formula, alias, properties);
     }
 
     /// <summary>
@@ -378,9 +378,13 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void GroupByFormula(string formula, string alias = null)
+    protected void GroupByFormula(string formula, string alias = null, bool addAsDisplayColumn = true)
     {
-        AddFormulaField(ConfiguredReport.eFieldSelectionType.asGroupBy, formula, alias);
+        AddFormulaField(ConfiguredReport.eFieldSelectionType.asGroupBy, null, formula, alias);
+        if (addAsDisplayColumn)
+        {
+            AddFormulaField(ConfiguredReport.eFieldSelectionType.asColumn, selectedField?.fieldId, formula, alias);
+        }
     }
 
     /// <summary>
@@ -430,11 +434,11 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     }
 
     private void AddFormulaField(ConfiguredReport.eFieldSelectionType type,
-        string formula, string alias,
+        string fieldId, string formula, string alias,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
-            $"formulaSjvs_{reportConfig.Fields.Count}", report.EntityId, null,
+            fieldId??$"formulaSjvs_{reportConfig.Fields.Count}", report.EntityId, null,
             alias, formula, false, ConfiguredReport.ReportMatrixType.Horizontal);
         ApplySelectedFieldProperties(selectedField, properties);
     }

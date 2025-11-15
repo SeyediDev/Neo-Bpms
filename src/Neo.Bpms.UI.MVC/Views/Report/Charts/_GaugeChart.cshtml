@@ -18,7 +18,7 @@
     double gaugeValue = 0;
     if (gaugeValueColumn != null && row != null)
     {
-        gaugeValue = (gaugeValueColumn.aggrType == eAggregationFunctions.Formula)
+        gaugeValue = !string.IsNullOrEmpty(gaugeValueColumn.Formula)
             ? Convert.ToDouble(row.Data[gaugeValueColumn.ColumnTypeName] ?? 0)
             : row.Data.GetDouble(gaugeValueColumn.ColumnTypeName);
     }

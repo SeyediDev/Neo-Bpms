@@ -52,7 +52,7 @@ public class ReportData
 
             singleValue = row == null
                 ? 0
-                : (singleValueColumn.aggrType == eAggregationFunctions.Formula)
+                : !string.IsNullOrEmpty(singleValueColumn.Formula)
                     ? Convert.ToDouble(row.Data[singleValueColumn.ColumnTypeName] ?? 0)
                     : row.Data.GetDouble(singleValueColumn.ColumnTypeName);
         }
@@ -212,6 +212,7 @@ public enum ReportConfigProperty
     IconClass = 10303,
     BackgroundColor = 10304,
     TextColor = 10305,
+    ChartAdvancedOptions = 10306,
 }
 
 public class PostedProperty

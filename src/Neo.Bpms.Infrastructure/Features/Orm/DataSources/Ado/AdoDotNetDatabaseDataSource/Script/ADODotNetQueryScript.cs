@@ -579,7 +579,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
             }
 
             sql += FetchFieldOrFormula(dataSource, gItem);
-            if (gItem.function is not eAggregationFunctions.InColumn and not eAggregationFunctions.Formula)
+            if (gItem.function is not eAggregationFunctions.InColumn and not eAggregationFunctions.AggregationFormula)
             {
                 sql += ")";
             }

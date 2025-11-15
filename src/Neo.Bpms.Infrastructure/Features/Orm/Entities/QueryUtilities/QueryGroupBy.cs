@@ -93,7 +93,7 @@ public partial class QueryUtility
             {
                 if (field.Formula?.FormulaBody != null)
                 {
-                    if (!field.Formula.UsedForAggregationOnly && (func == eAggregationFunctions.Formula || func == eAggregationFunctions.InColumn))
+                    if (!field.Formula.UsedForAggregationOnly && (func == eAggregationFunctions.AggregationFormula || func == eAggregationFunctions.InColumn))
                     {
                         addGroupBy(new AggregateDefinition(field)
                         {

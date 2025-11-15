@@ -362,7 +362,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
 
         foreach (string requestFormula in requestFormulas)
         {
-            q.GroupByFormula(requestFormula, eAggregationFunctions.Formula, eAggregateScope.All, "F" + formulaIndex++);
+            q.GroupByFormula(requestFormula, eAggregationFunctions.AggregationFormula, eAggregateScope.All, "F" + formulaIndex++);
         }
 
         if (!string.IsNullOrEmpty(whereClause))

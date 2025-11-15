@@ -54,7 +54,7 @@
 		ReportId: "@structure.Form_ReportId",
 		ConfigId: "@structure.ConfigId"
 	};
-	var formulaAggrId = "@(eAggregationFunctions.Formula)";
+	var formulaAggrId = "@(eAggregationFunctions.AggregationFormula)";
 </script>
 
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/report/report-orderByModal.css"/>
@@ -93,8 +93,8 @@
 								{
 									var descGovernor = column.col.Descending ? "governor" : "";
 									var ascGovernor = !column.col.Descending ? "governor" : "";
-									var orderById = column.orderById ? "governor2" : "";
-									var orderByBasic = !column.orderById ? "governor2" : "";
+									var orderById = column.OrderById ? "governor2" : "";
+                                    var orderByBasic = !column.OrderById ? "governor2" : "";
 
 									RenderOrderingItem(column.col, orderById, orderByBasic, descGovernor, ascGovernor);
 								}
@@ -154,7 +154,7 @@
 		    column-associationName="@(column.AssociationName)"
 		    column-name="@(column.ColumnName)"
 		    column-aggrId="@(column.aggrType)"
-		    column-formula="@(column.formula)">
+		    column-formula="@(column.Formula)">
 			&nbsp; @(column.Alias)
 
 			@if (column.FieldType == TVariableTypes.Association)

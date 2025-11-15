@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage;
 using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage.Dto;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
@@ -518,15 +519,22 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
                 return name;
             }
 
-            // Check for Description attribute
+            // Prefer Display attribute (supports resource-based localization)
+            var displayAttribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
+            if (displayAttribute?.GetName() is { } displayName && !string.IsNullOrWhiteSpace(displayName))
+            {
+                return displayName;
+            }
+
+            // Fallback to Description attribute if available
             var descriptionAttribute = fieldInfo.GetCustomAttribute<DescriptionAttribute>();
-            if (descriptionAttribute != null)
+            if (descriptionAttribute != null && !string.IsNullOrWhiteSpace(descriptionAttribute.Description))
             {
                 return descriptionAttribute.Description;
             }
         }
 
-        // Fall back to the name if no description
+        // Fall back to the enum member name
         return name;
     }
     #endregion

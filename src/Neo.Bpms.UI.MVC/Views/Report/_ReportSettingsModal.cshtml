@@ -1,4 +1,6 @@
-﻿@using Neo.Bpms.Domain.Entities.Cmmn
+﻿@using System
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn
 @using Neo.Bpms.Domain.Entities.Cmmn.UI
 ;
 @using Neo.Bpms.Domain.Model.Project
@@ -22,7 +24,7 @@
 		ReportId: "@structure.Form_ReportId",
 		ConfigId: "@structure.ConfigId"
 	};
-	var formulaAggrId = "@(eAggregationFunctions.Formula)";
+	var formulaAggrId = "@(eAggregationFunctions.AggregationFormula)";
 	var inputsCount = @(structure.Levels != null ? structure.Levels.Count : 0);
 </script>
 
@@ -142,6 +144,62 @@
 								}
 							}
 						</div>
+					}
+					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType != Report.ChartType.Gauge && structure.ChartType != Report.ChartType.MetricBox)
+					{
+						var advancedOptionsRaw = structure.GetReportProperty((long)ReportConfigProperty.ChartAdvancedOptions) ?? "";
+						var advancedOptions = advancedOptionsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries)
+							.Select(o => o.Trim().ToLower())
+							.ToList();
+						bool HasOption(string key) => advancedOptions.Contains(key);
+						<div class="row mt-3">
+							<div class="col-sm-12">
+								<h4>تنظیمات ظاهر نمودار</h4>
+								<input type="hidden" name="Properties[0].PropertyId" value="@((long)ReportConfigProperty.ChartAdvancedOptions)">
+								<input type="hidden" id="chartAdvancedOptionsValue-@modalKey" name="Properties[0].Value" value="@advancedOptionsRaw" />
+							</div>
+							<div class="col-sm-12" id="chartAdvancedOptions-@modalKey" data-target="#chartAdvancedOptionsValue-@modalKey">
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="stacked" id="chart-option-stacked-@modalKey" @(HasOption("stacked") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-stacked-@modalKey">نمایش ستون‌ها به صورت انباشته</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="percent" id="chart-option-percent-@modalKey" @(HasOption("percent") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-percent-@modalKey">ستون‌های درصدی (۱۰۰٪)</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="smooth" id="chart-option-smooth-@modalKey" @(HasOption("smooth") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-smooth-@modalKey">نرمی خطوط (Spline)</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="line-overlay" id="chart-option-line-@modalKey" @(HasOption("line-overlay") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-line-@modalKey">نمایش آخرین سری به صورت خط</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="markers" id="chart-option-markers-@modalKey" @(HasOption("markers") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-markers-@modalKey">نمایش مارکر نقاط</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input chart-option" type="checkbox" data-option="labels" id="chart-option-labels-@modalKey" @(HasOption("labels") ? "checked" : "") />
+									<label class="form-check-label" for="chart-option-labels-@modalKey">نمایش مقدار روی نمودار</label>
+								</div>
+							</div>
+						</div>
+						<script>
+							(function() {
+								var container = $('#chartAdvancedOptions-@modalKey');
+								var hiddenInput = $('#chartAdvancedOptionsValue-@modalKey');
+								function syncChartOptions() {
+									var values = [];
+									container.find('.chart-option:checked').each(function() {
+										values.push($(this).data('option'));
+									});
+									hiddenInput.val(values.join(','));
+								}
+								container.on('change', '.chart-option', syncChartOptions);
+								syncChartOptions();
+							})();
+						</script>
 					}
 				</div>
 				<div class="modal-footer">

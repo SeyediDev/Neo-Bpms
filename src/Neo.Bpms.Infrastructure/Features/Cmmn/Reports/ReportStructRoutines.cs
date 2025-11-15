@@ -198,7 +198,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                 cols.FirstOrDefault(
                     c => c.entityId + "." + c.ColumnTypeName == sortFieldEntityId + "." + sortFieldItems[0]) ??
                 cells.FirstOrDefault(
-                    c => c.entityId + "." + c.formula == sortFieldEntityId + "." + sortFieldFormula);
+                    c => c.entityId + "." + c.Formula == sortFieldEntityId + "." + sortFieldFormula);
             if (col == null)
                 continue;
             col.SortOrder = sortOrderIndex;
@@ -252,10 +252,34 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                 {
                     if (!string.IsNullOrEmpty(fld.formula))
                     {
-                        ColumnFieldDefinition col = AddSelectedColumn(eAggregationFunctions.Formula,
-                            fld.Alias ?? "" + (alias ?? "فرمول"),
-                            colType, null, fld, selectedColumns, reportField);
-                        col.formula = fld.formula;
+                        ColumnFieldDefinition col = null;
+                        switch (fld.type)
+                        {
+                            case ConfiguredReport.eFieldSelectionType.asColumn:
+                                col = AddSelectedColumn(eAggregationFunctions.InColumn,
+                                fld.Alias ?? "" + (alias ?? "فرمول"),
+                                colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asGroupBy:
+                                col = AddSelectedColumn(eAggregationFunctions.GroupByItem,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asFilter:
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAscending:
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asDescending:
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation:
+                                col = AddSelectedColumn(eAggregationFunctions.AggregationFormula,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                        }
                     }
 
                     continue;
@@ -394,7 +418,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                         fld.asGroupBy ? eAggregationFunctions.GroupByItem : eAggregationFunctions.InColumn,
                         (!string.IsNullOrEmpty(associationAlias) ? associationAlias + "-" : "") + fld.alias,
                         result, entity, associationName, fld, null);
-                    col.formula = fld.formula;
+                    col.Formula = fld.formula;
                 }
 
                 continue;
@@ -444,10 +468,8 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                 case TVariableTypes.DurHourMinute:
                     if (entityField.Formula != null && entityField.Formula.UsedForAggregationOnly)
                     {
-                        //var col = 
-                        AddColumn(eAggregationFunctions.Formula, fld.alias ?? alias, result, entity,
+                        AddColumn(eAggregationFunctions.AggregationFormula, fld.alias ?? alias, result, entity,
                             associationName, fld, entityField);
-                        //col.formula = entityField.Formula.FormulaText ?? "";
                     }
                     else
                     {

@@ -94,7 +94,7 @@ public static class EstablishReportQuery
             if (config.ViewType == ReportViewType.List)
                 qd.SelectFormulaField(conditionalFormatting.QueryName, formula);
             else
-                qd.GroupByFormula(formula, eAggregationFunctions.Formula, eAggregateScope.All,
+                qd.GroupByFormula(formula, eAggregationFunctions.GroupByItem, eAggregateScope.All,
                     conditionalFormatting.QueryName);
 
         }
@@ -289,14 +289,20 @@ public static class EstablishReportQuery
             if (!SelectQueryField(qd, item.entityId, item.AssociationName, item.ColumnName,
                 out QueryUtility colQuery, out EntityField colField))
             {
-                if (item.aggrType == eAggregationFunctions.Formula &&
-                    !string.IsNullOrEmpty(item.formula))
+                if (!string.IsNullOrEmpty(item.Formula))
                 {
-                    if (viewType == ReportViewType.List)
-                        qd.SelectFormulaField(item.ColumnTypeName, item.formula);
+                    if (viewType == ReportViewType.List || item.aggrType == eAggregationFunctions.AggregationFormula)
+                    {
+                        qd.SelectFormulaField(item.ColumnTypeName, item.Formula);
+                    }
+                    else if (item.aggrType == eAggregationFunctions.GroupByItem)
+                    {
+                        qd.GroupByFormula(item.Formula, true, item.ColumnTypeName);
+                    }
                     else
-                        qd.GroupByFormula(item.formula, eAggregationFunctions.InColumn, eAggregateScope.All
-                            , item.ColumnTypeName);
+                    {
+                        qd.GroupByFormula(item.Formula, item.aggrType, eAggregateScope.All, item.ColumnTypeName);
+                    }
                 }
 
                 continue;

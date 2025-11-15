@@ -8,8 +8,6 @@ public enum SortType
 }
 public enum eAggregationFunctions
 {
-    GroupByItem,
-
     Sum = 1,
     Avg = 2,
     Min,
@@ -28,14 +26,10 @@ public enum eAggregationFunctions
     //COUNT_BIG,//only in T-SQL return big int
     GROUPING,
 
-    InColumn,
-    Formula, //???
+    AggregationFormula,
 
-    //odprmagg_ReCalcFormula = 7,
-    //odprmagg_CumulativeSum = 8,
-    //odprmagg_Trend = 9,
-    //odprmagg_Mode = 10,
-    //odprmagg_ModeCount = 11,
+    GroupByItem,
+    InColumn,
 }
 
 public enum eAggregateScope

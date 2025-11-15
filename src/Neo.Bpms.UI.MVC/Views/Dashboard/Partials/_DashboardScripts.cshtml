@@ -1,11 +1,51 @@
+@using System.Text.Json
 @using Neo.Bpms.UI.MVC.Models.Dashboard
 @model DashboardPageScriptModel
+
+@{
+    var clientOnlyTabsJson = JsonSerializer.Serialize(Model.ClientOnlyConfigIds ?? Array.Empty<string>());
+}
 
 <script>
     // Set dashboard configuration for JavaScript
     window.dashboard_canDesign = @Model.CanDesign.ToString().ToLower();
     window.dashboard_activeTab = '@Model.ActiveTab';
     window.dashboard_selectedConfigId = '@Model.SelectedConfigId';
+    const clientOnlyTabs = new Set(@Html.Raw(clientOnlyTabsJson));
+    window.dashboard_clientOnlyTabs = clientOnlyTabs;
+
+    function toggleClientOnlyPanel(configId) {
+        const panels = document.querySelectorAll('[data-client-panel]');
+        let panelFound = false;
+        panels.forEach(panel => {
+            const panelId = panel.getAttribute('data-client-panel');
+            const shouldShow = !!configId && panelId === configId;
+            if (shouldShow) {
+                panel.hidden = false;
+                panel.removeAttribute('hidden');
+                panelFound = true;
+            } else {
+                panel.hidden = true;
+            }
+        });
+
+        const mainContent = document.getElementById('dashboard-main-content');
+        if (panelFound) {
+            if (mainContent) {
+                mainContent.setAttribute('hidden', 'hidden');
+            }
+        } else if (mainContent) {
+            mainContent.removeAttribute('hidden');
+        }
+
+        return panelFound;
+    }
+
+    window.dashboard_toggleClientPanel = toggleClientOnlyPanel;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleClientOnlyPanel(null);
+    });
 
     // Define switchConfig function before Dashboard.js loads
     window.dashboard_switchConfig = function (configId) {
@@ -30,6 +70,17 @@
                 if (link) link.setAttribute('aria-selected', 'false');
             }
         });
+
+        const isClientOnlyTab = clientOnlyTabs.has(configId);
+        if (isClientOnlyTab) {
+            const panelVisible = toggleClientOnlyPanel(configId);
+            if (!panelVisible) {
+                console.warn('Dashboard: Client-only tab selected but no panel found for', configId);
+            }
+            return;
+        }
+
+        toggleClientOnlyPanel(null);
 
         // Update config input and reload
         const configInput = document.querySelector("input[name='ConfigId']");

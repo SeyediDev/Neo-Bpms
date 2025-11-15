@@ -30,7 +30,7 @@
 		ReportId: "@structure.Form_ReportId",
 		ConfigId: "@structure.ConfigId"
 	};
-	var formulaAggrId = "@eAggregationFunctions.Formula";
+	var formulaAggrId = "@eAggregationFunctions.AggregationFormula";
 </script>
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/report/report-selectColumnsModal.css?v001"/>
 <div class="modal fade columnsSettingsModal" id="columnsSettingsModal-@modalKey" tabindex="-1" role="dialog" aria-labelledby="columnsSettingsModal-label-@modalKey">
@@ -223,18 +223,16 @@
 						{
 							firstId = col.ColumnName;
 						}
-						if (col.aggrType != eAggregationFunctions.GroupByItem)
+					
+						if (string.IsNullOrEmpty(col.Formula))
 						{
-							if (string.IsNullOrEmpty(col.formula))
-							{
-								var frm = col.aggrType != eAggregationFunctions.InColumn ? (col.aggrType + "(" + col.ColumnName + ")") : col.ColumnName;
+                            var frm = col.aggrType != eAggregationFunctions.InColumn && col.aggrType != eAggregationFunctions.GroupByItem ? (col.aggrType + "(" + col.ColumnName + ")") : col.ColumnName;
 
-								<a class="btn btn-outline-secondary col-md-4 col-sm-6  AddToFormulaBtn"
-								   title="@frm"
-								   onclick="addNewItemToFormula('@modalKey', '@frm', '@(firstId)')">
-									@col.Alias
-								</a>
-							}
+							<a class="btn btn-outline-secondary col-md-4 col-sm-6  AddToFormulaBtn"
+								title="@frm"
+								onclick="addNewItemToFormula('@modalKey', '@frm', '@(firstId)')">
+								@col.Alias
+							</a>
 						}
 					}
 				</div>
@@ -271,7 +269,7 @@
 		    column-associationName="@column.AssociationName"
 		    column-name="@column.ColumnName"
 		    column-aggrId="@aggrType"
-		    column-formula="@column.formula"
+		    column-formula="@column.Formula"
 		    column-matrixType="@column.MatrixType"
 		    ondblclick="renameColumn(this)">
 			<span class="alias">

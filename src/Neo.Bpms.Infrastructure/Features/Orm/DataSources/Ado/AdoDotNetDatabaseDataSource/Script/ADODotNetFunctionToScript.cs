@@ -228,7 +228,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
                 script = $"dbo.UDFPersianYearMonth({ConvertArgumentToScript(forWhere, function, localParameters)})";
                 break;
             default:
-                script = GenerateDefualErrorScript(forWhere);
+                script = GenerateDefaultErrorScript(forWhere);
                 output = function;
                 break;
         }
@@ -282,7 +282,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateEqualScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null) return GenerateDefaultErrorScript(forWhere);
         var paramNo = 0;
         var script = "";
         foreach (var prm in function.PositionalParameters)
@@ -308,7 +308,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateDateOnlyScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefaultErrorScript(forWhere);
         var script = "cast(";
         var item = function.PositionalParameters[0];
         if (ConvertExpressionToScript(forWhere, item, out var itemDateParam, out var itemout, localParameters) && itemout == null)
@@ -319,7 +319,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateStrAnyScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefaultErrorScript(forWhere);
         var item = function.PositionalParameters[0];
         var script = "";
         if (ConvertExpressionToScript(forWhere, item, out var itemFormula, out var itemout, localParameters) && itemout == null)
@@ -341,7 +341,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateStrStartScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefaultErrorScript(forWhere);
         var script = "(";
         var item = function.PositionalParameters[0];
         if (ConvertExpressionToScript(forWhere, item, out var itemFormula, out var itemout, localParameters) && itemout == null)
@@ -360,7 +360,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateStrEndScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null || function.PositionalParameters.Count <= 0) return GenerateDefaultErrorScript(forWhere);
         var script = "(";
         var item = function.PositionalParameters[0];
         if (ConvertExpressionToScript(forWhere, item, out var itemFormula, out var itemout, localParameters) && itemout == null)
@@ -425,7 +425,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private string GenerateSwitchScript(bool forWhere, FunctionInvocationExpressionNode function, LocalParameters localParameters)
     {
-        if (function.PositionalParameters == null) return GenerateDefualErrorScript(forWhere);
+        if (function.PositionalParameters == null) return GenerateDefaultErrorScript(forWhere);
         ConvertExpressionToScript(true, function.PositionalParameters[0], out var switchFormula,
             out var argOutput, localParameters);
         ConvertExpressionToScript(true, function.PositionalParameters[1], out var defaultFormula,
@@ -453,7 +453,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
         return script;
     }
 
-    private static string GenerateDefualErrorScript(bool forWhere)
+    private static string GenerateDefaultErrorScript(bool forWhere)
     {
         return forWhere ? "1=1" : "null";
     }
