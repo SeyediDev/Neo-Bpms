@@ -136,6 +136,7 @@ public static class DependencyInjection
             //_ = app.UseCaptcha(configuration);
         }
         _ = app.UseAuthentication();
+        _ = app.UseAuthorization();
         _ = app.UseResponseCaching();
         app.UseNeoBpms();
 
