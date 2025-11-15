@@ -372,6 +372,11 @@ public enum eControlPropertyId
     [ControlGroup(ControlGroup.Column)]
     WidthPercentage,
 
+    [Title("Decimal Digits")]
+    [ValueType(PropertyValueType.Int)]
+    [ControlGroup(ControlGroup.Column, ControlGroup.Number)]
+    DecimalDigits,
+
     [Title(nameof(Texts.EnLabelName), typeof(Texts))]
     [ValueType(PropertyValueType.String)]
     [ControlGroup(ControlGroup.All)]

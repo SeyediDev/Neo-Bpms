@@ -1,11 +1,15 @@
-﻿namespace Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+using System.Text.Json.Serialization;
+
+namespace Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 
 /// <summary>
 /// Properties of the form fields
 /// </summary>
 public class FormProperty : UIComponentProperty
 {
+    [JsonIgnore]
     public object value => Value;
+    [JsonIgnore]
     public eControlPropertyId id => Id;
 
     public FormProperty()

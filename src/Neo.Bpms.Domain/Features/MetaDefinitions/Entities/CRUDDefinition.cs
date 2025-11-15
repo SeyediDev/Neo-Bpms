@@ -262,6 +262,25 @@ public abstract class CRUDDefinition : EntityDefinition
             CrudDefinition.EditFormUIRules(this);
         }
     }
+    
+    public class SpecificURLForm : CUDForm
+    {
+        protected override Form Identify()
+        {
+            return DefineForm(Form.eFormType.SpecificURL, SubjectId);
+        }
+
+        protected override void ViewModel()
+        {
+            CrudDefinition.EditFormViewModel(this);
+            CrudDefinition.EditFormSubTables(this);
+        }
+
+        protected override void UIRules()
+        {
+            CrudDefinition.EditFormUIRules(this);
+        }
+    }
 
     public class ProcessCreateForm : CreateForm
     {

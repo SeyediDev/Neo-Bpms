@@ -1,4 +1,5 @@
 ﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
@@ -191,9 +192,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="aggregationType"></param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Aggregation(string fieldId, AggregationType aggregationType, string alias = null)
+    protected void Aggregation(string fieldId, AggregationType aggregationType, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AddField((ConfiguredReport.eFieldSelectionType)aggregationType, fieldId, alias);
+        AddField((ConfiguredReport.eFieldSelectionType)aggregationType, fieldId, alias, properties);
     }
 
     /// <summary>
@@ -203,9 +205,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="aggregationType"></param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void AggregationFormula(string formula, AggregationType aggregationType, string alias = null)
+    protected void AggregationFormula(string formula, AggregationType aggregationType, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AddFormulaField((ConfiguredReport.eFieldSelectionType)aggregationType, formula, alias);
+        AddFormulaField((ConfiguredReport.eFieldSelectionType)aggregationType, formula, alias, properties);
     }
 
     /// <summary>
@@ -214,9 +217,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="fieldId">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Sum(string fieldId, string alias = null)
+    protected void Sum(string fieldId, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        Aggregation(fieldId, AggregationType.Sum, alias);
+        Aggregation(fieldId, AggregationType.Sum, alias, properties);
     }
 
     /// <summary>
@@ -225,9 +229,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="fieldId">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Average(string fieldId, string alias = null)
+    protected void Average(string fieldId, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        Aggregation(fieldId, AggregationType.Average, alias);
+        Aggregation(fieldId, AggregationType.Average, alias, properties);
     }
 
     /// <summary>
@@ -236,9 +241,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void SumFormula(string formula, string alias = null)
+    protected void SumFormula(string formula, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AggregationFormula(formula, AggregationType.Sum, alias);
+        AggregationFormula(formula, AggregationType.Sum, alias, properties);
     }
 
     /// <summary>
@@ -247,14 +253,15 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="fieldId">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Count(string fieldId = null, string alias = null)
+    protected void Count(string fieldId = null, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
         if (string.IsNullOrEmpty(fieldId))
         {
             fieldId = "*";
         }
 
-        Aggregation(fieldId, AggregationType.Count, alias);
+        Aggregation(fieldId, AggregationType.Count, alias, properties);
     }
 
     /// <summary>
@@ -263,9 +270,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void CountFormula(string formula, string alias = null)
+    protected void CountFormula(string formula, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AggregationFormula(formula, AggregationType.Count, alias);
+        AggregationFormula(formula, AggregationType.Count, alias, properties);
     }
 
     /// <summary>
@@ -274,9 +282,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="fieldId">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Max(string fieldId, string alias = null)
+    protected void Max(string fieldId, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        Aggregation(fieldId, AggregationType.Max, alias);
+        Aggregation(fieldId, AggregationType.Max, alias, properties);
     }
 
     /// <summary>
@@ -285,9 +294,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void MaxFormula(string formula, string alias = null)
+    protected void MaxFormula(string formula, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AggregationFormula(formula, AggregationType.Max, alias);
+        AggregationFormula(formula, AggregationType.Max, alias, properties);
     }
 
     /// <summary>
@@ -296,9 +306,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="fieldId">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void Min(string fieldId, string alias = null)
+    protected void Min(string fieldId, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        Aggregation(fieldId, AggregationType.Min, alias);
+        Aggregation(fieldId, AggregationType.Min, alias, properties);
     }
 
     /// <summary>
@@ -307,9 +318,10 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void MinFormula(string formula, string alias = null)
+    protected void MinFormula(string formula, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AggregationFormula(formula, AggregationType.Min, alias);
+        AggregationFormula(formula, AggregationType.Min, alias, properties);
     }
 
     /// <summary>
@@ -419,26 +431,46 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     }
 
     private void AddFormulaField(ConfiguredReport.eFieldSelectionType type,
-        string formula, string alias)
+        string formula, string alias,
+        IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             $"formulaSjvs_{reportConfig.Fields.Count}", report.EntityId, null,
             alias, formula, false, ConfiguredReport.ReportMatrixType.Horizontal);
+        ApplySelectedFieldProperties(selectedField, properties);
     }
 
     private void AddField(ConfiguredReport.eFieldSelectionType type,
-        string fieldId, string alias)
+        string fieldId, string alias,
+        IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, report.EntityId, null,
             alias, null, false, ConfiguredReport.ReportMatrixType.Horizontal);
+        ApplySelectedFieldProperties(selectedField, properties);
     }
     private void AddIncludedField(ConfiguredReport.eFieldSelectionType type,
-        string fieldId, string associationEntityId, string associationName, string alias)
+        string fieldId, string associationEntityId, string associationName, string alias,
+        IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, associationEntityId, associationName,
             alias, null, false, ConfiguredReport.ReportMatrixType.Horizontal);
+        ApplySelectedFieldProperties(selectedField, properties);
+    }
+
+    private static void ApplySelectedFieldProperties(ConfiguredReport.SelectedField field,
+        IEnumerable<(eControlPropertyId propertyId, object value)> properties)
+    {
+        if (field == null || properties == null)
+        {
+            return;
+        }
+
+        foreach ((eControlPropertyId propertyId, object value) in properties)
+        {
+            field.AddProperty(propertyId, value);
+        }
     }
 
     /// <summary>

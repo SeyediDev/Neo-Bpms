@@ -1,0 +1,80 @@
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Components
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.UI.MVC.Models.Dashboard
+@model DashboardWidgetRenderModel
+
+@{
+    ViewBag.Counter = (ViewBag.Counter ?? 0) + 1;
+    ViewBag.bFromDashboard = true;
+    ViewBag.CanDesign = false;
+
+    var reportData = Model.ReportData;
+    var widget = Model.Widget;
+}
+
+@if (reportData.structure.ReportViewType == ReportViewType.Chart)
+{
+    if (reportData.structure.ChartType == Report.ChartType.WorldMap ||
+        reportData.structure.ChartType == Report.ChartType.IranMap)
+    {
+        <partial name="~/Views/Report/_map.cshtml" model="reportData" />
+    }
+    else if (reportData.structure.ChartType == Report.ChartType.BpmnDiagram)
+    {
+        <partial name="~/Views/Report/_bpmn.cshtml" model="reportData" />
+    }
+    else if (reportData.structure.ChartType == Report.ChartType.MetricBox)
+    {
+        var metricValue = reportData.GetMetricBoxValue();
+        var structure = reportData.structure;
+        var iconClass = structure.GetReportProperty((long)ReportConfigProperty.IconClass);
+        if (string.IsNullOrWhiteSpace(iconClass))
+        {
+            iconClass = widget?.GetPropertyValue(eControlPropertyId.IconClass);
+        }
+        iconClass ??= "fal fa-info-circle";
+        var backgroundColor = /*structure.GetReportProperty((long)ReportConfigProperty.BackgroundColor);
+        if (string.IsNullOrWhiteSpace(backgroundColor))
+        {
+            backgroundColor = widget?.GetPropertyValue(eControlPropertyId.BackgroundColor);
+        }
+        backgroundColor ??= */"#2563EB";
+        var textsColor = structure.GetReportProperty((long)ReportConfigProperty.TextColor);
+        if (string.IsNullOrWhiteSpace(textsColor))
+        {
+            textsColor = widget?.GetPropertyValue(eControlPropertyId.Color);
+        }
+        textsColor ??= "#ffffff";
+
+        <div class="dashboard-metric-box shadow-sm" style="background-color:@backgroundColor;color:@textsColor;">
+            <span class="dashboard-metric-box__value">@metricValue</span>
+        </div>
+        <style>
+            .dashboard-metric-box {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                border-radius: 1rem;
+                padding: 1.5rem 2rem;
+                gap: 1rem;
+                min-height: 160px;
+            }
+
+            .dashboard-metric-box__value {
+                font-size: clamp(2.5rem, 4vw, 3.5rem);
+                font-weight: 700;
+                line-height: 1;
+            }
+        </style>
+    }
+    else
+    {
+        <partial name="~/Views/Report/_chartView.cshtml" model="reportData" />
+    }
+}
+else
+{
+    <partial name="~/Views/Report/_listView.cshtml" model="reportData" />
+}

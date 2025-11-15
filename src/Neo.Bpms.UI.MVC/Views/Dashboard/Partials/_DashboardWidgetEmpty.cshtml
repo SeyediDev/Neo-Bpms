@@ -1,0 +1,51 @@
+@using Neo.Bpms.UI.MVC.Models.Dashboard
+@model DashboardWidgetRenderModel
+
+@{
+    var divConfig = Model.DivConfig;
+    var widget = Model.Widget;
+}
+
+<div class="neo-dashboard-widget-error">
+    <svg viewBox="0 0 24 24">
+        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#error-icon" />
+    </svg>
+    <div style="text-align: center;">
+        @if (widget == null)
+        {
+            <p style="margin: 8px 0; font-weight: bold;">ویجتی تنظیم نشده است</p>
+        }
+        else
+        {
+            <p style="margin: 8px 0; font-weight: bold;">داده ویجت در دسترس نیست</p>
+        }
+        @if (Model.CanDesign)
+        {
+            <details style="font-size: 12px; color: #666; text-align: right; margin-top: 12px;">
+                <summary style="cursor: pointer; user-select: none;">🐛 اطلاعات Debug</summary>
+                <div style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin-top: 8px;">
+                    <p><strong>Widget ID:</strong> @divConfig.WidgetId</p>
+                    <p><strong>Widget:</strong> @(widget != null ? "✓ یافت شد" : "✗ null")</p>
+                    @if (widget != null)
+                    {
+                        <p><strong>ReportConfigId:</strong> @(string.IsNullOrEmpty(widget.ReportConfigId) ? "✗ خالی" : widget.ReportConfigId)</p>
+                        <p><strong>ReportId:</strong> @(string.IsNullOrEmpty(widget.ReportId) ? "✗ خالی" : widget.ReportId)</p>
+                        <p><strong>ReportNamespaceId:</strong> @widget.ReportNamespaceId</p>
+                        <p><strong>ReportEntityId:</strong> @widget.ReportEntityId</p>
+                    }
+                    <p><strong>Model.ReportsData:</strong> @(Model.DashboardData?.ReportsData != null ? $"{Model.DashboardData.ReportsData.Count()} گزارش" : "✗ null")</p>
+                    @if (Model.DashboardData?.ReportsData?.Any() == true)
+                    {
+                        <p><strong>گزارشات موجود:</strong></p>
+                        <ul style="text-align: right; font-size: 11px;">
+                            @foreach (var rd in Model.DashboardData.ReportsData)
+                            {
+                                <li>ConfigId: @rd.structure?.ConfigId, ReportId: @rd.structure?.Form_ReportId, Count: @rd.RecordCount</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </details>
+        }
+    </div>
+</div>

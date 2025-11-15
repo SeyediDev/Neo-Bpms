@@ -1,6 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using Neo.Bpms.Domain.Entities.Cmmn.UI;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
@@ -251,6 +253,7 @@ public class ConfiguredReport : ConfiguredItem
         public string selectedFieldId => type + "$" + fieldId + "$" + entityId + "$" + AssociationName;
         public ReportMatrixType? MatrixType { get; set; }
         public List<ColumnFilterDefinition> FieldFilters { get; set; } = null;
+        public List<FormProperty> Properties { get; set; }
 
         public ColumnFilterDefinition AddFilter(ColumnFilterDefinition.eOperator Operator, string Operand)
         {
@@ -259,8 +262,15 @@ public class ConfiguredReport : ConfiguredItem
                 Operator = Operator,
                 Operand = Operand
             };
+            FieldFilters ??= [];
             FieldFilters.Add(columnFilterDefinition);
             return columnFilterDefinition;
+        }
+
+        public void AddProperty(eControlPropertyId propertyId, object value)
+        {
+            Properties ??= [];
+            Properties.Add(new FormProperty(propertyId, value));
         }
 
         public SelectedField Clone()
@@ -288,6 +298,15 @@ public class ConfiguredReport : ConfiguredItem
                 {
                     ColumnFilterDefinition ff = fieldFilter.Clone();
                     sf.FieldFilters.Add(ff);
+                }
+            }
+
+            if (Properties != null)
+            {
+                sf.Properties = [];
+                foreach (FormProperty property in Properties)
+                {
+                    sf.Properties.Add(new FormProperty(property.PropertyId, property.Value));
                 }
             }
 

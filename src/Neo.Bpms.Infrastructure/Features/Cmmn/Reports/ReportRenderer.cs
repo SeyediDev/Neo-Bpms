@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
 public class ReportRenderer
 {
@@ -48,6 +50,23 @@ public class ReportRenderer
             if (!hasvalue)
             {
                 data.GetField(colInfo.ColumnTypeName + "Id", out value);
+            }
+        }
+        var decimalDigitsProperty = colInfo.GetProperty(eControlPropertyId.DecimalDigits);
+        if (decimalDigitsProperty?.Value != null && value != null)
+        {
+            int decimalDigits = decimalDigitsProperty.Value.ToInt();
+            if (decimalDigits >= 0)
+            {
+                try
+                {
+                    decimal numericValue = Convert.ToDecimal(value);
+                    value = Math.Round(numericValue, decimalDigits);
+                }
+                catch
+                {
+                    // Ignore non-numeric values when rounding is requested.
+                }
             }
         }
         return value;

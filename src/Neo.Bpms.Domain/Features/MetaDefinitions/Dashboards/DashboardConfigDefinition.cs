@@ -7,6 +7,7 @@ public abstract class DashboardConfigDefinition : BaseModelingDefinition
     protected abstract string Title { get; }
     protected virtual List<string>? Roles { get; }
     protected virtual bool IsDefault { get; }
+    protected virtual string Icon => "home-dashboard";
 
     /// <summary>
     /// Define All Dashboard Configuration
@@ -28,7 +29,8 @@ public abstract class DashboardConfigDefinition : BaseModelingDefinition
             FolderId = null,
             Divs = [],
             Widgets = [],
-            IsMeta = true
+            IsMeta = true,
+            Icon = Icon
         };
         dashboard.MetaConfigures ??= [];
         dashboard.MetaConfigures.Add(dashboardConfig.ConfigId, dashboardConfig);

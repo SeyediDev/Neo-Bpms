@@ -10,6 +10,12 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
     protected virtual void RenderHeader(NeoStringBuilder result, bool isRemoteData,
         bool isMultiple, List<string> idsList, bool isSubTable, string defaultValue = null)
     {
+        if (!isRemoteData && !string.IsNullOrWhiteSpace(Field.PropertyValue(eControlPropertyId.NamespaceId))
+            && !string.IsNullOrWhiteSpace(Field.PropertyValue(eControlPropertyId.EntityId)))
+        {
+            isRemoteData = true;
+        }
+
         result.Append($"<div data-id=\"{Field.FieldName}\" title=\"" + CommonProperties.Tooltip + "\" class=\"" +
               ControlsRendererData.ControlsClassString +
                 CommonProperties.NarrowColumnClasses +
@@ -24,10 +30,21 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
         if (isMultiple)
             result.Append(" multiple=\"true\" ");
         string selectName = isMultiple && ControlsRendererData.Options.IsFilter ? $"{Field.FieldName}[]" : Field.FieldName;
+        string placeholder = Field.PropertyValue(eControlPropertyId.LabelName)
+            ?? Field.PropertyValue(eControlPropertyId.EnLabelName)
+            ?? Field.Label
+            ?? Field.FieldName;
+        string encodedPlaceholder = ControlsRendererData.Encoder.Encode(placeholder ?? string.Empty);
+        string placeholderAttribute = string.IsNullOrWhiteSpace(encodedPlaceholder)
+            ? string.Empty
+            : $" data-placeholder=\"{encodedPlaceholder}\"";
+        string allowClearAttribute = !CommonProperties.IsRequired ? " data-allow-clear=\"true\"" : string.Empty;
+
         result.Append(CommonProperties.ReadOnlyRelatedAttribute + " " +
               (isRemoteData ? $"data-isremote=\"true\" filter-formula=\"{Field.PropertyValue(eControlPropertyId.FilterFormula)}\"" : "") +
               (defaultValue != null ? $" data-default-value=\"{defaultValue}\"" : "") +
-              (CommonProperties.IsRequired ? " required=\"required\" oninvalid=\"InvalidMsg(this);\" " : "") + " dir=\"" +
+              (CommonProperties.IsRequired ? " required=\"required\" oninvalid=\"InvalidMsg(this);\" " : "") +
+              placeholderAttribute + allowClearAttribute + " dir=\"" +
                   CommonProperties.Direction + "\" title=\"" + CommonProperties.Tooltip + "\" name=\"" + selectName +
                   (ControlsRendererData.Options.IsFilter ? "\" form=\"filter-form" : "") +
                   "\" class=\"cBox\" " +

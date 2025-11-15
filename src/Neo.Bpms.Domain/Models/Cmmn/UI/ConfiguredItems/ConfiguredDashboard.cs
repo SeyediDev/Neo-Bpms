@@ -21,6 +21,7 @@ public class ConfiguredDashboard : ConfiguredItem
     public List<ConfigDiv> Divs { get; set; } = [];
     public List<ConfigWidget> Widgets { get; set; } = [];
     public bool IsMeta { get; set; }
+    public string Icon { get; set; }
 
     public class ConfigDiv
     {
@@ -45,6 +46,7 @@ public class ConfiguredDashboard : ConfiguredItem
         public string ReportId { get; set; }
         public string ReportConfigId { get; set; }
         public List<ConfigWidgetProperty> Properties { get; set; }
+        public string Icon { get; set; }
 
         public string GetPropertyValue(eControlPropertyId prop)
         {

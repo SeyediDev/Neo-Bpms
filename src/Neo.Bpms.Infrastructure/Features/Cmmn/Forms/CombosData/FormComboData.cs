@@ -75,6 +75,11 @@ public static class FormComboData
         bool isReadOnly = (!isSubTable || !subIsEditable) &&
                          form.AllFieldsAreReadOnly() && formField.FieldOrControlType != FormField.Type.FilterField;
         bool isRemoteData = formField.CheckProperty(eControlPropertyId.RemoteData);
+        if (!isRemoteData && field?.AssociationEntity?.Entity() != null)
+        {
+            isRemoteData = true;
+            formField.AddProperty(eControlPropertyId.RemoteData, true);
+        }
         bool isOnDemand = formField.CheckProperty(eControlPropertyId.OnDemand) &&
                          !formField.CheckProperty(eControlPropertyId.DefaultValue);
         bool isMandatory = formField.CheckProperty(eControlPropertyId.Required);

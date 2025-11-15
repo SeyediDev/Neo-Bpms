@@ -36,6 +36,28 @@ public class ReportData
         structure.SelectedColumns.Where(col =>
             col.aggrType != eAggregationFunctions.GroupByItem &&
             col.aggrType != eAggregationFunctions.InColumn);
+    public double GetMetricBoxValue()
+    {
+        double singleValue = 0;
+        var singleColumnAlias = "";
+        var row = Rows!=null && Rows.Count > 0 ? Rows[0] : null;
+        var singleValueColumn = structure.SelectedColumns.FirstOrDefault(s =>
+            s.aggrType != eAggregationFunctions.GroupByItem &&
+            s.aggrType !=
+            eAggregationFunctions
+                .InColumn); 
+        if (singleValueColumn != null)
+        {
+            singleColumnAlias = singleValueColumn.Alias;
+
+            singleValue = row == null
+                ? 0
+                : (singleValueColumn.aggrType == eAggregationFunctions.Formula)
+                    ? Convert.ToDouble(row.Data[singleValueColumn.ColumnTypeName] ?? 0)
+                    : row.Data.GetDouble(singleValueColumn.ColumnTypeName);
+        }
+        return singleValue;
+    }
 }
 
 public class ReportOrderInfo

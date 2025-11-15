@@ -374,7 +374,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
             entityId = selectedField.entityId,
             AssociationName = selectedField.AssociationName,
         };
-        FillProperties(entityField, reportField, col);
+        FillProperties(entityField, reportField, col, selectedField);
         selectedColumns.Add(col);
         return col;
     }
@@ -499,7 +499,8 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
     }
 
     private static void FillProperties(EntityField entityField,
-        Report.Field reportField, FormFieldDefinition col)
+        Report.Field reportField, FormFieldDefinition col,
+        ConfiguredReport.SelectedField selectedField = null)
     {
         if (entityField?.Properties != null)
         {
@@ -540,6 +541,14 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         {
             foreach (FormProperty item in reportField.properties)
                 col.AddProperty(item.id, item.value);
+        }
+
+        if (selectedField?.Properties != null)
+        {
+            foreach (FormProperty property in selectedField.Properties)
+            {
+                col.AddProperty(property.PropertyId, property.Value);
+            }
         }
     }
 

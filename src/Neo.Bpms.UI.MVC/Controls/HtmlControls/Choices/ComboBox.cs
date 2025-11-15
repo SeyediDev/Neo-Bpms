@@ -134,7 +134,14 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
 
     private NeoStringBuilder RenderOptions(NeoStringBuilder result, List<string> idsList)
     {
-        foreach (FormDataRow item in GetDataRows())
+        List<FormDataRow> dataRows = GetDataRows() ?? [];
+        bool hasEmptyOption = dataRows.Any(row => string.IsNullOrEmpty(row?.Ids));
+        if (!hasEmptyOption)
+        {
+            result.Append("<option value=\"\"></option>");
+        }
+
+        foreach (FormDataRow item in dataRows)
         {
             result.Append("<option");
             if (IsSelected(idsList, item.Ids))

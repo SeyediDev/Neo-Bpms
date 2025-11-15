@@ -20,12 +20,22 @@ var TetaMetrics = {
         var $element = $(selector);
         var options = this.obtainOptions(userOptions);
 
-        var widgetStyles = 'border-radius: 5px;padding: 15px 20px;margin-bottom: 10px;margin-top: 10 px;';
-        var widgetHtml = '<div style="' + widgetStyles + '"><div class="row">' +
-            '<div class="col-4">' +
-            '<i class="' + options.iconClass + '" style="font-size: 4rem;"></i></div>' +
-            '<div class="col-8 text-right"><span>' + options.title +
-            '</span><h2 class="font-bold">&nbsp;&nbsp;' + options.value + '</h2></div></div></div>';
+        var hasIcon = options.iconClass && options.iconClass.trim().length > 0;
+        var hasTitle = options.title && options.title.trim().length > 0;
+        var widgetHtml = '<div class="neo-metric-box" style="background-color:' + options.backgroundColor + ';color:' + options.textsColor + ';">';
+
+        if (hasIcon) {
+            widgetHtml += '<span class="neo-metric-box__icon" aria-hidden="true"><i class="' + options.iconClass + '"></i></span>';
+        }
+
+        widgetHtml += '<div class="neo-metric-box__content">';
+        widgetHtml += '<span class="neo-metric-box__value">' + options.value + '</span>';
+
+        if (hasTitle) {
+            widgetHtml += '<span class="neo-metric-box__title">' + options.title + '</span>';
+        }
+
+        widgetHtml += '</div></div>';
 
         $element.html(widgetHtml);
     }

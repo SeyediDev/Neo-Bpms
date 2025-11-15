@@ -8,6 +8,7 @@ public abstract class DashboardWidgetDefinitionBase
 {
     protected virtual int? HeightInPixels { get; } = 200;
     protected virtual int? MaxRecordCount { get; } = 10;
+    protected virtual string Icon => "chart-bar";
 
     /// <summary>
     /// Widget Properties
@@ -31,7 +32,8 @@ public abstract class DashboardWidgetDefinitionBase
             ReportNamespaceId = reportNamespaceId,
             ReportEntityId = reportEntityId,
             ReportId = reportId,
-            ReportConfigId = reportConfigId
+            ReportConfigId = reportConfigId,
+            Icon = Icon
         };
         div.Widget = widget;
         div.WidgetId = widget.Id;

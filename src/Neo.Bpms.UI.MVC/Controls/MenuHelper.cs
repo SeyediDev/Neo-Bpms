@@ -207,7 +207,8 @@ public class MenuHelper(IAccessServices accessServices)
             "home-dashboard", "info-circle", "list-checklist", "medal-award",
             "piggy-bank", "question-circle", "rule-checklist", "rss-signal",
             "sliders-h", "star-badge", "store-shop", "ticket-lottery", "trophy-star",
-            "user-admin", "user-badge", "user-circle", "user-settings", "users-group",
+            "user-admin", "user-badge", "user-circle", "user-settings",
+            "users-analysis", "users-group", "users-info", "users-network",
             "wallet-money"
         };
         

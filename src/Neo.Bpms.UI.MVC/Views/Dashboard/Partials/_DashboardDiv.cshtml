@@ -1,0 +1,72 @@
+@using Neo.Bpms.UI.MVC.Models.Dashboard
+@using Neo.Bpms.UI.MVC.Helpers
+@model DashboardDivRenderModel
+
+@{
+    var divConfig = Model.DivConfig;
+    if (divConfig == null)
+    {
+        return;
+    }
+
+    var hasChildren = divConfig.Children?.Any() == true;
+    var isRow = divConfig.IsRow;
+}
+
+@if (hasChildren)
+{
+    if (!string.IsNullOrEmpty(divConfig.Title))
+    {
+        var titleModel = new DashboardWidgetRenderModel
+        {
+            DashboardData = Model.DashboardData,
+            DivConfig = divConfig,
+            Widget = null,
+            CanDesign = Model.CanDesign,
+            ReportData = null,
+            WidgetHeight = 0,
+            MaxRecord = 0
+        };
+
+        @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidgetTitle.cshtml", titleModel)
+    }
+
+    if (isRow)
+    {
+        <div class="neo-dashboard-row">
+            @foreach (var child in divConfig.Children)
+            {
+                var childModel = new DashboardDivRenderModel(Model.DashboardData, child, Model.CanDesign);
+                @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardDiv.cshtml", childModel)
+            }
+        </div>
+    }
+    else
+    {
+        foreach (var child in divConfig.Children)
+        {
+            var childModel = new DashboardDivRenderModel(Model.DashboardData, child, Model.CanDesign);
+            @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardDiv.cshtml", childModel)
+        }
+    }
+}
+else
+{
+    var widget = DashboardRenderHelpers.ResolveWidget(Model.DashboardData, divConfig);
+    var widgetHeight = DashboardRenderHelpers.GetWidgetHeight(widget);
+    var maxRecord = DashboardRenderHelpers.GetMaxRecord(widget);
+    var reportData = DashboardRenderHelpers.GetReportData(Model.DashboardData, widget, maxRecord);
+
+    var widgetModel = new DashboardWidgetRenderModel
+    {
+        DashboardData = Model.DashboardData,
+        DivConfig = divConfig,
+        Widget = widget,
+        CanDesign = Model.CanDesign,
+        ReportData = reportData,
+        WidgetHeight = widgetHeight,
+        MaxRecord = maxRecord
+    };
+
+    @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidget.cshtml", widgetModel)
+}
