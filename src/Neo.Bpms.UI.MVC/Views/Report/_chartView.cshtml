@@ -78,15 +78,13 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
         // Prevent Highcharts from being loaded multiple times (Error #16)
         if (typeof window.HighchartsLoaded === 'undefined') {
             window.HighchartsLoaded = true;
+        }
     </script>
     <script src="@CommonBundles.ChartsJsBundle" asp-append-version="true"></script>
     if (!bFromDashboard && !isIframeReport)
     {
         <script src="@CommonBundles.HighChartsExportJsBundle" asp-append-version="true"></script>
     }
-    <script>
-        }
-    </script>
 }
 
 @if (isDrillDown && !Model.Config.IsInlineSubReport)
