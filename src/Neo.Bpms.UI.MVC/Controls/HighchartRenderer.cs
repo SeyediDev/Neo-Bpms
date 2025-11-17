@@ -250,60 +250,16 @@ public class HighchartRenderer(ReportData reportInfo)
 
     private double CalculateAggregation(ColumnFieldDefinition aggrColumn, List<ReportRowInfo> rows)
     {
-        if (rows == null || rows.Count == 0)
-            return 0;
-
-        // If only one row, return its value directly
-        if (rows.Count == 1)
-            return GetDoubleValue(aggrColumn, rows[0]);
-
-        // Calculate aggregation based on aggregation type
-        switch (aggrColumn.aggrType)
-        {
-            case eAggregationFunctions.Count:
-                // For Count, sum all count values in the group (each row may represent multiple records)
-                return rows.Sum(row => GetDoubleValue(aggrColumn, row));
-
-            case eAggregationFunctions.Sum:
-                // For Sum, sum all values in the group
-                return rows.Sum(row => GetDoubleValue(aggrColumn, row));
-
-            case eAggregationFunctions.Avg:
-                // For Average, we need to calculate weighted average
-                // Sum of (value * count) / Sum of counts
-                double totalSum = 0;
-                double totalCount = 0;
-                foreach (var row in rows)
-                {
-                    double value = GetDoubleValue(aggrColumn, row);
-                    // Try to get count from the row if available
-                    // For now, assume each row represents 1 record
-                    totalSum += value;
-                    totalCount += 1;
-                }
-                return totalCount > 0 ? totalSum / totalCount : 0;
-
-            case eAggregationFunctions.Max:
-                // For Max, return maximum value in the group
-                return rows.Max(row => GetDoubleValue(aggrColumn, row));
-
-            case eAggregationFunctions.Min:
-                // For Min, return minimum value in the group
-                return rows.Min(row => GetDoubleValue(aggrColumn, row));
-
-            default:
-                // For other aggregation types, return the first row's value
-                return GetDoubleValue(aggrColumn, rows.FirstOrDefault());
-        }
+        return AggregationCalculator.Calculate(aggrColumn, rows, GetDoubleValue);
     }
 
     private static double GetDoubleValue(ColumnFieldDefinition aggr, ReportRowInfo data)
     {
         double d = 0;
         if (data != null && GetValue(data, aggr, out object obj))
-            double.TryParse(obj.ToString().Replace("/", "."), out d);
+            _ = double.TryParse(obj.ToString().Replace("/", "."), out d);
         return d;
     }
 
-    private HtmlString HtmlStringFromObject(object o) => new(JsonConvert.SerializeObject(o));
+    private static HtmlString HtmlStringFromObject(object o) => new(JsonConvert.SerializeObject(o));
 }
