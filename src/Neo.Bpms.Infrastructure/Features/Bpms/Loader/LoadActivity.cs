@@ -82,7 +82,7 @@ public partial class Repository
             case SubProcess subProcess:
                 subProcessRuntime = subProcess.triggeredByEvent
                     ? new EventSubProcessRuntime(processVersion, subProcess)
-                    : (SubProcessRuntime)new EmbededSubProcessRuntime(processVersion, subProcess);
+                    : new EmbededSubProcessRuntime(processVersion, subProcess);
                 break;
             case CallActivity callActivity:
                 switch (callActivity.ActivityType)

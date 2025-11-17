@@ -55,7 +55,7 @@ public class MicroServicesController : ControllerBase
             Logger.LogError("Bad register from machineId {0} with empty or null functions", machineId);
             return BadRequest(functions == null ? "functions is null" : "functions is empty");
         }
-        Logger.LogInformation("machineId: {0} is trying to (re {1}) register its functions.Function names:{2}", machineId, reRegister, string.Join((string)",", (IEnumerable<string>)functions.Select(f => f.FuncName)));
+        Logger.LogInformation("machineId: {0} is trying to (re {1}) register its functions.Function names:{2}", machineId, reRegister, string.Join(",", functions.Select(f => f.FuncName)));
         bool registerResult = _microServiceManager.TryRegister(machineId, functions, reRegister ?? false);
         if (registerResult)
             Task.Factory.StartNew(() => _microServiceManager.RunFromQueue(machineId), CancellationToken.None,

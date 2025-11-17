@@ -61,7 +61,7 @@ public partial class ProcessController
         ElasticObject businesRule = q.FirstOrDefault();
         return businesRule.GetEnumText(nameof(BusinessRule.BusinessRuleTypeId), BusinessRuleTypeId.DataFlow) == BusinessRuleTypeId.Dmn
             ? RedirectToAction(nameof(DmnDesign), new { BusinessRuleCode = businessRuleCode, VersionId = versionId, nodeId })
-            : (ActionResult)RedirectToAction(nameof(FormController.Edit), "Form",
+            : RedirectToAction(nameof(FormController.Edit), "Form",
             new { NamespaceId = "MetaModel", EntityId = nameof(BusinessRuleVersion), Ids = businesRule.Id });
     }
 

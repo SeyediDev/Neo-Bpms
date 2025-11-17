@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using static Neo.Bpms.Domain.Entities.Cmmn.UI.Report;
+﻿using static Neo.Bpms.Domain.Entities.Cmmn.UI.Report;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

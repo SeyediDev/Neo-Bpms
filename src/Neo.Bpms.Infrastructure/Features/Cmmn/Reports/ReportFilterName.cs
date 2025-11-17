@@ -64,7 +64,7 @@ public class ReportFilterName(ReportConfigManager reportConfigManager)
                     foreach (ConfiguredReport.SelectedField field in parentConfig.Fields.Values.OrderBy(f => f.Order))
                     {
                         if (field.type != ConfiguredReport.eFieldSelectionType.asGroupBy) continue;
-                        Entity entity1 = parentConfig.Report.entity as Entity;
+                        Entity entity1 = parentConfig.Report.entity;
                         Entity colEntity = entity1;
                         if (entity1.Id != field.entityId)
                         {

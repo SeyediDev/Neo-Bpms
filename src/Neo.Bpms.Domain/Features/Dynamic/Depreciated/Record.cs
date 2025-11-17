@@ -39,7 +39,7 @@ public class Record : DynamicObject
 
     public void CallConstructor()
     {
-        CallConstructor(new Type[0], new object[0]);
+        CallConstructor([], []);
     }
 
     public void CallConstructor(Type[] paramTypes, object[] paramValues)
@@ -72,7 +72,7 @@ public class Record : DynamicObject
             BindingFlags.SetProperty | _commonBindingFlags,
             null /* Binder */,
             _obj,
-            new[] { value });
+            [value]);
 
         return retval;
     }
@@ -98,7 +98,7 @@ public class Record : DynamicObject
                 BindingFlags.SetField | _commonBindingFlags,
                 null /* Binder */,
                 _obj,
-                new[] { value });
+                [value]);
         }
         else
         {
@@ -231,7 +231,7 @@ public class Record : DynamicObject
                     if (_obj != null && _objType.GetField(argumentName) != null)
                     {
                         _objType.InvokeMember(argumentName, BindingFlags.SetField | _commonBindingFlags, null /* Binder */, _obj,
-                                              new[] { args[i] });
+                                              [args[i]]);
                     }
                     else
                     {

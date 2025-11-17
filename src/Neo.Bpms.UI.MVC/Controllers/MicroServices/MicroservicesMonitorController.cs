@@ -72,6 +72,6 @@ public class MicroservicesMonitorController : ControllerBaseMVC
                 Progress = 0
             }
         ];
-        return Json((object)dummyInfo);
+        return Json(dummyInfo);
     }
 }

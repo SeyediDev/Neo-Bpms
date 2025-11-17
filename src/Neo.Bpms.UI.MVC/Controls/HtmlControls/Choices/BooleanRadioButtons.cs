@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
+﻿using Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 

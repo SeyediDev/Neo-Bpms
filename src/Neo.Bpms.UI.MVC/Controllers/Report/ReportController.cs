@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Infrastructure.Features.Cmmn.ScheduledReports;
+﻿using Neo.Bpms.Infrastructure.Features.Cmmn.ScheduledReports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

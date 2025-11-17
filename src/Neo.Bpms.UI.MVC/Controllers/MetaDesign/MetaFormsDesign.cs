@@ -2,7 +2,6 @@
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormTemplate;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.FormModels;
 using static Neo.Bpms.Domain.Model.UI.Forms.Form;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
 
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
@@ -25,7 +24,7 @@ public partial class MetaDesignController
             forms = forms?.Where(f => f.FormType == eFormType.Index);
 
         return Json(
-            forms?.OrderBy(f => f.FormSubjectId).ThenBy(f => f.Id).Select(f => new FormRecognizer((Form)f)));
+            forms?.OrderBy(f => f.FormSubjectId).ThenBy(f => f.Id).Select(f => new FormRecognizer(f)));
     }
 
     [HttpGet]

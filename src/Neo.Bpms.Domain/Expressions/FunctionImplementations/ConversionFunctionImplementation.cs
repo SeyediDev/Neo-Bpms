@@ -79,18 +79,18 @@ public partial class BuiltInFunctions : IFunctionImplementations
         return getalphabetic(d1);
     }
 
-    private static string[] thousands = { "هزار", "میلیون", "میلیارد", "بیلیون", };
+    private static string[] thousands = ["هزار", "میلیون", "میلیارد", "بیلیون",];
 
     static readonly string[] hundreds =
-        {"یکصد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد", "هفتصد", "هشتصد", "نهصد",};
+        ["یکصد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد", "هفتصد", "هشتصد", "نهصد",];
 
-    static readonly string[] tens = { "ده", "بیست", "سی", "چهل", "پنجاه", "شصت", "هفتاد", "هشتصاد", "نود", };
+    static readonly string[] tens = ["ده", "بیست", "سی", "چهل", "پنجاه", "شصت", "هفتاد", "هشتصاد", "نود",];
 
     static readonly string[] ones =
-    {
+    [
         "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه", "ده",
         "یازده", "دوازده", "سیزده", "چهارده", "پانزده", "شانزده", "هفتده", "هجده", "نوزده",
-    };
+    ];
 
     private static string getalphabetic(long d)
     {
@@ -215,7 +215,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
 
     public static DateTime feel_shamsidateandtime(string from)
     {
-        char[] sep = { ' ' };
+        char[] sep = [' '];
         string[] a = from.Split(sep, StringSplitOptions.RemoveEmptyEntries);
         if (a.Length < 1) return DateTime.MinValue;
         string[] b = a[0].Split('/');

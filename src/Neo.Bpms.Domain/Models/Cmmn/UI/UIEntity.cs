@@ -52,12 +52,12 @@ public class UiEntity : Entity
 
     public Form GetEntityForm(string formId)
     {
-        return getForm(formId) as Form;
+        return getForm(formId);
     }
 
     public Form GetEntityForm(string formId, Form.eFormType? formType, string formSubjectId)
     {
-        return getForm(formId, formType, formSubjectId) as Form;
+        return getForm(formId, formType, formSubjectId);
     }
 
     public Form getForm(string formId, Form.eFormType? formType, string formSubjectId)

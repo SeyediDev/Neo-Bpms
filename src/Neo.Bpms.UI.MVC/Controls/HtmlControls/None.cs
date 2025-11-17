@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-
-namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
+﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 public class None(IFormLogicHelper formLogicHelper, InputFieldDefinition field, ControlsRendererData controlsRenderer, ISBVRRenderer sbvrRenderer) : BaseNeoHtmlControl(formLogicHelper, field, controlsRenderer, sbvrRenderer)
 {

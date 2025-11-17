@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-
-namespace Neo.Bpms.UI.MVC.PartialModels.Layout;
+﻿namespace Neo.Bpms.UI.MVC.PartialModels.Layout;
 
 public class BodyModel
 {

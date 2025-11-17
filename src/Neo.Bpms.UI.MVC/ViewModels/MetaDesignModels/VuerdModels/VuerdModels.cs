@@ -49,7 +49,7 @@ public class Setting
     public bool relationshipDataTypeSync { get; set; } = true;
 
     public string[] columnOrder { get; set; } =
-    {
+    [
         "columnName",
         "columnComment",
         "columnDataType",
@@ -57,13 +57,13 @@ public class Setting
         // "columnUnique",
         // "columnAutoIncrement",
         // "columnDefault",
-    };
+    ];
 }
 
 public class Table
 {
     public List<TableItem> tables { get; set; } = [];
-    public object[] indexes { get; set; } = { };
+    public object[] indexes { get; set; } = [];
 }
 
 public class TableItem
@@ -118,7 +118,7 @@ public class ColumnUi
 
 public class Memo
 {
-    public object[] memos { get; set; } = { };
+    public object[] memos { get; set; } = [];
 }
 
 public class Relationship

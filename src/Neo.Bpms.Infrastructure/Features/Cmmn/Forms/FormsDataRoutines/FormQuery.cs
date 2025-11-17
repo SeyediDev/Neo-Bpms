@@ -32,7 +32,7 @@ public class FormQuery
             form.formFields.Where(f =>
                 f.FieldOrControlType == FormField.Type.Field && f.Field != null &&
                 !f.CheckProperty(eControlPropertyId.DontLoadData)), referFormFields, joinQueries);
-        FormDataFilter.AddFormFilter(q, form as Form, GenerateFilterValuesRecord(lp), true, out _);
+        FormDataFilter.AddFormFilter(q, form, GenerateFilterValuesRecord(lp), true, out _);
         q.AddPkFields();
         if (!string.IsNullOrEmpty(ids))
         {
@@ -62,7 +62,7 @@ public class FormQuery
         Dictionary<string, FormField> referFormFields = [];
         if (checkfilterValues)
         {
-            FormDataFilter.AddFilters(q, form as Form, filterValues, out bool distinct);
+            FormDataFilter.AddFilters(q, form, filterValues, out bool distinct);
             if (justForCount && !distinct)
                 return referFormFields;
         }

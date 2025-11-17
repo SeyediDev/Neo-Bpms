@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Neo.Bpms.Domain.Features.Security;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

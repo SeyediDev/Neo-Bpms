@@ -853,7 +853,7 @@ public class Parser(string exp)
                                 bypassWhitespace();
                                 return checkString("else")
                                     ? new IfExpressionNode(prmExps0, thenexp, CheckExpression(depth, priority))
-                                    : (ExpressionNode)new IfExpressionNode(prmExps0, thenexp, null);
+                                    : new IfExpressionNode(prmExps0, thenexp, null);
                             }
                         }
 

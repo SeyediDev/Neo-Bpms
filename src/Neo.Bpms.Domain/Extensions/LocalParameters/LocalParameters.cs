@@ -96,7 +96,7 @@ public partial class LocalParameters : ConcurrentDictionary<string, object>
     public double? GetDouble(string key)
     {
         object v = Get(key);
-        return string.IsNullOrEmpty(v?.ToString()) ? (double?)null : Convert.ToDouble(v);
+        return string.IsNullOrEmpty(v?.ToString()) ? null : Convert.ToDouble(v);
     }
 
     public LocalParameters Set(ConcurrentDictionary<string, object> dictionary)

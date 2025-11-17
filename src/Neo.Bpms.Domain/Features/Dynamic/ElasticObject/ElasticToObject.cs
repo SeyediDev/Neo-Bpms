@@ -14,8 +14,8 @@ public partial class ElasticObject
     public object To(Type type, string prefix = null)
     {
         ElasticObject el = this;
-        ConstructorInfo ctr = type.GetConstructor(new Type[0]);
-        object obj = ctr?.Invoke(new object[0]);
+        ConstructorInfo ctr = type.GetConstructor([]);
+        object obj = ctr?.Invoke([]);
 
         if (!string.IsNullOrEmpty(prefix))
             el = GetSubElasticObject(prefix);

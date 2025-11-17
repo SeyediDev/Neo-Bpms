@@ -169,7 +169,7 @@ public partial class FormController
                                 SubTableAssociationFeildId = __subTableAssociationFieldId,
                                 ids = __parentIds
                             })
-                            : (ActionResult)RedirectToAction("Index", new { NamespaceId, EntityId, calendar });
+                            : RedirectToAction("Index", new { NamespaceId, EntityId, calendar });
                 }
             }
         }

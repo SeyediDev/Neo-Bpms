@@ -13,8 +13,8 @@ public partial class LocalParameters
 
     public object To(Type type)
     {
-        ConstructorInfo ctr = type.GetConstructor(new Type[0]);
-        object obj = ctr?.Invoke(new object[0]);
+        ConstructorInfo ctr = type.GetConstructor([]);
+        object obj = ctr?.Invoke([]);
         MergeToObject(obj);
         return obj;
     }

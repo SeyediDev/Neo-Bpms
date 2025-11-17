@@ -123,7 +123,7 @@ public abstract class FtpFileSystemObject : DynamicObject
             using (StreamReader reader = new(responseStream))
             {
                 var fileSystemDetails = reader.ReadToEnd();
-                return fileSystemDetails.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                return fileSystemDetails.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries);
             }
         }
     }

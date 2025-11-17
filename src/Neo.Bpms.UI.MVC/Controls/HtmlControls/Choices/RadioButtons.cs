@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-
-namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
+﻿namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices;
 
 public class RadioButtons(IFormLogicHelper formLogicHelper, InputFieldDefinition field, 
     ControlsRendererData controlsRendererData, ISBVRRenderer sbvrRenderer) 

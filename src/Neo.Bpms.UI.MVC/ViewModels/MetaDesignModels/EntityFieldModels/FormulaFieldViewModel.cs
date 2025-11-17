@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-
-namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
+﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
 
 public class FormulaFieldViewModel
 {

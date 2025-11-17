@@ -56,7 +56,7 @@ public class FormLayout
         oldField.ParentControlId = viewModel.ParentControlId;
         oldField.SetProperties(viewModel.Properties?.Select(p =>
             new FormProperty(p)).ToList());
-        ProjectEntityForm.Save(form as Form);
+        ProjectEntityForm.Save(form);
     }
 
     public void SaveFormLayout(IEntityPage page)

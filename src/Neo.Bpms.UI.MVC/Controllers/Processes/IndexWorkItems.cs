@@ -55,8 +55,8 @@ public partial class ProcessController
 
         Process process = (ProjectDefinition.Project.GetBpmnDefinition(processFilter.ProcessId,
              processFilter.ProcessVersionId)?.Process) ?? throw new Exception("چنین فرآیندی یافت نشد.");
-        Form form = (Form)(ProjectDefinition.Project.GetEntity(process.EntityNamespaceId,
-             process.EntityId) as UiEntity)?.getForms()?.FirstOrDefault(f => f.Id == indexFormId) ?? throw new Exception("چنین فرمی یافت نشد.");
+        Form form = ((ProjectDefinition.Project.GetEntity(process.EntityNamespaceId,
+             process.EntityId) as UiEntity)?.getForms()?.FirstOrDefault(f => f.Id == indexFormId)) ?? throw new Exception("چنین فرمی یافت نشد.");
         if (!CheckAccess(user, form))
             throw new Exception("شما به این فرم دسترسی ندارید.");
         CommonFormStructure structure = await formStructRoutines.GetIndexStructure(CultureHelper.GetCurrentNeutralCulture(),
@@ -101,7 +101,7 @@ public partial class ProcessController
             indexForms?.FirstOrDefault(ef => ef.FormSubjectId == process.Id) ??
             indexForms?.FirstOrDefault(ef => ef.FormSubjectId == $"{process.Id}Cartable") ??
             indexForms?.FirstOrDefault(ef => ef.FormSubjectId == "Cartable");
-        return (Form)result;
+        return result;
     }
     private void SetViewBags(IdentityUser user, string sortFields, CommonFormStructure structure,
          WorkItemsFilter processFilter, Process process)

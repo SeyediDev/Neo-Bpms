@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.VuerdModels;
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;
@@ -24,7 +23,7 @@ public class ErdController : BpmsController
 
         VuerdModel model = new() { canvas = { databaseName = ProjectDefinition.Project.Name } };
         HashSet<string> seenEntities = [];
-        GridColumn[] grid = new GridColumn[] { new(), new(), new(), new() };
+        GridColumn[] grid = [new(), new(), new(), new()];
         long l = 0;
         long zIndex = 1;
         List<Entity> sortedDictionary = ProjectDefinition.Project.Namespaces[namespaceId].GetEntities()
@@ -53,7 +52,7 @@ public class ErdController : BpmsController
     private void FillErdModel(VuerdModel model, Entity rootEntity, int depth, ref long tableLeft, ref long zIndex,
         ISet<string> seenEntities = null, GridColumn[] grid = null)
     {
-        grid ??= new GridColumn[] { new(), new(), new(), new() };
+        grid ??= [new(), new(), new(), new()];
         seenEntities ??= new HashSet<string>();
         if (seenEntities.Contains(rootEntity.Id) || depth == 0)
             return;

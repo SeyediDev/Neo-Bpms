@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
 using Neo.Bpms.Domain.Models.JobScheduling;
 
 namespace Neo.Bpms.UI.MVC.ViewModels;

@@ -22,7 +22,7 @@ public class IdentityResult
     /// <param name="errors"></param>
     public IdentityResult(IEnumerable<string> errors)
     {
-        errors ??= new[] { Resources.DefaultError };
+        errors ??= [Resources.DefaultError];
         Succeeded = false;
         Errors = errors;
     }
@@ -34,7 +34,7 @@ public class IdentityResult
     protected IdentityResult(bool success)
     {
         Succeeded = success;
-        Errors = new string[0];
+        Errors = [];
     }
 
     /// <summary>

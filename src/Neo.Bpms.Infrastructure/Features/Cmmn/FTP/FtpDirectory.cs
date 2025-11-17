@@ -251,7 +251,7 @@ public class FtpDirectory : FtpFileSystemObject
         if (GetAllSubDirectories().All(dir => dir.FullPath != finalPath))
         {
             // 2. if final path do not exists create each subdirectory
-            var subDirs = path.Replace(@"\", @"/").Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var subDirs = path.Replace(@"\", @"/").Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
             var newDir = FullPath;
             foreach (var subDir in subDirs)

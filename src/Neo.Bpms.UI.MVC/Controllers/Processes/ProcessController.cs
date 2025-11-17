@@ -15,7 +15,6 @@ using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.FlowElements;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities.Tasks.HumanTasks;
-using Neo.Bpms.Domain.Extensions;
 using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
 
@@ -287,7 +286,7 @@ public partial class ProcessController(IBpmsEngine bpmsEngine, IApplyFormData ap
 
         Process process = bpmnDefinitions?.GetRootElement(filter.ProcessId) as Process;
         SetActivitiesListViewBag(process);
-        return workItemsQueryType == WorkItemsQueryType.MyWorkItems ? View("MyWorkItems", result) : (ActionResult)View("WorkItems", result);
+        return workItemsQueryType == WorkItemsQueryType.MyWorkItems ? View("MyWorkItems", result) : View("WorkItems", result);
     }
 
     private void SetActivitiesListViewBag(Process process)

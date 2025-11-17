@@ -50,11 +50,11 @@ public abstract class DataSource<T>(
     public override bool read<TOut>(out TOut obj)
     {
         var type = typeof(TOut);
-        var ctr = type.GetConstructor(new Type[0]);
+        var ctr = type.GetConstructor([]);
         obj = default;
         if (!ReadRecord())
             return false;
-        obj = (TOut)ctr?.Invoke(new object[0]);
+        obj = (TOut)ctr?.Invoke([]);
         if (OnlyRecordCount)
         {
             SetField(obj, "recordCount", RecordsAffected);

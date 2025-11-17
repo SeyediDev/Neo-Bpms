@@ -476,7 +476,7 @@ public partial class FormExcelImporter(IApplyFormData applyFormData,
                         GetColumnValue(columnValue);
                 }
 
-                e[recordSubTableRecord.Key + $"[{counter}].__Deleted"] = excelRecord.IsDelete ? true : (object)false;
+                e[recordSubTableRecord.Key + $"[{counter}].__Deleted"] = excelRecord.IsDelete ? true : false;
 
                 counter++;
             }

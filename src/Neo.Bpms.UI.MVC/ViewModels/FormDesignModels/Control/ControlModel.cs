@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.Relationship;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Relationship;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.FormDesignModels.Control;

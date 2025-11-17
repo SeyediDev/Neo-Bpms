@@ -238,12 +238,12 @@ public partial class BuiltInFunctions : IFunctionImplementations
         {
             return string.Join(separator, list.Select(item =>
                 {
-                    dynamic d = (item as dynamic);
+                    dynamic d = item;
                     return d != null ? d[fieldId] : "";
                 }
             ).ToList());
         }
-        dynamic dy = (value as dynamic);
+        dynamic dy = value;
         return Convert.ToString(dy?[fieldId] ?? "");
     }
 }

@@ -90,9 +90,9 @@ public class FunctionInvocationExpressionNode : ExpressionNode
 
     private static object CreateBuiltInFunctionObject(Type type)
     {
-        Type[] types = { };
+        Type[] types = [];
         ConstructorInfo cons = type.GetConstructor(types);
-        object[] parameters = { };
+        object[] parameters = [];
         object obj = cons?.Invoke(parameters);
         return obj;
     }

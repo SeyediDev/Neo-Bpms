@@ -88,7 +88,7 @@ public class Check
     {
         if (!string.IsNullOrWhiteSpace(str) && !string.IsNullOrEmpty(str))
         {
-            string[] resObject = str.Split(new string[] { symbol }, StringSplitOptions.None);
+            string[] resObject = str.Split([symbol], StringSplitOptions.None);
             foreach (string w in resObject)
             {
                 if (w.IndexOf("charset") == -1 && w.IndexOf("char") > 0 ||

@@ -141,7 +141,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         {
             string[] associationItems = inc.AssociationId.Split('.');
             int ia = 0;
-            Entity incEntity = (Entity)entity;
+            Entity incEntity = entity;
             string associationAlias = "";
             foreach (string associationItem in associationItems)
             {

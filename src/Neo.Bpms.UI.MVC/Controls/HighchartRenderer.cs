@@ -8,7 +8,7 @@ public class HighchartRenderer(ReportData reportInfo)
         ((reportInfo?.Structure?.GetReportProperty((long)ReportConfigProperty.ChartAdvancedOptions) ?? string.Empty)
             .Split(',', StringSplitOptions.RemoveEmptyEntries)
             .Select(o => o.Trim().ToLower()))
-        .Contains("ceil-categories");
+        .Contains(ChartAdvancedOption.ceil_categories);
 
     public bool YAxisIsTimespan => _aggrColumns?.Any(c =>
         c.FieldType == TVariableTypes.DurHourMinute || c.FieldType == TVariableTypes.DayHourMinute) ?? false;
@@ -80,10 +80,66 @@ public class HighchartRenderer(ReportData reportInfo)
     {
         if (!_ceilCategories || value == null)
             return value;
-
         // Try to ceil numeric category values and remove decimals to reduce distinct categories
         if (double.TryParse(Convert.ToString(value), out double numeric))
         {
+            var category = categoryField.GetProperty(Domain.Models.Cmmn.UI.Components.eControlPropertyId.Category)?.Value?.ToString();
+            if (!string.IsNullOrEmpty(category))
+            {
+                var categoryRanges = reportInfo?.Structure?.GetReportPropertyList((long)ReportConfigProperty.CategoryRange) ?? [];
+                foreach (var categoryRangeStr in categoryRanges)
+                {
+                    var categoryRange = categoryRangeStr.Split(';');
+                    if (categoryRange.Length < 3 || categoryRange[0] != category)
+                    {
+                        continue;
+                    }
+                    
+                    // Format: category,label,from_to
+                    // from_to can be: "min_max" (closed range), "_max" (open from below), "min_" (open from above), "_" (all values)
+                    var rangeParts = categoryRange[2].Split('_');
+                    if (rangeParts.Length < 2)
+                    {
+                        continue;
+                    }
+                    
+                    bool matchesRange = true;
+                    
+                    // Check lower bound (from)
+                    if (!string.IsNullOrWhiteSpace(rangeParts[0]))
+                    {
+                        if (double.TryParse(rangeParts[0], out double rangeFrom))
+                        {
+                            // Value must be >= rangeFrom (inclusive lower bound)
+                            if (numeric < rangeFrom)
+                            {
+                                matchesRange = false;
+                            }
+                        }
+                    }
+                    // If rangeParts[0] is empty, no lower bound (open from below)
+                    
+                    // Check upper bound (to)
+                    if (matchesRange && !string.IsNullOrWhiteSpace(rangeParts[1]))
+                    {
+                        if (double.TryParse(rangeParts[1], out double rangeTo))
+                        {
+                            // Value must be <= rangeTo (inclusive upper bound)
+                            if (numeric > rangeTo)
+                            {
+                                matchesRange = false;
+                            }
+                        }
+                    }
+                    // If rangeParts[1] is empty, no upper bound (open from above)
+                    
+                    if (matchesRange)
+                    {
+                        return categoryRange[1]; // Return the label
+                    }
+                }
+            }
+
             var ceiled = Math.Ceiling(numeric);
             return ceiled.ToString("0");
         }
@@ -141,7 +197,7 @@ public class HighchartRenderer(ReportData reportInfo)
             });
         }
 
-        List<ColumnFieldDefinition> secondInColumns = inColumns.ToList();
+        List<ColumnFieldDefinition> secondInColumns = [.. inColumns];
         secondInColumns.RemoveAt(0);
         Dictionary<string, object> groupByRecordInColumnsRecords = [];
         foreach (ReportRowInfo row in reportInfo.Rows)
@@ -158,12 +214,12 @@ public class HighchartRenderer(ReportData reportInfo)
                 fieldName = string.Join(" ", secondInColumns.Select(col => col.Alias)),
                 data = _groupByRecords.Select(gbr =>
                 {
-                    ReportRowInfo rowInfo =
+                    List<ReportRowInfo> matchingRows =
                         (from row in gbr.Value
                          let groupByKey = CreateGroupByKey(secondInColumns, row, ",", false)
                          where groupByKey == gbrIcr
-                         select row).FirstOrDefault();
-                    return rowInfo != null ? GetDoubleValue(aggrColumn, rowInfo) : 0;
+                         select row).ToList();
+                    return matchingRows.Count > 0 ? CalculateAggregation(aggrColumn, matchingRows) : 0;
                 }),
                 rowIdsIndex = _groupByRecords.Select(gbr =>
                 {
@@ -185,11 +241,60 @@ public class HighchartRenderer(ReportData reportInfo)
             name = seryName,
             data = _groupByRecords.Values
                 .Select(gbr =>
-                    GetDoubleValue(aggrColumn, gbr.FirstOrDefault())
+                    CalculateAggregation(aggrColumn, gbr)
                 ),
             // Provide mapping from category index to original row index for tooltips
             rowIdsIndex = _groupByRecords.Values.Select(gbr => gbr.FirstOrDefault()?.Data.GetLong("__rowIndex") ?? -1)
         };
+    }
+
+    private double CalculateAggregation(ColumnFieldDefinition aggrColumn, List<ReportRowInfo> rows)
+    {
+        if (rows == null || rows.Count == 0)
+            return 0;
+
+        // If only one row, return its value directly
+        if (rows.Count == 1)
+            return GetDoubleValue(aggrColumn, rows[0]);
+
+        // Calculate aggregation based on aggregation type
+        switch (aggrColumn.aggrType)
+        {
+            case eAggregationFunctions.Count:
+                // For Count, sum all count values in the group (each row may represent multiple records)
+                return rows.Sum(row => GetDoubleValue(aggrColumn, row));
+
+            case eAggregationFunctions.Sum:
+                // For Sum, sum all values in the group
+                return rows.Sum(row => GetDoubleValue(aggrColumn, row));
+
+            case eAggregationFunctions.Avg:
+                // For Average, we need to calculate weighted average
+                // Sum of (value * count) / Sum of counts
+                double totalSum = 0;
+                double totalCount = 0;
+                foreach (var row in rows)
+                {
+                    double value = GetDoubleValue(aggrColumn, row);
+                    // Try to get count from the row if available
+                    // For now, assume each row represents 1 record
+                    totalSum += value;
+                    totalCount += 1;
+                }
+                return totalCount > 0 ? totalSum / totalCount : 0;
+
+            case eAggregationFunctions.Max:
+                // For Max, return maximum value in the group
+                return rows.Max(row => GetDoubleValue(aggrColumn, row));
+
+            case eAggregationFunctions.Min:
+                // For Min, return minimum value in the group
+                return rows.Min(row => GetDoubleValue(aggrColumn, row));
+
+            default:
+                // For other aggregation types, return the first row's value
+                return GetDoubleValue(aggrColumn, rows.FirstOrDefault());
+        }
     }
 
     private static double GetDoubleValue(ColumnFieldDefinition aggr, ReportRowInfo data)

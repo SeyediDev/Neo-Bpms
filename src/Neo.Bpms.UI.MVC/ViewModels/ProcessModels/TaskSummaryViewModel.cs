@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Entities.ProcessData;
-using Neo.Bpms.Domain.Extensions;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ProcessModels;

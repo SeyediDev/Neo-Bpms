@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.ReportModels;
+﻿using Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.ReportModels;
 
 
 namespace Neo.Bpms.UI.MVC.Controllers.MetaDesign;

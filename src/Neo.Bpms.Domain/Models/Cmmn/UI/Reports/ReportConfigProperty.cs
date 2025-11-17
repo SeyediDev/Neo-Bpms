@@ -7,5 +7,11 @@ public enum ReportConfigProperty
     IconClass = 10303,
     BackgroundColor = 10304,
     TextColor = 10305,
-    ChartAdvancedOptions = 10306,//values :ceil_categories
+    ChartAdvancedOptions = 10306,
+    CategoryRange = 10307,
 }
+public static class ChartAdvancedOption
+{
+    public static string ceil_categories = "ceil-categories";
+}
+

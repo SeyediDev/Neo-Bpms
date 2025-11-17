@@ -46,8 +46,8 @@ public abstract partial class AdoDotNetDatabaseDataSource
         if (!ReadFromDataReader())
             return false;
         var type = typeof(T);
-        var ctr = type.GetConstructor(new Type[0]);
-        obj = (T)ctr?.Invoke(new object[0]);
+        var ctr = type.GetConstructor([]);
+        obj = (T)ctr?.Invoke([]);
         var values = ExtractValues();
         ReadFieldInfos(obj, type, values);
         return true;

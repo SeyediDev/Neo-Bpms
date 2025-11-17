@@ -27,7 +27,7 @@ public partial class FormController
         if (indexFormFilterValues != null && indexFormFilterValues["user"] == null)
             indexFormFilterValues["user"] = user;
         q.ActiveStates();
-        FormDataFilter.AddFilters(q, indexForm as Form, indexFormFilterValues, out _);
+        FormDataFilter.AddFilters(q, indexForm, indexFormFilterValues, out _);
         int? maxRows = 5000;//todo ali please.
         q.SetPage(1, maxRows.Value);
         foreach (FormField arithmeticField in arithmeticFields)

@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
+﻿using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 
 namespace Neo.Bpms.UI.MVC.Controls;
 

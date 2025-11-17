@@ -266,11 +266,11 @@ public abstract partial class FormDefinition : BaseModelingDefinition, IUIRuleDe
 
     protected void SetServiceInterfaceProtocol(ServiceInterfaceProtocol p)
     {
-        ((Form)form).ServiceInterfaceProtocol = p;
+        form.ServiceInterfaceProtocol = p;
     }
     protected void GetServiceOperation<T>() where T : IServiceOperation, new()
     {
-        ((Form)form).GetServiceOperation = typeof(T).Name;
+        form.GetServiceOperation = typeof(T).Name;
     }
     protected void ApplyServiceOperation<T>() where T : IServiceOperation, new()
     {
@@ -286,7 +286,7 @@ public abstract partial class FormDefinition : BaseModelingDefinition, IUIRuleDe
     }
     protected void AddPassingParameters(string name)
     {
-        ((Form)form).AddPassingParameters(name);
+        form.AddPassingParameters(name);
     }
     protected void AllowAnonymous()
     {

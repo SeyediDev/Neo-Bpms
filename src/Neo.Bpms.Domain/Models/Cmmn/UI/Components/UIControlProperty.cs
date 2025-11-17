@@ -410,7 +410,8 @@ public enum eControlPropertyId
     [Title(nameof(Texts.ConfirmationMessage), typeof(Texts))]
     [ValueType(PropertyValueType.String)]
     [ControlGroup(ControlGroup.Operation)]
-    ConfirmMessage
+    ConfirmMessage,
+    Category
 }
 public enum eControlPropertyTarget
 {

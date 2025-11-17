@@ -24,7 +24,7 @@ public static class UserAuthorizationExtensions
         string formSubjectId, string formId, Form form = null)
     {
         ArgumentNullException.ThrowIfNull(user);
-        Form entityForm = form as Form;
+        Form entityForm = form;
         if (form == null)
         {
             entityForm = ProjectDefinition.Project.GetUiEntity(namespaceId, entityId)?

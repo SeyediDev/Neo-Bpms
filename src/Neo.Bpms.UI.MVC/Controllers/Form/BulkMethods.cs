@@ -78,7 +78,7 @@ public partial class FormController
         if (!FetchQuery(auditTrail?.User, namespaceId, entityId, recordsIds, indexForm, indexFilterValues,
             formData, form, taskId, culture, associationFieldId, maxRows, process, out QueryUtility q))
             return 0;
-        long itemCount = (long)0;
+        long itemCount = 0;
         object lockObject = new();
         string workDescription = formData.GetString(RenderingForm.WorkDescription);
         LocalParameters lpFormData = formData.ToLocalParameters();
@@ -174,7 +174,7 @@ public partial class FormController
         {
             ArgumentNullException.ThrowIfNull(indexForm);
             q.ActiveStates();
-            FormDataFilter.AddFilters(q, indexForm as Form, indexFilterValues, out _);
+            FormDataFilter.AddFilters(q, indexForm, indexFilterValues, out _);
         }
 
         q.AddPkFields();

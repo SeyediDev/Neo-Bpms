@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Newtonsoft.Json.Converters;
 
 namespace Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;

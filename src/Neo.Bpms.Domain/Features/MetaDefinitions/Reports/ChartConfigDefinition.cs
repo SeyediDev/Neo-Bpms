@@ -10,7 +10,7 @@ public abstract class ChartConfigDefinition(ChartType chartType) : GroupByConfig
     {
         base.DefineExtra();
         reportConfig.ChartType = chartType;
-        if (string.IsNullOrEmpty(ChartAdvancedOptions))
+        if (!string.IsNullOrEmpty(ChartAdvancedOptions))
         {
             reportConfig.AddProperty(ReportConfigProperty.ChartAdvancedOptions, ChartAdvancedOptions);
         }

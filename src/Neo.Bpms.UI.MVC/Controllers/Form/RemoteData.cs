@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.Fields;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Service.ServiceOperation;
 using Neo.Bpms.UI.MVC.ViewModels.Forms;
 

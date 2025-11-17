@@ -380,7 +380,7 @@ public partial class BuiltInFunctions
                     output += j switch
                     {
                         1 or 2 => (year / 100),
-                        _ => (object)year,
+                        _ => year,
                     };
                     break;
                 case 's':

@@ -15,7 +15,7 @@ public class TimerCatchRuntime : CatchRuntime
     {
         TimerEventDefinition = timerEventDefinition;
         _timer = CatchEvent.Location == CatchEventLocation.Start && !CatchEvent.InSubProcess
-            ? (TimerRoutine)new StartEventTimerEngine(this)
+            ? new StartEventTimerEngine(this)
             : new TimerCatch(this);
         _timer.Initialize(1, $"{processVersion.definition.Name}.{CatchEvent.Name}", timerEventDefinition.SecondsResolution);
     }

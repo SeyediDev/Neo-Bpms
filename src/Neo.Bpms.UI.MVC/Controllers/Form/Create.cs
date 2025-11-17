@@ -165,7 +165,7 @@ public partial class FormController
                         wid,
                         Caller
                     })
-                    : (ActionResult)RedirectToAction("Index", new { NamespaceId, EntityId, calendar });
+                    : RedirectToAction("Index", new { NamespaceId, EntityId, calendar });
             }
         }
         SetCommonCreateViewBags(postFormData.parentNamespaceId, postFormData.parentEntityId, postFormData.parentFormSubjectId,

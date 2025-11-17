@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
-using Neo.Bpms.Domain.Extensions;
 
 namespace Neo.Bpms.UI.MVC;
 internal interface IApplicationSetup

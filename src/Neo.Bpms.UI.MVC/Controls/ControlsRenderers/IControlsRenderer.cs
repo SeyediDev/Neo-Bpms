@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-using Neo.Bpms.Domain.Extensions;
-
-namespace Neo.Bpms.UI.MVC.Controls.ControlsRenderers;
+﻿namespace Neo.Bpms.UI.MVC.Controls.ControlsRenderers;
 
 public interface IControlsRenderer 
 {

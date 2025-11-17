@@ -145,8 +145,8 @@ public partial class ProcessController
         Process process = ProjectDefinition.Project.GetBpmnDefinition(filter.ProcessId, filter.ProcessVersionId)?.Process;
         if (process == null) return null;
         ElasticObject indexFilterValues = controllerMethods.DecodeFilterValues(indexFormFilterValues);
-        Form indexForm = (Form)(ProjectDefinition.Project.GetEntity(process.EntityNamespaceId,
-             process.EntityId) as UiEntity)?.getForms()?.FirstOrDefault(f => f.Id == indexFormId) ?? throw new Exception("چنین فرمی یافت نشد.");
+        Form indexForm = ((ProjectDefinition.Project.GetEntity(process.EntityNamespaceId,
+             process.EntityId) as UiEntity)?.getForms()?.FirstOrDefault(f => f.Id == indexFormId)) ?? throw new Exception("چنین فرمی یافت نشد.");
         CommonFormStructure structure = await formStructRoutines.GetIndexStructure(CultureHelper.GetCurrentNeutralCulture(),
                  process.EntityNamespaceId, process.EntityId, indexForm.FormSubjectId, indexForm.Id, "", indexForm, user) ?? throw new Exception(Messages.PageNotFound);
         return new EntityFilterInfo(structure, indexForm, indexFilterValues, "");

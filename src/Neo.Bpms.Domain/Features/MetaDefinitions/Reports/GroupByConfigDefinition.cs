@@ -17,7 +17,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     protected override void DefineExtra()
     {
         base.DefineExtra();
-        if (string.IsNullOrEmpty(HavingCondition))
+        if (!string.IsNullOrEmpty(HavingCondition))
         {
             reportConfig.HavingCondition = HavingCondition;
         }
@@ -223,5 +223,63 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
         params (eControlPropertyId propertyId, object value)[] properties)
     {
         AggregationFormula(formula, AggregationType.Min, alias, properties);
+    }
+
+    /// <summary>
+    /// Add group by column with category for range-based categorization
+    /// </summary>
+    /// <param name="field">Field name</param>
+    /// <param name="alias">Display alias</param>
+    /// <param name="category">Category identifier for this field</param>
+    /// <param name="addAsDisplayColumn">Whether to add as display column</param>
+    protected void GroupByWithCategory(string field, string alias, string category, bool addAsDisplayColumn = true)
+    {
+        string[] fieldIds = field.Split('.');
+        if (fieldIds.Length > 2)
+        {
+            return; // More than one dot is not supported
+        }
+
+        if (fieldIds.Length == 1)
+        {
+            AddField(ConfiguredReport.eFieldSelectionType.asGroupBy, field, alias,
+                [(eControlPropertyId.Category, category)]);
+        }
+        else
+        {
+            EntityField associationField = report?.entity.GetField(fieldIds[0]);
+            if (associationField == null)
+            {
+                return;
+            }
+
+            EntityField f = associationField.AssociationEntity.GetField(fieldIds[1]);
+            if (f == null)
+            {
+                return;
+            }
+
+            AddIncludedField(ConfiguredReport.eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id,
+                associationField.Id, alias,
+                [(eControlPropertyId.Category, category)]);
+        }
+
+        if (addAsDisplayColumn)
+        {
+            DisplayColumn(field, alias, [(eControlPropertyId.Category, category)]);
+        }
+    }
+
+    /// <summary>
+    /// Add category ranges for a specific category
+    /// </summary>
+    /// <param name="category">Category identifier</param>
+    /// <param name="ranges">List of ranges to add</param>
+    protected void AddCategoryRanges(string category, params CategoryRange[] ranges)
+    {
+        foreach (var range in ranges)
+        {
+            reportConfig.AddProperty(ReportConfigProperty.CategoryRange, range.ToCategoryRangeString(category));
+        }
     }
 }

@@ -16,8 +16,8 @@ public static class PerformanceOptimization
             options.EnableForHttps = true;
             options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
-            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-            {
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+            [
                 "text/css",
                 "application/javascript",
                 "application/json",
@@ -31,7 +31,7 @@ public static class PerformanceOptimization
                 "application/font-woff2",
                 "font/woff",
                 "font/woff2"
-            });
+            ]);
         });
 
         services.Configure<BrotliCompressionProviderOptions>(options =>

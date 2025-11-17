@@ -59,7 +59,7 @@ internal class ReformFormData
     internal static object ReformPassword(FormField formField, string value)
     {
         return formField == null || !formField.ControlTypeId.In(eControlTypeId.TextInput, eControlTypeId.None)
-            ? (object)value
+            ? value
             : new PasswordHasher().HashPassword(value);
     }
 }
