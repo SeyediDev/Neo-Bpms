@@ -1,15 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
 public class LongQueriesDefinitions : EntityDefinition
 {
     public class LongQueriesReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("طولانی ترین و پر هزینه ترین کوئری ها");
-        }
+        public override string Name => "طولانی ترین و پر هزینه ترین کوئری ها";
+        
         protected override void Filters()
         {
             _ = AddFilterFields("QueryText");

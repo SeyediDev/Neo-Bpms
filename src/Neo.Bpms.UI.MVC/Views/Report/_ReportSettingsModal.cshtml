@@ -46,7 +46,7 @@
 					@Html.Hidden("ConfigId", structure.ConfigId)
 
 					<div class="row">
-						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.MetricBox)
+						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == ChartType.MetricBox)
 						{
 							<div class="col-md-12">
 								<h4>Metric Box</h4>
@@ -69,7 +69,7 @@
 								       value="@structure.GetReportProperty((long) ReportConfigProperty.TextColor)">
 							</div>
 						}
-						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.Gauge)
+						@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == ChartType.Gauge)
 						{
 							<div class="col-sm-12">
 								<h4>Gauge</h4>
@@ -101,7 +101,7 @@
 							</div>
 						}
 					</div>
-					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == Report.ChartType.Gauge)
+					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType == ChartType.Gauge)
 					{
 						<div id="range-levels">
 							<i class="fa fa-plus" onclick="addLevelInputs()"></i>
@@ -145,7 +145,7 @@
 							}
 						</div>
 					}
-					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType != Report.ChartType.Gauge && structure.ChartType != Report.ChartType.MetricBox)
+					@if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType != ChartType.Gauge && structure.ChartType != ChartType.MetricBox)
 					{
 						var advancedOptionsRaw = structure.GetReportProperty((long)ReportConfigProperty.ChartAdvancedOptions) ?? "";
 						var advancedOptions = advancedOptionsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries)

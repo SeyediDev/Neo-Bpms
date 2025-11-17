@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
@@ -18,7 +17,7 @@ public class DashboardConfigViewModel : DashboardStructure
             public string Id { get; set; }
             public string Name { get; set; }
             public ReportViewType viewType { get; set; }
-            public Report.ChartType ChartType { get; set; }
+            public ChartType ChartType { get; set; }
         }
     }
 }

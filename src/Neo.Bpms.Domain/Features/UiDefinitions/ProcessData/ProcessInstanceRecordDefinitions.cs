@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using Neo.Bpms.MetaModel.ProcessData;
 
@@ -105,23 +104,16 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
     /// </summary>
     public class ProcessAnalysis : AnalysisReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("نظارت بر فرآیندهای غیرفعال");
-        }
+        public override string Name => "نظارت بر فرآیندهای غیرفعال";
 
         protected override void Filters()
         {
             base.Filters();
             AddFilter($"StateId>={ProcessInstanceStateId.Completed:D}");
         }
-        public class CompletedProcessCount : ReportConfigDefinition
+        public class CompletedProcessCount() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override void Identify()
-            {
-                DefineConfig("تعداد فرآیند های انجام شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
+            protected override string Name => "تعداد فرآیند های انجام شده";
 
             protected override void DefineColumns()
             {
@@ -133,13 +125,9 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
                 GroupBys(nameof(ProcessInstanceRecord.ProcessVersion));
             }
         }
-        public class CompletedProcessDuration : ReportConfigDefinition
+        public class CompletedProcessDuration() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش مدت زمان انجام فرآیندها", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
+            protected override string Name => "گزارش مدت زمان انجام فرآیندها";
 
             protected override void DefineColumns()
             {
@@ -160,10 +148,8 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
         }
         public class List : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش جزئیات فرآیندها", ReportViewType.List);
-            }
+            protected override string Name => "گزارش جزئیات فرآیندها";
+            protected override ReportViewType ViewType => ReportViewType.List;
 
             protected override void DefineColumns()
             {
@@ -179,22 +165,16 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
     /// </summary>
     public class ActiveProcessAnalysis : AnalysisReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("نظارت بر فرآیندهای فعال");
-        }
+        public override string Name => "نظارت بر فرآیندهای فعال";
+        
         protected override void Filters()
         {
             base.Filters();
             AddFilter($"StateId<{ProcessInstanceStateId.Completed:D}");
         }
-        public class ActivatedProcess : ReportConfigDefinition
+        public class ActivatedProcess() : ChartConfigDefinition(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فرآیند های در حال اجرا", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
+            protected override string Name => "گزارش فرآیند های در حال اجرا";
 
             protected override void DefineColumns()
             {
@@ -208,10 +188,8 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
         }
         public class List : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش جزئیات فرآیند های در حال اجرا", ReportViewType.List);
-            }
+            protected override string Name => "گزارش جزئیات فرآیند های در حال اجرا";
+            protected override ReportViewType ViewType => ReportViewType.List;
 
             protected override void DefineColumns()
             {
@@ -226,17 +204,11 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
     /// </summary>
     public class TotalProcessAnalysis : AnalysisReport
     {
-        protected override Report IdentifyReport()
+        public override string Name => "نظارت بر فرآیندها";
+        
+        public class CreatedProcess() : ChartConfigDefinition(ChartType.Bar)
         {
-            return DefineReport("نظارت بر فرآیندها");
-        }
-        public class CreatedProcess : ReportConfigDefinition
-        {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فرآیند های ایجاد شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
+            protected override string Name => "گزارش فرآیند های ایجاد شده";
 
             protected override void DefineColumns()
             {
@@ -248,18 +220,10 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
                 GroupBys("ProcessVersion");
             }
         }
-        public class CompletedProcess : ReportConfigDefinition
+        public class CompletedProcess() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فرآیند های تکمیل شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId == {ProcessInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش فرآیند های تکمیل شده";
+            protected override string WhereCondition => $"StateId == {ProcessInstanceStateId.Completed:D}";
 
             protected override void DefineColumns()
             {
@@ -271,18 +235,10 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
                 GroupBys("ProcessVersion");
             }
         }
-        public class ActivatedProcess : ReportConfigDefinition
+        public class ActivatedProcess() : ChartConfigDefinition(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فرآیند های در حال اجرا", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId < {ProcessInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش فرآیند های در حال اجرا";
+            protected override string WhereCondition => $"StateId < {ProcessInstanceStateId.Completed:D}";
 
             protected override void DefineColumns()
             {
@@ -294,18 +250,10 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
                 GroupBys("ProcessVersion");
             }
         }
-        public class CompletedProcessDuration : ReportConfigDefinition
+        public class CompletedProcessDuration() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش مدت زمان انجام فرآیندها", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId == {ProcessInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش مدت زمان انجام فرآیندها";
+            protected override string WhereCondition => $"StateId == {ProcessInstanceStateId.Completed:D}";
 
             protected override void DefineColumns()
             {
@@ -326,10 +274,8 @@ public class ProcessInstanceRecordDefinitions : CRUDDefinition
         }
         public class List : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش جزئیات فرآیندها", ReportViewType.List);
-            }
+            protected override string Name => "گزارش جزئیات فرآیندها";
+            protected override ReportViewType ViewType => ReportViewType.List;
 
             protected override void DefineColumns()
             {

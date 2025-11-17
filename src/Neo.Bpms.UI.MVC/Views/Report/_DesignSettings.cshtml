@@ -309,7 +309,7 @@
                 </a>
             }
             
-            @if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType.In(Report.ChartType.Gauge, Report.ChartType.MetricBox))
+            @if (structure.ReportViewType == ReportViewType.Chart && structure.ChartType.In(ChartType.Gauge, ChartType.MetricBox))
             {
                 <a class="design-settings-link" data-toggle="modal" href="" data-target="#reportSettingsModal-@structure.ConfigId" onclick="hideDesignSettingsTooltip()">
                     <div class="design-settings-link-icon">

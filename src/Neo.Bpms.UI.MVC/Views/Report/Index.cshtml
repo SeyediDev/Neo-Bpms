@@ -286,11 +286,11 @@
                                 case ReportViewType.Chart:
                                     switch (structure.ChartType)
                                     {
-                                        case Report.ChartType.WorldMap:
-                                        case Report.ChartType.IranMap:
+                                        case ChartType.WorldMap:
+                                        case ChartType.IranMap:
                                             <partial name="_map" model="Model" />
                                             break;
-                                        case Report.ChartType.BpmnDiagram:
+                                        case ChartType.BpmnDiagram:
                                             <partial name="_bpmn" model="Model" />
                                             break;
                                         default:

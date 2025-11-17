@@ -182,7 +182,7 @@ public class AddNewConfigParameters
     public string ReportId { get; set; }
     public string NewConfigName { get; set; }
     public ReportViewType viewType { get; set; }
-    public Report.ChartType chartType { get; set; }
+    public ChartType chartType { get; set; }
 }
 
 public class AddSubReportParameters
@@ -203,16 +203,6 @@ public class PostedOrderdColumn
     public string Formula { get; set; }
     public bool IsTooltip { get; set; }
     public ConfiguredReport.ReportMatrixType MatrixType { get; set; }
-}
-
-public enum ReportConfigProperty
-{
-    Unit = 10203,
-
-    IconClass = 10303,
-    BackgroundColor = 10304,
-    TextColor = 10305,
-    ChartAdvancedOptions = 10306,
 }
 
 public class PostedProperty

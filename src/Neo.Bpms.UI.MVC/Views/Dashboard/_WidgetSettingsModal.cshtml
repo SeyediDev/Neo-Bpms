@@ -38,7 +38,7 @@
                                 نوع نمودار
                             </label>
                             <select id="selectChart-@divConfiguration.WidgetId" class="neo-dashboard-form-input">
-                                @foreach (Report.ChartType chartType in Enum.GetValues<Report.ChartType>())
+                                @foreach (ChartType chartType in Enum.GetValues<ChartType>())
                                 {
                                     <option value="@chartType" selected="@(reportData.Structure.ChartType == chartType)">
                                         @chartType

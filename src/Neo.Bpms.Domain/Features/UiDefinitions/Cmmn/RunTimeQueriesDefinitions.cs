@@ -1,15 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
 public class RunTimeQueriesDefinitions : EntityDefinition
 {
     public class RunTimeQueriesReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("کوئری های در حال اجرا");
-        }
+        public override string Name => "کوئری های در حال اجرا";
 
         protected override void Filters()
         {

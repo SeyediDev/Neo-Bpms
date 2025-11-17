@@ -71,7 +71,7 @@ public partial class ReportController
         result.Structure.ParentReportIds = ParentReportIds;
         if (config.Parent == null)
         {
-            if (result.Structure.ChartType == Report.ChartType.WorldMap)
+            if (result.Structure.ChartType == ChartType.WorldMap)
             {
                 ViewBag.ContainerClass = "container-fluid";
             }
@@ -80,8 +80,8 @@ public partial class ReportController
         }
         SetInIframe();
         return PartialView(config.ViewType == ReportViewType.Chart
-            ? (config.ChartType == Report.ChartType.WorldMap ||
-               config.ChartType == Report.ChartType.IranMap
+            ? (config.ChartType == ChartType.WorldMap ||
+               config.ChartType == ChartType.IranMap
                 ? "~/Views/Report/_map.cshtml"
                 : "~/Views/Report/_chartView.cshtml")
             : "~/Views/Report/_listView.cshtml", result);
@@ -131,13 +131,13 @@ public partial class ReportController
         if (!string.IsNullOrEmpty(SelectedChartType))
         {
             result.Structure.ChartType =
-                (Report.ChartType)Enum.Parse(typeof(Report.ChartType), SelectedChartType);
+                (ChartType)Enum.Parse(typeof(ChartType), SelectedChartType);
         }
 
         await SetReportViewBag(user, ParentReportIds, sortFields, FilterValues, DrillDown == 1, Page, false, result, null);
         return DrillDown == 1
             ? PartialView(initPostReportConfigResult.config.ViewType == ReportViewType.Chart
-                ? (initPostReportConfigResult.config.ChartType == Report.ChartType.WorldMap || initPostReportConfigResult.config.ChartType == Report.ChartType.IranMap
+                ? (initPostReportConfigResult.config.ChartType == ChartType.WorldMap || initPostReportConfigResult.config.ChartType == ChartType.IranMap
                     ? "_map"
                     : "_chartView")
                 : "_listView", result)
@@ -257,7 +257,7 @@ public partial class ReportController
         ViewBag.PersistentIsNull = persistentIsNull;
         ViewBag.FilterId = configuredFilter?.Id;
         ViewBag.FilterName = configuredFilter?.Name;
-        if (!isDrillDown && result.Structure.ChartType == Report.ChartType.WorldMap)
+        if (!isDrillDown && result.Structure.ChartType == ChartType.WorldMap)
         {
             ViewBag.ContainerClass = "container-fluid";
         }

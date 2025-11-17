@@ -1,15 +1,10 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
 public class MissingIndexesDefinitions : EntityDefinition
 {
     public class MissingIndexesReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("گزارش ایندکس های پیشنهادی پایگاه داده");
-        }
+        public override string Name => "گزارش ایندکس های پیشنهادی پایگاه داده";
         protected override void Filters()
         {
             AddFilterFields("TableName");

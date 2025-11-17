@@ -4,6 +4,7 @@
 @using Neo.Bpms.Domain.Model.Project
 @using Neo.Bpms.Domain.Model.UI
 @using Neo.Bpms.Domain.Models.Cmmn
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
 @using Neo.Bpms.UI.MVC.Controls
 @using Neo.Bpms.UI.MVC.PartialModels
@@ -29,11 +30,11 @@
 <script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.min.js"></script> *@
 <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.css"/>
 <script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.min.js"></script>
-@if (Model.Structure.ChartType == Report.ChartType.WorldMap)
+@if (Model.Structure.ChartType == ChartType.WorldMap)
 {
 	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-world-mill.js"></script>
 }
-else if (Model.Structure.ChartType == Report.ChartType.IranMap)
+else if (Model.Structure.ChartType == ChartType.IranMap)
 {
 	<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-iran-mill.js"></script>
 }
@@ -45,7 +46,7 @@ else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 </div>
 
 <script>
-	var isWorldMap = @((Model.Structure.ChartType == Report.ChartType.WorldMap).ToString().ToLower());
+	var isWorldMap = @((Model.Structure.ChartType == ChartType.WorldMap).ToString().ToLower());
 	var mapData = {};
 	var mapInfo = {};
 
@@ -70,7 +71,7 @@ else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 	@foreach (var row in reportInfo.Rows)
 	{
 		var iso2 = row.Data[iso2Column != null ? iso2Column.ColumnTypeName : "Iso2"];
-		if (Model.Structure.ChartType == Report.ChartType.IranMap)
+		if (Model.Structure.ChartType == ChartType.IranMap)
 		{
 			if(!isValidIranProvinceIso2(iso2))
 				iso2 = "iran";
@@ -104,7 +105,7 @@ else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 	//todo read mapMarkers from mapInfo
 
 	var iso2sWhichShouldBeMarkers = [
-		@if (Model.Structure.ChartType == Report.ChartType.WorldMap)
+		@if (Model.Structure.ChartType == ChartType.WorldMap)
 		{
 			<text>
 				{ markerType: 'satellite', iso2: '3ry', latLng: [-51, -130], name: 'ماهواره ثریا' },
@@ -137,7 +138,7 @@ else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 				{ markerType: 'country', iso2: 'ST', latLng: [0.33, 6.73], name: 'São Tomé and Príncipe' }
 			</text>
 		}
-		@if (Model.Structure.ChartType == Report.ChartType.IranMap)
+		@if (Model.Structure.ChartType == ChartType.IranMap)
 		{
 			<text>
 				{ markerType: 'iran', iso2: 'iran', latLng: [50, -10], name: 'تعیین نشده' },
@@ -244,7 +245,7 @@ else if (Model.Structure.ChartType == Report.ChartType.IranMap)
 
 	$('#world-map')
 		.vectorMap({
-			map: '@(Model.Structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
+			map: '@(Model.Structure.ChartType == ChartType.IranMap ? "iran_mill" : "world_mill")',
 			markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
 //            labels: {
 //                markers: {

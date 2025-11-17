@@ -8,7 +8,7 @@ namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 public class ReportStructure : CommonFormStructure
 {
     public ReportViewType ReportViewType { get; set; }
-    public Report.ChartType ChartType { get; set; }
+    public ChartType ChartType { get; set; }
 
     public IList<ReportColumnFilter> SelectedFilters { get; set; }
 

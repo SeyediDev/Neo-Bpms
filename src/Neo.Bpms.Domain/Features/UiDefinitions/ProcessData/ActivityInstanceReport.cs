@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.MetaModel.ProcessData;
@@ -142,7 +141,20 @@ public partial class ActivityInstanceRecordDefinitions
             AddGroupByField(nameof(ActivityInstanceRecord.OperationName));
         }
 
-        public abstract class AbstractReportConfig : ReportConfigDefinition
+        public abstract class AbstractGroupByConfig : GroupByConfigDefinition
+        {
+            protected void DefineAggs()
+            {
+                Count();
+                Sum(nameof(ActivityInstanceRecord.ActiveDuration));
+                Sum(nameof(ActivityInstanceRecord.DoneDuration));
+                Sum(nameof(ActivityInstanceRecord.WaitTime));
+                Sum(nameof(ActivityInstanceRecord.CreationDistance));
+                Sum(nameof(ActivityInstanceRecord.StartDistance));
+                Sum(nameof(ActivityInstanceRecord.CloseDistance));
+            }
+        }
+        public abstract class AbstractChartConfig(ChartType chartType) : ChartConfigDefinition(chartType)
         {
             protected void DefineAggs()
             {
@@ -159,17 +171,11 @@ public partial class ActivityInstanceRecordDefinitions
 
     public class ProcessAnalysis : AbstractReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("نظارت بر فعالیت های کسب و کار");
-        }
+        public override string Name => "نظارت بر فعالیت های کسب و کار";
 
-        public class GroupByFlowNodeAndUser : AbstractReportConfig
+        public class GroupByFlowNodeAndUser : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("آمار به تفکیک نوع فعالیت و کاربر", ReportViewType.GroupByList);
-            }
+            protected override string Name => "آمار به تفکیک نوع فعالیت و کاربر";
 
             protected override void DefineGroupBy()
             {
@@ -185,12 +191,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class GroupByFlowNodeAndUserGroup : AbstractReportConfig
+        public class GroupByFlowNodeAndUserGroup : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("آمار به تفکیک نوع فعالیت و نقش", ReportViewType.GroupByList);
-            }
+            protected override string Name => "آمار به تفکیک نوع فعالیت و نقش";
 
             protected override void DefineGroupBy()
             {
@@ -206,12 +209,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class DailyWorkDone : AbstractReportConfig
+        public class DailyWorkDone : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده روزانه", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارهای انجام شده روزانه";
 
             protected override void DefineGroupBy()
             {
@@ -225,13 +225,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class DailyWorkDoneChart : AbstractReportConfig
+        public class DailyWorkDoneChart() : AbstractChartConfig(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده روزانه(چارت)", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
+            protected override string Name => "گزارش کارهای انجام شده روزانه(چارت)";
 
             protected override void DefineGroupBy()
             {
@@ -245,12 +241,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class MonthlyWorkDone : AbstractReportConfig
+        public class MonthlyWorkDone : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده ماهانه", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارهای انجام شده ماهانه";
 
             protected override void DefineGroupBy()
             {
@@ -264,13 +257,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class MonthlyWorkDoneChart : AbstractReportConfig
+        public class MonthlyWorkDoneChart() : AbstractChartConfig(ChartType.Line)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده ماهانه(چارت)", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Line);
-            }
+            protected override string Name => "گزارش کارهای انجام شده ماهانه(چارت)";
 
             protected override void DefineGroupBy()
             {
@@ -283,12 +272,9 @@ public partial class ActivityInstanceRecordDefinitions
                 DefineAggs();
             }
         }
-        public class UserWorks : AbstractReportConfig
+        public class UserWorks : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای کاربران در هر فرآیند", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارهای کاربران در هر فرآیند";
 
             protected override void DefineGroupBy()
             {
@@ -304,12 +290,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class UserGroupWorks : AbstractReportConfig
+        public class UserGroupWorks : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای نقش ها در هر فرآیند", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارهای نقش ها در هر فرآیند";
 
             protected override void DefineGroupBy()
             {
@@ -325,13 +308,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class UserWorksChart : AbstractReportConfig
+        public class UserWorksChart() : AbstractChartConfig(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("نمودار کارهای کاربران در هر فرآیند", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
+            protected override string Name => "نمودار کارهای کاربران در هر فرآیند";
 
             protected override void DefineGroupBy()
             {
@@ -347,13 +326,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class UserGroupWorksChart : AbstractReportConfig
+        public class UserGroupWorksChart() : AbstractChartConfig(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("نمودار کارهای نقش ها در هر فرآیند", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
+            protected override string Name => "نمودار کارهای نقش ها در هر فرآیند";
 
             protected override void DefineGroupBy()
             {
@@ -368,18 +343,10 @@ public partial class ActivityInstanceRecordDefinitions
                 DefineAggs();
             }
         }
-        public class CompletedActivities : AbstractReportConfig
+        public class CompletedActivities() : AbstractChartConfig(ChartType.Bar)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فعالیت های تکمیل شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Bar);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId=={ActivityInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش فعالیت های تکمیل شده";
+            protected override string WhereCondition => $"StateId=={ActivityInstanceStateId.Completed:D}";
 
             protected override void DefineGroupBy()
             {
@@ -393,18 +360,10 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class PendingActivities : AbstractReportConfig
+        public class PendingActivities() : AbstractChartConfig(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فعالیت های در انتظار", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId<{ActivityInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش فعالیت های در انتظار";
+            protected override string WhereCondition => $"StateId<{ActivityInstanceStateId.Completed:D}";
 
             protected override void DefineGroupBy()
             {
@@ -418,19 +377,10 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class OverDueActivities : AbstractReportConfig
+        public class OverDueActivities() : AbstractChartConfig(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش فعالیت های عقب افتاده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId<{ActivityInstanceStateId.Completed:D}");
-                SetWhereCondition($"daydiff(({nameof(ActivityInstanceRecord.CreationTime)}),(getdate())) > 1");
-            }
+            protected override string Name => "گزارش فعالیت های عقب افتاده";
+            protected override string WhereCondition => $"StateId<{ActivityInstanceStateId.Completed:D} && daydiff(({nameof(ActivityInstanceRecord.CreationTime)}),(getdate())) > 1";
 
             protected override void DefineGroupBy()
             {
@@ -443,18 +393,10 @@ public partial class ActivityInstanceRecordDefinitions
                 DefineAggs();
             }
         }
-        public class AvgDurationForActivities : AbstractReportConfig
+        public class AvgDurationForActivities() : AbstractChartConfig(ChartType.Area)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش میانگین زمان صرف شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Area);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId=={ActivityInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "گزارش میانگین زمان صرف شده";
+            protected override string WhereCondition => $"StateId=={ActivityInstanceStateId.Completed:D}";
 
             protected override void DefineGroupBy()
             {
@@ -472,10 +414,7 @@ public partial class ActivityInstanceRecordDefinitions
 
     public class OneProcessAnalysis : AbstractReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("نظارت بر فعالیت های یک فرآیند");
-        }
+        public override string Name => "نظارت بر فعالیت های یک فرآیند";
 
         protected override void Filters()
         {
@@ -483,13 +422,9 @@ public partial class ActivityInstanceRecordDefinitions
             SelectFilterField(nameof(ActivityInstanceRecord.Process), eControlPropertyId.IsNotMultiple, eControlPropertyId.Required);
         }
 
-        public class InstancesChart : AbstractReportConfig
+        public class InstancesChart() : AbstractChartConfig(ChartType.Area)
         {
-            protected override void Identify()
-            {
-                DefineConfig("تعداد فعالیت فعال", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Area);
-            }
+            protected override string Name => "تعداد فعالیت فعال";
 
             protected override void DefineGroupBy()
             {
@@ -507,18 +442,10 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class BpmnDiagram : ReportConfigDefinition
+        public class BpmnDiagram() : ChartConfigDefinition(ChartType.BpmnDiagram)
         {
-            protected override void Identify()
-            {
-                DefineConfig("تعداد فعالیت فعال در دیاگرام", ReportViewType.Chart);
-                SetChartType(Report.ChartType.BpmnDiagram);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition("IsNull(Closed,0)==0");
-            }
+            protected override string Name => "تعداد فعالیت فعال در دیاگرام";
+            protected override string WhereCondition => "IsNull(Closed,0)==0";
 
             protected override void DefineGroupBy()
             {
@@ -533,18 +460,10 @@ public partial class ActivityInstanceRecordDefinitions
                 Min(nameof(ActivityInstanceRecord.ActiveDuration));
             }
         }
-        public class CompletedBpmnDiagram : ReportConfigDefinition
+        public class CompletedBpmnDiagram : BpmnDiagramDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("دیاگرام فعالیت های تکمیل شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.BpmnDiagram);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"StateId=={ActivityInstanceStateId.Completed:D}");
-            }
+            protected override string Name => "دیاگرام فعالیت های تکمیل شده";
+            protected override string WhereCondition => $"StateId=={ActivityInstanceStateId.Completed:D}";
 
             protected override void DefineGroupBy()
             {
@@ -567,10 +486,7 @@ public partial class ActivityInstanceRecordDefinitions
     /// </summary>
     public class ReportOfMyWork : AbstractReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("نظارت بر فعالیت های من");
-        }
+        public override string Name => "نظارت بر فعالیت های من";
 
         protected override void Filters()
         {
@@ -579,12 +495,9 @@ public partial class ActivityInstanceRecordDefinitions
             AddFilter($"{nameof(ActivityInstanceRecord.ActualOwnerId)} == (UserId(user))");
         }
 
-        public class DailyWork : AbstractReportConfig
+        public class DailyWork : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده روزانه", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارهای انجام شده روزانه";
 
             protected override void DefineGroupBy()
             {
@@ -598,13 +511,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class DailyWorkChart : AbstractReportConfig
+        public class DailyWorkChart() : ChartConfigDefinition(ChartType.Column)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارهای انجام شده روزانه(چارت)", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Column);
-            }
+            protected override string Name => "گزارش کارهای انجام شده روزانه(چارت)";
 
             protected override void DefineGroupBy()
             {
@@ -618,12 +527,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class MonthlyWork : AbstractReportConfig
+        public class MonthlyWork : AbstractGroupByConfig
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارها انجام شده ماهانه", ReportViewType.GroupByList);
-            }
+            protected override string Name => "گزارش کارها انجام شده ماهانه";
 
             protected override void DefineGroupBy()
             {
@@ -637,13 +543,9 @@ public partial class ActivityInstanceRecordDefinitions
             }
         }
 
-        public class MonthlyWorkChart : AbstractReportConfig
+        public class MonthlyWorkChart() : ChartConfigDefinition(ChartType.Line)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش کارها انجام شده ماهانه(چارت)", ReportViewType.Chart);
-                SetChartType(Report.ChartType.Line);
-            }
+            protected override string Name => "گزارش کارها انجام شده ماهانه(چارت)";
 
             protected override void DefineGroupBy()
             {
@@ -659,11 +561,7 @@ public partial class ActivityInstanceRecordDefinitions
     }
     public class MyActiveInstanceReport : AbstractReport
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("فعالیت های فعال من");
-        }
-
+        public override string Name => "گزارش فعالیت های فعال من";
         protected override void Filters()
         {
             base.Filters();
@@ -671,13 +569,9 @@ public partial class ActivityInstanceRecordDefinitions
             AddFilter($"{nameof(ActivityInstanceRecord.ActualOwnerId)} == (UserId(user))");
         }
 
-        public class AllActiveWorkItemCount : AbstractReportConfig
+        public class AllActiveWorkItemCount() : AbstractChartConfig(ChartType.MetricBox)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش تعداد کار های ایجاد شده", ReportViewType.Chart);
-                SetChartType(Report.ChartType.MetricBox);
-            }
+            protected override string Name => "گزارش تعداد کار های ایجاد شده";
 
             protected override void DefineGroupBy()
             {
@@ -689,19 +583,10 @@ public partial class ActivityInstanceRecordDefinitions
                 Count(null, "کارهای من");
             }
         }
-        public class TodayCreatedWorkItemCount : AbstractReportConfig
+        public class TodayCreatedWorkItemCount() : AbstractChartConfig(ChartType.MetricBox)
         {
-            protected override void Identify()
-            {
-                DefineConfig("گزارش تعداد کار های ایجاد شده در روز جاری", ReportViewType.Chart);
-                SetChartType(Report.ChartType.MetricBox);
-            }
-
-            protected override void DefineFilter()
-            {
-                SetWhereCondition($"DateOf({nameof(ActivityInstanceRecord.CreationTime)}) == ServerDate()");
-            }
-
+            protected override string Name => "گزارش تعداد کار های ایجاد شده در روز جاری";
+            protected override string WhereCondition => $"DateOf({nameof(ActivityInstanceRecord.CreationTime)}) == ServerDate()";
             protected override void DefineGroupBy()
             {
                 GroupBy(nameof(ActivityInstanceRecord.ActualOwnerId));

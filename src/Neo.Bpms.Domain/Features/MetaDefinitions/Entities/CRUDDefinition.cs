@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
 
 public class DefaultCRUDDefinition : CRUDDefinition { }
 public abstract class CRUDDefinition<TEntity> : CRUDDefinition
@@ -407,12 +405,8 @@ public abstract class CRUDDefinition : EntityDefinition
     public partial class PublicReport : ReportDefinition
     {
         protected CRUDDefinition CrudDefinition => (CRUDDefinition)entityDefinition;
-
-        protected override Report IdentifyReport()
-        {
-            return DefineReport($"{entity.Name} Report", "گزارش " + entity.Name);
-        }
-
+        public override string EnName => $"{entity.Name} Report";
+        public override string Name => "گزارش " + entity.Name;
 
         protected override void Filters()
         {

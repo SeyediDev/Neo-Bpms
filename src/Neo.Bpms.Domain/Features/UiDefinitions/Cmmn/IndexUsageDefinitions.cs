@@ -1,15 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
 public class IndexUsageDefinitions : EntityDefinition
 {
     public class IndexUsageReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("ایندکس های استفاده شده");
-        }
+        public override string Name => "ایندکس های استفاده شده";
+        
         protected override void Filters()
         {
             AddFilterFields("DatabaseName");

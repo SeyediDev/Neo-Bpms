@@ -123,16 +123,16 @@
 }
 else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
 {
-    if (reportData.Structure.ChartType == Report.ChartType.WorldMap ||
-        reportData.Structure.ChartType == Report.ChartType.IranMap)
+    if (reportData.Structure.ChartType == ChartType.WorldMap ||
+        reportData.Structure.ChartType == ChartType.IranMap)
     {
         <partial name="~/Views/Report/_map.cshtml" model="reportData" />
     }
-    else if (reportData.Structure.ChartType == Report.ChartType.BpmnDiagram)
+    else if (reportData.Structure.ChartType == ChartType.BpmnDiagram)
     {
         <partial name="~/Views/Report/_bpmn.cshtml" model="reportData" />
     }
-    else if (reportData.Structure.ChartType == Report.ChartType.MetricBox)
+    else if (reportData.Structure.ChartType == ChartType.MetricBox)
     {
         var metricValue = reportData.GetMetricBoxValue();
         var structure = reportData.Structure;

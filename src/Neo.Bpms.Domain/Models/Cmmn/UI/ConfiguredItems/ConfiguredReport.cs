@@ -39,7 +39,7 @@ public class ConfiguredReport : ConfiguredItem
     public string UniqueId => $"{Report?.NamespaceId}.{Report?.EntityId}.{Report?.Id}.{ConfigId}";
     [JsonIgnore]
     public string ConfigId { get; set; }
-    public Report.ChartType ChartType { get; set; } = Report.ChartType.Line;
+    public ChartType ChartType { get; set; } = ChartType.Line;
     public ReportViewType ViewType { get; set; }
     public bool IsMeta { get; set; }
 
@@ -159,6 +159,10 @@ public class ConfiguredReport : ConfiguredItem
         return format;
     }
 
+    public void AddProperty(ReportConfigProperty propertyId, string value)
+    {
+        AddProperty((long)propertyId, value);
+    }
     public void AddProperty(long propertyId, string value)
     {
         Properties ??= [];

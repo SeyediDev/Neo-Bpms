@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Entities.ProcessData;
+﻿using Neo.Bpms.Domain.Entities.ProcessData;
 
 namespace Neo.Bpms.Domain.Features.UiDefinitions.ProcessData;
 
@@ -315,10 +314,7 @@ public class SystemUserDefinitions : EntityDefinition
 
     public class SystemUser_75_Report : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("فهرست کاربران");
-        }
+        public override string Name => "فهرست کاربران";
 
         protected override void Filters()
         {
@@ -353,10 +349,7 @@ public class SystemUserDefinitions : EntityDefinition
 
     public class SystemUserSubUsersReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("فهرست کاربران زیر مجموعه");
-        }
+        public override string Name => "فهرست کاربران زیر مجموعه";
 
         protected override void Filters()
         {

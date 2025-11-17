@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.ProcessData;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.ProcessData;
 
 public class SystemUserGroupDefinitions : EntityDefinition
 {
@@ -347,10 +345,8 @@ public class SystemUserGroupDefinitions : EntityDefinition
     #region report definitions
     public class SystemUserGroup_75_Report : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("فهرست گروه‌های کاربری");
-        }
+        public override string Name => "فهرست گروه‌های کاربری";
+        
         protected override void Filters()
         {
             SetInputStateIds(1);

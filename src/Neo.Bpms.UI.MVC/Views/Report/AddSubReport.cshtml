@@ -1,5 +1,6 @@
 ﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
 @using Neo.Bpms.Domain.Model.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
 @model             PossibleSubReportSelections
 
 @{
@@ -264,14 +265,14 @@
 		<div style="display: none;">
 			<span style="padding-left: 20px;">@ViewTexts.ChartType :</span>
 			<select class="form-control" id="nCharts" name="chartType">
-				<option selected="selected" value="@Report.ChartType.Area">@Report.ChartType.Area</option>
-				<option value="@Report.ChartType.Bar">Bar</option>
-				<option value="@Report.ChartType.Column">Column</option>
-				<option value="@Report.ChartType.Line">Line</option>
-				<option value="@Report.ChartType.Pie">Pie</option>
-				<option value="@Report.ChartType.Spline">Spline</option>
-				<option value="@Report.ChartType.Areaspline">Areaspline</option>
-				<option value="@Report.ChartType.Scatter">Scatter</option>
+				<option selected="selected" value="@ChartType.Area">@ChartType.Area</option>
+				<option value="@ChartType.Bar">Bar</option>
+				<option value="@ChartType.Column">Column</option>
+				<option value="@ChartType.Line">Line</option>
+				<option value="@ChartType.Pie">Pie</option>
+				<option value="@ChartType.Spline">Spline</option>
+				<option value="@ChartType.Areaspline">Areaspline</option>
+				<option value="@ChartType.Scatter">Scatter</option>
 			</select>
 		</div>
 		@*<input type="button" class="btn btn-primary" value="@ViewTexts.Submit" onclick="submit(this)"/>*@

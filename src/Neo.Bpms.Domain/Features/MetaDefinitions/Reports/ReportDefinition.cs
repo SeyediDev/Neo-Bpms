@@ -302,12 +302,17 @@ public abstract class ReportDefinition : FormDefinition
             }
         }
     }
+
     /// <summary>
     /// IdentifyReport
     /// </summary>
     /// 
     /// <returns></returns>
-    protected abstract Report IdentifyReport();
+    //protected abstract Report IdentifyReport();
+    protected Report IdentifyReport()
+    {
+        return DefineReport(EnName, Name);
+    }
 
     /// <summary>
     /// Define Report Data Sources

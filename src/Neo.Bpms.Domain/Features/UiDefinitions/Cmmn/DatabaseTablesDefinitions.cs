@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
@@ -7,10 +6,7 @@ public class DatabaseTablesDefinitions : EntityDefinition
 {
     public class PublicReport : ReportDefinition
     {
-        protected override Report IdentifyReport()
-        {
-            return DefineReport("جداول پایگاه داده");
-        }
+        public override string Name => "جداول پایگاه داده";
 
         protected override void Filters()
         {
@@ -27,10 +23,8 @@ public class DatabaseTablesDefinitions : EntityDefinition
         }
         public class List : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("جداول پایگاه داده", ReportViewType.List);
-            }
+            protected override string Name => "جداول پایگاه داده";
+            protected override ReportViewType ViewType => ReportViewType.List;
 
             protected override void DefineColumns()
             {

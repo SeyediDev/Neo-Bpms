@@ -215,7 +215,7 @@
 
 	@*$('#world-map')
         .vectorMap({
-            map: '@(Model.structure.ChartType == Report.ChartType.IranMap ? "iran_mill" : "world_mill")',
+            map: '@(Model.structure.ChartType == ChartType.IranMap ? "iran_mill" : "world_mill")',
             markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
 //            labels: {
 //                markers: {

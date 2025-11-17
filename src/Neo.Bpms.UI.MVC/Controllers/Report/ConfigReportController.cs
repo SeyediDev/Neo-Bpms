@@ -55,12 +55,12 @@ public partial class ReportController
             //if ((int)Params.viewType == 3)
             //{
             //	//Params.viewType = eReportViewType.WorldMap;
-            //	Params.chartType = Report.ChartType.WorldMap;
+            //	Params.chartType = ChartType.WorldMap;
             //}
             //else if ((int)Params.viewType == 5)
             //{
             //	Params.viewType = eReportViewType.IranMap;
-            //	Params.chartType = Report.ChartType.IranMap;
+            //	Params.chartType = ChartType.IranMap;
             //}
 
             ConfiguredReport cr = new(report, Params.viewType,

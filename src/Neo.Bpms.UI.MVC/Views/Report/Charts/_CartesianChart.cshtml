@@ -1,3 +1,5 @@
+@using System
+@using System.Linq
 @using Neo.Bpms.Domain.Entities.Cmmn
 @using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
@@ -11,18 +13,284 @@
     var showTitle = Model.ShouldShowTitle;
     var hr = new HighchartRenderer(reportInfo);
     var chartType = reportInfo.Structure.ChartType.ToString().ToLower();
-    var hasSingleAggregation = reportInfo.AggregationColumns.Count() == 1;
+    var aggregationCount = reportInfo.AggregationColumns.Count();
+    var hasSingleAggregation = aggregationCount == 1;
+    var hasMultipleAggregations = aggregationCount > 1;
     var isMatrix = reportInfo.Structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.InColumn) > 1 &&
                    reportInfo.Structure.SelectedColumns.Count(s => s.aggrType == eAggregationFunctions.GroupByItem) > 0;
+    var drilldownConfigs = reportInfo?.Structure?.SubReports?.Count(sr => sr.Type == Report.SubReportType.DrillDown) ?? 0;
+    var chartConfigId = reportInfo?.Structure?.ConfigId ?? string.Empty;
+    var advancedOptionsRaw = Model.Structure?.GetReportProperty((long)ReportConfigProperty.ChartAdvancedOptions) ?? string.Empty;
+    var advancedOptions = advancedOptionsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries)
+        .Select(o => o.Trim().ToLower())
+        .ToList();
+    var stackingMode = advancedOptions.Contains("percent")
+        ? "percent"
+        : advancedOptions.Contains("stacked")
+            ? "normal"
+            : string.Empty;
+    var smoothLines = advancedOptions.Contains("smooth");
+    var overlayLine = advancedOptions.Contains("line-overlay");
+    var enableMarkers = advancedOptions.Contains("markers");
+    var showDataLabels = advancedOptions.Contains("labels");
 }
 
 <script type="text/javascript">
 	var rotateVal = -40;
 	var chartType = '@chartType';
-	if (chartType == 'bar') {
+	if (chartType === 'bar') {
 		rotateVal = -1;
 	}
+
+	var chartCategories = @hr.GetCategories();
+	var renderedSeries = @hr.GetSeries();
+	var isMatrixChart = @(isMatrix ? "true" : "false");
+	var hasSingleAggregationSeries = @(hasSingleAggregation ? "true" : "false");
+	var hasMultipleAggregationSeries = @(hasMultipleAggregations ? "true" : "false");
+	var reportDataKey = '@idx';
+	var drilldownConfigId = '@chartConfigId';
+	var subReportsCount = @drilldownConfigs;
+	var stackingMode = '@stackingMode';
+	var enableSmoothLines = @(smoothLines ? "true" : "false");
+	var overlayLineEnabled = @(overlayLine ? "true" : "false");
+	var markersEnabled = @(enableMarkers ? "true" : "false");
+	var dataLabelsEnabled = @(showDataLabels ? "true" : "false");
+
+	function mergeSeriesOptions(series, extraOptions) {
+		if (typeof Highcharts !== 'undefined' && Highcharts.merge) {
+			return Highcharts.merge(series, extraOptions);
+		}
+		return Object.assign({}, series, extraOptions);
+	}
+
+	if (enableSmoothLines && (chartType === 'line' || chartType === 'area')) {
+		for (var smoothIndex = 0; smoothIndex < renderedSeries.length; smoothIndex++) {
+			renderedSeries[smoothIndex] = mergeSeriesOptions(renderedSeries[smoothIndex], {
+				type: 'spline',
+				marker: { enabled: markersEnabled }
+			});
+		}
+	}
+
+	if (overlayLineEnabled && renderedSeries.length > 1) {
+		var overlayIndex = renderedSeries.length - 1;
+		renderedSeries[overlayIndex] = mergeSeriesOptions(renderedSeries[overlayIndex], {
+			type: 'spline',
+			lineWidth: 3,
+			marker: { enabled: true }
+		});
+	}
+
+	function getReportRows() {
+		if (!window.top || !window.top.reportsData) {
+			return null;
+		}
+		return window.top.reportsData[reportDataKey] || null;
+	}
+
+	function resolveMatrixTooltip(pointContext) {
+		if (!isMatrixChart || !hasSingleAggregationSeries) {
+			return null;
+		}
+
+		var seriesIndex = typeof pointContext.colorIndex !== 'undefined'
+			? parseInt(pointContext.colorIndex)
+			: (pointContext.series && typeof pointContext.series.index !== 'undefined'
+				? parseInt(pointContext.series.index)
+				: 0);
+		if (isNaN(seriesIndex) || seriesIndex < 0 || seriesIndex >= renderedSeries.length) {
+			seriesIndex = 0;
+		}
+
+		var seriesElement = renderedSeries[seriesIndex];
+		if (!seriesElement || !seriesElement.rowIdsIndex) {
+			return null;
+		}
+
+		var pointIndex = parseInt(pointContext.index);
+		if (isNaN(pointIndex) || pointIndex < 0 || pointIndex >= seriesElement.rowIdsIndex.length) {
+			return null;
+		}
+
+		var rowIdIndex = seriesElement.rowIdsIndex[pointIndex];
+		if (typeof rowIdIndex !== 'number' || rowIdIndex < 0) {
+			return null;
+		}
+
+		var rows = getReportRows();
+		if (!rows || rows.length <= rowIdIndex) {
+			return null;
+		}
+
+		var tooltipValues = rows[rowIdIndex]["tooltipValues"];
+		if (!tooltipValues || !tooltipValues.length) {
+			return null;
+		}
+
+		var tooltipResult = "";
+		for (var i = 0; i < tooltipValues.length; i++) {
+			tooltipResult += tooltipFormatter(tooltipValues[i]);
+		}
+		return tooltipResult;
+	}
+
+	function resolveStandardTooltip(pointContext) {
+		var rows = getReportRows();
+		if (!rows) {
+			return null;
+		}
+
+		var seriesIndex = typeof pointContext.colorIndex !== 'undefined'
+			? parseInt(pointContext.colorIndex)
+			: (pointContext.series && typeof pointContext.series.index !== 'undefined'
+				? parseInt(pointContext.series.index)
+				: 0);
+		if (isNaN(seriesIndex) || seriesIndex < 0 || seriesIndex >= renderedSeries.length) {
+			seriesIndex = 0;
+		}
+		var seriesElement = renderedSeries[seriesIndex];
+
+		var candidateIndex = parseInt(pointContext.index);
+		var rowIndex = candidateIndex;
+		if (seriesElement && seriesElement.rowIdsIndex && seriesElement.rowIdsIndex.length > candidateIndex) {
+			var mapped = seriesElement.rowIdsIndex[candidateIndex];
+			if (typeof mapped === 'number' && mapped >= 0) {
+				rowIndex = mapped;
+			}
+		}
+
+		if (isNaN(rowIndex) || rowIndex < 0 || rowIndex >= rows.length) {
+			return null;
+		}
+
+		var tooltipRows = rows[rowIndex]["tooltipValues"];
+		if (!tooltipRows || !tooltipRows.length) {
+			return null;
+		}
+
+		var aggregationIndex = typeof pointContext.colorIndex !== 'undefined'
+			? parseInt(pointContext.colorIndex)
+			: (pointContext.series && typeof pointContext.series.index !== 'undefined'
+				? parseInt(pointContext.series.index)
+				: 0);
+		if (isNaN(aggregationIndex) || aggregationIndex < 0 || aggregationIndex >= tooltipRows.length) {
+			aggregationIndex = 0;
+		}
+
+		return tooltipFormatter(tooltipRows[aggregationIndex] || tooltipRows[0]);
+	}
+
+	function resolveSharedTooltip(pointContext) {
+		if (!hasMultipleAggregationSeries || isMatrixChart) {
+			return null;
+		}
+
+		var rows = getReportRows();
+		if (!rows) {
+			return null;
+		}
+
+		var sampleSeries = renderedSeries[0];
+		var candidateIndex = parseInt(pointContext.index);
+		var rowIndex = candidateIndex;
+		if (sampleSeries && sampleSeries.rowIdsIndex && sampleSeries.rowIdsIndex.length > candidateIndex) {
+			var mapped = sampleSeries.rowIdsIndex[candidateIndex];
+			if (typeof mapped === 'number' && mapped >= 0) {
+				rowIndex = mapped;
+			}
+		}
+		if (isNaN(rowIndex) || rowIndex < 0 || rowIndex >= rows.length) {
+			return null;
+		}
+
+		var tooltipRows = rows[rowIndex]["tooltipValues"];
+		if (!tooltipRows || !tooltipRows.length) {
+			return null;
+		}
+
+		var combinedTooltip = "";
+		for (var i = 0; i < tooltipRows.length; i++) {
+			combinedTooltip += tooltipFormatter(tooltipRows[i]);
+		}
+		return combinedTooltip;
+	}
+
+	function buildNumericFallbackTooltip(pointContext) {
+		var items = {};
+		var label = (pointContext.series && pointContext.series.name) ? pointContext.series.name : '';
+		var valueText = (typeof Highcharts !== 'undefined' && Highcharts.numberFormat)
+			? Highcharts.numberFormat(pointContext.y, 0)
+			: (pointContext.y != null ? String(pointContext.y) : '');
+		if (!label) {
+			// Try to use Y axis title when there is a single aggregation
+			try {
+				var chart = pointContext.series && pointContext.series.chart;
+				var yTitle = chart && chart.yAxis && chart.yAxis[0] && chart.yAxis[0].axisTitle && chart.yAxis[0].axisTitle.textStr;
+				label = yTitle || '';
+			} catch (e) { /* ignore */ }
+		}
+		items[label] = valueText;
+		return tooltipFormatter(items);
+	}
+
+	function resolveRowData(pointContext) {
+		var rows = getReportRows();
+		if (!rows) {
+			return null;
+		}
+
+		if (isMatrixChart && hasSingleAggregationSeries) {
+			var seriesIndex = typeof pointContext.colorIndex !== 'undefined'
+				? parseInt(pointContext.colorIndex)
+				: (pointContext.series && typeof pointContext.series.index !== 'undefined'
+					? parseInt(pointContext.series.index)
+					: 0);
+			var seriesElement = renderedSeries[seriesIndex];
+			if (!seriesElement || !seriesElement.rowIdsIndex) {
+				return null;
+			}
+			var mappedRowIndex = seriesElement.rowIdsIndex[parseInt(pointContext.index)];
+			if (typeof mappedRowIndex === 'number' && mappedRowIndex >= 0 && rows.length > mappedRowIndex) {
+				return rows[mappedRowIndex];
+			}
+			return null;
+		}
+
+		var resolvedIndex = parseInt(pointContext.index);
+		if (isNaN(resolvedIndex) || resolvedIndex < 0 || resolvedIndex >= rows.length) {
+			return null;
+		}
+		return rows[resolvedIndex];
+	}
+
+	function openMasterDetail(pointContext, nativeEvent) {
+		if (!subReportsCount) {
+			return;
+		}
+
+		var rowData = resolveRowData(pointContext);
+		if (!rowData || !rowData.ids) {
+			return;
+		}
+
+		var parentFilter = window.top.reportInfo && window.top.reportInfo[drilldownConfigId]
+			? window.top.reportInfo[drilldownConfigId]["parentFilter"]
+			: null;
+
+		var anchorElement = nativeEvent && nativeEvent.target
+			? nativeEvent.target
+			: (pointContext.graphic && pointContext.graphic.element);
+
+		openSubReportFrame2(subReportsCount,
+			rowData.ids,
+			drilldownConfigId,
+			parentFilter,
+			anchorElement,
+			nativeEvent);
+	}
+
 	(function() {
+		var autoDataLabels = dataLabelsEnabled || hasMultipleAggregationSeries;
 		var container_chartCorrectiveAction = new Highcharts.Chart({
 			credits: {
 				enabled: false
@@ -36,7 +304,7 @@
 				text: '@(showTitle ? chartTitle : "")'
 			},
 			xAxis: {
-				categories: @hr.GetCategories(),
+				categories: chartCategories,
 				labels: {
 					rotation: rotateVal,
 					align: '',
@@ -45,37 +313,36 @@
 				}
 			},
 			legend: {
-				enabled: false
+				enabled: hasMultipleAggregationSeries,
+				layout: 'horizontal',
+				align: 'center',
+				verticalAlign: 'bottom'
 			},
 			tooltip: {
+				shared: hasMultipleAggregationSeries && !isMatrixChart,
 				formatter: function() {
-					var tooltipsObj = {};
-					var hasAgg = @(hasSingleAggregation ? "true" : "false");
-					var isMatrix = @(isMatrix ? "true" : "false");
-					if (isMatrix && hasAgg) {
-						var seriesElement = @(hr.GetSeries())[parseInt(this.point.colorIndex)];
-						var rowIdIndex = seriesElement.rowIdsIndex[parseInt(this.point.index)];
-						var tooltipsFormatter = "";
-						if (rowIdIndex >= 0) {
-							var idx = '@idx';
-							var tooltipsObjs = window.top.reportsData[idx][rowIdIndex]["tooltipValues"];
-							var tooltipsObjsLength = tooltipsObjs.length;
-							for (var itooltipsObj = 0; itooltipsObj < tooltipsObjsLength; itooltipsObj++) {
-								tooltipsFormatter += tooltipFormatter(tooltipsObjs[itooltipsObj]);
-							}
-						} else {
-							tooltipsFormatter +=
-								tooltipFormatterItem(seriesElement.fieldName, seriesElement.name) +
-								tooltipFormatterItem("", window.tetaI18n.t('No Record'));
-						}
-						return tooltipsFormatter;
-					} else {
-						tooltipsObj =
-							window.top.reportsData['@idx'][parseInt(this.point.index)]["tooltipValues"][
-								parseInt(
-									this.point.colorIndex)];
+					var matrixTooltip = resolveMatrixTooltip(this);
+					if (matrixTooltip) {
+						return matrixTooltip;
 					}
-					return tooltipFormatter(tooltipsObj);
+
+					var sharedTooltip = resolveSharedTooltip(this);
+					if (sharedTooltip) {
+						return sharedTooltip;
+					}
+
+					var standardTooltip = resolveStandardTooltip(this);
+					if (standardTooltip && typeof standardTooltip === 'string' && standardTooltip.trim() !== '') {
+						return standardTooltip;
+					}
+
+					// Fallback to numeric value from the point if structured tooltip cannot be resolved
+					var numericFallback = buildNumericFallbackTooltip(this);
+					if (numericFallback && numericFallback.trim() !== '') {
+						return numericFallback;
+					}
+
+					return tooltipFormatterItem('', window.tetaI18n ? window.tetaI18n.t('No Record') : '');
 				},
 				useHTML: true
 			},
@@ -95,10 +362,40 @@
 				}
 			},
 			colors: ['#6366f1', '#fe6a35', '#eeca34', '#06aed4', '#2b72fb' ,'#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
-			series: @hr.GetSeries(),
+			series: renderedSeries,
 			plotOptions: {
+				series: {
+					cursor: subReportsCount ? 'pointer' : 'default',
+					stacking: stackingMode || undefined,
+					marker: {
+						enabled: markersEnabled
+					},
+					dataLabels: {
+						enabled: autoDataLabels,
+						formatter: function() {
+							if (!autoDataLabels) {
+								return null;
+							}
+							if (stackingMode === 'percent' && typeof this.percentage !== 'undefined') {
+								return Highcharts.numberFormat(this.percentage, 0) + '%';
+							}
+							var valueText = Highcharts.numberFormat(this.y, 0);
+							if (hasMultipleAggregationSeries) {
+								return this.series.name + ': ' + valueText;
+							}
+							return valueText;
+						}
+					},
+					point: {
+						events: {
+							click: function(event) {
+								openMasterDetail(this, event);
+							}
+						}
+					}
+				},
 				column: {
-					colorByPoint: true
+					colorByPoint: stackingMode ? false : !hasMultipleAggregationSeries
 				}
 			}
 		});

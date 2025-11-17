@@ -204,8 +204,8 @@
 						@foreach (var cReport in chartReports)
 						{
 							ViewBag.Counter = co;
-							if (cReport.Structure.ChartType == Report.ChartType.WorldMap ||
-							    cReport.Structure.ChartType == Report.ChartType.IranMap)
+							if (cReport.Structure.ChartType == ChartType.WorldMap ||
+							    cReport.Structure.ChartType == ChartType.IranMap)
 							{
 								@Html.Partial("_map", cReport)
 							}

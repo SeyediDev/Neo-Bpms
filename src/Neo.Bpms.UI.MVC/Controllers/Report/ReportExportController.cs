@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Neo.Bpms.UI.MVC.Controllers;
+﻿namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class ReportController
 {

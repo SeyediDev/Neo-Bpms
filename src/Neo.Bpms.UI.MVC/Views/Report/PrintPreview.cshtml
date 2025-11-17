@@ -38,7 +38,7 @@
 		  {
 				case ReportViewType.Chart:
 				<script src="@CommonBundles.JqueryAloneJsBundle" asp-append-version="true"></script>
-					 if (structure.ChartType == Report.ChartType.WorldMap || structure.ChartType == Report.ChartType.IranMap)
+					 if (structure.ChartType == ChartType.WorldMap || structure.ChartType == ChartType.IranMap)
 					 {
 	 	 	 	 	 @Html.Partial("_map", Model)
 			}

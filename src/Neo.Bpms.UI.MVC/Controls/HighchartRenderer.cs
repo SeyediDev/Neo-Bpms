@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Html;
-using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.Fields;
-
-namespace Neo.Bpms.UI.MVC.Controls;
+﻿namespace Neo.Bpms.UI.MVC.Controls;
 
 public class HighchartRenderer(ReportData reportInfo)
 {
     private Dictionary<string, List<ReportRowInfo>> _groupByRecords;
     private IEnumerable<ColumnFieldDefinition> _aggrColumns;
+    private readonly bool _ceilCategories =
+        ((reportInfo?.Structure?.GetReportProperty((long)ReportConfigProperty.ChartAdvancedOptions) ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(o => o.Trim().ToLower()))
+        .Contains("ceil-categories");
 
     public bool YAxisIsTimespan => _aggrColumns?.Any(c =>
         c.FieldType == TVariableTypes.DurHourMinute || c.FieldType == TVariableTypes.DayHourMinute) ?? false;
@@ -59,7 +60,7 @@ public class HighchartRenderer(ReportData reportInfo)
             _groupByRecords.Add(groupByKey, [row]);
     }
 
-    private static string CreateGroupByKey(IEnumerable<ColumnFieldDefinition> categoryFields, ReportRowInfo row,
+    private string CreateGroupByKey(IEnumerable<ColumnFieldDefinition> categoryFields, ReportRowInfo row,
         string seperator, bool checkOneItem)
     {
         string groupByKey = "";
@@ -67,14 +68,27 @@ public class HighchartRenderer(ReportData reportInfo)
         {
             groupByKey += string.IsNullOrEmpty(groupByKey) ? "" : seperator;
             if (GetValue(row, categoryField, out object obj))
-                groupByKey += obj;
+                groupByKey += FormatCategoryValue(obj, categoryField);
             else
                 groupByKey += "-";
-            //if (checkOneItem)//todo
-            //	break;
         }
 
         return groupByKey;
+    }
+
+    private object FormatCategoryValue(object value, ColumnFieldDefinition categoryField)
+    {
+        if (!_ceilCategories || value == null)
+            return value;
+
+        // Try to ceil numeric category values and remove decimals to reduce distinct categories
+        if (double.TryParse(Convert.ToString(value), out double numeric))
+        {
+            var ceiled = Math.Ceiling(numeric);
+            return ceiled.ToString("0");
+        }
+
+        return value;
     }
 
     private static bool GetValue(ReportRowInfo row, ColumnFieldDefinition columnField, out object obj)
@@ -172,7 +186,9 @@ public class HighchartRenderer(ReportData reportInfo)
             data = _groupByRecords.Values
                 .Select(gbr =>
                     GetDoubleValue(aggrColumn, gbr.FirstOrDefault())
-                ) //why first?
+                ),
+            // Provide mapping from category index to original row index for tooltips
+            rowIdsIndex = _groupByRecords.Values.Select(gbr => gbr.FirstOrDefault()?.Data.GetLong("__rowIndex") ?? -1)
         };
     }
 

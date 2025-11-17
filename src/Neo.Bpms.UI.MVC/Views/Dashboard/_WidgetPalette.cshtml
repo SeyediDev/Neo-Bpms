@@ -47,7 +47,7 @@
                         {
                             var configDisplayName = config.Name.Length > 40 ? config.Name.Substring(0, 40) + "..." : config.Name;
                             var viewTypeText = config.viewType == ReportViewType.Chart
-                            ? (config.ChartType == Report.ChartType.WorldMap || config.ChartType == Report.ChartType.IranMap
+                            ? (config.ChartType == ChartType.WorldMap || config.ChartType == ChartType.IranMap
                             ? ViewTexts.Map : ViewTexts.Chart)
                             : (config.viewType == ReportViewType.GroupByList ? ViewTexts.GroupByList : "");
 

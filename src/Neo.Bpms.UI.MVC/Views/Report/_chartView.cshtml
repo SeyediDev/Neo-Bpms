@@ -24,7 +24,7 @@
 
 @{
 
-    void RenderChartTypeOption(Report.ChartType chartType, Report.ChartType selectedChartType)
+    void RenderChartTypeOption(ChartType chartType, ChartType selectedChartType)
     {
         //var editorBug = ":(";
         <!option value="@chartType" @(selectedChartType == chartType ? "selected=\" selected\"" : "" )>
@@ -35,17 +35,17 @@
     Func<dynamic, HelperResult> RenderChartTypeSelector =
     @<select class="form-control" name="SelectedChartType" onchange="this.form.submit()">
 	    @{
-                RenderChartTypeOption(Report.ChartType.Area, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Bar, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Column, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Line, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Pie, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Spline, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Areaspline, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Scatter, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Treemap, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.Gauge, item.structure.ChartType);
-                RenderChartTypeOption(Report.ChartType.MetricBox, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Area, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Bar, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Column, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Line, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Pie, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Spline, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Areaspline, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Scatter, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Treemap, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Gauge, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.MetricBox, item.structure.ChartType);
             }
         </select>;
 
@@ -78,6 +78,16 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
         // Prevent Highcharts from being loaded multiple times (Error #16)
         if (typeof window.HighchartsLoaded === 'undefined') {
             window.HighchartsLoaded = true;
+        }
+    </script>
+    <script>
+        // Ensure global configs exist when layout is not used (e.g., iframes/standalone)
+        if (typeof window.tetaConfigs === 'undefined') {
+            window.tetaConfigs = {
+                neutralCulture: '@CultureHelper.GetCurrentNeutralCulture()',
+                isRtl: @(CultureHelper.IsRightToLeft() ? "true" : "false"),
+                version: ''
+            };
         }
     </script>
     <script src="@CommonBundles.ChartsJsBundle" asp-append-version="true"></script>
@@ -187,7 +197,7 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
     var chartScriptModel = new ChartScriptModel(idx, reportInfo, calendar, chartTitle, shouldShowChartTitle);
 }
 
-@if (reportInfo.Structure.ChartType == Report.ChartType.Treemap)
+@if (reportInfo.Structure.ChartType == ChartType.Treemap)
 {
     <partial name="~/Views/Report/Charts/_TreemapChart.cshtml" model="chartScriptModel" />
 }
@@ -195,15 +205,15 @@ else
 {
     <partial name="~/Views/Report/Charts/_ReportDataTooltips.cshtml" model="chartScriptModel" />
 
-    if (reportInfo.Structure.ChartType == Report.ChartType.Gauge)
+    if (reportInfo.Structure.ChartType == ChartType.Gauge)
     {
         <partial name="~/Views/Report/Charts/_GaugeChart.cshtml" model="chartScriptModel" />
     }
-    else if (reportInfo.Structure.ChartType == Report.ChartType.MetricBox)
+    else if (reportInfo.Structure.ChartType == ChartType.MetricBox)
     {
         <partial name="~/Views/Report/Charts/_MetricBoxChart.cshtml" model="chartScriptModel" />
     }
-    else if (reportInfo.Structure.ChartType == Report.ChartType.Pie)
+    else if (reportInfo.Structure.ChartType == ChartType.Pie)
     {
         <partial name="~/Views/Report/Charts/_PieChart.cshtml" model="chartScriptModel" />
     }

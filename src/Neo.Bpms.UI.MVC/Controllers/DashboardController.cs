@@ -1,4 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
@@ -517,7 +518,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
                 return Json("خطا:درخواست نامعتبر");
             if (!string.IsNullOrEmpty(model.ChartType))
             {
-                Enum.TryParse(model.ChartType, out Report.ChartType eChartType);
+                Enum.TryParse(model.ChartType, out ChartType eChartType);
                 reportConfig.ChartType = eChartType;
             }
 

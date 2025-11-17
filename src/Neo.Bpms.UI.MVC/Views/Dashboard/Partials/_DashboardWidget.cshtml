@@ -1,3 +1,4 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
 @using Neo.Bpms.UI.MVC.Helpers
 @using Neo.Bpms.UI.MVC.Models.Dashboard
 @model DashboardWidgetRenderModel
@@ -8,7 +9,7 @@
     var reportData = Model.ReportData;
     var widgetHeight = Model.WidgetHeight;
     var width = DashboardRenderHelpers.ResolveWidth(divConfig);
-    var isMetricWidget = reportData?.Structure?.ChartType == Report.ChartType.MetricBox;
+    var isMetricWidget = reportData?.Structure?.ChartType == ChartType.MetricBox;
     var contentClasses = "neo-dashboard-widget-content" + (isMetricWidget ? " neo-dashboard-widget-content--metric" : string.Empty);
 }
 

@@ -481,9 +481,9 @@ public static class EstablishReportQuery
         bool forPrint, QueryUtility qd)
     {
         if (forPrint || config.ViewType == ReportViewType.Chart &&
-            (config.ChartType == Report.ChartType.WorldMap ||
-            config.ChartType == Report.ChartType.Treemap ||
-            config.ChartType == Report.ChartType.IranMap))
+            (config.ChartType == ChartType.WorldMap ||
+            config.ChartType == ChartType.Treemap ||
+            config.ChartType == ChartType.IranMap))
         {
             recordsPerPage = 1000;
             pageNumber = 1;

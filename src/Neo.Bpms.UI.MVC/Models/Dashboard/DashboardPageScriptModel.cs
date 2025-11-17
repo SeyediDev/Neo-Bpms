@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Neo.Bpms.UI.MVC.Models.Dashboard
 {
     public class DashboardPageScriptModel
