@@ -2,6 +2,7 @@
 @using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
 @using Neo.Bpms.UI.MVC.Helpers
 @using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Newtonsoft.Json
 @model ChartScriptModel
 
 @{
@@ -20,7 +21,7 @@
 }
 
 <script>
-	var reportData = grabReportData('@idx');
+	var reportData = grabReportData('@(idx)');
 
 	@foreach (var row in reportInfo.Rows)
 	{
@@ -39,10 +40,10 @@
 
 		<text>
 	var rowData = reportData[@ii] = {};
-		rowData['name'] = '@categoryValue';
+		rowData['name'] = @Html.Raw(JsonConvert.SerializeObject(categoryValue));
 		rowData['value'] = @colorValue;
 		rowData['colorValue'] = @colorValue;
-		rowData['ids'] = '@rowIds';
+		rowData['ids'] = @Html.Raw(JsonConvert.SerializeObject(rowIds));
 		rowData['tooltipValues'] = {};</text>
 
 		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
@@ -51,7 +52,7 @@
 		{
 			var value = ReportRenderer.GetCelValue(colInfo, row);
 			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
-			@:rowData['tooltipValues']['@colInfo.Alias'] = '@val';
+			@:rowData['tooltipValues'][@Html.Raw(JsonConvert.SerializeObject(colInfo.Alias))] = @Html.Raw(JsonConvert.SerializeObject(val?.ToString() ?? ""));
 		}
 
 		ii++;
@@ -59,51 +60,163 @@
 
 	$(document)
 		.ready(function() {
-			var a = new Highcharts.Chart({
+			// Wait for treemap module to be available before rendering
+			function waitForTreemapModule(callback, maxAttempts) {
+				maxAttempts = maxAttempts || 50;
+				var attempts = 0;
+				
+				function check() {
+					attempts++;
+					if (window.Highcharts && 
+						window.Highcharts.seriesTypes && 
+						window.Highcharts.seriesTypes.treemap) {
+						callback();
+					} else if (attempts < maxAttempts) {
+						setTimeout(check, 100);
+					} else {
+						console.error('Highcharts treemap module not available after ' + (maxAttempts * 100) + 'ms');
+						// Try to render anyway - might work if module loads during render
+						callback();
+					}
+				}
+				
+				check();
+			}
+			
+			waitForTreemapModule(function() {
+				// Calculate min and max values for color gradient
+				var data = window.top.reportsData['@(idx)'] || [];
+				var values = data.map(function(item) { return item.value || 0; });
+				var minValue = values.length > 0 ? Math.min.apply(Math, values) : 0;
+				var maxValue = values.length > 0 ? Math.max.apply(Math, values) : 100;
+				
+				// Persian font family - Vazir or fallback to system fonts
+				var persianFont = "'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif";
+				
+				var a = new Highcharts.Chart({
 				credits: {
 					enabled: false
 				},
 				chart: {
 					renderTo: 'container_@(idx)',
-					type: 'treemap'
+					type: 'treemap',
+					backgroundColor: 'transparent',
+					spacing: [10, 10, 10, 10],
+					style: {
+						fontFamily: persianFont
+					}
 				},
 				title: {
-					text: '@(showTitle ? chartTitle : "")'
+					text: '@(showTitle ? chartTitle : "")',
+					style: {
+						fontSize: '16px',
+						fontWeight: 'bold',
+						fontFamily: persianFont
+					}
 				},
 				tooltip: {
 					formatter: function() {
 						var tooltipsObj = this.point.tooltipValues;
 						return tooltipFormatter(tooltipsObj);
 					},
-					useHTML: true
+					useHTML: true,
+					backgroundColor: 'rgba(255, 255, 255, 0.95)',
+					borderWidth: 2,
+					borderRadius: 8,
+					shadow: true,
+					style: {
+						fontSize: '13px',
+						fontFamily: persianFont
+					}
 				},
 				colorAxis: {
-					minColor: '#FFFFFF',
-					maxColor: Highcharts.getOptions().colors[0],
+					// Gradient from light (small boxes) to dark (large boxes)
+					minColor: '#E3F2FD',  // Light blue for small boxes
+					maxColor: '#1565C0',  // Dark blue for large boxes
+					min: minValue,
+					max: maxValue,
+					startOnTick: false,
+					endOnTick: false,
 					labels: {
 						formatter: function() {
 							var xMillion = (+this.value) / 1000000;
 							if (xMillion >= 1) {
-								return Math.round(xMillion) + "m";
+								return Math.round(xMillion * 10) / 10 + "M";
 							}
 							var xKilo = (+this.value) / 1000;
 							if (xKilo >= 1) {
-								return Math.round(xKilo) + "k";
+								return Math.round(xKilo * 10) / 10 + "K";
 							}
-							return ((Math.round(this.value) == this.value) ? this.value : this.value.toFixed(2));
+							return ((Math.round(this.value) == this.value) ? this.value : this.value.toFixed(1));
+						},
+						style: {
+							fontSize: '11px',
+							color: '#666',
+							fontFamily: persianFont
 						}
 					}
 				},
 				plotOptions: {
+					treemap: {
+						borderRadius: 6,
+						borderWidth: 2,
+						borderColor: '#ffffff',
+						dataLabels: {
+							enabled: true,
+							align: 'center',
+							verticalAlign: 'middle',
+							style: {
+								fontWeight: 'bold',
+								textOutline: '1px contrast',
+								color: '#333',
+								fontFamily: persianFont
+							}
+						},
+						levels: [{
+							level: 1,
+							dataLabels: {
+								enabled: true,
+								align: 'left',
+								verticalAlign: 'top',
+								style: {
+									fontSize: '14px',
+									fontWeight: 'bold',
+									textOutline: '2px contrast',
+									fontFamily: persianFont
+								}
+							},
+							borderWidth: 3,
+							borderColor: '#ffffff'
+						}],
+						states: {
+							hover: {
+								borderColor: '#333333',
+								borderWidth: 3,
+								brightness: 0.1,
+								shadow: true
+							},
+							select: {
+								borderColor: '#000000',
+								borderWidth: 3
+							}
+						}
+					},
 					series: {
 						events: {
 							click: function(event) {
-								openSubReportFrame2(@subReportsCount,
-									event.point.ids,
-									'@reportInfo.Structure.ConfigId',
-									window.top.reportInfo['@reportInfo.Structure.ConfigId']["parentFilter"],
-									event.toElement,
-									event);
+								@if (subReportsCount > 0)
+								{
+									<text>
+									if (event.point && event.point.ids) {
+										openSubReportFrame2(@subReportsCount,
+											event.point.ids,
+											'@reportInfo.Structure.ConfigId',
+											window.top.reportInfo['@reportInfo.Structure.ConfigId']["parentFilter"],
+											event.toElement || event.target,
+											event);
+									}
+									</text>
+								}
 							}
 						}
 					}
@@ -111,35 +224,68 @@
 				series: [
 					{
 						layoutAlgorithm: 'squarified',
-						data: window.top.reportsData['@idx'],
+						algorithmFill: true,
+						data: window.top.reportsData['@(idx)'],
 						dataLabels: {
+							enabled: true,
 							formatter: function() {
-								if (this.point.node.pointValues) {
-									var heightDependentSize = Math.round(this.point.node.pointValues.height * 0.5);
-									var pointName = this.point.name;
-									var constDesiredRatio = 1;
-									var maxCharsLength = this.point.node.pointValues.width / constDesiredRatio;
-
-									if (pointName.length > maxCharsLength) {
-										pointName = pointName.substr(0, (maxCharsLength - 2) || 1);
+								if (this.point.node && this.point.node.pointValues) {
+									var pointName = this.point.name || '';
+									var pointValues = this.point.node.pointValues;
+									var height = pointValues.height || 0;
+									var width = pointValues.width || 0;
+									
+									// Calculate font size based on area
+									var area = height * width;
+									var baseFontSize = Math.max(12, Math.min(18, Math.sqrt(area) * 0.15));
+									
+									// Truncate name if too long
+									var maxChars = Math.floor(width / (baseFontSize * 0.6));
+									if (pointName.length > maxChars && maxChars > 3) {
+										pointName = pointName.substring(0, maxChars - 3) + '...';
 									}
-									var heightFontSize = heightDependentSize;
-									var fontSize = heightFontSize > 14 ? heightFontSize : 14;
-
-									fontSize = (fontSize > 20 ? 20 : fontSize);
-
-									return "<div style='direction:ltr;'><span style='font-size:" +
-										+ fontSize +
-										"px;'>" +
-										pointName +
-										"</span></div>";
+									
+									// Add value if space allows
+									var valueText = '';
+									if (this.point.value && height > 30 && width > 60) {
+										var formattedValue = this.point.value;
+										if (formattedValue >= 1000000) {
+											formattedValue = (formattedValue / 1000000).toFixed(1) + 'M';
+										} else if (formattedValue >= 1000) {
+											formattedValue = (formattedValue / 1000).toFixed(1) + 'K';
+										} else {
+											formattedValue = Math.round(formattedValue).toString();
+										}
+										valueText = '<div style="font-size:' + (baseFontSize * 0.7) + 'px; opacity:0.8; margin-top:2px;">' + formattedValue + '</div>';
+									}
+									
+									return '<div style="direction:rtl; text-align:center; padding:4px; font-family:' + persianFont + ';">' +
+										'<div style="font-size:' + baseFontSize + 'px; font-weight:bold; line-height:1.2; font-family:' + persianFont + ';">' + 
+										pointName + 
+										'</div>' + 
+										valueText +
+										'</div>';
 								}
 								return "";
 							},
-							useHTML: true
+							useHTML: true,
+							style: {
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap'
+							}
+						},
+						point: {
+							events: {
+								mouseOver: function() {
+									this.graphic && this.graphic.css({
+										cursor: 'pointer'
+									});
+								}
+							}
 						}
 					}
 				]
+			});
 			});
 		});
 </script>

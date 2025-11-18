@@ -41,8 +41,333 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 
 <partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drilldownSubReports, reportKey = reportKey, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}"/>
 
+<style>
+	.map-report-container {
+		display: flex;
+		gap: 15px;
+		height: 75vh;
+		min-height: 500px;
+		width: 100%;
+	}
+	
+	.map-left-panel {
+		flex: 1 1 100%;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.world-map-container {
+		flex: 1;
+		min-height: 0;
+		width: 100%;
+		max-width: 1200px;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.world-map-container .jvectormap-container {
+		width: 100% !important;
+		height: 100% !important;
+		margin: 0 auto;
+	}
+	
+	.map-right-panel {
+		flex: 0 0 0;
+		min-width: 0;
+		display: none;
+		flex-direction: column;
+		gap: 15px;
+		overflow: hidden;
+	}
+	
+	.map-right-panel.active {
+		flex: 1 1 40%;
+		min-width: 300px;
+		display: flex;
+	}
+	
+	.map-info-panel {
+		background: #f8f9fa;
+		border: 1px solid #dee2e6;
+		border-radius: 4px;
+		padding: 15px;
+		overflow-y: auto;
+		flex: 0 0 auto;
+		max-height: 300px;
+	}
+	
+	.map-info-panel h4 {
+		margin: 0 0 10px 0;
+		color: #495057;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	
+	.map-info-panel .info-item {
+		margin-bottom: 8px;
+		padding: 8px;
+		background: white;
+		border-radius: 3px;
+		border-right: 3px solid #0071A4;
+	}
+	
+	.map-info-panel .info-label {
+		font-weight: 600;
+		color: #6c757d;
+		margin-left: 5px;
+	}
+	
+	.map-info-panel .info-value {
+		color: #212529;
+		margin-right: 5px;
+	}
+	
+	.map-data-table {
+		flex: 1;
+		min-height: 0;
+		background: white;
+		border: 1px solid #dee2e6;
+		border-radius: 4px;
+		overflow: auto;
+	}
+	
+	.map-data-table table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 13px;
+	}
+	
+	.map-data-table thead {
+		background: #0071A4;
+		color: white;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+	}
+	
+	.map-data-table th {
+		padding: 10px;
+		text-align: right;
+		font-weight: 600;
+		border: 1px solid #005a7a;
+	}
+	
+	.map-data-table td {
+		padding: 8px 10px;
+		border: 1px solid #dee2e6;
+		text-align: right;
+	}
+	
+	.map-data-table tbody tr:hover {
+		background: #f1f3f5;
+		cursor: pointer;
+	}
+	
+	.map-data-table tbody tr.selected {
+		background: #e7f3ff;
+		border-right: 3px solid #0071A4;
+	}
+	
+	.map-right-panel.empty {
+		display: none;
+	}
+	
+	.map-table-search {
+		padding: 10px;
+		background: #f8f9fa;
+		border-bottom: 1px solid #dee2e6;
+	}
+	
+	.map-table-search input {
+		width: 100%;
+		padding: 8px 12px;
+		border: 1px solid #ced4da;
+		border-radius: 4px;
+		font-size: 14px;
+	}
+	
+	.map-table-search input:focus {
+		outline: none;
+		border-color: #0071A4;
+		box-shadow: 0 0 0 2px rgba(0, 113, 164, 0.1);
+	}
+	
+	.map-table-stats {
+		padding: 8px 10px;
+		background: #e9ecef;
+		border-top: 1px solid #dee2e6;
+		font-size: 12px;
+		color: #6c757d;
+		text-align: center;
+	}
+	
+	.map-data-table .sortable {
+		cursor: pointer;
+		user-select: none;
+		position: relative;
+	}
+	
+	.map-data-table .sortable:hover {
+		background: #005a7a;
+	}
+	
+	.map-data-table .sortable::after {
+		content: ' ↕';
+		opacity: 0.5;
+		font-size: 10px;
+	}
+	
+	.map-data-table .sortable.asc::after {
+		content: ' ↑';
+		opacity: 1;
+	}
+	
+	.map-data-table .sortable.desc::after {
+		content: ' ↓';
+		opacity: 1;
+	}
+	
+	.map-drilldown-panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 50%;
+		max-width: 800px;
+		height: 100vh;
+		background: white;
+		box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+		z-index: 10000;
+		display: none;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	
+	.map-drilldown-panel.active {
+		display: flex;
+	}
+	
+	.map-drilldown-header {
+		padding: 15px 20px;
+		background: #0071A4;
+		color: white;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 2px solid #005a7a;
+	}
+	
+	.map-drilldown-header h3 {
+		margin: 0;
+		font-size: 18px;
+		font-weight: 600;
+	}
+	
+	.map-drilldown-close {
+		background: transparent;
+		border: none;
+		color: white;
+		font-size: 24px;
+		cursor: pointer;
+		padding: 0;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 4px;
+		transition: background 0.2s;
+	}
+	
+	.map-drilldown-close:hover {
+		background: rgba(255,255,255,0.2);
+	}
+	
+	.map-drilldown-content {
+		flex: 1;
+		overflow: auto;
+		padding: 20px;
+	}
+	
+	.map-drilldown-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.5);
+		z-index: 9999;
+		display: none;
+	}
+	
+	.map-drilldown-overlay.active {
+		display: block;
+	}
+	
+	@@media (max-width: 768px) {
+		.map-report-container {
+			flex-direction: column;
+			height: auto;
+		}
+		
+		.map-left-panel {
+			flex: 1 1 100%;
+			height: 60vh;
+		}
+		
+		.map-right-panel.active {
+			flex: 1 1 100%;
+			min-width: 0;
+		}
+		
+		.map-drilldown-panel {
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+</style>
 
-<div id="world-map" class="world-map-container">
+<div class="map-report-container">
+	<div class="map-left-panel">
+		<div id="world-map" class="world-map-container">
+		</div>
+	</div>
+	<div id="map-right-panel" class="map-right-panel">
+		<div id="map-info-panel" class="map-info-panel" style="display: none;">
+			<h4>اطلاعات استان انتخاب شده</h4>
+			<div id="map-info-content"></div>
+		</div>
+		<div id="map-data-table" class="map-data-table">
+			<div class="map-table-search">
+				<input type="text" id="map-table-search-input" placeholder="جستجو در جدول..." />
+			</div>
+			<table>
+				<thead>
+					<tr id="map-table-header"></tr>
+				</thead>
+				<tbody id="map-table-body"></tbody>
+			</table>
+			<div id="map-table-stats" class="map-table-stats"></div>
+		</div>
+	</div>
+</div>
+
+<div id="map-drilldown-overlay" class="map-drilldown-overlay"></div>
+<div id="map-drilldown-panel" class="map-drilldown-panel">
+	<div class="map-drilldown-header">
+		<h3 id="map-drilldown-title">گزارش زیرمجموعه</h3>
+		<button class="map-drilldown-close" onclick="closeMapDrillDown()">×</button>
+	</div>
+	<div class="map-drilldown-content" id="map-drilldown-content">
+		<div style="text-align: center; padding: 40px; color: #6c757d;">
+			<div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+			<div>در حال بارگذاری...</div>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -92,7 +417,8 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
 			//s.aggrType != eAggregationFunctions.InColumn &&
 			s.aggrType != eAggregationFunctions.GroupByItem &&
-			s.ColumnName != "Iso2");
+			s.ColumnName != "Iso2" &&
+			s.Alias != "Iso2");
 		foreach (var colInfo in columns)
 		{
 			var value = ReportRenderer.GetCelValue(colInfo, row);
@@ -148,6 +474,11 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 
 
 	var mapMarkers = [];
+	var tableData = [];
+	var filteredTableData = [];
+	var selectedRegionCode = null;
+	var currentSortColumn = null;
+	var currentSortDirection = 'asc';
 
 	for (var i = 0; i < iso2sWhichShouldBeMarkers.length; i++) {
 		var t = iso2sWhichShouldBeMarkers[i];
@@ -157,6 +488,343 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			name: t.name,
 			markerType: t.markerType
 		};
+	}
+
+	// Prepare table data
+	@{
+		var tableColumns = reportInfo.Structure.SelectedColumns.Where(s =>
+			s.aggrType != eAggregationFunctions.GroupByItem &&
+			s.ColumnName != "Iso2" &&
+			s.Alias != "Iso2").ToList();
+	}
+	var tableColumns = [
+		@foreach (var col in tableColumns)
+		{
+			<text>{ name: '@col.Alias', columnName: '@col.ColumnTypeName' },</text>
+		}
+	];
+
+	// Build table data from mapInfo
+	for (var code in mapInfo) {
+		if (mapInfo.hasOwnProperty(code)) {
+			var info = mapInfo[code];
+			var row = { code: code, name: code, data: {} };
+			if (info.tooltipValues) {
+				var nameFound = false;
+				for (var field in info.tooltipValues) {
+					if (info.tooltipValues.hasOwnProperty(field)) {
+						var cleanValue = info.tooltipValues[field].replace(/<[^>]*>/g, '').trim();
+						row.data[field] = info.tooltipValues[field];
+						// Try to get the name from tooltip values (prefer fields with 'name', 'title', 'province', 'استان')
+						if (!nameFound && (field.toLowerCase().indexOf('name') >= 0 || 
+							field.toLowerCase().indexOf('title') >= 0 ||
+							field.toLowerCase().indexOf('province') >= 0 ||
+							field.indexOf('استان') >= 0 ||
+							field.indexOf('منطقه') >= 0) && cleanValue) {
+							row.name = cleanValue;
+							nameFound = true;
+						}
+					}
+				}
+				// If no name found, use first non-empty value
+				if (!nameFound) {
+					for (var field in info.tooltipValues) {
+						if (info.tooltipValues.hasOwnProperty(field)) {
+							var cleanValue = info.tooltipValues[field].replace(/<[^>]*>/g, '').trim();
+							if (cleanValue) {
+								row.name = cleanValue;
+								break;
+							}
+						}
+					}
+				}
+			}
+			tableData.push(row);
+		}
+	}
+
+	// Function to filter table data
+	function filterTableData(searchText) {
+		if (!searchText || searchText.trim() === '') {
+			filteredTableData = tableData.slice();
+		} else {
+			searchText = searchText.toLowerCase();
+			filteredTableData = tableData.filter(function(row) {
+				// Search in region name
+				if (row.name.toLowerCase().indexOf(searchText) >= 0) {
+					return true;
+				}
+				// Search in region code
+				if (row.code.toLowerCase().indexOf(searchText) >= 0) {
+					return true;
+				}
+				// Search in data values
+				for (var field in row.data) {
+					if (row.data.hasOwnProperty(field)) {
+						var value = row.data[field].replace(/<[^>]*>/g, '').toLowerCase();
+						if (value.indexOf(searchText) >= 0) {
+							return true;
+						}
+					}
+				}
+				return false;
+			});
+		}
+		updateTableDisplay();
+	}
+
+	// Function to sort table data
+	function sortTableData(columnIndex, direction) {
+		// Sort by data column
+		var colName = tableColumns[columnIndex].name;
+		filteredTableData.sort(function(a, b) {
+			var aVal = (a.data[colName] || '').replace(/<[^>]*>/g, '').toLowerCase();
+			var bVal = (b.data[colName] || '').replace(/<[^>]*>/g, '').toLowerCase();
+			
+			// Try to parse as number
+			var aNum = parseFloat(aVal);
+			var bNum = parseFloat(bVal);
+			if (!isNaN(aNum) && !isNaN(bNum)) {
+				return direction === 'asc' ? aNum - bNum : bNum - aNum;
+			}
+			
+			// String comparison
+			if (direction === 'asc') {
+				return aVal.localeCompare(bVal);
+			} else {
+				return bVal.localeCompare(aVal);
+			}
+		});
+		updateTableDisplay();
+	}
+
+	// Function to update table display
+	function updateTableDisplay() {
+		var tbody = $('#map-table-body');
+		var stats = $('#map-table-stats');
+		
+		tbody.empty();
+		
+		if (filteredTableData.length === 0) {
+			tbody.append('<tr><td colspan="' + tableColumns.length + '" style="text-align: center; padding: 20px; color: #6c757d;">هیچ داده‌ای یافت نشد</td></tr>');
+			stats.text('0 مورد از ' + tableData.length);
+			return;
+		}
+		
+		// Add rows
+		var selectedRowIndex = -1;
+		for (var i = 0; i < filteredTableData.length; i++) {
+			var row = filteredTableData[i];
+			var tr = $('<tr>').attr('data-code', row.code).attr('data-name', row.name);
+			if (selectedRegionCode === row.code) {
+				tr.addClass('selected');
+				selectedRowIndex = i;
+			}
+			
+			// Data cells
+			for (var j = 0; j < tableColumns.length; j++) {
+				var colName = tableColumns[j].name;
+				var value = row.data[colName] || '-';
+				tr.append('<td>' + value + '</td>');
+			}
+			
+			tbody.append(tr);
+		}
+		
+		// Scroll to selected row if exists
+		if (selectedRowIndex >= 0) {
+			setTimeout(function() {
+				var selectedRow = tbody.find('tr.selected').first();
+				if (selectedRow.length > 0) {
+					var tableContainer = $('#map-data-table');
+					var rowPosition = selectedRow.position().top;
+					var containerScrollTop = tableContainer.scrollTop();
+					var containerHeight = tableContainer.height();
+					var rowHeight = selectedRow.outerHeight();
+					
+					var rowTop = rowPosition + containerScrollTop;
+					var rowBottom = rowTop + rowHeight;
+					var containerTop = containerScrollTop;
+					var containerBottom = containerTop + containerHeight;
+					
+					if (rowTop < containerTop || rowBottom > containerBottom) {
+						var targetScroll = rowPosition + containerScrollTop - (containerHeight / 2) + (rowHeight / 2);
+						tableContainer.scrollTop(Math.max(0, targetScroll));
+					}
+				}
+			}, 100);
+		}
+		
+		// Add click handlers
+		tbody.find('tr').on('click', function(e) {
+			var code = $(this).attr('data-code');
+			var name = $(this).attr('data-name');
+			if (code) {
+				// Single click: select region
+				if (e.detail === 1) {
+					selectRegion(code);
+				}
+			}
+		});
+		
+		// Add double-click handler for drilldown
+		tbody.find('tr').on('dblclick', function() {
+			var code = $(this).attr('data-code');
+			var name = $(this).attr('data-name');
+			if (code && subReportsCount > 0) {
+				showMapDrillDown(code, name);
+			}
+		});
+		
+		// Update stats
+		stats.text(filteredTableData.length + ' مورد از ' + tableData.length);
+	}
+
+	// Function to render table
+	function renderTable() {
+		var headerRow = $('#map-table-header');
+		
+		headerRow.empty();
+		
+		if (tableData.length === 0) {
+			headerRow.append('<th>هیچ داده‌ای یافت نشد</th>');
+			return;
+		}
+		
+		// Add headers for data columns
+		for (var i = 0; i < tableColumns.length; i++) {
+			var colIndex = i;
+			var colHeader = $('<th>').addClass('sortable').text(tableColumns[i].name);
+			colHeader.on('click', function(idx) {
+				return function() {
+					if (currentSortColumn === idx) {
+						currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+					} else {
+						currentSortColumn = idx;
+						currentSortDirection = 'asc';
+					}
+					updateSortHeaders();
+					sortTableData(currentSortColumn, currentSortDirection);
+				};
+			}(colIndex));
+			headerRow.append(colHeader);
+		}
+		
+		// Initialize filtered data
+		filteredTableData = tableData.slice();
+		
+		// Initial sort by first column if available
+		if (tableColumns.length > 0) {
+			currentSortColumn = 0;
+			currentSortDirection = 'asc';
+			updateSortHeaders();
+			sortTableData(0, 'asc');
+		} else {
+			updateTableDisplay();
+		}
+		
+		// Add search handler
+		$('#map-table-search-input').on('input', function() {
+			filterTableData($(this).val());
+		});
+	}
+
+	// Function to update sort headers
+	function updateSortHeaders() {
+		$('#map-table-header th').removeClass('asc desc');
+		if (currentSortColumn !== null) {
+			var header = $('#map-table-header th').eq(currentSortColumn);
+			header.addClass(currentSortDirection);
+		}
+	}
+
+	// Function to show region info panel
+	function showRegionInfo(code) {
+		if (!mapInfo[code]) {
+			$('#map-info-panel').hide();
+			return;
+		}
+		
+		var info = mapInfo[code];
+		var content = $('#map-info-content');
+		content.empty();
+		
+		if (info.tooltipValues) {
+			for (var field in info.tooltipValues) {
+				if (info.tooltipValues.hasOwnProperty(field)) {
+					var item = $('<div>').addClass('info-item');
+					var label = $('<span>').addClass('info-label').text(field + ':');
+					var value = $('<span>').addClass('info-value').html(info.tooltipValues[field]);
+					item.append(label).append(value);
+					content.append(item);
+				}
+			}
+		}
+		
+		$('#map-info-panel').show();
+	}
+
+	// Function to select a region
+	function selectRegion(code) {
+		if (!code) return;
+		
+		selectedRegionCode = code;
+		
+		// Update table selection - scroll to selected row if not visible
+		$('#map-table-body tr').removeClass('selected');
+		var selectedRow = $('#map-table-body tr[data-code="' + code + '"]');
+		if (selectedRow.length > 0) {
+			selectedRow.addClass('selected');
+			// Scroll to selected row
+			setTimeout(function() {
+				var tableContainer = $('#map-data-table');
+				var tableBody = $('#map-table-body');
+				var rowPosition = selectedRow.position().top;
+				var containerScrollTop = tableContainer.scrollTop();
+				var containerHeight = tableContainer.height();
+				var rowHeight = selectedRow.outerHeight();
+				
+				// Check if row is visible
+				var rowTop = rowPosition + containerScrollTop;
+				var rowBottom = rowTop + rowHeight;
+				var containerTop = containerScrollTop;
+				var containerBottom = containerTop + containerHeight;
+				
+				if (rowTop < containerTop || rowBottom > containerBottom) {
+					// Scroll to center the row
+					var targetScroll = rowPosition + containerScrollTop - (containerHeight / 2) + (rowHeight / 2);
+					tableContainer.animate({
+						scrollTop: Math.max(0, targetScroll)
+					}, 300);
+				}
+			}, 50);
+		}
+		
+		// Show info panel
+		showRegionInfo(code);
+		
+		// Highlight region on map
+		var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
+		if (mapInstance && mapInstance.regions && mapInstance.regions[code]) {
+			try {
+				// Reset all regions
+				for (var regCode in mapInstance.regions) {
+					if (mapInstance.regions.hasOwnProperty(regCode) && 
+						mapInstance.regions[regCode].element && 
+						typeof mapInstance.regions[regCode].element.setSelected === 'function') {
+						mapInstance.regions[regCode].element.setSelected(false);
+					}
+				}
+				// Select current region
+				if (mapInstance.regions[code].element && 
+					typeof mapInstance.regions[code].element.setSelected === 'function') {
+					mapInstance.regions[code].element.setSelected(true);
+				}
+			} catch (e) {
+				// Ignore errors if setSelected is not available
+				console.log('Could not highlight region:', e);
+			}
+		}
 	}
 
 	var showTip = function(event, label, code) {
@@ -213,29 +881,94 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		showTip(event, label, mapMarkers[code].code);
 	}
 
-	var showDrillDown = function(event, code, docObj) {
-//        console.log(docObj);
-//        console.log(this);
-//        console.log(code);
-//        console.log(event);
-
+	// Function to show drilldown panel
+	function showMapDrillDown(code, regionName) {
+		if (!code || !mapInfo[code] || subReportsCount === 0) {
+			return;
+		}
+		
+		// Show overlay and panel
+		$('#map-drilldown-overlay').addClass('active');
+		$('#map-drilldown-panel').addClass('active');
+		$('body').css('overflow', 'hidden');
+		
+		// Update title
+		$('#map-drilldown-title').text('گزارش زیرمجموعه: ' + (regionName || code));
+		
+		// Show loading
+		var content = $('#map-drilldown-content');
+		content.html('<div style="text-align: center; padding: 40px; color: #6c757d;"><div style="font-size: 48px; margin-bottom: 20px;">⏳</div><div>در حال بارگذاری...</div></div>');
+		
+		// Load sub report
 		var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
-//        console.log(mapInstanceData);
-//        console.log(mapInstanceData.regions[code]);
-//        console.log(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes);
-//        console.log(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10]);
-//        console.log($(mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10])[0].getBBox());
+		if (mapInstanceData && typeof openSubReportFrame2 !== 'undefined') {
+			// Create a container for the sub report
+			var iframeContainer = $('<div>').css({
+				width: '100%',
+				height: '100%',
+				border: 'none'
+			});
+			content.html(iframeContainer);
+			
+			// Use the existing openSubReportFrame2 function but customize it
+			try {
+				openSubReportFrame2(subReportsCount,
+					mapInfo[code]['ids'],
+					reportKey,
+					window.top.reportInfo['@reportKey']["parentFilter"],
+					iframeContainer[0],
+					null);
+			} catch (e) {
+				console.error('Error loading drilldown:', e);
+				content.html('<div style="text-align: center; padding: 40px; color: #dc3545;"><div style="font-size: 48px; margin-bottom: 20px;">❌</div><div>خطا در بارگذاری گزارش</div><div style="margin-top: 10px; font-size: 12px;">' + e.message + '</div></div>');
+			}
+		} else {
+			// Fallback: load via iframe
+			var reportUrl = window.top.rootUrl + 'Report/Index?configId=' + reportKey + '&ids=' + mapInfo[code]['ids'] + '&isDrillDown=true';
+			content.html('<iframe src="' + reportUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>');
+		}
+	}
 
-		if (mapInfo[code]) {
-			openSubReportFrame2(subReportsCount,
-				mapInfo[code]['ids'],
-				reportKey,
-				window.top.reportInfo['@reportKey']["parentFilter"],
-//            mapInstanceData.regions[code].element,
-//            mapInstanceData.regions[code].element.config.canvas.node.childNodes[1].childNodes[10],
-				mapInstanceData.container[0],
-//                docObj || this,
-				event);
+	// Function to close drilldown panel
+	function closeMapDrillDown() {
+		$('#map-drilldown-overlay').removeClass('active');
+		$('#map-drilldown-panel').removeClass('active');
+		$('body').css('overflow', '');
+		$('#map-drilldown-content').html('<div style="text-align: center; padding: 40px; color: #6c757d;"><div style="font-size: 48px; margin-bottom: 20px;">⏳</div><div>در حال بارگذاری...</div></div>');
+	}
+
+	// Make closeMapDrillDown available globally
+	window.closeMapDrillDown = closeMapDrillDown;
+
+	var showDrillDown = function(event, code, docObj) {
+		if (!code && event && event.target) {
+			// Try to find code from event target
+			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
+			if (mapInstance) {
+				for (var regCode in mapInstance.regions) {
+					if (mapInstance.regions.hasOwnProperty(regCode)) {
+						var region = mapInstance.regions[regCode];
+						if (region.element && region.element.shape && 
+							(region.element.shape.node === event.target || 
+							 $(region.element.shape.node).find(event.target).length > 0)) {
+							code = regCode;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		if (code && mapInfo[code]) {
+			var regionName = code;
+			// Try to get region name from table data
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i].code === code) {
+					regionName = tableData[i].name;
+					break;
+				}
+			}
+			showMapDrillDown(code, regionName);
 		}
 	}
 
@@ -281,23 +1014,22 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			//            onRegionLabelShow: function(event, label, code) {
 			onRegionTipShow: showTip,
 			onMarkerTipShow: showMarkerTip,
-			onRegionClick: showDrillDown,
+			onRegionClick: @(Model.Structure.ChartType == ChartType.IranMap ? "function() {}" : "showDrillDown"),
 			onMarkerClick: showMarkerDrillDown,
 			onViewportChange: function(event, scale) {
 				var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
 
 				// loop through your array of markers
-				for (var marker in mapInstanceData.markers) {
-					if (mapInstanceData.markers.hasOwnProperty(marker)) {
-						var radius = 1 * scale;
-						mapInstanceData.markers[marker].element.config.style.current.r = radius;
+				if (mapInstanceData && mapInstanceData.markers) {
+					for (var marker in mapInstanceData.markers) {
+						if (mapInstanceData.markers.hasOwnProperty(marker)) {
+							var radius = 1 * scale;
+							if (mapInstanceData.markers[marker].element && mapInstanceData.markers[marker].element.config) {
+								mapInstanceData.markers[marker].element.config.style.current.r = radius;
+							}
+						}
 					}
 				}
-//                mapInstanceData.markers(function (marker) {
-//                    var radius = 1 * scale;
-//                    // change the radius
-//                    marker.element.node.setAttribute('r', radius);
-//                });
 			},
 			series: {
 				regions: [
@@ -356,6 +1088,112 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			}
 		});
 
+	// Initialize map responsiveness and render table after map is created
+	setTimeout(function() {
+		var mapContainer = $('#world-map .jvectormap-container');
+		var mapInstance = mapContainer.data('mapObject');
+		
+		if (mapInstance) {
+			// Make map responsive
+			if (typeof ResizeObserver !== 'undefined') {
+				var resizeObserver = new ResizeObserver(function(entries) {
+					if (mapInstance && mapInstance.updateSize) {
+						setTimeout(function() {
+							mapInstance.updateSize();
+						}, 100);
+					}
+				});
+				resizeObserver.observe(mapContainer[0]);
+			} else {
+				// Fallback for browsers without ResizeObserver
+				var resizeTimer;
+				$(window).on('resize', function() {
+					clearTimeout(resizeTimer);
+					resizeTimer = setTimeout(function() {
+						if (mapInstance && mapInstance.updateSize) {
+							mapInstance.updateSize();
+						}
+					}, 250);
+				});
+			}
+		}
+		
+		// Render table after map is ready
+		renderTable();
+	}, 500);
+
+	@if (Model.Structure.ChartType == ChartType.IranMap)
+	{
+		<text>
+		// Add double-click drilldown for Iran map
+		setTimeout(function() {
+			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
+			if (mapInstance && subReportsCount > 0) {
+				$('#world-map').on('dblclick', 'path.jvectormap-region', function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					
+					// Find the region code by checking all regions
+					var clickedElement = this;
+					var foundCode = null;
+					
+					for (var code in mapInstance.regions) {
+						if (mapInstance.regions.hasOwnProperty(code)) {
+							var region = mapInstance.regions[code];
+							if (region.element && region.element.shape) {
+								var shapeNode = region.element.shape.node;
+								if (shapeNode === clickedElement || 
+									$(shapeNode).is(clickedElement) ||
+									$(shapeNode).find(clickedElement).length > 0 ||
+									$(clickedElement).closest('path').is(shapeNode)) {
+									foundCode = code;
+									break;
+								}
+							}
+						}
+					}
+					
+					if (foundCode && mapInfo[foundCode]) {
+						showDrillDown(e, foundCode, clickedElement);
+					}
+				});
+				
+				// Also handle single click for selection
+				$('#world-map').on('click', 'path.jvectormap-region', function(e) {
+					if (e.detail === 1) { // Single click only
+						var clickedElement = this;
+						var foundCode = null;
+						
+						for (var code in mapInstance.regions) {
+							if (mapInstance.regions.hasOwnProperty(code)) {
+								var region = mapInstance.regions[code];
+								if (region.element && region.element.shape) {
+									var shapeNode = region.element.shape.node;
+									if (shapeNode === clickedElement || 
+										$(shapeNode).is(clickedElement) ||
+										$(shapeNode).find(clickedElement).length > 0 ||
+										$(clickedElement).closest('path').is(shapeNode)) {
+										foundCode = code;
+										break;
+									}
+								}
+							}
+						}
+						
+						if (foundCode) {
+							selectRegion(foundCode);
+						}
+					}
+				});
+				
+				// Close drilldown when clicking overlay
+				$('#map-drilldown-overlay').on('click', function() {
+					closeMapDrillDown();
+				});
+			}
+		}, 500);
+		</text>
+	}
 
 </script>
 <partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>

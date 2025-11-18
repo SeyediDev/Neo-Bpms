@@ -35,17 +35,17 @@
     Func<dynamic, HelperResult> RenderChartTypeSelector =
     @<select class="form-control" name="SelectedChartType" onchange="this.form.submit()">
 	    @{
-                RenderChartTypeOption(ChartType.Area, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Bar, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Column, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Line, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Pie, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Spline, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Areaspline, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Scatter, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Treemap, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.Gauge, item.structure.ChartType);
-                RenderChartTypeOption(ChartType.MetricBox, item.structure.ChartType);
+                RenderChartTypeOption(ChartType.Area, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Bar, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Column, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Line, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Pie, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Spline, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Areaspline, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Scatter, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Treemap, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.Gauge, item.Structure.ChartType);
+                RenderChartTypeOption(ChartType.MetricBox, item.Structure.ChartType);
             }
         </select>;
 
@@ -91,6 +91,10 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
         }
     </script>
     <script src="@CommonBundles.ChartsJsBundle" asp-append-version="true"></script>
+    @if (reportInfo.Structure.ChartType == ChartType.Treemap)
+    {
+        <script src="~/Scripts/common-assets-includes/common-plugins/global/high-charts/treemap.js" asp-append-version="true"></script>
+    }
     if (!bFromDashboard && !isIframeReport)
     {
         <script src="@CommonBundles.HighChartsExportJsBundle" asp-append-version="true"></script>

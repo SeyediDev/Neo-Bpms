@@ -79,8 +79,10 @@
 							@{
 								var value = ReportRenderer.GetCelValue(colInfo, reportInfo.TotalRecord);
 								var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+								var valStr = val.Value.Trim();
+								var isNumeric = !string.IsNullOrEmpty(valStr) && double.TryParse(valStr, out _);
 							}
-                            <span class="table-col-value">@(!string.IsNullOrEmpty(val.Value.Trim()) ? Convert.ToDouble(val.Value.Trim()).ToString("N0") : val)</span>
+                            <span class="table-col-value">@(isNumeric ? Convert.ToDouble(valStr).ToString("N0") : val)</span>
 						</td>
 					}
 				}
@@ -151,17 +153,22 @@
                                 var isNumber = false;
 								if (colInfo.aggrType == eAggregationFunctions.Count || colInfo.aggrType == eAggregationFunctions.Sum)
 								{
-									var v = Convert.ToDouble(value);
-									var total = Convert.ToDouble(ReportRenderer.GetValue(colInfo, reportInfo.TotalRecord) ?? 0);
-									var percent = total == 0 ? 0 : Math.Round(v * 10000 / total) / 100;
-									if (percent != 0)
+									if (double.TryParse(value?.ToString(), out var v))
 									{
-										percentage = new HtmlString("(" + percent + "%)");
+										var totalValue = ReportRenderer.GetValue(colInfo, reportInfo.TotalRecord);
+										var total = double.TryParse(totalValue?.ToString(), out var t) ? t : 0;
+										var percent = total == 0 ? 0 : Math.Round(v * 10000 / total) / 100;
+										if (percent != 0)
+										{
+											percentage = new HtmlString("(" + percent + "%)");
+										}
+										tooltip = new HtmlString(string.Format("{0} : {1}\n\r{2} : %{3}", ViewTexts.Value, value, ViewTexts.Percentage, Math.Round(v * 10000000 / total) / 100000));
+										isNumber = true;
 									}
-									tooltip = new HtmlString(string.Format("{0} : {1}\n\r{2} : %{3}", ViewTexts.Value, value, ViewTexts.Percentage, Math.Round(v * 10000000 / total) / 100000));
-                                    isNumber = true;
 								}
-                                <span class="table-col-value" title="@tooltip" >@(isNumber ? Convert.ToDouble(val.Value.Trim()).ToString("N0") : val) @percentage</span>
+								var valStr2 = val.Value.Trim();
+								var isNumeric2 = isNumber && !string.IsNullOrEmpty(valStr2) && double.TryParse(valStr2, out _);
+                                <span class="table-col-value" title="@tooltip" >@(isNumeric2 ? Convert.ToDouble(valStr2).ToString("N0") : val) @percentage</span>
 							}
 						</td>
 					}
