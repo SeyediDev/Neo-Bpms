@@ -80,6 +80,118 @@
     };
 }
 
+@* ===== CRITICAL CSS FOR LOADING OVERLAY ===== *@
+<style>
+    /* Critical CSS for loading overlay - prevents flash of unstyled content */
+    .dashboard-loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+    .dashboard-loading-overlay.show {
+        display: flex;
+        opacity: 1;
+    }
+    /* When overlay is shown via inline style, ensure it's visible immediately */
+    .dashboard-loading-overlay[style*="display: flex"] {
+        opacity: 1 !important;
+    }
+    .dashboard-loading-content {
+        text-align: center;
+        color: #1f2937;
+    }
+    .dashboard-loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: dashboard-spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+    }
+    .dashboard-loading-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-top: 16px;
+    }
+    @@keyframes dashboard-spin {
+        to { transform: rotate(360deg); }
+    }
+    /* Prevent flash of content during tab switch */
+    #dashboard-main-content {
+        transition: opacity 0.3s ease-in;
+    }
+    /* Smooth widget transitions */
+    .neo-dashboard-widget-container,
+    .neo-dashboard-widget {
+        transition: opacity 0.3s ease-in;
+    }
+    /* Initially hide content if we're switching tabs (prevents flash on page load) */
+    body.dashboard-switching #dashboard-main-content,
+    body.dashboard-switching .neo-dashboard-widget-container,
+    body.dashboard-switching .neo-dashboard-widget {
+        opacity: 0;
+    }
+    /* Hide content initially until JavaScript confirms it's ready */
+    /* Fallback: if JavaScript is disabled, show content after 2 seconds */
+    #dashboard-main-content {
+        opacity: 0;
+        transition: opacity 0.3s ease-in;
+        animation: dashboard-show-fallback 0.1s 2s forwards;
+    }
+    #dashboard-main-content.content-ready {
+        opacity: 1;
+        animation: none;
+    }
+    @@keyframes dashboard-show-fallback {
+        to { opacity: 1; }
+    }
+    /* Show loading overlay initially if switching - use attribute selector for immediate effect */
+    body[data-dashboard-switching="true"] .dashboard-loading-overlay {
+        display: flex !important;
+        opacity: 1 !important;
+    }
+    body[data-dashboard-switching="true"] #dashboard-main-content {
+        opacity: 0 !important;
+    }
+</style>
+<script>
+    // CRITICAL: This must run immediately, before any content renders
+    // Check sessionStorage and set body attribute immediately
+    (function() {
+        try {
+            if (sessionStorage.getItem('dashboard-switching')) {
+                // Set attribute on body immediately (works even if body doesn't exist yet)
+                if (document.body) {
+                    document.body.setAttribute('data-dashboard-switching', 'true');
+                } else {
+                    // If body doesn't exist yet, wait for it
+                    var observer = new MutationObserver(function(mutations) {
+                        if (document.body) {
+                            document.body.setAttribute('data-dashboard-switching', 'true');
+                            observer.disconnect();
+                        }
+                    });
+                    observer.observe(document.documentElement, { childList: true, subtree: true });
+                }
+            }
+        } catch(e) {
+            console.error('Dashboard switching check failed:', e);
+        }
+    })();
+</script>
+
 @* ===== TOOLBAR ===== *@
 <div class="neo-dashboard-header-toolbar">
     @* ===== FILTER TOGGLE ===== *@
@@ -153,9 +265,33 @@ new
     }
 
     @* ===== MODERN DASHBOARD MAIN CONTENT ===== *@
-    <div id="dashboard-main-content">
+    <div id="dashboard-main-content" style="opacity: 0;">
         <partial name="~/Views/Dashboard/_DashboardContent.cshtml" model="Model" />
     </div>
+    
+    @* ===== LOADING OVERLAY (Shown when switching tabs) ===== *@
+    <div id="dashboard-loading-overlay" class="dashboard-loading-overlay" style="display: none; opacity: 0;">
+        <div class="dashboard-loading-content">
+            <div class="dashboard-loading-spinner"></div>
+            <div class="dashboard-loading-text">در حال بارگذاری...</div>
+        </div>
+    </div>
+    <script>
+        // Show overlay immediately if switching (runs as soon as this element is parsed)
+        (function() {
+            try {
+                if (sessionStorage.getItem('dashboard-switching')) {
+                    var overlay = document.getElementById('dashboard-loading-overlay');
+                    if (overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.style.opacity = '1';
+                    }
+                }
+            } catch(e) {
+                console.error('Dashboard overlay show failed:', e);
+            }
+        })();
+    </script>
 
     @if (structure != null)
     {

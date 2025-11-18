@@ -47,6 +47,120 @@
         toggleClientOnlyPanel(null);
     });
 
+    // Show loading overlay - optimized to prevent flash
+    function showDashboardLoading() {
+        // First, immediately hide dashboard content to prevent flash
+        const mainContent = document.getElementById('dashboard-main-content');
+        if (mainContent) {
+            mainContent.classList.remove('content-ready');
+            mainContent.style.opacity = '0';
+            mainContent.style.transition = 'opacity 0.1s ease-out';
+            mainContent.style.pointerEvents = 'none';
+        }
+        
+        // Hide all dashboard widgets immediately
+        const widgets = document.querySelectorAll('.neo-dashboard-widget-container, .neo-dashboard-widget');
+        widgets.forEach(widget => {
+            widget.style.opacity = '0';
+            widget.style.transition = 'opacity 0.1s ease-out';
+        });
+        
+        let overlay = document.getElementById('dashboard-loading-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'dashboard-loading-overlay';
+            overlay.className = 'dashboard-loading-overlay';
+            overlay.style.display = 'flex'; // Show immediately without transition
+            overlay.style.opacity = '1'; // Full opacity immediately
+            overlay.innerHTML = `
+                <div class="dashboard-loading-content">
+                    <div class="dashboard-loading-spinner"></div>
+                    <div class="dashboard-loading-text">در حال بارگذاری...</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        } else {
+            // If overlay exists, show it immediately
+            overlay.style.display = 'flex';
+            overlay.style.opacity = '1';
+            overlay.classList.add('show');
+        }
+    }
+
+    // Hide loading overlay
+    function hideDashboardLoading() {
+        const overlay = document.getElementById('dashboard-loading-overlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+            overlay.style.opacity = '0';
+            // Remove from DOM after transition
+            setTimeout(() => {
+                if (overlay && !overlay.classList.contains('show')) {
+                    overlay.style.display = 'none';
+                    overlay.remove();
+                }
+            }, 200);
+        }
+        
+        // Restore dashboard content visibility
+        const mainContent = document.getElementById('dashboard-main-content');
+        if (mainContent) {
+            mainContent.classList.add('content-ready');
+            mainContent.style.opacity = '1';
+            mainContent.style.transition = 'opacity 0.3s ease-in';
+            mainContent.style.pointerEvents = '';
+        }
+        
+        // Restore widgets visibility
+        const widgets = document.querySelectorAll('.neo-dashboard-widget-container, .neo-dashboard-widget');
+        widgets.forEach(widget => {
+            widget.style.opacity = '1';
+            widget.style.transition = 'opacity 0.3s ease-in';
+        });
+    }
+
+    // Hide loading overlay when page is fully loaded
+    // Ensure content is fully rendered before showing it
+    function ensureContentReady() {
+        const isSwitching = sessionStorage.getItem('dashboard-switching');
+        
+        function showContent() {
+            // Mark content as ready
+            const mainContent = document.getElementById('dashboard-main-content');
+            if (mainContent) {
+                mainContent.classList.add('content-ready');
+            }
+            // Hide loading overlay
+            hideDashboardLoading();
+            // Remove switching flag
+            if (isSwitching) {
+                sessionStorage.removeItem('dashboard-switching');
+                document.body.classList.remove('dashboard-switching');
+                document.body.removeAttribute('data-dashboard-switching');
+            }
+        }
+        
+        // Wait for both DOM and all resources (images, stylesheets, etc.) to be loaded
+        if (document.readyState === 'complete') {
+            // Small delay to ensure all rendering is complete
+            setTimeout(showContent, 200);
+        } else {
+            // If switching tabs, wait for full page load
+            if (isSwitching) {
+                window.addEventListener('load', function() {
+                    setTimeout(showContent, 200);
+                });
+            } else {
+                // For normal page load, show content when DOM is ready
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(showContent, 100);
+                });
+            }
+        }
+    }
+    
+    ensureContentReady();
+
     // Define switchConfig function before Dashboard.js loads
     window.dashboard_switchConfig = function (configId) {
         console.log('Dashboard: Switching to config:', configId);
@@ -55,6 +169,9 @@
             console.error('Dashboard: Missing config ID');
             return;
         }
+
+        // IMMEDIATELY hide content and show loading overlay (synchronously, no delay)
+        showDashboardLoading();
 
         // Update active tab visual state
         const tabItems = document.querySelectorAll('.dashboard-tab-item');
@@ -73,6 +190,7 @@
 
         const isClientOnlyTab = clientOnlyTabs.has(configId);
         if (isClientOnlyTab) {
+            hideDashboardLoading();
             const panelVisible = toggleClientOnlyPanel(configId);
             if (!panelVisible) {
                 console.warn('Dashboard: Client-only tab selected but no panel found for', configId);
@@ -87,10 +205,16 @@
         if (configInput) {
             configInput.value = configId;
 
-            // Submit form to reload with new config
+            // Mark that we're switching tabs (for next page load)
+            sessionStorage.setItem('dashboard-switching', 'true');
+
+            // Submit form immediately - overlay is already visible
             const form = configInput.closest('form');
             if (form) {
-                form.submit();
+                // Use requestAnimationFrame to ensure overlay is rendered before submit
+                requestAnimationFrame(() => {
+                    form.submit();
+                });
             }
         }
     };
