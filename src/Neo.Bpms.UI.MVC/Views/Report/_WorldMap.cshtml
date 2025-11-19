@@ -94,6 +94,32 @@
 		margin-right: 5px;
 	}
 	
+	.map-info-panel-top .info-drilldown-btn {
+		margin-top: 15px;
+		padding: 10px 20px;
+		background: #0071A4;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: 600;
+		width: 100%;
+		transition: background 0.2s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+	}
+	
+	.map-info-panel-top .info-drilldown-btn:hover {
+		background: #005a7a;
+	}
+	
+	.map-info-panel-top .info-drilldown-btn:active {
+		background: #004a64;
+	}
+	
 	.map-toggle-panel-btn {
 		position: absolute;
 		top: 10px;
@@ -356,7 +382,7 @@
 @* Map HTML Structure *@
 <div class="map-report-container">
 	<div class="map-left-panel">
-		<button id="map-toggle-panel-btn" class="map-toggle-panel-btn" title="نمایش/مخفی کردن جدول کشورها">
+		<button type="button" id="map-toggle-panel-btn" class="map-toggle-panel-btn" title="نمایش/مخفی کردن جدول کشورها">
 			<span id="map-toggle-panel-icon">◀</span> جدول کشورها
 		</button>
 		<div id="map-info-panel-top" class="map-info-panel-top">
@@ -392,7 +418,7 @@
 <div id="map-drilldown-panel" class="map-drilldown-panel">
 	<div class="map-drilldown-header">
 		<h3 id="map-drilldown-title">گزارش زیرمجموعه</h3>
-		<button class="map-drilldown-close" onclick="closeMapDrillDown()">×</button>
+		<button type="button" class="map-drilldown-close" onclick="event.preventDefault(); event.stopPropagation(); closeMapDrillDown();">×</button>
 	</div>
 	<div class="map-drilldown-content" id="map-drilldown-content">
 		<div style="text-align: center; padding: 40px; color: #6c757d;">
@@ -712,7 +738,9 @@
 		}
 	}
 	
-	$('#map-toggle-panel-btn').on('click', function() {
+	$('#map-toggle-panel-btn').on('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		toggleRightPanel();
 	});
 
@@ -735,6 +763,28 @@
 				}
 			}
 		}
+		
+		// Add drilldown button if subReports exist
+		if (subReportsCount > 0) {
+			var regionName = code;
+			for (var i = 0; i < tableData.length; i++) {
+				if (tableData[i].code === code) {
+					regionName = tableData[i].name;
+					break;
+				}
+			}
+			var drilldownBtn = $('<button>')
+				.attr('type', 'button')
+				.addClass('info-drilldown-btn')
+				.html('<span>📊</span> مشاهده گزارش زیرمجموعه')
+				.on('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					showMapDrillDown(code, regionName);
+				});
+			content.append(drilldownBtn);
+		}
+		
 		$('#map-info-panel-top').addClass('active');
 	}
 
