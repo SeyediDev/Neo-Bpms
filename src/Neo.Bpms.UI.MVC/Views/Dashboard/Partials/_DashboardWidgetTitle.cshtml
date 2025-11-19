@@ -33,36 +33,38 @@
         }
         <h4 class="neo-dashboard-widget-title-text">@divTitle</h4>
     </div>
-    @if (Model.CanDesign && !string.IsNullOrEmpty(divConfig.WidgetId))
-    {
-        <div class="neo-dashboard-widget-title-actions dashboard-design-only" style="display: none;">
-            @if (reportData?.Structure != null)
-            {
-                <a href="@("Report/Index?NamespaceId=" + reportData.Structure.NamespaceId + "&EntityId=" + reportData.Structure.EntityId + "&ReportId=" + reportData.Structure.Form_ReportId + "&ConfigId=" + reportData.Structure.ConfigId)"
-                   class="neo-dashboard-widget-title-action"
-                   target="_blank"
-                   title="باز کردن گزارش">
+    <div class="neo-dashboard-widget-title-actions">
+        @if (reportData?.Structure != null)
+        {
+            <a href="@("Report/Index?NamespaceId=" + reportData.Structure.NamespaceId + "&EntityId=" + reportData.Structure.EntityId + "&ReportId=" + reportData.Structure.Form_ReportId + "&ConfigId=" + reportData.Structure.ConfigId)"
+               class="neo-dashboard-widget-title-action"
+               target="_blank"
+               title="باز کردن گزارش">
+                <svg viewBox="0 0 24 24">
+                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#link-dashboard" />
+                </svg>
+            </a>
+        }
+        @if (Model.CanDesign && !string.IsNullOrEmpty(divConfig.WidgetId))
+        {
+            <div class="dashboard-design-only" style="display: none;">
+                <button class="neo-dashboard-widget-title-action"
+                        data-toggle="modal"
+                        data-target="#widgetSettingsModal-@divConfig.WidgetId"
+                        title="@ViewTexts.WidgetSettings">
                     <svg viewBox="0 0 24 24">
-                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#link-dashboard" />
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-dashboard" />
                     </svg>
-                </a>
-            }
-            <button class="neo-dashboard-widget-title-action"
-                    data-toggle="modal"
-                    data-target="#widgetSettingsModal-@divConfig.WidgetId"
-                    title="@ViewTexts.WidgetSettings">
-                <svg viewBox="0 0 24 24">
-                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-dashboard" />
-                </svg>
-            </button>
-            <button class="neo-dashboard-widget-title-action neo-dashboard-widget-delete"
-                    widgetId="@divConfig.WidgetId"
-                    onclick="dashboard_removeWidget(this)"
-                    title="@ViewTexts.Delete">
-                <svg viewBox="0 0 24 24">
-                    <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#close-dashboard" />
-                </svg>
-            </button>
-        </div>
-    }
+                </button>
+                <button class="neo-dashboard-widget-title-action neo-dashboard-widget-delete"
+                        widgetId="@divConfig.WidgetId"
+                        onclick="dashboard_removeWidget(this)"
+                        title="@ViewTexts.Delete">
+                    <svg viewBox="0 0 24 24">
+                        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#close-dashboard" />
+                    </svg>
+                </button>
+            </div>
+        }
+    </div>
 </div>

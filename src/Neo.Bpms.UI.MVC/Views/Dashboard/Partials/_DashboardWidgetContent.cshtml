@@ -123,10 +123,13 @@
 }
 else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
 {
-    if (reportData.Structure.ChartType == ChartType.WorldMap ||
-        reportData.Structure.ChartType == ChartType.IranMap)
+    if (reportData.Structure.ChartType == ChartType.IranMap)
     {
-        <partial name="~/Views/Report/_map.cshtml" model="reportData" />
+        <partial name="~/Views/Report/_IranMap.cshtml" model="reportData" />
+    }
+    else if (reportData.Structure.ChartType == ChartType.WorldMap)
+    {
+        <partial name="~/Views/Report/_WorldMap.cshtml" model="reportData" />
     }
     else if (reportData.Structure.ChartType == ChartType.BpmnDiagram)
     {
@@ -136,25 +139,6 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
     {
         var metricValue = reportData.GetMetricBoxValue();
         var structure = reportData.Structure;
-        /*var iconClass = structure.GetReportProperty((long)ReportConfigProperty.IconClass);
-        if (string.IsNullOrWhiteSpace(iconClass))
-        {
-            iconClass = widget?.GetPropertyValue(eControlPropertyId.IconClass);
-        }
-        iconClass ??= "fal fa-info-circle";
-        var backgroundColor = structure.GetReportProperty((long)ReportConfigProperty.BackgroundColor);
-        if (string.IsNullOrWhiteSpace(backgroundColor))
-        {
-            backgroundColor = widget?.GetPropertyValue(eControlPropertyId.BackgroundColor);
-        }
-        backgroundColor ??= "#2563EB";
-        var textsColor = structure.GetReportProperty((long)ReportConfigProperty.TextColor);
-        if (string.IsNullOrWhiteSpace(textsColor))
-        {
-            textsColor = widget?.GetPropertyValue(eControlPropertyId.Color);
-        }
-        textsColor ??= "#ffffff";*/
-
         <div class="dashboard-metric-box shadow-sm" >
             <span class="dashboard-metric-box__value" data-original-value="@metricValue">@metricValue</span>
         </div>

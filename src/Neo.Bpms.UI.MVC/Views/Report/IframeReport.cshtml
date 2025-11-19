@@ -41,9 +41,11 @@
                     case ReportViewType.Chart:
                         switch (structure.ChartType)
                         {
-                            case ChartType.WorldMap:
                             case ChartType.IranMap:
-                                @Html.Partial("_map", Model)
+                                @Html.Partial("_IranMap", Model)
+                                break;
+                            case ChartType.WorldMap:
+                                @Html.Partial("_WorldMap", Model)
                                 break;
                             case ChartType.BpmnDiagram:
                                 @Html.Partial("_bpmn", Model)

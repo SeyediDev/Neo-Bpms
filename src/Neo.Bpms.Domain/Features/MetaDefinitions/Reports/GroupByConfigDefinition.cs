@@ -34,6 +34,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
         string[] fieldIds = field.Split('.');
         if (fieldIds.Length > 2)
         {
+            GroupByFormula(field, alias, addAsDisplayColumn);
             return;//todo more than one dot is not supported in this method
         }
 

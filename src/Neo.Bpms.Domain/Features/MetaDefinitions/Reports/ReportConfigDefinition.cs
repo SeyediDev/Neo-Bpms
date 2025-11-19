@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using System.Collections.Generic;
+using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
@@ -220,7 +221,11 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         selectedField = reportConfig?.AddField(type,
             fieldId, report.EntityId, null,
             alias, null, false, ConfiguredReport.ReportMatrixType.Horizontal);
-        ApplySelectedFieldProperties(selectedField, properties);
+        if(selectedField==null)
+        {
+            AddFormulaField(type, fieldId, fieldId, alias, properties);
+        }
+        else ApplySelectedFieldProperties(selectedField, properties);
     }
 
     protected void AddIncludedField(ConfiguredReport.eFieldSelectionType type,

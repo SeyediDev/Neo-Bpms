@@ -1751,7 +1751,7 @@
     })(q)
 });
 
-var TetaMetrics = {
+var NeoMetrics = {
     defaultOptions: {
         iconClass: 'fa fa-info-circle',
         value: '',

@@ -79,9 +79,10 @@ public partial class ReportController
         }
         SetInIframe();
         return PartialView(config.ViewType == ReportViewType.Chart
-            ? (config.ChartType == ChartType.WorldMap ||
-               config.ChartType == ChartType.IranMap
-                ? "~/Views/Report/_map.cshtml"
+            ? (config.ChartType == ChartType.IranMap
+                ? "~/Views/Report/_IranMap.cshtml"
+                : config.ChartType == ChartType.WorldMap
+                ? "~/Views/Report/_WorldMap.cshtml"
                 : "~/Views/Report/_chartView.cshtml")
             : "~/Views/Report/_listView.cshtml", result);
     }
@@ -136,8 +137,10 @@ public partial class ReportController
         await SetReportViewBag(user, ParentReportIds, sortFields, FilterValues, DrillDown == 1, Page, false, result, null);
         return DrillDown == 1
             ? PartialView(initPostReportConfigResult.config.ViewType == ReportViewType.Chart
-                ? (initPostReportConfigResult.config.ChartType == ChartType.WorldMap || initPostReportConfigResult.config.ChartType == ChartType.IranMap
-                    ? "_map"
+                ? (initPostReportConfigResult.config.ChartType == ChartType.IranMap
+                    ? "_IranMap"
+                    : initPostReportConfigResult.config.ChartType == ChartType.WorldMap
+                    ? "_WorldMap"
                     : "_chartView")
                 : "_listView", result)
             : View("Index", result);

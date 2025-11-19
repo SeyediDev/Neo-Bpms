@@ -38,10 +38,14 @@
 		  {
 				case ReportViewType.Chart:
 				<script src="@CommonBundles.JqueryAloneJsBundle" asp-append-version="true"></script>
-					 if (structure.ChartType == ChartType.WorldMap || structure.ChartType == ChartType.IranMap)
+					 if (structure.ChartType == ChartType.IranMap)
 					 {
-	 	 	 	 	 @Html.Partial("_map", Model)
-			}
+	 	 	 	 	 @Html.Partial("_IranMap", Model)
+					 }
+					 else if (structure.ChartType == ChartType.WorldMap)
+					 {
+	 	 	 	 	 @Html.Partial("_WorldMap", Model)
+					 }
 			else
 			{
 	 	 	 <div style="direction: ltr !important;">

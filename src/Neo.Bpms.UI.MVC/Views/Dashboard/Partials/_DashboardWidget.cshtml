@@ -11,6 +11,9 @@
     var width = DashboardRenderHelpers.ResolveWidth(divConfig);
     var isMetricWidget = reportData?.Structure?.ChartType == ChartType.MetricBox;
     var contentClasses = "neo-dashboard-widget-content" + (isMetricWidget ? " neo-dashboard-widget-content--metric" : string.Empty);
+    var reportUrl = reportData?.Structure != null 
+        ? $"Report/Index?NamespaceId={reportData.Structure.NamespaceId}&EntityId={reportData.Structure.EntityId}&ReportId={reportData.Structure.Form_ReportId}&ConfigId={reportData.Structure.ConfigId}"
+        : null;
 }
 
 <div class="neo-dashboard-widget-container neo-dashboard-column-@width"

@@ -399,7 +399,7 @@
 				@if (drilldownSubReports.Count > 0)
 				{
 					<div style="margin-top: 8px; font-size: 11px; color: #6c757d; text-align: center;">
-						💡 برای مشاهده گزارش زیرمجموعه: دوبار کلیک روی ردیف
+						💡 برای مشاهده گزارش زیرمجموعه: کلیک روی ردیف
 					</div>
 				}
 			</div>
@@ -660,16 +660,15 @@
 		
 		tbody.find('tr').on('click', function(e) {
 			var code = $(this).attr('data-code');
-			if (code && e.detail === 1) {
-				selectRegion(code);
-			}
-		});
-		
-		tbody.find('tr').on('dblclick', function() {
-			var code = $(this).attr('data-code');
 			var name = $(this).attr('data-name');
-			if (code && subReportsCount > 0) {
-				showMapDrillDown(code, name);
+			if (code && e.detail === 1) {
+				if (subReportsCount > 0) {
+					// اگر زیرگزارش وجود دارد، با یک کلیک drill-down فعال می‌شود
+					showMapDrillDown(code, name);
+				} else {
+					// در غیر این صورت فقط انتخاب می‌شود
+					selectRegion(code);
+				}
 			}
 		});
 		
@@ -860,7 +859,7 @@
 			if (subReportsCount > 0) {
 				$(label).append($("<hr/>", { 'style': 'margin: 5px 0 3px 0; border-color: rgba(255,255,255,0.3);' }));
 				$(label).append($("<span/>", {
-					'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده گزارش زیرمجموعه: دوبار کلیک کنید</span>',
+					'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده گزارش زیرمجموعه: کلیک کنید</span>',
 					'class': 'teta-bidi'
 				}));
 			}
@@ -1011,40 +1010,13 @@
 	}, 500);
 
 	@* Click handlers for WorldMap *@
-	setTimeout(function() {
-		var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
-		if (mapInstance) {
-			// Handle single click for selection
-			$('#world-map').on('click', 'path.jvectormap-region', function(e) {
-				var clickedElement = this;
-				var clickedCode = null;
-				for (var code in mapInstance.regions) {
-					if (mapInstance.regions.hasOwnProperty(code)) {
-						var region = mapInstance.regions[code];
-						if (region.element && region.element.shape) {
-							var shapeNode = region.element.shape.node;
-							if (shapeNode === clickedElement || $(shapeNode).is(clickedElement) ||
-								$(shapeNode).find(clickedElement).length > 0 || $(clickedElement).closest('path').is(shapeNode)) {
-								clickedCode = code;
-								break;
-							}
-						}
-					}
-				}
-				if (clickedCode) {
-					clearTimeout(window.mapClickTimeout);
-					window.mapClickTimeout = setTimeout(function() { selectRegion(clickedCode); }, 300);
-				}
-			});
-			
-			// Handle double-click for drilldown
-			if (subReportsCount > 0) {
-				$('#world-map').on('dblclick', 'path.jvectormap-region', function(e) {
-					e.stopPropagation();
-					e.preventDefault();
-					clearTimeout(window.mapClickTimeout);
+		setTimeout(function() {
+			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
+			if (mapInstance) {
+				// Handle single click for selection or drilldown
+				$('#world-map').on('click', 'path.jvectormap-region', function(e) {
 					var clickedElement = this;
-					var foundCode = null;
+					var clickedCode = null;
 					for (var code in mapInstance.regions) {
 						if (mapInstance.regions.hasOwnProperty(code)) {
 							var region = mapInstance.regions[code];
@@ -1052,22 +1024,35 @@
 								var shapeNode = region.element.shape.node;
 								if (shapeNode === clickedElement || $(shapeNode).is(clickedElement) ||
 									$(shapeNode).find(clickedElement).length > 0 || $(clickedElement).closest('path').is(shapeNode)) {
-									foundCode = code;
+									clickedCode = code;
 									break;
 								}
 							}
 						}
 					}
-					if (foundCode && mapInfo[foundCode]) {
-						showDrillDown(e, foundCode, clickedElement);
+					if (clickedCode) {
+						clearTimeout(window.mapClickTimeout);
+						if (subReportsCount > 0 && mapInfo[clickedCode]) {
+							// اگر زیرگزارش وجود دارد، با یک کلیک drill-down فعال می‌شود
+							var regionName = clickedCode;
+							for (var i = 0; i < tableData.length; i++) {
+								if (tableData[i].code === clickedCode) {
+									regionName = tableData[i].name;
+									break;
+								}
+							}
+							showMapDrillDown(clickedCode, regionName);
+						} else {
+							// در غیر این صورت فقط انتخاب می‌شود
+							window.mapClickTimeout = setTimeout(function() { selectRegion(clickedCode); }, 300);
+						}
 					}
 				});
+				
+				// Close drilldown when clicking overlay
+				$('#map-drilldown-overlay').on('click', function() { closeMapDrillDown(); });
 			}
-			
-			// Close drilldown when clicking overlay
-			$('#map-drilldown-overlay').on('click', function() { closeMapDrillDown(); });
-		}
-	}, 500);
+		}, 500);
 </script>
 
 <partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>

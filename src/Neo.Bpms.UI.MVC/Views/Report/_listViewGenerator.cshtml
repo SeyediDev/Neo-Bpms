@@ -211,11 +211,14 @@
 						@foreach (var cReport in chartReports)
 						{
 							ViewBag.Counter = co;
-							if (cReport.Structure.ChartType == ChartType.WorldMap ||
-							    cReport.Structure.ChartType == ChartType.IranMap)
-							{
-								@Html.Partial("_map", cReport)
-							}
+						if (cReport.Structure.ChartType == ChartType.IranMap)
+						{
+							@Html.Partial("_IranMap", cReport)
+						}
+						else if (cReport.Structure.ChartType == ChartType.WorldMap)
+						{
+							@Html.Partial("_WorldMap", cReport)
+						}
 							else
 							{
 								@Html.Partial("~/Views/Report/_chartView.cshtml", cReport)
