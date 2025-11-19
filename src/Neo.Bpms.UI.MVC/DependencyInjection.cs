@@ -120,7 +120,8 @@ public static class DependencyInjection
                     .UnsafeEval()
                     .CustomSources("blob:")
                 )
-                .FontSources(s => s.Self().CustomSources("data:"))
+                .FontSources(s => s.Self()
+                    .CustomSources("data:", "https://cdn.jsdelivr.net"))
                 .ImageSources(s => s.Self().CustomSources("data:")));
         AddPermissionPolicyHeaderMiddleware(app);
 

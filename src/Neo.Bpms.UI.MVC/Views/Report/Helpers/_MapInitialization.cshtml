@@ -25,6 +25,24 @@ $('#world-map').vectorMap({
 				}
 			}
 		}
+		
+		@* Handle zoom state for Iran map - enable scroll only in map container *@
+		@if (Model.Structure.ChartType == ChartType.IranMap)
+		{
+			<text>
+			// Check if map is zoomed (scale > 1 means zoomed in)
+			var isZoomed = scale > 1.1;
+			var mapWrapper = $('#world-map'); // This element has both id="world-map" and class="world-map-container"
+			
+			if (isZoomed) {
+				$('body').addClass('map-zoom-active');
+				mapWrapper.addClass('map-zoomed');
+			} else {
+				$('body').removeClass('map-zoom-active');
+				mapWrapper.removeClass('map-zoomed');
+			}
+			</text>
+		}
 	},
 	series: {
 		regions: [{ values: mapData, scale: ['#C8EEFF', '#0071A4'], normalizeFunction: 'polynomial', min: 0 }],

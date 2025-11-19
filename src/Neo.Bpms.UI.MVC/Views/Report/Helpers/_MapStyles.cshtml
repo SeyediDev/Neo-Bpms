@@ -100,12 +100,36 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		overflow: visible;
 	}
 	
 	.world-map-container .jvectormap-container {
 		width: 100% !important;
 		height: 100% !important;
 		margin: 0 auto;
+		position: relative;
+	}
+	
+	@* Enable scroll only in map container when zoomed (for Iran map) *@
+	@if (Model.Structure.ChartType == ChartType.IranMap)
+	{
+		<text>
+		/* Prevent body scroll when map is zoomed */
+		body.map-zoom-active {
+			overflow: hidden !important;
+		}
+		
+		/* Enable scroll in map container when zoomed */
+		.world-map-container.map-zoomed {
+			overflow: auto !important;
+			cursor: grab;
+			-webkit-overflow-scrolling: touch;
+		}
+		
+		.world-map-container.map-zoomed:active {
+			cursor: grabbing;
+		}
+		</text>
 	}
 	
 	.map-right-panel {
@@ -324,6 +348,52 @@
 			width: 100%;
 			max-width: 100%;
 		}
+	}
+
+	.map-debug-panel {
+		margin-top: 20px;
+		background: #fff8e1;
+		border: 1px solid #f0ad4e;
+		border-radius: 6px;
+		padding: 12px;
+		font-family: monospace;
+		font-size: 12px;
+		color: #5f370e;
+		direction: ltr;
+	}
+
+	.map-debug-panel.collapsed pre {
+		max-height: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+	.map-debug-panel pre {
+		margin: 10px 0 0 0;
+		white-space: pre-wrap;
+		max-height: 250px;
+		overflow: auto;
+	}
+
+	.map-debug-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.map-debug-header button {
+		padding: 4px 8px;
+		font-size: 11px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		background: #f0ad4e;
+		color: #fff;
+	}
+
+	.map-debug-header button:hover {
+		background: #eea236;
 	}
 </style>
 

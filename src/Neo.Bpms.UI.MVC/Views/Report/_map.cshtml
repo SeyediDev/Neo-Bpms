@@ -491,11 +491,83 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 	@* Initialize map with appropriate map type *@
 	<partial name="~/Views/Report/Helpers/_MapInitialization.cshtml" model="Model"/>
 
-	// Initialize map responsiveness
+	// Initialize map responsiveness and zoom scroll handling
 	setTimeout(function() {
 		var mapContainer = $('#world-map .jvectormap-container');
+		var mapWrapper = $('#world-map');
 		var mapInstance = mapContainer.data('mapObject');
+		
 		if (mapInstance) {
+			@if (Model.Structure.ChartType == ChartType.IranMap)
+			{
+				<text>
+				// Handle scroll prevention for zoomed Iran map
+				// The zoom state is managed in onViewportChange callback
+				// Here we just ensure proper scroll behavior
+				
+				// mapWrapper is the same element as .world-map-container (id="world-map" class="world-map-container")
+				var mapContainerElement = mapWrapper[0];
+				
+				// Prevent body scroll when mouse is over zoomed map
+				if (mapContainerElement) {
+					mapWrapper.on('mouseenter', function() {
+						if (mapWrapper.hasClass('map-zoomed')) {
+							$('body').addClass('map-zoom-active');
+						}
+					});
+					
+					mapWrapper.on('mouseleave', function() {
+						if (!mapWrapper.hasClass('map-zoomed')) {
+							$('body').removeClass('map-zoom-active');
+						}
+					});
+					
+					// Prevent touch scroll on body when interacting with zoomed map
+					mapContainerElement.addEventListener('touchstart', function(e) {
+						if (mapWrapper.hasClass('map-zoomed')) {
+							$('body').addClass('map-zoom-active');
+						}
+					}, { passive: true });
+					
+					mapContainerElement.addEventListener('touchend', function(e) {
+						setTimeout(function() {
+							if (!mapWrapper.hasClass('map-zoomed')) {
+								$('body').removeClass('map-zoom-active');
+							}
+						}, 100);
+					}, { passive: true });
+					
+					// Prevent wheel event from scrolling body when map is zoomed
+					mapContainerElement.addEventListener('wheel', function(e) {
+						if (mapWrapper.hasClass('map-zoomed')) {
+							// Check if we're at the edge of scrollable area
+							var container = this;
+							var scrollTop = container.scrollTop;
+							var scrollHeight = container.scrollHeight;
+							var height = container.clientHeight;
+							var scrollLeft = container.scrollLeft;
+							var scrollWidth = container.scrollWidth;
+							var width = container.clientWidth;
+							
+							var isScrollingUp = e.deltaY < 0;
+							var isScrollingDown = e.deltaY > 0;
+							var isScrollingLeft = e.deltaX < 0;
+							var isScrollingRight = e.deltaX > 0;
+							
+							// If at edge and trying to scroll further, prevent body scroll
+							if ((scrollTop <= 0 && isScrollingUp) || 
+								(scrollTop + height >= scrollHeight && isScrollingDown) ||
+								(scrollLeft <= 0 && isScrollingLeft) ||
+								(scrollLeft + width >= scrollWidth && isScrollingRight)) {
+								// Let jvectormap handle panning, but prevent body scroll
+								e.stopPropagation();
+							}
+						}
+					}, { passive: false });
+				}
+				</text>
+			}
+			
 			if (typeof ResizeObserver !== 'undefined') {
 				var resizeObserver = new ResizeObserver(function(entries) {
 					if (mapInstance && mapInstance.updateSize) {
