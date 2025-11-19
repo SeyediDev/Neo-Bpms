@@ -1840,8 +1840,8 @@
 		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\showOrHideJobScheduleFeatures.js">
 			<Link>wwwroot\Scripts\common-assets-includes\features\report\showOrHideJobScheduleFeatures.js</Link>
 		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\teta.metric.js">
-			<Link>wwwroot\Scripts\common-assets-includes\features\report\teta.metric.js</Link>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\neo.metric.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\report\neo.metric.js</Link>
 		</Content>
 		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Techniques\teta-bidi.js">
 			<Link>wwwroot\Scripts\common-assets-includes\features\techniques\teta-bidi.js</Link>

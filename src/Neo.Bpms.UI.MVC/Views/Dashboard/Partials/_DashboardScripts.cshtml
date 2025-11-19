@@ -124,7 +124,7 @@
     function ensureContentReady() {
         const isSwitching = sessionStorage.getItem('dashboard-switching');
         
-        function showContent() {
+        function displayContent() {
             // Mark content as ready
             const mainContent = document.getElementById('dashboard-main-content');
             if (mainContent) {
@@ -140,20 +140,33 @@
             }
         }
         
+        function showContent() {
+            // Wait for fonts (especially Font Awesome icons) to load before showing content
+            // This ensures icons are displayed correctly
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(function() {
+                    displayContent();
+                });
+            } else {
+                // Fallback: if fonts API not available, show immediately
+                displayContent();
+            }
+        }
+        
         // Wait for both DOM and all resources (images, stylesheets, etc.) to be loaded
         if (document.readyState === 'complete') {
-            // Small delay to ensure all rendering is complete
-            setTimeout(showContent, 200);
+            // Page already loaded, show content immediately (after fonts load)
+            showContent();
         } else {
             // If switching tabs, wait for full page load
             if (isSwitching) {
                 window.addEventListener('load', function() {
-                    setTimeout(showContent, 200);
+                    showContent();
                 });
             } else {
                 // For normal page load, show content when DOM is ready
                 document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(showContent, 100);
+                    showContent();
                 });
             }
         }

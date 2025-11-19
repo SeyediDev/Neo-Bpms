@@ -15,9 +15,10 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="FluentAssertions" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj" />
+    <ProjectReference Include="..\..\src\Neo.Bpms.Infrastructure\Neo.Bpms.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

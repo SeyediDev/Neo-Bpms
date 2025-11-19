@@ -1,0 +1,68 @@
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@model ReportData
+
+@* Click handlers for IranMap and WorldMap *@
+@if (Model.Structure.ChartType == ChartType.IranMap || Model.Structure.ChartType == ChartType.WorldMap)
+{
+	<text>
+	setTimeout(function() {
+		var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
+		if (mapInstance) {
+			// Handle single click for selection
+			$('#world-map').on('click', 'path.jvectormap-region', function(e) {
+				var clickedElement = this;
+				var clickedCode = null;
+				for (var code in mapInstance.regions) {
+					if (mapInstance.regions.hasOwnProperty(code)) {
+						var region = mapInstance.regions[code];
+						if (region.element && region.element.shape) {
+							var shapeNode = region.element.shape.node;
+							if (shapeNode === clickedElement || $(shapeNode).is(clickedElement) ||
+								$(shapeNode).find(clickedElement).length > 0 || $(clickedElement).closest('path').is(shapeNode)) {
+								clickedCode = code;
+								break;
+							}
+						}
+					}
+				}
+				if (clickedCode) {
+					clearTimeout(window.mapClickTimeout);
+					window.mapClickTimeout = setTimeout(function() { selectRegion(clickedCode); }, 300);
+				}
+			});
+			
+			// Handle double-click for drilldown
+			if (subReportsCount > 0) {
+				$('#world-map').on('dblclick', 'path.jvectormap-region', function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					clearTimeout(window.mapClickTimeout);
+					var clickedElement = this;
+					var foundCode = null;
+					for (var code in mapInstance.regions) {
+						if (mapInstance.regions.hasOwnProperty(code)) {
+							var region = mapInstance.regions[code];
+							if (region.element && region.element.shape) {
+								var shapeNode = region.element.shape.node;
+								if (shapeNode === clickedElement || $(shapeNode).is(clickedElement) ||
+									$(shapeNode).find(clickedElement).length > 0 || $(clickedElement).closest('path').is(shapeNode)) {
+									foundCode = code;
+									break;
+								}
+							}
+						}
+					}
+					if (foundCode && mapInfo[foundCode]) {
+						showDrillDown(e, foundCode, clickedElement);
+					}
+				});
+			}
+			
+			// Close drilldown when clicking overlay
+			$('#map-drilldown-overlay').on('click', function() { closeMapDrillDown(); });
+		}
+	}, 500);
+	</text>
+}
+

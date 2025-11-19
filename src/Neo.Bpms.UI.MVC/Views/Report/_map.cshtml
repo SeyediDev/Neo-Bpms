@@ -9,7 +9,7 @@
 @using Neo.Bpms.UI.MVC.Controls
 @using Neo.Bpms.UI.MVC.PartialModels
 @using Neo.Bpms.UI.MVC.PartialModels.Report
-@model             ReportData
+@model ReportData
 @{
 	var calendar = ProjectDefinition.Project.DefaultCalendar;
 	var reportInfo = Model;
@@ -19,15 +19,14 @@
 	var bFromDashboard = ViewBag.bFromDashboard ?? false;
 	var drilldownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 }
+
+@* Design Tools *@
 @if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
 {
-	 @*     <div id="map-design-tools-container" class="designTool designMode"> *@
 	<partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = Model, forInlineSubReport = true}"/>
-	 @* </div> *@
 }
 
-@* <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.css"/>
-<script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.3.min.js"></script> *@
+@* Load JVector Map Scripts *@
 <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.css"/>
 <script src="~/Scripts/common-assets-includes/common-plugins/global/jvector-map/jquery-jvectormap-2.0.5.min.js"></script>
 @if (Model.Structure.ChartType == ChartType.WorldMap)
@@ -41,335 +40,13 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 
 <partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drilldownSubReports, reportKey = reportKey, reportInfo = reportInfo, filterValues = ViewBag.FilterValues as ElasticObject}"/>
 
-<style>
-	.map-report-container {
-		display: flex;
-		gap: 15px;
-		height: 75vh;
-		min-height: 500px;
-		width: 100%;
-	}
-	
-	.map-left-panel {
-		flex: 1 1 100%;
-		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-	
-	.world-map-container {
-		flex: 1;
-		min-height: 0;
-		width: 100%;
-		max-width: 1200px;
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	
-	.world-map-container .jvectormap-container {
-		width: 100% !important;
-		height: 100% !important;
-		margin: 0 auto;
-	}
-	
-	.map-right-panel {
-		flex: 0 0 0;
-		min-width: 0;
-		display: none;
-		flex-direction: column;
-		gap: 15px;
-		overflow: hidden;
-	}
-	
-	.map-right-panel.active {
-		flex: 1 1 40%;
-		min-width: 300px;
-		display: flex;
-	}
-	
-	.map-info-panel {
-		background: #f8f9fa;
-		border: 1px solid #dee2e6;
-		border-radius: 4px;
-		padding: 15px;
-		overflow-y: auto;
-		flex: 0 0 auto;
-		max-height: 300px;
-	}
-	
-	.map-info-panel h4 {
-		margin: 0 0 10px 0;
-		color: #495057;
-		font-size: 16px;
-		font-weight: 600;
-	}
-	
-	.map-info-panel .info-item {
-		margin-bottom: 8px;
-		padding: 8px;
-		background: white;
-		border-radius: 3px;
-		border-right: 3px solid #0071A4;
-	}
-	
-	.map-info-panel .info-label {
-		font-weight: 600;
-		color: #6c757d;
-		margin-left: 5px;
-	}
-	
-	.map-info-panel .info-value {
-		color: #212529;
-		margin-right: 5px;
-	}
-	
-	.map-data-table {
-		flex: 1;
-		min-height: 0;
-		background: white;
-		border: 1px solid #dee2e6;
-		border-radius: 4px;
-		overflow: auto;
-	}
-	
-	.map-data-table table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 13px;
-	}
-	
-	.map-data-table thead {
-		background: #0071A4;
-		color: white;
-		position: sticky;
-		top: 0;
-		z-index: 10;
-	}
-	
-	.map-data-table th {
-		padding: 10px;
-		text-align: right;
-		font-weight: 600;
-		border: 1px solid #005a7a;
-	}
-	
-	.map-data-table td {
-		padding: 8px 10px;
-		border: 1px solid #dee2e6;
-		text-align: right;
-	}
-	
-	.map-data-table tbody tr:hover {
-		background: #f1f3f5;
-		cursor: pointer;
-	}
-	
-	.map-data-table tbody tr.selected {
-		background: #e7f3ff;
-		border-right: 3px solid #0071A4;
-	}
-	
-	.map-right-panel.empty {
-		display: none;
-	}
-	
-	.map-table-search {
-		padding: 10px;
-		background: #f8f9fa;
-		border-bottom: 1px solid #dee2e6;
-	}
-	
-	.map-table-search input {
-		width: 100%;
-		padding: 8px 12px;
-		border: 1px solid #ced4da;
-		border-radius: 4px;
-		font-size: 14px;
-	}
-	
-	.map-table-search input:focus {
-		outline: none;
-		border-color: #0071A4;
-		box-shadow: 0 0 0 2px rgba(0, 113, 164, 0.1);
-	}
-	
-	.map-table-stats {
-		padding: 8px 10px;
-		background: #e9ecef;
-		border-top: 1px solid #dee2e6;
-		font-size: 12px;
-		color: #6c757d;
-		text-align: center;
-	}
-	
-	.map-data-table .sortable {
-		cursor: pointer;
-		user-select: none;
-		position: relative;
-	}
-	
-	.map-data-table .sortable:hover {
-		background: #005a7a;
-	}
-	
-	.map-data-table .sortable::after {
-		content: ' ↕';
-		opacity: 0.5;
-		font-size: 10px;
-	}
-	
-	.map-data-table .sortable.asc::after {
-		content: ' ↑';
-		opacity: 1;
-	}
-	
-	.map-data-table .sortable.desc::after {
-		content: ' ↓';
-		opacity: 1;
-	}
-	
-	.map-drilldown-panel {
-		position: fixed;
-		top: 0;
-		right: 0;
-		width: 50%;
-		max-width: 800px;
-		height: 100vh;
-		background: white;
-		box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-		z-index: 10000;
-		display: none;
-		flex-direction: column;
-		overflow: hidden;
-	}
-	
-	.map-drilldown-panel.active {
-		display: flex;
-	}
-	
-	.map-drilldown-header {
-		padding: 15px 20px;
-		background: #0071A4;
-		color: white;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-bottom: 2px solid #005a7a;
-	}
-	
-	.map-drilldown-header h3 {
-		margin: 0;
-		font-size: 18px;
-		font-weight: 600;
-	}
-	
-	.map-drilldown-close {
-		background: transparent;
-		border: none;
-		color: white;
-		font-size: 24px;
-		cursor: pointer;
-		padding: 0;
-		width: 30px;
-		height: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 4px;
-		transition: background 0.2s;
-	}
-	
-	.map-drilldown-close:hover {
-		background: rgba(255,255,255,0.2);
-	}
-	
-	.map-drilldown-content {
-		flex: 1;
-		overflow: auto;
-		padding: 20px;
-	}
-	
-	.map-drilldown-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0,0,0,0.5);
-		z-index: 9999;
-		display: none;
-	}
-	
-	.map-drilldown-overlay.active {
-		display: block;
-	}
-	
-	@@media (max-width: 768px) {
-		.map-report-container {
-			flex-direction: column;
-			height: auto;
-		}
-		
-		.map-left-panel {
-			flex: 1 1 100%;
-			height: 60vh;
-		}
-		
-		.map-right-panel.active {
-			flex: 1 1 100%;
-			min-width: 0;
-		}
-		
-		.map-drilldown-panel {
-			width: 100%;
-			max-width: 100%;
-		}
-	}
-</style>
+@* Map Styles *@
+<partial name="~/Views/Report/Helpers/_MapStyles.cshtml" model="Model"/>
 
-<div class="map-report-container">
-	<div class="map-left-panel">
-		<div id="world-map" class="world-map-container">
-		</div>
-	</div>
-	<div id="map-right-panel" class="map-right-panel">
-		<div id="map-info-panel" class="map-info-panel" style="display: none;">
-			<h4>اطلاعات استان انتخاب شده</h4>
-			<div id="map-info-content"></div>
-		</div>
-		<div id="map-data-table" class="map-data-table">
-			<div class="map-table-search">
-				<input type="text" id="map-table-search-input" placeholder="جستجو در جدول..." />
-			</div>
-			<table>
-				<thead>
-					<tr id="map-table-header"></tr>
-				</thead>
-				<tbody id="map-table-body"></tbody>
-			</table>
-			<div id="map-table-stats" class="map-table-stats"></div>
-		</div>
-	</div>
-</div>
+@* Map HTML Structure *@
+<partial name="~/Views/Report/Helpers/_MapHtml.cshtml" model="Model"/>
 
-<div id="map-drilldown-overlay" class="map-drilldown-overlay"></div>
-<div id="map-drilldown-panel" class="map-drilldown-panel">
-	<div class="map-drilldown-header">
-		<h3 id="map-drilldown-title">گزارش زیرمجموعه</h3>
-		<button class="map-drilldown-close" onclick="closeMapDrillDown()">×</button>
-	</div>
-	<div class="map-drilldown-content" id="map-drilldown-content">
-		<div style="text-align: center; padding: 40px; color: #6c757d;">
-			<div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
-			<div>در حال بارگذاری...</div>
-		</div>
-	</div>
-</div>
-
+@* Map JavaScript *@
 <script>
 	var isWorldMap = @((Model.Structure.ChartType == ChartType.WorldMap).ToString().ToLower());
 	var mapData = {};
@@ -380,98 +57,16 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		var iso2Column = reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.ColumnName == "Iso2")
 			?? reportInfo.Structure.SelectedColumns.FirstOrDefault(s => s.aggrType != eAggregationFunctions.GroupByItem && s.aggrType == eAggregationFunctions.InColumn && s.Alias == "Iso2");
 		var subReportsCount = reportInfo.Structure.SubReports.Count(sr => sr.Type == Report.SubReportType.DrillDown);
-
-		bool isValidIranProvinceIso2(object iso2)
-		{
-			if (iso2 == null || string.IsNullOrEmpty(iso2.ToString()))
-				return false;
-
-			return iso2.ToString().StartsWith("IR-");
-		}
 	}
 
 	var subReportsCount = @subReportsCount;
 	var reportKey = "@reportKey";
 
-	@foreach (var row in reportInfo.Rows)
-	{
-		var iso2 = row.Data[iso2Column != null ? iso2Column.ColumnTypeName : "Iso2"];
-		if (Model.Structure.ChartType == ChartType.IranMap)
-		{
-			if(!isValidIranProvinceIso2(iso2))
-				iso2 = "iran";
-		}
-		var rowIds = row.Data.GetString("Ids").Split(',')[0];
-		double colorValue = 0;
+	@* Process map data from server - with special handling for IranMap *@
+	<partial name="~/Views/Report/Helpers/_MapDataProcessing.cshtml" model="Model"/>
 
-		if (colorColumn != null)
-		{
-			colorValue = row.Data.GetDouble(colorColumn.ColumnTypeName);
-		}
-		
-		
-		var str = "mapData['" + iso2 + "']=" + colorValue + ";\n";
-		str += "mapInfo['" + iso2 + "']={};\n";
-		str += "mapInfo['" + iso2 + "']['ids']='" + rowIds + "';\n";
-		str += "mapInfo['" + iso2 + "']['tooltipValues']={};\n";
-		var columns = reportInfo.Structure.SelectedColumns.Where(s =>
-			//s.aggrType != eAggregationFunctions.InColumn &&
-			s.aggrType != eAggregationFunctions.GroupByItem &&
-			s.ColumnName != "Iso2" &&
-			s.Alias != "Iso2");
-		foreach (var colInfo in columns)
-		{
-			var value = ReportRenderer.GetCelValue(colInfo, row);
-			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
-			str += "mapInfo['" + iso2 + "']['tooltipValues']['" + colInfo.Alias + "'] = '" + val + "';";
-		}
-		@(new HtmlString(str))
-	}
-
-	//todo read mapMarkers from mapInfo
-
-	var iso2sWhichShouldBeMarkers = [
-		@if (Model.Structure.ChartType == ChartType.WorldMap)
-		{
-			<text>
-				{ markerType: 'satellite', iso2: '3ry', latLng: [-51, -130], name: 'ماهواره ثریا' },
-				{ markerType: 'satellite', iso2: '3is', latLng: [-30, -130], name: 'Inmarsat' },
-				{ markerType: 'country', iso2: 'VA', latLng: [41.90, 12.45], name: 'Vatican City' },
-				{ markerType: 'country', iso2: 'MC', latLng: [43.73, 7.41], name: 'Monaco' },
-				{ markerType: 'country', iso2: 'NR', latLng: [-0.52, 166.93], name: 'Nauru' },
-				{ markerType: 'country', iso2: 'TV', latLng: [-8.51, 179.21], name: 'Tuvalu' },
-				{ markerType: 'country', iso2: 'SM', latLng: [43.93, 12.46], name: 'San Marino' },
-				{ markerType: 'country', iso2: 'LI', latLng: [47.14, 9.52], name: 'Liechtenstein' },
-				{ markerType: 'country', iso2: 'MH', latLng: [7.11, 171.06], name: 'Marshall Islands' },
-				{ markerType: 'country', iso2: 'KN', latLng: [17.3, -62.73], name: 'Saint Kitts and Nevis' },
-				{ markerType: 'country', iso2: 'MV', latLng: [3.2, 73.22], name: 'Maldives' },
-				{ markerType: 'country', iso2: 'MT', latLng: [35.88, 14.5], name: 'Malta' },
-				{ markerType: 'country', iso2: 'GD', latLng: [12.05, -61.75], name: 'Grenada' },
-				{ markerType: 'country', iso2: 'VC', latLng: [13.16, -61.23], name: 'Saint Vincent and the Grenadines' },
-				{ markerType: 'country', iso2: 'BB', latLng: [13.16, -59.55], name: 'Barbados' },
-				{ markerType: 'country', iso2: 'AG', latLng: [17.11, -61.85], name: 'Antigua and Barbuda' },
-				{ markerType: 'country', iso2: 'SC', latLng: [-4.61, 55.45], name: 'Seychelles' },
-				{ markerType: 'country', iso2: 'PW', latLng: [7.35, 134.46], name: 'Palau' },
-				{ markerType: 'country', iso2: 'AD', latLng: [42.5, 1.51], name: 'Andorra' },
-				{ markerType: 'country', iso2: 'LC', latLng: [14.01, -60.98], name: 'Saint Lucia' },
-				{ markerType: 'country', iso2: 'FM', latLng: [6.91, 158.18], name: 'Federated States of Micronesia' },
-				{ markerType: 'country', iso2: 'SG', latLng: [1.3, 103.8], name: 'Singapore' },
-				{ markerType: 'country', iso2: 'KI', latLng: [1.46, 173.03], name: 'Kiribati' },
-				{ markerType: 'country', iso2: 'TO', latLng: [-21.13, -175.2], name: 'Tonga' },
-				{ markerType: 'country', iso2: 'DM', latLng: [15.3, -61.38], name: 'Dominica' },
-				{ markerType: 'country', iso2: 'MU', latLng: [-20.2, 57.5], name: 'Mauritius' },
-				{ markerType: 'country', iso2: 'BH', latLng: [26.02, 50.55], name: 'Bahrain' },
-				{ markerType: 'country', iso2: 'ST', latLng: [0.33, 6.73], name: 'São Tomé and Príncipe' }
-			</text>
-		}
-		@if (Model.Structure.ChartType == ChartType.IranMap)
-		{
-			<text>
-				{ markerType: 'iran', iso2: 'iran', latLng: [50, -10], name: 'تعیین نشده' },
-			</text>
-		}
-	];
-
+	@* Initialize map markers based on map type *@
+	<partial name="~/Views/Report/Helpers/_MapMarkers.cshtml" model="Model"/>
 
 	var mapMarkers = [];
 	var tableData = [];
@@ -480,6 +75,7 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 	var currentSortColumn = null;
 	var currentSortDirection = 'asc';
 
+	// Prepare markers
 	for (var i = 0; i < iso2sWhichShouldBeMarkers.length; i++) {
 		var t = iso2sWhichShouldBeMarkers[i];
 		mapMarkers[i] = {
@@ -490,7 +86,7 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		};
 	}
 
-	// Prepare table data
+	// Prepare table columns
 	@{
 		var tableColumns = reportInfo.Structure.SelectedColumns.Where(s =>
 			s.aggrType != eAggregationFunctions.GroupByItem &&
@@ -504,7 +100,7 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		}
 	];
 
-	// Build table data from mapInfo
+	// Build table data
 	for (var code in mapInfo) {
 		if (mapInfo.hasOwnProperty(code)) {
 			var info = mapInfo[code];
@@ -515,7 +111,6 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 					if (info.tooltipValues.hasOwnProperty(field)) {
 						var cleanValue = info.tooltipValues[field].replace(/<[^>]*>/g, '').trim();
 						row.data[field] = info.tooltipValues[field];
-						// Try to get the name from tooltip values (prefer fields with 'name', 'title', 'province', 'استان')
 						if (!nameFound && (field.toLowerCase().indexOf('name') >= 0 || 
 							field.toLowerCase().indexOf('title') >= 0 ||
 							field.toLowerCase().indexOf('province') >= 0 ||
@@ -526,7 +121,6 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 						}
 					}
 				}
-				// If no name found, use first non-empty value
 				if (!nameFound) {
 					for (var field in info.tooltipValues) {
 						if (info.tooltipValues.hasOwnProperty(field)) {
@@ -543,28 +137,19 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		}
 	}
 
-	// Function to filter table data
+	// Table functions
 	function filterTableData(searchText) {
 		if (!searchText || searchText.trim() === '') {
 			filteredTableData = tableData.slice();
 		} else {
 			searchText = searchText.toLowerCase();
 			filteredTableData = tableData.filter(function(row) {
-				// Search in region name
-				if (row.name.toLowerCase().indexOf(searchText) >= 0) {
-					return true;
-				}
-				// Search in region code
-				if (row.code.toLowerCase().indexOf(searchText) >= 0) {
-					return true;
-				}
-				// Search in data values
+				if (row.name.toLowerCase().indexOf(searchText) >= 0) return true;
+				if (row.code.toLowerCase().indexOf(searchText) >= 0) return true;
 				for (var field in row.data) {
 					if (row.data.hasOwnProperty(field)) {
 						var value = row.data[field].replace(/<[^>]*>/g, '').toLowerCase();
-						if (value.indexOf(searchText) >= 0) {
-							return true;
-						}
+						if (value.indexOf(searchText) >= 0) return true;
 					}
 				}
 				return false;
@@ -573,36 +158,24 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		updateTableDisplay();
 	}
 
-	// Function to sort table data
 	function sortTableData(columnIndex, direction) {
-		// Sort by data column
 		var colName = tableColumns[columnIndex].name;
 		filteredTableData.sort(function(a, b) {
 			var aVal = (a.data[colName] || '').replace(/<[^>]*>/g, '').toLowerCase();
 			var bVal = (b.data[colName] || '').replace(/<[^>]*>/g, '').toLowerCase();
-			
-			// Try to parse as number
 			var aNum = parseFloat(aVal);
 			var bNum = parseFloat(bVal);
 			if (!isNaN(aNum) && !isNaN(bNum)) {
 				return direction === 'asc' ? aNum - bNum : bNum - aNum;
 			}
-			
-			// String comparison
-			if (direction === 'asc') {
-				return aVal.localeCompare(bVal);
-			} else {
-				return bVal.localeCompare(aVal);
-			}
+			return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
 		});
 		updateTableDisplay();
 	}
 
-	// Function to update table display
 	function updateTableDisplay() {
 		var tbody = $('#map-table-body');
 		var stats = $('#map-table-stats');
-		
 		tbody.empty();
 		
 		if (filteredTableData.length === 0) {
@@ -611,7 +184,6 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			return;
 		}
 		
-		// Add rows
 		var selectedRowIndex = -1;
 		for (var i = 0; i < filteredTableData.length; i++) {
 			var row = filteredTableData[i];
@@ -620,18 +192,14 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 				tr.addClass('selected');
 				selectedRowIndex = i;
 			}
-			
-			// Data cells
 			for (var j = 0; j < tableColumns.length; j++) {
 				var colName = tableColumns[j].name;
 				var value = row.data[colName] || '-';
 				tr.append('<td>' + value + '</td>');
 			}
-			
 			tbody.append(tr);
 		}
 		
-		// Scroll to selected row if exists
 		if (selectedRowIndex >= 0) {
 			setTimeout(function() {
 				var selectedRow = tbody.find('tr.selected').first();
@@ -641,12 +209,10 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 					var containerScrollTop = tableContainer.scrollTop();
 					var containerHeight = tableContainer.height();
 					var rowHeight = selectedRow.outerHeight();
-					
 					var rowTop = rowPosition + containerScrollTop;
 					var rowBottom = rowTop + rowHeight;
 					var containerTop = containerScrollTop;
 					var containerBottom = containerTop + containerHeight;
-					
 					if (rowTop < containerTop || rowBottom > containerBottom) {
 						var targetScroll = rowPosition + containerScrollTop - (containerHeight / 2) + (rowHeight / 2);
 						tableContainer.scrollTop(Math.max(0, targetScroll));
@@ -655,19 +221,13 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			}, 100);
 		}
 		
-		// Add click handlers
 		tbody.find('tr').on('click', function(e) {
 			var code = $(this).attr('data-code');
-			var name = $(this).attr('data-name');
-			if (code) {
-				// Single click: select region
-				if (e.detail === 1) {
-					selectRegion(code);
-				}
+			if (code && e.detail === 1) {
+				selectRegion(code);
 			}
 		});
 		
-		// Add double-click handler for drilldown
 		tbody.find('tr').on('dblclick', function() {
 			var code = $(this).attr('data-code');
 			var name = $(this).attr('data-name');
@@ -676,22 +236,16 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			}
 		});
 		
-		// Update stats
 		stats.text(filteredTableData.length + ' مورد از ' + tableData.length);
 	}
 
-	// Function to render table
 	function renderTable() {
 		var headerRow = $('#map-table-header');
-		
 		headerRow.empty();
-		
 		if (tableData.length === 0) {
 			headerRow.append('<th>هیچ داده‌ای یافت نشد</th>');
 			return;
 		}
-		
-		// Add headers for data columns
 		for (var i = 0; i < tableColumns.length; i++) {
 			var colIndex = i;
 			var colHeader = $('<th>').addClass('sortable').text(tableColumns[i].name);
@@ -709,11 +263,7 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			}(colIndex));
 			headerRow.append(colHeader);
 		}
-		
-		// Initialize filtered data
 		filteredTableData = tableData.slice();
-		
-		// Initial sort by first column if available
 		if (tableColumns.length > 0) {
 			currentSortColumn = 0;
 			currentSortDirection = 'asc';
@@ -722,14 +272,11 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		} else {
 			updateTableDisplay();
 		}
-		
-		// Add search handler
 		$('#map-table-search-input').on('input', function() {
 			filterTableData($(this).val());
 		});
 	}
 
-	// Function to update sort headers
 	function updateSortHeaders() {
 		$('#map-table-header th').removeClass('asc desc');
 		if (currentSortColumn !== null) {
@@ -737,18 +284,41 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 			header.addClass(currentSortDirection);
 		}
 	}
+	
+	function toggleRightPanel() {
+		var panel = $('#map-right-panel');
+		var btn = $('#map-toggle-panel-btn');
+		var icon = $('#map-toggle-panel-icon');
+		var isIranMap = @((Model.Structure.ChartType == ChartType.IranMap).ToString().ToLower());
+		var tableName = isIranMap ? 'استان‌ها' : 'کشورها';
+		if (panel.hasClass('active')) {
+			panel.removeClass('active');
+			icon.text('▶');
+			btn.attr('title', 'نمایش جدول ' + tableName);
+		} else {
+			panel.addClass('active');
+			icon.text('◀');
+			btn.attr('title', 'مخفی کردن جدول ' + tableName);
+		}
+	}
+	
+	@if (Model.Structure.ChartType == ChartType.IranMap || Model.Structure.ChartType == ChartType.WorldMap)
+	{
+		<text>
+		$('#map-toggle-panel-btn').on('click', function() {
+			toggleRightPanel();
+		});
+		</text>
+	}
 
-	// Function to show region info panel
 	function showRegionInfo(code) {
 		if (!mapInfo[code]) {
-			$('#map-info-panel').hide();
+			$('#map-info-panel-top').removeClass('active');
 			return;
 		}
-		
 		var info = mapInfo[code];
-		var content = $('#map-info-content');
+		var content = $('#map-info-content-top');
 		content.empty();
-		
 		if (info.tooltipValues) {
 			for (var field in info.tooltipValues) {
 				if (info.tooltipValues.hasOwnProperty(field)) {
@@ -760,54 +330,36 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 				}
 			}
 		}
-		
-		$('#map-info-panel').show();
+		$('#map-info-panel-top').addClass('active');
 	}
 
-	// Function to select a region
 	function selectRegion(code) {
 		if (!code) return;
-		
 		selectedRegionCode = code;
-		
-		// Update table selection - scroll to selected row if not visible
 		$('#map-table-body tr').removeClass('selected');
 		var selectedRow = $('#map-table-body tr[data-code="' + code + '"]');
 		if (selectedRow.length > 0) {
 			selectedRow.addClass('selected');
-			// Scroll to selected row
 			setTimeout(function() {
 				var tableContainer = $('#map-data-table');
-				var tableBody = $('#map-table-body');
 				var rowPosition = selectedRow.position().top;
 				var containerScrollTop = tableContainer.scrollTop();
 				var containerHeight = tableContainer.height();
 				var rowHeight = selectedRow.outerHeight();
-				
-				// Check if row is visible
 				var rowTop = rowPosition + containerScrollTop;
 				var rowBottom = rowTop + rowHeight;
 				var containerTop = containerScrollTop;
 				var containerBottom = containerTop + containerHeight;
-				
 				if (rowTop < containerTop || rowBottom > containerBottom) {
-					// Scroll to center the row
 					var targetScroll = rowPosition + containerScrollTop - (containerHeight / 2) + (rowHeight / 2);
-					tableContainer.animate({
-						scrollTop: Math.max(0, targetScroll)
-					}, 300);
+					tableContainer.animate({ scrollTop: Math.max(0, targetScroll) }, 300);
 				}
 			}, 50);
 		}
-		
-		// Show info panel
 		showRegionInfo(code);
-		
-		// Highlight region on map
 		var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
 		if (mapInstance && mapInstance.regions && mapInstance.regions[code]) {
 			try {
-				// Reset all regions
 				for (var regCode in mapInstance.regions) {
 					if (mapInstance.regions.hasOwnProperty(regCode) && 
 						mapInstance.regions[regCode].element && 
@@ -815,13 +367,11 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 						mapInstance.regions[regCode].element.setSelected(false);
 					}
 				}
-				// Select current region
 				if (mapInstance.regions[code].element && 
 					typeof mapInstance.regions[code].element.setSelected === 'function') {
 					mapInstance.regions[code].element.setSelected(true);
 				}
 			} catch (e) {
-				// Ignore errors if setSelected is not available
 				console.log('Could not highlight region:', e);
 			}
 		}
@@ -829,50 +379,42 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 
 	var showTip = function(event, label, code) {
 		var countryName = $(label).text();
-		if (!code) {
-			code = countryName;
-		}
-
+		if (!code) code = countryName;
 		$(label).empty();
 		$(label).css('min-width', '200px');
 		if (isWorldMap) {
-			$(label)
-				.append($("<img/>",
-					{
-						'src': window.top.rootUrl +
-							'Content/common-assets-includes/flags/' +
-							countryNamesBasedOnIso2[code] +
-							'.svg',
-						'style':
-							'display: inline; height: 36px; height: 36px; margin-left: 4px; margin-top:-7px; margin-bottom:-6px;'
-					}));
+			$(label).append($("<img/>", {
+				'src': window.top.rootUrl + 'Content/common-assets-includes/flags/' + countryNamesBasedOnIso2[code] + '.svg',
+				'style': 'display: inline; height: 36px; height: 36px; margin-left: 4px; margin-top:-7px; margin-bottom:-6px;'
+			}));
 		}
-		$(label)
-			.append($("<span/>",
-				{
-					'html': countryName,
-					'style':
-						' font-size: 1.5em; margin-top:3px; float: ' +
-							(isWorldMap ? 'left' : 'right') +
-							'; color: #FFFADC'
-				}));
+		$(label).append($("<span/>", {
+			'html': countryName,
+			'style': ' font-size: 1.5em; margin-top:3px; float: ' + (isWorldMap ? 'left' : 'right') + '; color: #FFFADC'
+		}));
 		if (!!mapInfo[code]) {
 			var tooltipsObj = mapInfo[code]["tooltipValues"];
 			$(label).append($("<hr/>", { 'style': 'margin: 3px 0;' }));
 			for (var field in tooltipsObj) {
 				if (tooltipsObj.hasOwnProperty(field)) {
-					$(label)
-						.append($("<span/>",
-							{
-								'html': field +
-									' : ' +
-									'<span style="color: #f7eeb9;">' +
-									tooltipsObj[field] +
-									'</span>',
-								'class': 'teta-bidi'
-							}));
+					$(label).append($("<span/>", {
+						'html': field + ' : ' + '<span style="color: #f7eeb9;">' + tooltipsObj[field] + '</span>',
+						'class': 'teta-bidi'
+					}));
 					$(label).append($("<br/>"));
 				}
+			}
+			@if (Model.Structure.ChartType == ChartType.IranMap || Model.Structure.ChartType == ChartType.WorldMap)
+			{
+				<text>
+				if (subReportsCount > 0) {
+					$(label).append($("<hr/>", { 'style': 'margin: 5px 0 3px 0; border-color: rgba(255,255,255,0.3);' }));
+					$(label).append($("<span/>", {
+						'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده گزارش زیرمجموعه: دوبار کلیک کنید</span>',
+						'class': 'teta-bidi'
+					}));
+				}
+				</text>
 			}
 		}
 	};
@@ -881,68 +423,40 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		showTip(event, label, mapMarkers[code].code);
 	}
 
-	// Function to show drilldown panel
 	function showMapDrillDown(code, regionName) {
-		if (!code || !mapInfo[code] || subReportsCount === 0) {
-			return;
-		}
-		
-		// Show overlay and panel
+		if (!code || !mapInfo[code] || subReportsCount === 0) return;
 		$('#map-drilldown-overlay').addClass('active');
 		$('#map-drilldown-panel').addClass('active');
 		$('body').css('overflow', 'hidden');
-		
-		// Update title
 		$('#map-drilldown-title').text('گزارش زیرمجموعه: ' + (regionName || code));
-		
-		// Show loading
 		var content = $('#map-drilldown-content');
 		content.html('<div style="text-align: center; padding: 40px; color: #6c757d;"><div style="font-size: 48px; margin-bottom: 20px;">⏳</div><div>در حال بارگذاری...</div></div>');
-		
-		// Load sub report
 		var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
 		if (mapInstanceData && typeof openSubReportFrame2 !== 'undefined') {
-			// Create a container for the sub report
-			var iframeContainer = $('<div>').css({
-				width: '100%',
-				height: '100%',
-				border: 'none'
-			});
+			var iframeContainer = $('<div>').css({ width: '100%', height: '100%', border: 'none' });
 			content.html(iframeContainer);
-			
-			// Use the existing openSubReportFrame2 function but customize it
 			try {
-				openSubReportFrame2(subReportsCount,
-					mapInfo[code]['ids'],
-					reportKey,
-					window.top.reportInfo['@reportKey']["parentFilter"],
-					iframeContainer[0],
-					null);
+				openSubReportFrame2(subReportsCount, mapInfo[code]['ids'], reportKey, window.top.reportInfo['@reportKey']["parentFilter"], iframeContainer[0], null);
 			} catch (e) {
 				console.error('Error loading drilldown:', e);
 				content.html('<div style="text-align: center; padding: 40px; color: #dc3545;"><div style="font-size: 48px; margin-bottom: 20px;">❌</div><div>خطا در بارگذاری گزارش</div><div style="margin-top: 10px; font-size: 12px;">' + e.message + '</div></div>');
 			}
 		} else {
-			// Fallback: load via iframe
 			var reportUrl = window.top.rootUrl + 'Report/Index?configId=' + reportKey + '&ids=' + mapInfo[code]['ids'] + '&isDrillDown=true';
 			content.html('<iframe src="' + reportUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>');
 		}
 	}
 
-	// Function to close drilldown panel
 	function closeMapDrillDown() {
 		$('#map-drilldown-overlay').removeClass('active');
 		$('#map-drilldown-panel').removeClass('active');
 		$('body').css('overflow', '');
 		$('#map-drilldown-content').html('<div style="text-align: center; padding: 40px; color: #6c757d;"><div style="font-size: 48px; margin-bottom: 20px;">⏳</div><div>در حال بارگذاری...</div></div>');
 	}
-
-	// Make closeMapDrillDown available globally
 	window.closeMapDrillDown = closeMapDrillDown;
 
 	var showDrillDown = function(event, code, docObj) {
 		if (!code && event && event.target) {
-			// Try to find code from event target
 			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
 			if (mapInstance) {
 				for (var regCode in mapInstance.regions) {
@@ -958,10 +472,8 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 				}
 			}
 		}
-
 		if (code && mapInfo[code]) {
 			var regionName = code;
-			// Try to get region name from table data
 			for (var i = 0; i < tableData.length; i++) {
 				if (tableData[i].code === code) {
 					regionName = tableData[i].name;
@@ -976,136 +488,22 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 		showDrillDown(event, mapMarkers[code].code, this);
 	}
 
-	$('#world-map')
-		.vectorMap({
-			map: '@(Model.Structure.ChartType == ChartType.IranMap ? "iran_mill" : "world_mill")',
-			markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
-//            labels: {
-//                markers: {
-//                    render: function(index){
-//                        return mapMarkers[index].name;
-//                    },
-//                    offsets: function(index){
-//                        var offset = [0, 0];
-//
-//                        return [offset[0] - 7, offset[1] + 3];
-//                    }
-//                }
-//            },
-//            backgroundColor: "#DEEBF7",
-			backgroundColor: "#B5CEE5",
-			markerStyle: {
-				initial: {
-					fill: '#FFFFFF',
-					stroke: '#ffffff'
-//                    stroke: '#383f47'
-				}
-			},
-			regionStyle: {
-				initial: {
-					fill: '#ffffff',
-					"fill-opacity": 0.9,
-					stroke: '#8D8D8D',
-					"stroke-width": 1,
-					// "stroke-opacity": 0
-				}
-			},
+	@* Initialize map with appropriate map type *@
+	<partial name="~/Views/Report/Helpers/_MapInitialization.cshtml" model="Model"/>
 
-			//            onRegionLabelShow: function(event, label, code) {
-			onRegionTipShow: showTip,
-			onMarkerTipShow: showMarkerTip,
-			onRegionClick: @(Model.Structure.ChartType == ChartType.IranMap ? "function() {}" : "showDrillDown"),
-			onMarkerClick: showMarkerDrillDown,
-			onViewportChange: function(event, scale) {
-				var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
-
-				// loop through your array of markers
-				if (mapInstanceData && mapInstanceData.markers) {
-					for (var marker in mapInstanceData.markers) {
-						if (mapInstanceData.markers.hasOwnProperty(marker)) {
-							var radius = 1 * scale;
-							if (mapInstanceData.markers[marker].element && mapInstanceData.markers[marker].element.config) {
-								mapInstanceData.markers[marker].element.config.style.current.r = radius;
-							}
-						}
-					}
-				}
-			},
-			series: {
-				regions: [
-					{
-						values: mapData,
-						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
-						scale: ['#C8EEFF', '#0071A4'],
-						normalizeFunction: 'polynomial',
-						min: 0
-						//                        max: 100
-					}
-				],
-				markers: [
-					{
-						attribute: 'image',
-						scale: {
-//                            'country': '/img/icon-np-3.png',
-							'satellite': window.top.rootUrl + 'Content/common-assets-includes/flags/satellite.svg',
-							'iran': window.top.rootUrl + 'Content/common-assets-includes/flags/iran.svg'
-						},
-						values: mapMarkers.reduce(function(p, c, i) {
-								p[i] = c.markerType;
-								return p;
-							},
-							{})
-					}, {
-						attribute: 'fill',
-						values: mapMarkers.map(function(h) {
-							return mapData[h.code];
-						}),
-						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
-						scale: ['#C8EEFF', '#0071A4'],
-						normalizeFunction: 'polynomial',
-						min: 0
-					}, {
-						attribute: 'stroke',
-						values: mapMarkers.map(function(h) {
-							return mapData[h.code];
-						}),
-						// scale: ["#ffffff", "#FFF6CF", "#FFF0A8", "#FFE982", "#DBC352", "#BCA22C"],
-						scale: ['#C8EEFF', '#0071A4'],
-						normalizeFunction: 'polynomial',
-						min: 0
-					},
-					{
-						attribute: 'r',
-						values: mapMarkers.map(function(h) {
-							return 1;
-						})
-//                        ,
-//                        scale: ["#ffffff", "#990024"],
-//                        normalizeFunction: 'polynomial',
-//                        min: 0
-					}
-				]
-			}
-		});
-
-	// Initialize map responsiveness and render table after map is created
+	// Initialize map responsiveness
 	setTimeout(function() {
 		var mapContainer = $('#world-map .jvectormap-container');
 		var mapInstance = mapContainer.data('mapObject');
-		
 		if (mapInstance) {
-			// Make map responsive
 			if (typeof ResizeObserver !== 'undefined') {
 				var resizeObserver = new ResizeObserver(function(entries) {
 					if (mapInstance && mapInstance.updateSize) {
-						setTimeout(function() {
-							mapInstance.updateSize();
-						}, 100);
+						setTimeout(function() { mapInstance.updateSize(); }, 100);
 					}
 				});
 				resizeObserver.observe(mapContainer[0]);
 			} else {
-				// Fallback for browsers without ResizeObserver
 				var resizeTimer;
 				$(window).on('resize', function() {
 					clearTimeout(resizeTimer);
@@ -1117,83 +515,19 @@ else if (Model.Structure.ChartType == ChartType.IranMap)
 				});
 			}
 		}
-		
-		// Render table after map is ready
 		renderTable();
+		@if (Model.Structure.ChartType == ChartType.IranMap || Model.Structure.ChartType == ChartType.WorldMap)
+		{
+			<text>
+			if (tableData.length > 0) {
+				$('#map-right-panel').addClass('active');
+			}
+			</text>
+		}
 	}, 500);
 
-	@if (Model.Structure.ChartType == ChartType.IranMap)
-	{
-		<text>
-		// Add double-click drilldown for Iran map
-		setTimeout(function() {
-			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
-			if (mapInstance && subReportsCount > 0) {
-				$('#world-map').on('dblclick', 'path.jvectormap-region', function(e) {
-					e.stopPropagation();
-					e.preventDefault();
-					
-					// Find the region code by checking all regions
-					var clickedElement = this;
-					var foundCode = null;
-					
-					for (var code in mapInstance.regions) {
-						if (mapInstance.regions.hasOwnProperty(code)) {
-							var region = mapInstance.regions[code];
-							if (region.element && region.element.shape) {
-								var shapeNode = region.element.shape.node;
-								if (shapeNode === clickedElement || 
-									$(shapeNode).is(clickedElement) ||
-									$(shapeNode).find(clickedElement).length > 0 ||
-									$(clickedElement).closest('path').is(shapeNode)) {
-									foundCode = code;
-									break;
-								}
-							}
-						}
-					}
-					
-					if (foundCode && mapInfo[foundCode]) {
-						showDrillDown(e, foundCode, clickedElement);
-					}
-				});
-				
-				// Also handle single click for selection
-				$('#world-map').on('click', 'path.jvectormap-region', function(e) {
-					if (e.detail === 1) { // Single click only
-						var clickedElement = this;
-						var foundCode = null;
-						
-						for (var code in mapInstance.regions) {
-							if (mapInstance.regions.hasOwnProperty(code)) {
-								var region = mapInstance.regions[code];
-								if (region.element && region.element.shape) {
-									var shapeNode = region.element.shape.node;
-									if (shapeNode === clickedElement || 
-										$(shapeNode).is(clickedElement) ||
-										$(shapeNode).find(clickedElement).length > 0 ||
-										$(clickedElement).closest('path').is(shapeNode)) {
-										foundCode = code;
-										break;
-									}
-								}
-							}
-						}
-						
-						if (foundCode) {
-							selectRegion(foundCode);
-						}
-					}
-				});
-				
-				// Close drilldown when clicking overlay
-				$('#map-drilldown-overlay').on('click', function() {
-					closeMapDrillDown();
-				});
-			}
-		}, 500);
-		</text>
-	}
-
+	@* Click handlers for IranMap and WorldMap *@
+	<partial name="~/Views/Report/Helpers/_MapClickHandlers.cshtml" model="Model"/>
 </script>
+
 <partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>

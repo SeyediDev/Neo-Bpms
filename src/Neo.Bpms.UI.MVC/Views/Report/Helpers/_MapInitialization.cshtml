@@ -1,0 +1,46 @@
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@model ReportData
+
+@* Initialize vector map with appropriate map type *@
+$('#world-map').vectorMap({
+	map: '@(Model.Structure.ChartType == ChartType.IranMap ? "iran_mill" : "world_mill")',
+	markers: mapMarkers.map(function(h) { return { name: h.name, latLng: h.latLng } }),
+	backgroundColor: "#B5CEE5",
+	markerStyle: { initial: { fill: '#FFFFFF', stroke: '#ffffff' } },
+	regionStyle: { initial: { fill: '#ffffff', "fill-opacity": 0.9, stroke: '#8D8D8D', "stroke-width": 1 } },
+	onRegionTipShow: showTip,
+	onMarkerTipShow: showMarkerTip,
+	onRegionClick: function() {},
+	onMarkerClick: showMarkerDrillDown,
+	onViewportChange: function(event, scale) {
+		var mapInstanceData = $('#world-map .jvectormap-container').data('mapObject');
+		if (mapInstanceData && mapInstanceData.markers) {
+			for (var marker in mapInstanceData.markers) {
+				if (mapInstanceData.markers.hasOwnProperty(marker)) {
+					var radius = 1 * scale;
+					if (mapInstanceData.markers[marker].element && mapInstanceData.markers[marker].element.config) {
+						mapInstanceData.markers[marker].element.config.style.current.r = radius;
+					}
+				}
+			}
+		}
+	},
+	series: {
+		regions: [{ values: mapData, scale: ['#C8EEFF', '#0071A4'], normalizeFunction: 'polynomial', min: 0 }],
+		markers: [
+			{
+				attribute: 'image',
+				scale: {
+					'satellite': window.top.rootUrl + 'Content/common-assets-includes/flags/satellite.svg',
+					'iran': window.top.rootUrl + 'Content/common-assets-includes/flags/iran.svg'
+				},
+				values: mapMarkers.reduce(function(p, c, i) { p[i] = c.markerType; return p; }, {})
+			},
+			{ attribute: 'fill', values: mapMarkers.map(function(h) { return mapData[h.code]; }), scale: ['#C8EEFF', '#0071A4'], normalizeFunction: 'polynomial', min: 0 },
+			{ attribute: 'stroke', values: mapMarkers.map(function(h) { return mapData[h.code]; }), scale: ['#C8EEFF', '#0071A4'], normalizeFunction: 'polynomial', min: 0 },
+			{ attribute: 'r', values: mapMarkers.map(function(h) { return 1; }) }
+		]
+	}
+});
+

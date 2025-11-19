@@ -1,4 +1,4 @@
-var TetaMetrics = {
+var NeoMetrics = {
     defaultOptions: {
         iconClass: 'fa fa-info-circle',
         value: '',
@@ -6,6 +6,16 @@ var TetaMetrics = {
         backgroundColor: '#17a2b8',//If it got changed, ReportResult.cs -> GetDefaultPropertyValue should also change
         textsColor: '#ffffff'//If it got changed, ReportResult.cs -> GetDefaultPropertyValue should also change
     },
+    
+    // Convert English digits to Persian digits
+    toPersianDigits: function(str) {
+        if (!str) return str;
+        var persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return str.toString().replace(/\d/g, function(w) {
+            return persianDigits[parseInt(w)];
+        });
+    },
+    
     obtainOptions: function (userOptions) {
         return {
             iconClass: userOptions.iconClass == '' ? this.defaultOptions.iconClass : userOptions.iconClass,
@@ -22,6 +32,10 @@ var TetaMetrics = {
 
         var hasIcon = options.iconClass && options.iconClass.trim().length > 0;
         var hasTitle = options.title && options.title.trim().length > 0;
+        
+        // Convert value to Persian digits
+        var persianValue = this.toPersianDigits(options.value);
+        
         var widgetHtml = '<div class="neo-metric-box" style="background-color:' + options.backgroundColor + ';color:' + options.textsColor + ';">';
 
         if (hasIcon) {
@@ -29,7 +43,7 @@ var TetaMetrics = {
         }
 
         widgetHtml += '<div class="neo-metric-box__content">';
-        widgetHtml += '<span class="neo-metric-box__value">' + options.value + '</span>';
+        widgetHtml += '<span class="neo-metric-box__value">' + persianValue + '</span>';
 
         if (hasTitle) {
             widgetHtml += '<span class="neo-metric-box__title">' + options.title + '</span>';
@@ -40,3 +54,4 @@ var TetaMetrics = {
         $element.html(widgetHtml);
     }
 }
+

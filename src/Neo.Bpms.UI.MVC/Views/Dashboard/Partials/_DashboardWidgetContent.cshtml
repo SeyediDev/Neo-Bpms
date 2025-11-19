@@ -156,8 +156,29 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
         textsColor ??= "#ffffff";*/
 
         <div class="dashboard-metric-box shadow-sm" >
-            <span class="dashboard-metric-box__value">@metricValue</span>
+            <span class="dashboard-metric-box__value" data-original-value="@metricValue">@metricValue</span>
         </div>
+        <script>
+            // Convert English digits to Persian digits
+            (function() {
+                function toPersianDigits(str) {
+                    if (!str) return str;
+                    var persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                    return str.toString().replace(/\d/g, function(w) {
+                        return persianDigits[parseInt(w)];
+                    });
+                }
+                
+                // Convert all metric box values to Persian digits
+                document.addEventListener('DOMContentLoaded', function() {
+                    var metricValues = document.querySelectorAll('.dashboard-metric-box__value, .neo-metric-box__value');
+                    metricValues.forEach(function(element) {
+                        var originalValue = element.getAttribute('data-original-value') || element.textContent;
+                        element.textContent = toPersianDigits(originalValue);
+                    });
+                });
+            })();
+        </script>
         <style>
             .dashboard-metric-box {
                 display: flex;
@@ -171,12 +192,12 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
             }
 
             .dashboard-metric-box__value {
-                font-size: clamp(2.5rem, 4vw, 3.5rem);
+                font-size: clamp(1.5rem, 3vw, 2rem);
                 font-weight: 700;
-                line-height: 1;
+                line-height: 1.2;
                 font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
-                font-feature-settings: 'tnum' 1, 'lnum' 1;
-                font-variant-numeric: tabular-nums;
+                direction: rtl;
+                unicode-bidi: embed;
             }
         </style>
     }

@@ -901,13 +901,13 @@
 }
 
 .neo-metric-box__value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: var(--neo-dashboard-font-weight-bold);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-  font-variant-numeric: tabular-nums;
+  direction: rtl;
+  unicode-bidi: embed;
 }
 
 .neo-metric-box__title {
