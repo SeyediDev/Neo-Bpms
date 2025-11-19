@@ -300,11 +300,12 @@ new
         {
             <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
         }
+        @* Include ChartsJsBundle for dashboard chart widgets *@
+        <script src="@CommonBundles.ChartsJsBundle" asp-append-version="true"></script>
     }
 
         @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardScripts.cshtml", scriptModel)
-        <script src="~/Scripts/common-assets-includes/features/dashboard/Dashboard.js">
-        </script>
+        <script src="~/Scripts/common-assets-includes/features/dashboard/Dashboard.js"></script>
         <script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
         <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
         <script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
