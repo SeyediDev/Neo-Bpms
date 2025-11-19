@@ -68,12 +68,6 @@
 		display: block;
 	}
 	
-	.map-info-panel-top h4 {
-		margin: 0 0 10px 0;
-		color: #495057;
-		font-size: 16px;
-		font-weight: 600;
-	}
 	
 	.map-info-panel-top .info-item {
 		margin-bottom: 8px;
@@ -92,6 +86,38 @@
 	.map-info-panel-top .info-value {
 		color: #212529;
 		margin-right: 5px;
+	}
+	
+	.map-info-panel-top .info-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+	
+	.map-info-panel-top .info-header h4 {
+		margin: 0;
+	}
+	
+	.map-info-panel-top .info-close-btn {
+		background: transparent;
+		border: none;
+		color: #6c757d;
+		font-size: 20px;
+		cursor: pointer;
+		padding: 0;
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 4px;
+		transition: all 0.2s;
+	}
+	
+	.map-info-panel-top .info-close-btn:hover {
+		background: #e9ecef;
+		color: #495057;
 	}
 	
 	.map-info-panel-top .info-drilldown-btn {
@@ -402,7 +428,10 @@
 			<span id="map-toggle-panel-icon">◀</span> جدول استان‌ها
 		</button>
 		<div id="map-info-panel-top" class="map-info-panel-top">
-			<h4>اطلاعات استان انتخاب شده</h4>
+			<div class="info-header">
+				<h4>اطلاعات استان انتخاب شده</h4>
+				<button type="button" class="info-close-btn" id="map-info-close-btn" title="مخفی کردن">×</button>
+			</div>
 			<div id="map-info-content-top"></div>
 		</div>
 		<div id="world-map" class="world-map-container">
@@ -775,7 +804,7 @@
 			var drilldownBtn = $('<button>')
 				.attr('type', 'button')
 				.addClass('info-drilldown-btn')
-				.html('<span>📊</span> مشاهده گزارش زیرمجموعه')
+				.text('جزئیات')
 				.on('click', function(e) {
 					e.preventDefault();
 					e.stopPropagation();
@@ -855,7 +884,7 @@
 			if (subReportsCount > 0) {
 				$(label).append($("<hr/>", { 'style': 'margin: 5px 0 3px 0; border-color: rgba(255,255,255,0.3);' }));
 				$(label).append($("<span/>", {
-					'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده گزارش زیرمجموعه: کلیک کنید</span>',
+					'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده جزئیات: دکمه جزئیات را در باکس اطلاعات کلیک کنید</span>',
 					'class': 'teta-bidi'
 				}));
 			}
@@ -1083,10 +1112,17 @@
 	}, 500);
 
 	@* Click handlers for IranMap *@
+		// Handle close button for info panel
+		$('#map-info-close-btn').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			$('#map-info-panel-top').removeClass('active');
+		});
+		
 		setTimeout(function() {
 			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
 			if (mapInstance) {
-				// Handle single click for selection or drilldown
+				// Handle single click for selection
 				$('#world-map').on('click', 'path.jvectormap-region', function(e) {
 					var clickedElement = this;
 					var clickedCode = null;
@@ -1105,20 +1141,7 @@
 					}
 					if (clickedCode) {
 						clearTimeout(window.mapClickTimeout);
-						if (subReportsCount > 0 && mapInfo[clickedCode]) {
-							// اگر زیرگزارش وجود دارد، با یک کلیک drill-down فعال می‌شود
-							var regionName = clickedCode;
-							for (var i = 0; i < tableData.length; i++) {
-								if (tableData[i].code === clickedCode) {
-									regionName = tableData[i].name;
-									break;
-								}
-							}
-							showMapDrillDown(clickedCode, regionName);
-						} else {
-							// در غیر این صورت فقط انتخاب می‌شود
-							window.mapClickTimeout = setTimeout(function() { selectRegion(clickedCode); }, 300);
-						}
+						window.mapClickTimeout = setTimeout(function() { selectRegion(clickedCode); }, 300);
 					}
 				});
 				
