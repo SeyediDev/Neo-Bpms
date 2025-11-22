@@ -66,6 +66,7 @@ public static class DependencyInjection
         _ = services.AddScoped<DashboardDataRoutines>();
         _ = services.AddScoped<DashboardStructRoutines>();
         _ = services.AddScoped<ReportDataRoutines>();
+        _ = services.AddScoped<SlowQueryLogger>();
         _ = services.AddScoped<ControllerMethods>();
         _ = services.AddScoped<FormStructRoutines>();
         _ = services.AddScoped<IEnrichFieldsSbvr, EnrichFieldsSbvr>();

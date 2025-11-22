@@ -411,7 +411,23 @@ public enum eControlPropertyId
     [ValueType(PropertyValueType.String)]
     [ControlGroup(ControlGroup.Operation)]
     ConfirmMessage,
-    Category
+    Category,
+
+    /// <summary>
+    /// Timeout برای پرس‌وجوهای ویجت در داشبورد (به میلی‌ثانیه)
+    /// </summary>
+    [Title("Timeout ویجت (میلی‌ثانیه)")]
+    [ValueType(PropertyValueType.Int)]
+    [ControlGroup(ControlGroup.None)]
+    WidgetTimeoutMs = 600001,
+
+    /// <summary>
+    /// Threshold برای لاگ‌گیری پرس‌وجوهای کند (به میلی‌ثانیه)
+    /// </summary>
+    [Title("Threshold لاگ پرس‌وجوهای کند (میلی‌ثانیه)")]
+    [ValueType(PropertyValueType.Int)]
+    [ControlGroup(ControlGroup.None)]
+    SlowQueryThresholdMs = 600002
 }
 public enum eControlPropertyTarget
 {

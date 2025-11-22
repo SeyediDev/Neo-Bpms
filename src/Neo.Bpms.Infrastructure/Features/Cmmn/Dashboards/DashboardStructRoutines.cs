@@ -34,7 +34,7 @@ public class DashboardStructRoutines(
             await dashboardDataRoutines.GetDashboardData(result, config,
                 parentReportConfig, subReport,
                 parentReportIds, parentFilters,
-                culture, forPrint, user, reportConfigBackupRestore);
+                culture, forPrint, user, reportConfigBackupRestore, cancellationToken);
         }
 
         FormComboData.SetCombosData(config.Dashboard, result.Structure, culture, null, lp);

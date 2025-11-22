@@ -47,6 +47,7 @@ public class ConfiguredDashboard : ConfiguredItem
         public string ReportConfigId { get; set; }
         public List<ConfigWidgetProperty> Properties { get; set; }
         public string Icon { get; set; }
+        public long Threshold { get; set; }
 
         public string GetPropertyValue(eControlPropertyId prop)
         {

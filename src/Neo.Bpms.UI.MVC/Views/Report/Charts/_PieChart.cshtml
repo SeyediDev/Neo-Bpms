@@ -14,6 +14,9 @@
 <script type="text/javascript">
 	$(document)
 		.ready(function() {
+			// Persian font family - Vazir or fallback to system fonts
+			var persianFont = "'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif";
+			
 			var colors = Highcharts.getOptions().colors,
 				categories = @hr.GetCategories(),
 				data = @hr.GetSeries(),
@@ -35,21 +38,33 @@
 					},
 					chart: {
 						renderTo: "container_@(idx)",
-						type: 'pie'
+						type: 'pie',
+						style: {
+							fontFamily: persianFont
+						}
 					},
 					title: {
-						text: '@(showTitle ? chartTitle : "")'
+						text: '@(showTitle ? chartTitle : "")',
+						style: {
+							fontFamily: persianFont
+						}
 					},
-					ooltip: {
+					tooltip: {
 						formatter: function() {
 							var tooltipsObj = window.top.reportsData['@idx'][parseInt(this.point.index)][
 								"tooltipValues"][0];
 							return tooltipFormatter(tooltipsObj);
 						},
-						useHTML: true
+						useHTML: true,
+						style: {
+							fontFamily: persianFont
+						}
 					},
 					legend: {
-						enabled: false
+						enabled: false,
+						itemStyle: {
+							fontFamily: persianFont
+						}
 					},
 					series: [
 						{
@@ -57,6 +72,9 @@
 							data: browserData,
 							useHTML: true,
 							dataLabels: {
+								style: {
+									fontFamily: persianFont
+								},
 								formatter: function() {
 									return this.point.name;
 								}

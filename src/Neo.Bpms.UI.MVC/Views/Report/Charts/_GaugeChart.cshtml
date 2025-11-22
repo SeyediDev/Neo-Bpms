@@ -95,6 +95,9 @@
 
 
 	$(function() {
+		// Persian font family - Vazir or fallback to system fonts
+		var persianFont = "'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif";
+		
 		Highcharts.chart("container_@(idx)",
 			{
 				credits: {
@@ -105,10 +108,16 @@
 					plotBackgroundColor: null,
 					plotBackgroundImage: null,
 					plotBorderWidth: 0,
-					plotShadow: false
+					plotShadow: false,
+					style: {
+						fontFamily: persianFont
+					}
 				},
 				title: {
-					text: '@(showTitle ? chartTitle : "")'
+					text: '@(showTitle ? chartTitle : "")',
+					style: {
+						fontFamily: persianFont
+					}
 				},
 				pane: {
 					startAngle: -150,
@@ -150,7 +159,10 @@
 								this.point.colorIndex)];
 						return tooltipFormatter(tooltipsObj);
 					},
-					useHTML: true
+					useHTML: true,
+					style: {
+						fontFamily: persianFont
+					}
 				},
 				yAxis: {
 					min: gaugeInfo.range.from,
@@ -167,17 +179,28 @@
 					tickColor: '#666',
 					labels: {
 						step: 2,
-						rotation: 'auto'
+						rotation: 'auto',
+						style: {
+							fontFamily: persianFont
+						}
 					},
 					title: {
-						text: gaugeInfo.unit
+						text: gaugeInfo.unit,
+						style: {
+							fontFamily: persianFont
+						}
 					},
 					plotBands: gaugeInfo.levels
 				},
 				series: [
 					{
 						name: gaugeInfo.categoryName,
-						data: gaugeInfo.data
+						data: gaugeInfo.data,
+						dataLabels: {
+							style: {
+								fontFamily: persianFont
+							}
+						}
 					}
 				]
 			});

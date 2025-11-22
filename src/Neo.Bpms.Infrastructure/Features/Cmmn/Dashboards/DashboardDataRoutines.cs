@@ -2,21 +2,26 @@
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
+using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
+using Microsoft.Extensions.Configuration;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
-public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines)
+public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines, 
+    SlowQueryLogger slowQueryLogger, IConfiguration configuration)
 {
     internal async Task GetDashboardData(
         DashboardData dashboardData, ConfiguredDashboard config,
         ConfiguredReport parentReportConfig, ConfiguredReport.ConfiguredSubReport subReport,
         string parentReportIds, ElasticObject parentFilters,
-        string culture, bool forPrint, IdentityUser user, ReportConfigBackupRestore reportConfigBackupRestore)
+        string culture, bool forPrint, IdentityUser user, ReportConfigBackupRestore reportConfigBackupRestore,
+        CancellationToken cancellationToken = default)
     {
         Dashboard dashboard = config.Dashboard;
         IEnumerable<ConfiguredDashboard.ConfigWidget> widgets = config.Widgets.Where(w => !string.IsNullOrEmpty(w.ReportConfigId));
         SetFilterValuesWithParentDataAndGetIds(parentFilters, dashboardData);
         List<object> parentReportIdList = parentReportIds != null ? [.. parentReportIds.Split(',')] : null;
+        
         foreach (ConfiguredDashboard.ConfigWidget widget in widgets)
         {
             ConfiguredDashboard.ConfigDiv div = GetWidgetDiv(config.Divs, widget);
@@ -32,11 +37,94 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines)
             ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => rd.Structure.ConfigId == reportConfig.ConfigId);
             if (reportData != null)
                 continue;
-            reportData = await reportDataRoutines.GetReportData(
-                reportConfig, true, dashboardData.Structure.FilterValues, 1, null,
-                parentReportConfig, subReport, parentReportIdList, culture, forPrint, user, maxRecord);
-            reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
-            dashboardData.ReportsData.Add(reportData);
+
+            // خواندن timeout از widget properties (پیش‌فرض: 30 ثانیه)
+            int widgetTimeoutMs = GetWidgetTimeoutMs(widget);
+            int slowQueryThresholdMs = GetWidgetSlowQueryThresholdMs(widget);
+
+            // اجرای پرس‌وجو با timeout
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            CancellationTokenSource timeoutCts = null;
+            try
+            {
+                timeoutCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(widgetTimeoutMs));
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+                
+                reportData = await reportDataRoutines.GetReportData(
+                    reportConfig, true, dashboardData.Structure.FilterValues, 1, null,
+                    parentReportConfig, subReport, parentReportIdList, culture, forPrint, user, maxRecord,
+                    cancellationToken: linkedCts.Token);
+                
+                stopwatch.Stop();
+                var elapsedMs = stopwatch.ElapsedMilliseconds;
+                
+                // لاگ کردن پرس‌وجوهای کند
+                if (reportData.QueryInfo != null && elapsedMs >= slowQueryThresholdMs)
+                {
+                    // جمع‌آوری متن پرس‌وجوها از QueryInfo
+                    var queryTexts = reportData.QueryInfo.GetQueries().ToList();
+                    
+                    if (queryTexts.Count > 0)
+                    {
+                        var queryText = string.Join("\n", queryTexts);
+                        slowQueryLogger.LogSlowQuery(
+                            widget.Id,
+                            reportConfig.ConfigId,
+                            reportConfig.Name ?? report.Name,
+                            queryText,
+                            elapsedMs,
+                            slowQueryThresholdMs,
+                            user?.Id,
+                            user?.UserName);
+                    }
+                }
+                
+                reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+                dashboardData.ReportsData.Add(reportData);
+            }
+            catch (OperationCanceledException) when (timeoutCts?.Token.IsCancellationRequested == true)
+            {
+                stopwatch.Stop();
+                
+                // لاگ کردن timeout
+                slowQueryLogger.LogQueryTimeout(
+                    widget.Id,
+                    reportConfig.ConfigId,
+                    reportConfig.Name ?? report.Name,
+                    widgetTimeoutMs,
+                    user?.Id,
+                    user?.UserName);
+                
+                // ایجاد ReportData با خطای timeout
+                reportData = new ReportData(reportConfig, null, dashboardData.Structure.FilterValues, false)
+                {
+                    Structure = new ReportStructure()
+                };
+                reportData.Errors.AddError(
+                    $"پرس‌وجو به دلیل طولانی شدن زمان اجرا (بیش از {widgetTimeoutMs / 1000} ثانیه) متوقف شد.",
+                    reportConfig.ConfigId,
+                    "TIMEOUT",
+                    $"Widget: {widget.Id}, Report: {reportConfig.Name ?? report.Name}");
+                reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+                dashboardData.ReportsData.Add(reportData);
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                
+                // ایجاد ReportData با خطا
+                reportData = new ReportData(reportConfig, null, dashboardData.Structure.FilterValues, false)
+                {
+                    Structure = new ReportStructure()
+                };
+                reportData.Errors.AddError(
+                    $"خطا در اجرای پرس‌وجو: {ex.Message}",
+                    reportConfig.ConfigId,
+                    "ERROR",
+                    ex.ToString());
+                reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+                dashboardData.ReportsData.Add(reportData);
+            }
         }
 
         dashboardData.Structure.Name = string.IsNullOrEmpty(config.Name) ? dashboard.Name : config.Name;
@@ -83,5 +171,43 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines)
         if (maxRecord <= 0)
             maxRecord = viewType == ReportViewType.Chart ? 15 : 5;
         return maxRecord;
+    }
+
+    /// <summary>
+    /// دریافت timeout ویجت از properties (پیش‌فرض: 30000 میلی‌ثانیه)
+    /// </summary>
+    private int GetWidgetTimeoutMs(ConfiguredDashboard.ConfigWidget widget)
+    {
+        // خواندن از widget property
+        var timeout = widget.GetPropertyValueInt(eControlPropertyId.WidgetTimeoutMs);
+        if (timeout > 0)
+            return timeout;
+
+        // خواندن از appsettings
+        var appSettingsTimeout = configuration.GetValue<int>("Dashboard:WidgetTimeoutMs", 0);
+        if (appSettingsTimeout > 0)
+            return appSettingsTimeout;
+
+        // پیش‌فرض
+        return 30000; // 30 ثانیه
+    }
+
+    /// <summary>
+    /// دریافت threshold برای لاگ‌گیری پرس‌وجوهای کند (پیش‌فرض: 5000 میلی‌ثانیه)
+    /// </summary>
+    private int GetWidgetSlowQueryThresholdMs(ConfiguredDashboard.ConfigWidget widget)
+    {
+        // خواندن از widget property
+        var threshold = widget.GetPropertyValueInt(eControlPropertyId.SlowQueryThresholdMs);
+        if (threshold > 0)
+            return threshold;
+
+        // خواندن از appsettings
+        var appSettingsThreshold = configuration.GetValue<int>("Dashboard:SlowQueryThresholdMs", 0);
+        if (appSettingsThreshold > 0)
+            return appSettingsThreshold;
+
+        // پیش‌فرض
+        return 5000; // 5 ثانیه
     }
 }

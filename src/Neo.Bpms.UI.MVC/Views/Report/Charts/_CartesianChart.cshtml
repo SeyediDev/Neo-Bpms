@@ -290,6 +290,9 @@
 	}
 
 	(function() {
+		// Persian font family - Vazir or fallback to system fonts
+		var persianFont = "'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif";
+		
 		var autoDataLabels = dataLabelsEnabled || hasMultipleAggregationSeries;
 		var container_chartCorrectiveAction = new Highcharts.Chart({
 			credits: {
@@ -298,10 +301,16 @@
 			chart: {
 				renderTo: "container_@(idx)",
 				type: '@chartType',
-				marginBottom: 150
+				marginBottom: 150,
+				style: {
+					fontFamily: persianFont
+				}
 			},
 			title: {
-				text: '@(showTitle ? chartTitle : "")'
+				text: '@(showTitle ? chartTitle : "")',
+				style: {
+					fontFamily: persianFont
+				}
 			},
 			xAxis: {
 				categories: chartCategories,
@@ -309,17 +318,26 @@
 					rotation: rotateVal,
 					align: '',
 					direction: 'rtl',
-					useHTML: true
+					useHTML: true,
+					style: {
+						fontFamily: persianFont
+					}
 				}
 			},
 			legend: {
 				enabled: hasMultipleAggregationSeries,
 				layout: 'horizontal',
 				align: 'center',
-				verticalAlign: 'bottom'
+				verticalAlign: 'bottom',
+				itemStyle: {
+					fontFamily: persianFont
+				}
 			},
 			tooltip: {
 				shared: hasMultipleAggregationSeries && !isMatrixChart,
+				style: {
+					fontFamily: persianFont
+				},
 				formatter: function() {
 					var matrixTooltip = resolveMatrixTooltip(this);
 					if (matrixTooltip) {
@@ -353,12 +371,28 @@
 				labels: {
 					formatter: function() {
 						return window.TimeSpanManager.toDisplayText(this.value, { displayMilliseconds: false });
+					},
+					style: {
+						fontFamily: persianFont
+					}
+				},
+					</text>
+				}
+				@if (!hr.YAxisIsTimespan)
+				{
+					<text>
+				labels: {
+					style: {
+						fontFamily: persianFont
 					}
 				},
 					</text>
 				}
 				title: {
-					text: @hr.GetYAxisName()
+					text: @hr.GetYAxisName(),
+					style: {
+						fontFamily: persianFont
+					}
 				}
 			},
 			colors: ['#6366f1', '#fe6a35', '#eeca34', '#06aed4', '#2b72fb' ,'#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
@@ -372,6 +406,9 @@
 					},
 					dataLabels: {
 						enabled: autoDataLabels,
+						style: {
+							fontFamily: persianFont
+						},
 						formatter: function() {
 							if (!autoDataLabels) {
 								return null;
