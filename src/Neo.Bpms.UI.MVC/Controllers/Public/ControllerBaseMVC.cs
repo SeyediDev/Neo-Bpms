@@ -85,6 +85,10 @@ public class ControllerBaseMVC : ControllerBaseInjection
     {
         ViewBag.PagePackId = value;
     }
+    protected void SetPagePackId(Form form)
+    {
+        SetPagePackId(form.PagePackId + ";" + form.IndexPagePackId);
+    }
 
     protected void SetInIframe(bool value = true)
     {

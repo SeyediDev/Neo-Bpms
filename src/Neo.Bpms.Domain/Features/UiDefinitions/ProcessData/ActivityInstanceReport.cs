@@ -597,5 +597,27 @@ public partial class ActivityInstanceRecordDefinitions
                 Count(null, "کارهای ایجاد شده امروز");
             }
         }
+
+        /// <summary>
+        /// نمایش تعداد کارهای تکمیل شده به صورت Gauge
+        /// این ویجت برای نمایش تعداد کارهای بسته شده مناسب است
+        /// می‌توانید در تنظیمات گزارش، Range (مثلاً 0-100) و Levels (سطوح رنگی) را تنظیم کنید
+        /// </summary>
+        public class CompletedActivitiesGauge() : AbstractChartConfig(ChartType.Gauge)
+        {
+            protected override string Name => "تعداد کارهای تکمیل شده (Gauge)";
+
+            protected override string WhereCondition => $"{nameof(ActivityInstanceRecord.Closed)} == true";
+
+            protected override void DefineGroupBy()
+            {
+                // بدون گروه‌بندی - نمایش یک مقدار کلی
+            }
+
+            protected override void DefineColumns()
+            {
+                Count(null, "کارهای تکمیل شده");
+            }
+        }
     }
 }

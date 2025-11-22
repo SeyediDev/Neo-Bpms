@@ -216,9 +216,4 @@ public partial class FormController
         SetInIframe(inIframe);
         return View("~/Views/Error/Error.cshtml", new FormErrorViewModel { ErrorMessage = error });
     }
-
-    private void SetPagePackId(Form form)
-    {
-        SetPagePackId(form.PagePackId + ";" + form.IndexPagePackId);
-    }
 }

@@ -40,7 +40,7 @@
     //new Mmenu(document.querySelector("#menu2"));
     document.addEventListener(
         "DOMContentLoaded", () => {
-            new Mmenu( "#menu2", {
+            var menuInstance = new Mmenu( "#menu2", {
                 "navbar":
                 {
                     "title": "پلتفرم باشگاه مشتریان"
@@ -69,6 +69,106 @@
                     }
                 ]
             });
+            
+            // تابع برای تنظیم آیتم selected در منو
+            function setSelectedMenuItem() {
+                // ابتدا از کلاس "Selected" که در HTML وجود دارد استفاده می‌کنیم
+                var selectedItems = document.querySelectorAll('#menu2 li.Selected');
+                
+                if (selectedItems.length > 0) {
+                    // اگر آیتم selected پیدا شد، آن را به Mmenu نشان بده
+                    for (var i = 0; i < selectedItems.length; i++) {
+                        var item = selectedItems[i];
+                        var link = item.querySelector('a');
+                        if (link) {
+                            // تبدیل کلاس "Selected" به کلاس مورد نیاز Mmenu
+                            item.classList.add('mm-listitem--selected');
+                            
+                            // باز کردن پنل والد اگر وجود دارد
+                            var parentPanel = item.closest('.mm-panel');
+                            if (parentPanel) {
+                                try {
+                                    menuInstance.openPanel(parentPanel);
+                                } catch(e) {
+                                    // اگر باز کردن پنل با خطا مواجه شد، نادیده بگیر
+                                }
+                            }
+                        }
+                    }
+                    return; // اگر selected پیدا شد، دیگر نیازی به چک کردن URL نیست
+                }
+                
+                // اگر کلاس Selected پیدا نشد، از URL استفاده کن
+                var currentUrl = window.location.pathname.toLowerCase();
+                currentUrl = currentUrl.split('?')[0].split('#')[0];
+                
+                // نرمال‌سازی URL: حذف slash اول و آخر
+                var normalizeUrl = function(url) {
+                    url = url.toLowerCase().trim();
+                    while (url.startsWith('/')) url = url.substring(1);
+                    while (url.endsWith('/') && url.length > 1) url = url.substring(0, url.length - 1);
+                    return url;
+                };
+                
+                var normalizedCurrentUrl = normalizeUrl(currentUrl);
+                
+                // پیدا کردن لینک منو که با URL فعلی مطابقت دارد
+                var menuLinks = document.querySelectorAll('#menu2 a[href]');
+                
+                for (var i = 0; i < menuLinks.length; i++) {
+                    var link = menuLinks[i];
+                    var href = link.getAttribute('href');
+                    if (href && href !== '#') {
+                        // حذف query string و hash از href
+                        var cleanHref = href.split('?')[0].split('#')[0];
+                        var normalizedHref = normalizeUrl(cleanHref);
+                        
+                        // مقایسه URL - چک کردن تطابق کامل یا partial
+                        if (normalizedCurrentUrl === normalizedHref || 
+                            normalizedCurrentUrl === normalizedHref + '/scoringrules' ||
+                            normalizedCurrentUrl === normalizedHref + '/scoringrules/index' ||
+                            normalizedCurrentUrl.endsWith('/' + normalizedHref) ||
+                            normalizedHref.endsWith('/' + normalizedCurrentUrl) ||
+                            (normalizedCurrentUrl.includes('scoringrules') && normalizedHref.includes('scoringrules'))) {
+                            
+                            var listItem = link.closest('li');
+                            if (listItem) {
+                                listItem.classList.add('mm-listitem--selected');
+                                
+                                // باز کردن پنل والد اگر وجود دارد
+                                var parentPanel = listItem.closest('.mm-panel');
+                                if (parentPanel && parentPanel !== listItem) {
+                                    try {
+                                        menuInstance.openPanel(parentPanel);
+                                    } catch(e) {
+                                        // اگر باز کردن پنل با خطا مواجه شد، نادیده بگیر
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // تنظیم منو برای تشخیص صفحه فعلی بعد از initialize شدن
+            // استفاده از setTimeout برای اطمینان از اینکه منو کاملاً initialize شده
+            setTimeout(setSelectedMenuItem, 300);
+            
+            // همچنین بعد از باز شدن منو هم دوباره چک کن
+            if (menuInstance && typeof menuInstance.bind === 'function') {
+                menuInstance.bind('open:finish', setSelectedMenuItem);
+            }
+            
+            // اگر منو لاک شده است، بعد از چند ثانیه دوباره تلاش کن
+            // این برای حل مشکل "لاک شدن" منو بعد از لود صفحه است
+            setTimeout(function() {
+                // اگر هنوز هیچ آیتمی selected نشده است و URL شامل ScoringRules است
+                var hasSelected = document.querySelectorAll('#menu2 li.mm-listitem--selected').length > 0;
+                if (!hasSelected && window.location.pathname.toLowerCase().includes('scoringrules')) {
+                    setSelectedMenuItem();
+                }
+            }, 1000);
         }
     );
 

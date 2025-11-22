@@ -55,13 +55,16 @@
 	}
 	
 	.map-info-panel-top {
-		width: 100%;
-		max-width: 1200px;
+		width: calc(100% - 220px);
+		max-width: calc(1200px - 220px);
+		margin-left: 200px;
 		background: #f8f9fa;
 		border: 1px solid #dee2e6;
 		border-radius: 4px;
 		padding: 15px;
 		display: none;
+		position: relative;
+		z-index: 100;
 	}
 	
 	.map-info-panel-top.active {
@@ -113,6 +116,8 @@
 		justify-content: center;
 		border-radius: 4px;
 		transition: all 0.2s;
+		position: relative;
+		z-index: 101;
 	}
 	
 	.map-info-panel-top .info-close-btn:hover {
@@ -792,26 +797,28 @@
 			}
 		}
 		
-		// Add drilldown button if subReports exist
-		if (subReportsCount > 0) {
-			var regionName = code;
-			for (var i = 0; i < tableData.length; i++) {
-				if (tableData[i].code === code) {
-					regionName = tableData[i].name;
-					break;
-				}
+		// Add drilldown button (always visible)
+		var regionName = code;
+		for (var i = 0; i < tableData.length; i++) {
+			if (tableData[i].code === code) {
+				regionName = tableData[i].name;
+				break;
 			}
-			var drilldownBtn = $('<button>')
-				.attr('type', 'button')
-				.addClass('info-drilldown-btn')
-				.text('جزئیات')
-				.on('click', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					showMapDrillDown(code, regionName);
-				});
-			content.append(drilldownBtn);
 		}
+		var drilldownBtn = $('<button>')
+			.attr('type', 'button')
+			.addClass('info-drilldown-btn')
+			.text('جزئیات')
+			.on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				if (subReportsCount > 0) {
+					showMapDrillDown(code, regionName);
+				} else {
+					alert('گزارش زیرمجموعه‌ای تعریف نشده است.');
+				}
+			});
+		content.append(drilldownBtn);
 		
 		$('#map-info-panel-top').addClass('active');
 	}
@@ -884,13 +891,6 @@
 					}));
 					$(label).append($("<br/>"));
 				}
-			}
-			if (subReportsCount > 0) {
-				$(label).append($("<hr/>", { 'style': 'margin: 5px 0 3px 0; border-color: rgba(255,255,255,0.3);' }));
-				$(label).append($("<span/>", {
-					'html': '<span style="color: #f7eeb9; font-size: 0.9em; font-style: italic;">💡 برای مشاهده جزئیات: دکمه جزئیات را در باکس اطلاعات کلیک کنید</span>',
-					'class': 'teta-bidi'
-				}));
 			}
 		}
 	};
@@ -1039,14 +1039,16 @@
 	}, 500);
 
 	@* Click handlers for WorldMap *@
+	$(document).ready(function() {
 		// Handle close button for info panel
-		$('#map-info-close-btn').on('click', function(e) {
+		$(document).on('click', '#map-info-close-btn', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 			$('#map-info-panel-top').removeClass('active');
 		});
-		
-		setTimeout(function() {
+	});
+	
+	setTimeout(function() {
 			var mapInstance = $('#world-map .jvectormap-container').data('mapObject');
 			if (mapInstance) {
 				// Handle single click for selection

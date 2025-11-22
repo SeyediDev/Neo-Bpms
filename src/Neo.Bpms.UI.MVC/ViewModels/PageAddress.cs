@@ -11,6 +11,7 @@ public class PageAddress
         Report,
         Dashboard
     }
+    public PageAddress() { }
     public PageAddress(CommonFormStructure structure)
     {
         NamespaceId = structure.NamespaceId;

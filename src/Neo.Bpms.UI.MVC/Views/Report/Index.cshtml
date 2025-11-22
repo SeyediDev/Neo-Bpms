@@ -27,6 +27,74 @@
 
 @model ReportData;
 
+@* Critical CSS to prevent FOUC - Must be at the very top *@
+<style>
+	/* Hide icons and tabs initially - Critical inline styles */
+	/* Use display: none to prevent rendering until styles are loaded */
+	.icons-tables,
+	.top-bar-anchor-icon,
+	.sideNavi-top-bar .icons-tables,
+	.side-navi-body .icons-tables {
+		display: none !important;
+	}
+	
+	/* Show icons and tabs after page is ready with critical styles */
+	body.page-ready .icons-tables {
+		display: inline-flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 36px !important;
+		height: 36px !important;
+		border-radius: 8px !important;
+		opacity: 1 !important;
+		transition: all 0.2s ease !important;
+		margin: 0 4px !important;
+	}
+	
+	body.page-ready .top-bar-anchor-icon,
+	body.page-ready .sideNavi-top-bar .icons-tables,
+	body.page-ready .side-navi-body .icons-tables {
+		display: inline-block !important;
+		opacity: 1 !important;
+		transition: opacity 0.2s ease-in;
+		/* Critical styles to prevent unstyled appearance */
+		color: #1869AA;
+		cursor: pointer;
+		text-decoration: none !important;
+		vertical-align: middle;
+	}
+	
+	/* Special handling for SVG icons */
+	body.page-ready .icons-tables svg {
+		width: 18px !important;
+		height: 18px !important;
+		display: block !important;
+	}
+	
+	body.page-ready .top-bar-anchor-icon svg {
+		display: inline-block !important;
+		width: 16px;
+		height: 16px;
+		vertical-align: middle;
+	}
+	
+	/* Text colors for different icon types */
+	body.page-ready .icons-tables.text-success,
+	body.page-ready .top-bar-anchor-icon.text-success {
+		color: #28a745 !important;
+	}
+	
+	body.page-ready .icons-tables.text-primary,
+	body.page-ready .top-bar-anchor-icon.text-primary {
+		color: #1869AA !important;
+	}
+	
+	body.page-ready .icons-tables.text-danger,
+	body.page-ready .top-bar-anchor-icon.text-danger {
+		color: #dc3545 !important;
+	}
+</style>
+
 @{
     var structure = Model?.Structure;
     var canDesign = ViewBag.CanDesign ?? false;
@@ -617,6 +685,64 @@ else
                 
             });
     });
+    
+    // Show icons and tabs after page is fully loaded to prevent FOUC
+    (function() {
+        var iconsShown = false;
+        
+        function showIconsAndTabs() {
+            if (iconsShown) return;
+            iconsShown = true;
+            document.body.classList.add('page-ready');
+        }
+        
+        function checkStylesheetsLoaded() {
+            var stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
+            var allLoaded = true;
+            
+            for (var i = 0; i < stylesheets.length; i++) {
+                var sheet = stylesheets[i];
+                // Check if stylesheet is loaded
+                try {
+                    if (sheet.sheet === null && sheet.href) {
+                        allLoaded = false;
+                        break;
+                    }
+                } catch (e) {
+                    // Cross-origin stylesheet, assume loaded
+                }
+            }
+            
+            return allLoaded;
+        }
+        
+        // Method 1: Wait for window load (all resources including CSS)
+        window.addEventListener('load', function() {
+            setTimeout(showIconsAndTabs, 150);
+        });
+        
+        // Method 2: Check when DOM is ready and stylesheets are loaded
+        function checkAndShow() {
+            if (checkStylesheetsLoaded()) {
+                setTimeout(showIconsAndTabs, 200);
+            } else {
+                setTimeout(checkAndShow, 50);
+            }
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(checkAndShow, 100);
+            });
+        } else {
+            setTimeout(checkAndShow, 100);
+        }
+        
+        // Fallback: Show after maximum delay (1.5 seconds)
+        setTimeout(function() {
+            showIconsAndTabs();
+        }, 1500);
+    })();
 </script>
 
 <style>
