@@ -1,4 +1,5 @@
 ﻿using static Neo.Bpms.Domain.Entities.Cmmn.UI.Report;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -387,6 +388,10 @@ public partial class ReportController
         ReportConfigManager.SetConfigColumns(model.SelectedColumns, config);
         config.HavingCondition = model.HavingConstraint;
         config.WhereCondition = model.Constraint;
+        if (model.GroupByViewType.HasValue && config.ViewType == ReportViewType.GroupByList)
+        {
+            config.GroupByViewType = model.GroupByViewType.Value;
+        }
         await reportConfigBackupRestore.Save(config, cancellationToken);
         return Json(new { OK = "OK" });
     }
@@ -441,6 +446,7 @@ public class ColumnsBindingModel
     public PostedOrderdColumn[] SelectedColumns { get; set; }
     public string Constraint { get; set; }
     public string HavingConstraint { get; set; }
+    public GroupByViewType? GroupByViewType { get; set; }
 }
 
 public class ApplyColorsSettingsModel

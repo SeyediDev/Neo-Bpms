@@ -9,3 +9,8 @@ public enum ReportViewType
     //WorldMap=3,
     Dashboard = 4
 }
+public enum GroupByViewType
+{
+    Grid,
+    Matrix
+}

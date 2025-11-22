@@ -2,6 +2,7 @@
 using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
+using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredReport;
 
 namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 
@@ -191,17 +192,44 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         double width = 0, ConfiguredReport.eHAlign hAlign = ConfiguredReport.eHAlign.Center,
         ConfiguredReport.eVAlign vAlign = ConfiguredReport.eVAlign.Top)
     {
-        if (selectedField == null)
+        // LayoutColumn should only apply to GroupByItem fields, not DisplayColumn fields
+        // Find the GroupByItem field by fieldId (associationName is the fieldId)
+        if (reportConfig == null || string.IsNullOrEmpty(associationName))
         {
             return;
         }
 
-        selectedField.IsTooltip = isTooltip;
-        selectedField.AssociationName = associationName;
-        selectedField.MatrixType = matrixType;
-        selectedField.width = width;
-        selectedField.HAlign = hAlign;
-        selectedField.VAlign = vAlign;
+        // Find the GroupByItem field with the matching fieldId
+        SelectedField groupByField = null;
+        foreach (var field in reportConfig.Fields.Values)
+        {
+            if (field.type == ConfiguredReport.eFieldSelectionType.asGroupBy &&
+                field.fieldId == associationName)
+            {
+                groupByField = field;
+                break;
+            }
+        }
+
+        if (groupByField == null)
+        {
+            // Fallback to selectedField if it's a GroupByItem
+            if (selectedField != null && selectedField.type == ConfiguredReport.eFieldSelectionType.asGroupBy)
+            {
+                groupByField = selectedField;
+            }
+            else
+            {
+                return; // No matching GroupByItem field found
+            }
+        }
+
+        groupByField.IsTooltip = isTooltip;
+        groupByField.AssociationName = associationName;
+        groupByField.MatrixType = matrixType;
+        groupByField.width = width;
+        groupByField.HAlign = hAlign;
+        groupByField.VAlign = vAlign;
     }
 
     protected void AddFormulaField(ConfiguredReport.eFieldSelectionType type,

@@ -163,6 +163,28 @@
 						       type="text" value="@structure.HavingConstraint"/>
 					</div>
 				</div>
+				@if (structure.ReportViewType == ReportViewType.GroupByList)
+				{
+					var isGrid = structure.GroupByViewType == GroupByViewType.Grid;
+					var isMatrix = structure.GroupByViewType == GroupByViewType.Matrix;
+					<div class="row">
+						<div class="col-md-6">
+							<label for="GroupByViewType-@modalKey">نوع نمایش گروه‌بندی:</label>
+							<select id="GroupByViewType-@modalKey" class="form-control">
+								@if (isGrid)
+								{
+									<option value="0" selected="selected">Grid</option>
+									<option value="1">Matrix</option>
+								}
+								else
+								{
+									<option value="0">Grid</option>
+									<option value="1" selected="selected">Matrix</option>
+								}
+							</select>
+						</div>
+					</div>
+				}
 				@if (CultureHelper.GetCurrentNeutralCulture() == "fa") // todo translation!
 				{
 					<p>

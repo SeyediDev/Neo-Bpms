@@ -6,8 +6,10 @@ namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 
 public abstract class GroupByConfigDefinition : ReportConfigDefinition
 {
-    protected virtual string HavingCondition { get; }
     protected override ReportViewType ViewType => ReportViewType.GroupByList;
+    protected virtual GroupByViewType GroupByViewType => GroupByViewType.Grid;
+    
+    protected virtual string HavingCondition { get; }
     public override bool DefineAll(Report r)
     {
         base.DefineAll(r);
@@ -17,6 +19,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     protected override void DefineExtra()
     {
         base.DefineExtra();
+        reportConfig.GroupByViewType = GroupByViewType;
         if (!string.IsNullOrEmpty(HavingCondition))
         {
             reportConfig.HavingCondition = HavingCondition;

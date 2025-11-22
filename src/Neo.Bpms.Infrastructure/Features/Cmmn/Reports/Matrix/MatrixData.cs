@@ -4,6 +4,7 @@ public class MatrixData
 {
     public List<MatrixItem> Horizontals { get; internal set; }
     public List<MatrixItem> Verticals { get; internal set; }
+    public List<ColumnFieldDefinition> Indexs { get; internal set; }
 }
 public class MatrixItem
 {

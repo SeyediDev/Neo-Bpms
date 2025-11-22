@@ -41,6 +41,8 @@
         });
     var havingConstraint = $("#HavingConstraint-" + modalKey).val().trim();
     var constraint = $("#Constraint-" + modalKey).val().trim();
+    var groupByViewTypeElement = $("#GroupByViewType-" + modalKey);
+    var groupByViewType = groupByViewTypeElement.length > 0 ? parseInt(groupByViewTypeElement.val()) : null;
 
     var ajaxParams = {
         NamespaceId: window.top.modalObjects[modalKey].NamespaceId,
@@ -49,7 +51,8 @@
         ConfigId: window.top.modalObjects[modalKey].ConfigId,
         SelectedColumns: selectedColumns,
         havingConstraint: havingConstraint,
-        constraint: constraint
+        constraint: constraint,
+        groupByViewType: groupByViewType
     };
     var obj = JSON.stringify(ajaxParams);
     $.ajax({

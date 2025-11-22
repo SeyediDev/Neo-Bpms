@@ -9,6 +9,7 @@ public class ReportStructure : CommonFormStructure
 {
     public ReportViewType ReportViewType { get; set; }
     public ChartType ChartType { get; set; }
+    public GroupByViewType GroupByViewType { get; set; }
 
     public IList<ReportColumnFilter> SelectedFilters { get; set; }
 

@@ -2,38 +2,44 @@
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix;
 
-public class MatrixRoutines
+public class MatrixRoutines(ReportData reportInfo)
 {
-    private ReportData _reportInfo;
-
     public int HorizontalColumnsCount { get; private set; }
 
-    public MatrixRoutines(ReportData reportInfo)
-    {
-        _reportInfo = reportInfo;
-    }
     public MatrixData GetMatrixData()
     {
         MatrixData matrixData = new()
         {
             Verticals = [],
             Horizontals = [],
+            Indexs = [.. reportInfo.Structure.SelectedColumns.Where(
+                sc => sc.aggrType != eAggregationFunctions.InColumn &&
+                      sc.aggrType != eAggregationFunctions.GroupByItem)]
+
         };
-        IEnumerable<ColumnFieldDefinition> cols = _reportInfo.Structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
+        IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns;
+        // Only use GroupByItem fields with MatrixType for dimensions (DisplayColumn fields don't have MatrixType)
         foreach (ColumnFieldDefinition col in cols)
         {
-            MatrixItem matrixItem = new() { Column = col };
-            if (col.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+            if (col.MatrixType == ConfiguredReport.ReportMatrixType.Vertical &&
+                col.aggrType == eAggregationFunctions.GroupByItem)
+            {
+                MatrixItem matrixItem = new() { Column = col };
                 matrixData.Verticals.Add(matrixItem);
-            else if (col.aggrType == eAggregationFunctions.InColumn)
+            }
+            else if (col.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal &&
+                     col.aggrType == eAggregationFunctions.GroupByItem)
+            {
+                MatrixItem matrixItem = new() { Column = col };
                 matrixData.Horizontals.Add(matrixItem);
+            }
         }
-        foreach (ReportRowInfo row in _reportInfo.Rows)
+        foreach (ReportRowInfo row in reportInfo.Rows)
         {
             ReadVerticalValue(matrixData, row, null, 0);
         }
         int rowIndex = 0;
-        foreach (ReportRowInfo row in _reportInfo.Rows)
+        foreach (ReportRowInfo row in reportInfo.Rows)
         {
             ReadHorizontalValue(matrixData, row, null, 0);
             rowIndex++;
@@ -69,14 +75,17 @@ public class MatrixRoutines
     }
     private void ReadHorizontalValue(MatrixData matrixData, ReportRowInfo row, MatrixValue parentMatrixValue, int vIndex)
     {
-        MatrixItem matrixItem = null;
-        if (matrixData.Horizontals.Count > 0)
-            matrixItem = matrixData.Horizontals[vIndex];
-        //var matrixItem = matrixData.Horizontals[vIndex];
+        if (matrixData.Horizontals.Count == 0)
+            return; // No horizontal dimensions
+        
+        if (vIndex >= matrixData.Horizontals.Count)
+            return; // Index out of range
+        
+        MatrixItem matrixItem = matrixData.Horizontals[vIndex];
         if (parentMatrixValue != null)
         {
             parentMatrixValue.Children ??= [];
-            matrixItem = parentMatrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == matrixItem.Column.ColumnTypeName);
+            matrixItem = parentMatrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == matrixData.Horizontals[vIndex].Column.ColumnTypeName);
             if (matrixItem == null)
             {
                 matrixItem = new MatrixItem() { Column = matrixData.Horizontals[vIndex].Column };
@@ -95,15 +104,19 @@ public class MatrixRoutines
             ReadHorizontalValue(matrixData, row, matrixValue, vIndex + 1);
         else
         {
-            IEnumerable<ColumnFieldDefinition> cols = _reportInfo.Structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
+            IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns;
             foreach (ColumnFieldDefinition col in cols.Where(col =>
                     col.aggrType != eAggregationFunctions.InColumn &&
-                    col.MatrixType != ConfiguredReport.ReportMatrixType.Vertical))
+                    col.aggrType != eAggregationFunctions.GroupByItem &&
+                    col.MatrixType != ConfiguredReport.ReportMatrixType.Vertical &&
+                    col.MatrixType != ConfiguredReport.ReportMatrixType.Horizontal))
             {
                 matrixValue.Children ??= [];
                 MatrixItem child = matrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == col.ColumnTypeName);
                 if (child == null)
                 {
+                    if (matrixData.Verticals.Count == 0)
+                        continue; // Skip if no vertical dimensions
                     int leafCount = matrixData.Verticals[0].LeafCount;
                     child = new MatrixItem() { Column = col, Values = new List<MatrixValue>(leafCount) };
                     for (int i = 0; i < leafCount; i++)
@@ -113,7 +126,8 @@ public class MatrixRoutines
                 value = ReportRenderer.GetCelValue(col, row);
                 int leafIndex = 0;
                 GetVerticalLeafIndex(matrixData.Verticals, row, ref leafIndex);
-                child.Values[leafIndex].Value = value;
+                if (leafIndex < child.Values.Count)
+                    child.Values[leafIndex].Value = value;
             }
         }
     }

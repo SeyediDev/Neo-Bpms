@@ -27,12 +27,13 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         //config.Formats
         GetSelectionColumns(config, culture, entity, structure.SelectedColumns, out IList<ReportColumnFilter> selectedFilters, report);
         structure.SelectedFilters = selectedFilters;
-        bool isMatrix = structure.SelectedColumns.Any(col => col.MatrixType == ConfiguredReport.ReportMatrixType.Vertical);
-        if (isMatrix)
-            configRecordsPerPage = 10000;
-
+        
         structure.ChartType = config.ChartType;
         structure.ReportViewType = config.ViewType;
+        structure.GroupByViewType = config.GroupByViewType;
+        
+        if (config.ViewType == ReportViewType.GroupByList && config.GroupByViewType == GroupByViewType.Matrix)
+            configRecordsPerPage = 10000;
         AddFieldsToStructure(structure, entity, report.reportFields, "", "", culture);
         AddIncludesToStructure(culture, report, entity, structure);
         AddCountColumnIfNeeded(structure, entity);

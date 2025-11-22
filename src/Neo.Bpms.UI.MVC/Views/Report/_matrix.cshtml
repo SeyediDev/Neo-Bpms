@@ -13,13 +13,26 @@
     var structure = Model?.Structure;
     var calendar = ViewBag.calendar as string ?? ProjectDefinition.Project.DefaultCalendar;
     var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
+    // Only use GroupByItem fields with MatrixType for dimensions (DisplayColumn fields don't have MatrixType)
+    // Important: DisplayColumn fields should NOT have MatrixType set, only GroupByItem fields should
+    
+    // Debug: بررسی تمام فیلدها
+    var allGroupByItems = selectedColumns.Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem).ToList();
+    var allDisplayColumns = selectedColumns.Where(sc => sc.aggrType == eAggregationFunctions.InColumn).ToList();
+    
     var rowDimensions = selectedColumns
-        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical &&
-                     sc.aggrType == eAggregationFunctions.InColumn)
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem &&
+                     sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
         .ToList();
     var columnDimensions = selectedColumns
-        .Where(sc => sc.MatrixType != ConfiguredReport.ReportMatrixType.Vertical &&
-                     sc.aggrType == eAggregationFunctions.InColumn)
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem &&
+                     sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
+        .ToList();
+    
+    // Debug: بررسی فیلدهایی که MatrixType دارند اما GroupByItem نیستند
+    var displayColumnsWithMatrixType = selectedColumns
+        .Where(sc => sc.aggrType == eAggregationFunctions.InColumn &&
+                     sc.MatrixType != null)
         .ToList();
     var valueColumns = selectedColumns
         .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
@@ -114,7 +127,7 @@
 
     <div class="matrix-pivot-meta">
         <div class="matrix-pivot-meta__item">
-            <span>تعداد رکورد</span>
+            <span>تنوع رکورد</span>
             <strong>@recordCountText</strong>
         </div>
         <div class="matrix-pivot-meta__item">

@@ -74,6 +74,8 @@ public class ConfiguredReport : ConfiguredItem
     [JsonIgnore]
     public bool IsInlineSubReport => Parent?.Type == Report.SubReportType.SubReport;
 
+    public GroupByViewType GroupByViewType { get; set; }
+
     /// <summary>
     /// Add Field
     /// </summary>

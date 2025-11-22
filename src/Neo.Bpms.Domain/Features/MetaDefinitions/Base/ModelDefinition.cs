@@ -152,10 +152,10 @@ public abstract partial class ModelDefinition : BaseModelingDefinition
             {
                 _ = DefineEntity(type);
             }
-        }
-        foreach (Type type in types.Where(t => t.IsEnum))
-        {
-            DefineEnumeration(type);
+            if (type.IsEnum)
+            {
+                DefineEnumeration(type);
+            }
         }
     }
 
