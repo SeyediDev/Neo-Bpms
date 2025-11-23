@@ -86,8 +86,13 @@
     var rowIdsMapJson = System.Text.Json.JsonSerializer.Serialize(rowIdsMap);
 
     var rowFields = rowDimensions.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
+    string rowFieldsLabel = rowFields.Count > 0 ? string.Join(" / ", rowFields.Select(f => f.label)) : "بعد سطر";
+    var rowFieldsCountText = rowFields.Count.ToString("N0", CultureInfo.InvariantCulture);
     var columnFields = columnDimensions.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
+    string columnFieldsLabel = columnFields.Count > 0 ? string.Join(" / ", columnFields.Select(f => f.label)) : "بعد ستون";
+    var columnFieldsCountText = columnFields.Count.ToString("N0", CultureInfo.InvariantCulture);
     var valueFields = valueColumns.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
+    var valueFieldsCountText = valueFields.Count.ToString("N0", CultureInfo.InvariantCulture);
     
     // بررسی وجود زیر گزارش برای drill down
     var hasSubReport = Model?.Structure?.SubReports?.Any(sr => sr.Type == Report.SubReportType.DrillDown) == true;
@@ -128,6 +133,18 @@
     <div class="pivot-combination-count">
         <span class="pivot-combination-label">تعداد ترکیب:</span>
         <span class="pivot-combination-value">@recordCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد شاخص:</span>
+        <span class="pivot-combination-value">@valueFieldsCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد @rowFieldsLabel :</span>
+        <span class="pivot-combination-value">@rowFieldsCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد @columnFieldsLabel :</span>
+        <span class="pivot-combination-value">@columnFieldsCountText</span>
     </div>
 </section>
 
