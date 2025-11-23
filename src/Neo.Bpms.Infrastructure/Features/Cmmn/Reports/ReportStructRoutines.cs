@@ -280,6 +280,66 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
                                     colType, null, fld, selectedColumns, reportField);
                                 col.Formula = fld.formula;
                                 break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Sum:
+                                col = AddSelectedColumn(eAggregationFunctions.Sum,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Average:
+                                col = AddSelectedColumn(eAggregationFunctions.Avg,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Min:
+                                col = AddSelectedColumn(eAggregationFunctions.Min,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Max:
+                                col = AddSelectedColumn(eAggregationFunctions.Max,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_First:
+                                col = AddSelectedColumn(eAggregationFunctions.First,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Last:
+                                col = AddSelectedColumn(eAggregationFunctions.Last,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_SD:
+                                col = AddSelectedColumn(eAggregationFunctions.StDev,//TODO
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Mode:
+                                col = AddSelectedColumn(eAggregationFunctions.StDevP,//TODO
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Trend:
+                                col = AddSelectedColumn(eAggregationFunctions.Var,//TODO
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
+                            case ConfiguredReport.eFieldSelectionType.asAggregation_Count:
+                                col = AddSelectedColumn(eAggregationFunctions.AggregationFormula,
+                                    fld.Alias ?? "" + (alias ?? "فرمول"),
+                                    colType, null, fld, selectedColumns, reportField);
+                                col.Formula = fld.formula;
+                                break;
                         }
                     }
 
