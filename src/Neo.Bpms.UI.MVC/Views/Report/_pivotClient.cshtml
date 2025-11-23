@@ -168,7 +168,7 @@
     }
 
     .pivot-matrix-card__title {
-        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-size: clamp(1.2rem, 2.4vw, 1.6rem);
         color: #0f172a;
         margin: 0.3rem 0;
         font-weight: 700;
@@ -721,6 +721,9 @@ class PivotTable {
                 '    position: sticky;' +
                 '    font-size: 0.95rem;' +
                 '}' +
+                '.pivot-table thead th {' +
+                '    padding: 0;' +
+                '}' +
                 '.pivot-row-dimension-header {' +
                 '    background-color: #fde68a !important;' +
                 '    color: #92400e !important;' +
@@ -787,7 +790,6 @@ class PivotTable {
                 '    background-color: #a5b4fc !important;' +
                 '    font-weight: 500;' +
                 '    position: sticky;' +
-                '    top: 50px;' +
                 '    z-index: 4;' +
                 '    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);' +
                 '}' +
