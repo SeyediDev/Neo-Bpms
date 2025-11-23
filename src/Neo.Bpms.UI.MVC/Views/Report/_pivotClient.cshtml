@@ -328,14 +328,13 @@ class PivotTable {
     }
 
     processData() {
-        const { data, rowFields, columnFields, valueFields, aggregator } = this.options;
+        const { data, rowFields, columnFields, valueFields } = this.options;
 
-        const pivot = {};
-        const colKeysSeen = new Set();
-        const colKeysList = [];
+        // colKeysList به صورت object برای ذخیره اطلاعات هر colKey
+        this.colKeysList = {};
+        this.pivotData = {};
 
         if (!data || !Array.isArray(data) || data.length === 0) {
-            this.pivotData = {};
             return;
         }
 
@@ -345,52 +344,37 @@ class PivotTable {
             const rowKey = this.buildKey(row, rowFields);
             const colKey = this.buildKey(row, columnFields);
             
-            // جمع‌آوری colKeys برای بررسی تکراری
+            // جمع‌آوری colKeys در colKeysList
             if (colKey && colKey !== 'Total') {
-                colKeysList.push(colKey);
-                colKeysSeen.add(colKey);
+                if (!this.colKeysList[colKey]) {
+                    this.colKeysList[colKey] = {};
+                    this.colKeysList[colKey].colKey = colKey;
+                    this.colKeysList[colKey].label = this.formatKey(colKey); // استفاده از formatKey برای label
+                    this.colKeysList[colKey].count = 0;
+                }
+                this.colKeysList[colKey].count = this.colKeysList[colKey].count + 1;
             }
 
-            if (!pivot[rowKey]) {
-                pivot[rowKey] = {};
+            // ایجاد ساختار pivotData - داده‌ها از سرور aggregate شده می‌آیند
+            if (!this.pivotData[rowKey]) {
+                this.pivotData[rowKey] = {};
             }
-            if (!pivot[rowKey][colKey]) {
-                pivot[rowKey][colKey] = {};
-                valueFields.forEach(field => {
-                    if (field) {
-                        const fieldName = typeof field === 'object' && field.name ? field.name : field;
-                        pivot[rowKey][colKey][fieldName] = {
-                            values: [],
-                            count: 0
-                        };
-                    }
-                });
+            
+            // اگر colKey قبلاً وجود ندارد، ایجاد کن
+            if (!this.pivotData[rowKey][colKey]) {
+                this.pivotData[rowKey][colKey] = {};
             }
 
+            // مستقیماً مقادیر را از row بگیر (بدون aggregate)
+            // داده‌ها از سرور aggregate شده می‌آیند، پس هر row یک مقدار نهایی دارد
             valueFields.forEach(field => {
                 const fieldName = typeof field === 'object' && field.name ? field.name : field;
-                if (field && pivot[rowKey][colKey][fieldName]) {
-                    const value = this.parseValue(row[fieldName]);
-                    if (value !== null && !isNaN(value)) {
-                        pivot[rowKey][colKey][fieldName].values.push(value);
-                        pivot[rowKey][colKey][fieldName].count++;
-                    }
-                }
+                const value = this.parseValue(row[fieldName]);
+                // مستقیماً مقدار را قرار بده (اگر چند ردیف با rowKey و colKey یکسان وجود داشته باشد، آخرین مقدار overwrite می‌شود)
+                this.pivotData[rowKey][colKey][fieldName] = value;
             });
         });
         
-        // بررسی تکراری بودن colKeys در processData
-        const duplicates = colKeysList.filter((key, index) => colKeysList.indexOf(key) !== index);
-        if (duplicates.length > 0) {
-            console.warn('Duplicate colKeys detected in processData:', {
-                totalColKeys: colKeysList.length,
-                uniqueCount: colKeysSeen.size,
-                duplicates: [...new Set(duplicates)],
-                allColKeys: colKeysList
-            });
-        }
-
-        this.pivotData = this.aggregateData(pivot, aggregator);
     }
 
     buildKey(row, fields) {
@@ -398,7 +382,13 @@ class PivotTable {
         const keyParts = fields.map(field => {
             const fieldName = typeof field === 'object' && field.name ? field.name : field;
             const value = row[fieldName];
-            return value !== null && value !== undefined ? String(value).trim() : '(خالی)';
+            // نرمال‌سازی مقدار: trim و حذف فاصله‌های اضافی
+            if (value === null || value === undefined) {
+                return '(خالی)';
+            }
+            // تبدیل به string و نرمال‌سازی
+            //const normalizedValue = String(value).trim().replace(/\s+/g, ' ');
+            return value;
         });
         const key = keyParts.join('|');
         return key;
@@ -411,104 +401,15 @@ class PivotTable {
         return isNaN(parsed) ? null : parsed;
     }
 
-    aggregateData(pivot, aggregator) {
-        const aggregated = {};
-        
-        Object.keys(pivot).forEach(rowKey => {
-            aggregated[rowKey] = {};
-            Object.keys(pivot[rowKey]).forEach(colKey => {
-                aggregated[rowKey][colKey] = {};
-                Object.keys(pivot[rowKey][colKey]).forEach(field => {
-                    const data = pivot[rowKey][colKey][field];
-                    if (data && data.values && Array.isArray(data.values)) {
-                        aggregated[rowKey][colKey][field] = this.calculateAggregate(data.values, aggregator);
-                    } else {
-                        aggregated[rowKey][colKey][field] = aggregator.toLowerCase() === 'count' ? 0 : null;
-                    }
-                });
-            });
-        });
-
-        return aggregated;
-    }
-
-    calculateAggregate(values, aggregator) {
-        if (!values || !Array.isArray(values) || values.length === 0) {
-            if (aggregator.toLowerCase() === 'count') {
-                return 0;
-            }
-            return null;
-        }
-
-        switch (aggregator.toLowerCase()) {
-            case 'sum':
-                return values.reduce((a, b) => a + b, 0);
-            case 'count':
-                return values.length;
-            case 'avg':
-            case 'average':
-                const sum = values.reduce((a, b) => a + b, 0);
-                return sum / values.length;
-            case 'min':
-                return Math.min(...values);
-            case 'max':
-                return Math.max(...values);
-            default:
-                return values.reduce((a, b) => a + b, 0);
-        }
-    }
 
     render() {
-        console.log('=== RENDER CALLED ===');
         const { rowFields, columnFields, valueFields } = this.options;
         
-        // گرفتن rowKeys و حذف تکراری‌ها
-        const allRowKeys = Object.keys(this.pivotData);
-        const rowKeys = [...new Set(allRowKeys)].sort();
+        const rowKeys = Object.keys(this.pivotData).sort();
         
-        // لاگ برای دیباگ
-        if (allRowKeys.length !== rowKeys.length) {
-            console.warn('Duplicate rowKeys detected:', {
-                allRowKeys: allRowKeys.length,
-                uniqueRowKeys: rowKeys.length,
-                duplicates: allRowKeys.filter((key, index) => allRowKeys.indexOf(key) !== index)
-            });
-        }
-        
-        let colKeys = this.getAllColumnKeys();
-        
-        // بررسی تکراری بودن colKeys و حذف آنها
-        const uniqueColKeysSet = new Set(colKeys);
-        const uniqueColKeys = Array.from(uniqueColKeysSet).sort();
-        
-        if (colKeys.length !== uniqueColKeys.length) {
-            console.warn('Duplicate colKeys detected in render (after getAllColumnKeys):', {
-                originalCount: colKeys.length,
-                uniqueCount: uniqueColKeys.length,
-                duplicates: colKeys.filter((key, index) => colKeys.indexOf(key) !== index),
-                allKeys: colKeys,
-                uniqueKeys: uniqueColKeys
-            });
-        }
-        
-        // همیشه از colKeys منحصر به فرد استفاده کن
-        colKeys = uniqueColKeys;
-        
-        console.log('Render colKeys:', {
-            count: colKeys.length,
-            keys: colKeys,
-            keysString: colKeys.join(' | '),
-            isArray: Array.isArray(colKeys),
-            hasDuplicates: colKeys.length !== new Set(colKeys).size
-        });
-
-        if (rowKeys.length === 0) {
+        if (rowKeys.length === 0 || !this.colKeysList || Object.keys(this.colKeysList).length === 0) {
             this.container.innerHTML = '<div class=""pivot-empty"">داده‌ای برای نمایش موجود نیست</div>';
             return;
-        }
-
-        if (colKeys.length === 0) {
-            colKeys.push('Total');
         }
 
         let html = '<table class=""pivot-table"" dir=""' + this.options.direction + '"">';
@@ -534,7 +435,8 @@ class PivotTable {
         }
         
         // سلول بزرگ که کل columnFields را می‌پوشاند - همه ابعاد را با / جدا می‌کنیم
-        const totalCols = colKeys.length * valueFields.length;
+        const colKeysCount = Object.keys(this.colKeysList).length;
+        const totalCols = colKeysCount * valueFields.length;
         if (columnFields.length > 0) {
             const columnFieldsLabel = columnFields.map(f => this.getFieldLabel(f)).join(' / ');
             html += '<th class=""pivot-header"" colspan=""' + totalCols + '"">' + columnFieldsLabel + '</th>';
@@ -546,46 +448,13 @@ class PivotTable {
         
         // سطر دوم: colKeys (مقادیر ستون‌ها) - برای هر colKey، یک ستون برای هر valueField
         html += '<tr>';
-        // colKeys قبلاً منحصر به فرد شده است، اما برای اطمینان دوباره بررسی می‌کنیم
-        const finalColKeys = Array.from(new Set(colKeys)).sort();
-        
-        console.log('Rendering header row 2 with colKeys:', {
-            count: finalColKeys.length,
-            keys: finalColKeys,
-            keysString: finalColKeys.join(' | '),
-            valueFieldsCount: valueFields.length,
-            expectedColumns: finalColKeys.length * valueFields.length,
-            hasDuplicates: finalColKeys.length !== new Set(finalColKeys).size
-        });
-        
-        // بررسی دقیق‌تر - شمارش هر کلید
-        const keyCounts = {};
-        finalColKeys.forEach(key => {
-            keyCounts[key] = (keyCounts[key] || 0) + 1;
-        });
-        const duplicateKeys = Object.keys(keyCounts).filter(key => keyCounts[key] > 1);
-        if (duplicateKeys.length > 0) {
-            console.error('DUPLICATE KEYS FOUND IN finalColKeys:', {
-                duplicates: duplicateKeys,
-                counts: keyCounts
-            });
+        // استفاده مستقیم از colKeysList
+        for (const colKey in this.colKeysList) {
+            const colKeyInfo = this.colKeysList[colKey];
+            const colKeyLabel = colKeyInfo.label || this.formatKey(colKey);
+            html += '<th class=""pivot-col-value"" data-col-key=""' + colKey + '"" >' + colKeyLabel + '</th>';
         }
-        
-        let renderedColCount = 0;
-        finalColKeys.forEach((colKey, colIndex) => {
-            for (let i = 0; i < valueFields.length; i++) {
-                html += '<th class=""pivot-col-value"" data-col-index=""' + colIndex + '"" data-col-key=""' + this.formatKey(colKey) + '"" data-value-index=""' + i + '"">' + this.formatKey(colKey) + '</th>';
-                renderedColCount++;
-            }
-        });
         html += '</tr>';
-        
-        console.log('Header row 2 rendered:', {
-            finalColKeysCount: finalColKeys.length,
-            valueFieldsCount: valueFields.length,
-            expectedColumns: finalColKeys.length * valueFields.length,
-            actualRenderedColumns: renderedColCount
-        });
         
         html += '</thead>';
         
@@ -593,25 +462,6 @@ class PivotTable {
         
         // گروه‌بندی rowKeys بر اساس اولین dimension برای تفکیک بصری
         const groupedRowKeys = this.groupRowKeysByFirstDimension(rowKeys);
-        
-        // بررسی تکراری بودن rowKeys در گروه‌ها
-        const seenRowKeys = new Set();
-        let hasDuplicates = false;
-        groupedRowKeys.forEach(group => {
-            group.forEach(rowKey => {
-                if (seenRowKeys.has(rowKey)) {
-                    hasDuplicates = true;
-                    console.warn('Duplicate rowKey found in groups:', rowKey);
-                }
-                seenRowKeys.add(rowKey);
-            });
-        });
-        
-        if (hasDuplicates) {
-            console.warn('Duplicate rowKeys detected in groupedRowKeys');
-        }
-        
-        let rowIndex = 0;
         
         groupedRowKeys.forEach((group, groupIndex) => {
             group.forEach((rowKey, keyIndex) => {
@@ -634,8 +484,8 @@ class PivotTable {
                     }
                     
                     // برای هر colKey، یک سلول برای هر valueField
-                    // colKeys قبلاً منحصر به فرد شده است
-                    colKeys.forEach(colKey => {
+                    // استفاده مستقیم از colKeysList
+                    for (const colKey in this.colKeysList) {
                         const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
                         const value = this.pivotData[rowKey]?.[colKey]?.[valueFieldName] ?? null;
                         const hasValue = value !== null && value !== undefined;
@@ -650,39 +500,17 @@ class PivotTable {
                                 '<span class=""pivot-value-text"">' + this.formatValue(value) + '</span>' + 
                                 drillDownIcon + 
                                 '</td>';
-                    });
+                    }
                     
                     html += '</tr>';
                 });
-                rowIndex++;
             });
         });
         
         html += '</tbody>';
         html += '</table>';
 
-        // بررسی تعداد ستون‌های render شده در header
-        const headerRow2Match = html.match(/<tr>[\s\S]*?<th class=""pivot-col-value""/g);
-        const headerRow2Count = headerRow2Match ? headerRow2Match.length : 0;
-        console.log('Before setting innerHTML:', {
-            expectedHeaderColumns: finalColKeys.length * valueFields.length,
-            actualHeaderColumnsInHTML: headerRow2Count,
-            htmlLength: html.length
-        });
-
         this.container.innerHTML = html;
-        
-        // بررسی تعداد ستون‌های واقعی در DOM
-        const actualHeaderCells = this.container.querySelectorAll('thead tr:last-child th.pivot-col-value');
-        console.log('After setting innerHTML - Actual DOM cells:', {
-            expected: finalColKeys.length * valueFields.length,
-            actual: actualHeaderCells.length,
-            cells: Array.from(actualHeaderCells).map(cell => ({
-                text: cell.textContent.trim(),
-                colIndex: cell.getAttribute('data-col-index'),
-                colKey: cell.getAttribute('data-col-key')
-            }))
-        });
         
         this.applyStyles();
         this.attachDrillDownHandlers();
@@ -694,9 +522,11 @@ class PivotTable {
         const rowHeaders = this.container.querySelectorAll('.pivot-row-header');
         const rowHeaderCount = rowHeaders ? rowHeaders.length : 0;
         
-        // محاسبه تعداد سلول‌های pivot-column-header (colKeys)
-        const colKeys = this.getAllColumnKeys();
-        const columnHeaderCount = colKeys ? colKeys.length : 0;
+        // محاسبه تعداد سلول‌های pivot-column-header از colKeysList
+        let columnHeaderCount = 0;
+        for (const colKey in this.colKeysList) {
+            columnHeaderCount++;
+        }
         
         // به‌روزرسانی مقادیر در footer
         const rowHeaderValueEl = document.querySelector('.pivot-row-header-value');
@@ -727,8 +557,6 @@ class PivotTable {
                     
                     if (rowKey && colKey && valueField) {
                         this.navigateToDrillDown(rowKey, colKey, valueField);
-                    } else {
-                        console.warn('Missing data attributes for drill down:', { rowKey, colKey, valueField });
                     }
                 });
             }
@@ -751,25 +579,16 @@ class PivotTable {
     }
     
     navigateToDrillDown(rowKey, colKey, valueField) {
-        if (!this.options.hasSubReport) {
-            console.warn('Drill down not available: hasSubReport is false');
+        if (!this.options.hasSubReport || !this.options.reportKey) {
             return;
         }
         
-        // ساخت combined key برای پیدا کردن ids
         const combinedKey = rowKey + '||' + colKey;
         const rowIdsMap = this.options.rowIdsMap || {};
         const ids = rowIdsMap[combinedKey] || '';
-        
-        // گرفتن اطلاعات sub report از window.top
         const reportKey = this.options.reportKey;
-        if (!reportKey) {
-            console.warn('Drill down not available: reportKey is missing');
-            return;
-        }
         
         if (!window.top || !window.top.subConfigIds || !window.top.subConfigIds[reportKey]) {
-            console.warn('Sub report configuration not found for reportKey:', reportKey);
             return;
         }
         
@@ -809,96 +628,19 @@ class PivotTable {
             }
         });
         
-        // لاگ برای دیباگ
-        console.log('Drill down filter values:', {
-            rowKey: rowKey,
-            colKey: colKey,
-            rowKeyParts: rowKeyParts,
-            colKeyParts: colKeyParts,
-            rowFields: this.options.rowFields,
-            columnFields: this.options.columnFields,
-            filterValues: filterValues
-        });
-        
-        // فراخوانی OpenDrillDownModal - ids می‌تواند خالی باشد، فیلترها کافی هستند
         if (typeof window.top.OpenDrillDownModal !== 'undefined') {
             window.top.OpenDrillDownModal(
                 subReportNamespaceId,
                 subReportEntityId,
                 subReportReportId,
                 subConfigId,
-                ids || '', // می‌تواند خالی باشد
+                ids || '',
                 subReportConfigName,
                 filterValues
             );
-        } else {
-            console.error('OpenDrillDownModal function not found');
         }
     }
 
-    getAllColumnKeys() {
-        if (!this.pivotData || Object.keys(this.pivotData).length === 0) {
-            return ['Total'];
-        }
-        
-        const colKeys = new Set();
-        const allColKeys = [];
-        const colKeysByRow = {};
-        
-        // جمع‌آوری تمام colKeys از pivotData
-        Object.entries(this.pivotData).forEach(([rowKey, row], rowIndex) => {
-            if (row && typeof row === 'object') {
-                const rowColKeys = Object.keys(row).filter(key => key && key !== 'Total');
-                colKeysByRow[rowKey] = rowColKeys;
-                rowColKeys.forEach(colKey => {
-                    allColKeys.push(colKey);
-                    colKeys.add(colKey);
-                });
-            }
-        });
-        
-        // حذف تکراری‌ها و مرتب‌سازی
-        const result = Array.from(colKeys).sort();
-        
-        // لاگ برای دیباگ - بررسی تکراری‌ها
-        const duplicates = allColKeys.filter((key, index) => allColKeys.indexOf(key) !== index);
-        if (duplicates.length > 0) {
-            console.warn('Duplicate colKeys detected in getAllColumnKeys:', {
-                totalColKeys: allColKeys.length,
-                uniqueCount: colKeys.size,
-                resultCount: result.length,
-                duplicates: [...new Set(duplicates)],
-                colKeysByRow: colKeysByRow
-            });
-        }
-        
-        // بررسی دقیق‌تر - آیا colKeys در pivotData تکراری هستند؟
-        const colKeyOccurrences = {};
-        allColKeys.forEach(key => {
-            colKeyOccurrences[key] = (colKeyOccurrences[key] || 0) + 1;
-        });
-        const repeatedColKeys = Object.keys(colKeyOccurrences).filter(key => colKeyOccurrences[key] > Object.keys(this.pivotData).length);
-        if (repeatedColKeys.length > 0) {
-            console.error('CRITICAL: ColKeys appear more times than number of rows!', {
-                repeatedColKeys: repeatedColKeys,
-                occurrences: colKeyOccurrences,
-                rowCount: Object.keys(this.pivotData).length
-            });
-        }
-        
-        // لاگ تمام colKeys برای بررسی
-        console.log('getAllColumnKeys result:', {
-            count: result.length,
-            keys: result,
-            keysString: result.join(' | '),
-            pivotDataKeys: Object.keys(this.pivotData).length,
-            allColKeysFromData: allColKeys,
-            uniqueColKeysFromData: [...new Set(allColKeys)],
-            colKeysByRow: colKeysByRow
-        });
-        
-        return result.length > 0 ? result : ['Total'];
-    }
 
     formatKey(key) {
         if (key === 'Total') return 'جمع کل';
@@ -1120,9 +862,7 @@ class PivotTable {
     // صبر می‌کنیم تا DOM لود شود
     (function() {
         function initPivotTable() {
-            // بررسی وجود PivotTable
             if (typeof PivotTable === 'undefined') {
-                console.error('PivotTable is not defined');
                 const container = document.getElementById('pivot-table-container');
                 if (container) {
                     container.classList.remove('loading');
@@ -1131,16 +871,10 @@ class PivotTable {
                 return;
             }
             
-            console.log('PivotTable is available!');
-            
-            // بررسی وجود container
             const container = document.getElementById('pivot-table-container');
             if (!container) {
-                console.error('Container pivot-table-container not found!');
                 return;
             }
-            
-            console.log('Container found, loading data...');
             
             // اضافه کردن کلاس loading
             container.classList.add('loading');
@@ -1198,8 +932,6 @@ class PivotTable {
                             rowIdsMap: rowIdsMap
                         });
                     }
-                    
-                    // حذف کلاس loading بعد از ایجاد موفق
                     container.classList.remove('loading');
                 } catch (error) {
                     if (container) {
@@ -1387,7 +1119,7 @@ class PivotTable {
                             addField(data.field, data.label, type);
                         }
                     } catch (err) {
-                        console.error('Error parsing drag data:', err);
+                        // خطا در parse کردن drag data - نادیده بگیر
                     }
                 });
             }
@@ -1483,17 +1215,11 @@ class PivotTable {
             }
 
             // مقداردهی اولیه
-            console.log('Starting initialization...');
             updatePills();
             updateDropdowns();
             initializePivotTable();
             updateSummaryBoxes();
-            console.log('Initialization complete!');
         }
-        
-        // اجرای فوری (کد inline است، نیازی به انتظار نیست)
-        console.log('Initializing PivotTable...');
-        console.log('PivotTable available:', typeof PivotTable !== 'undefined');
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initPivotTable);
@@ -1503,3 +1229,4 @@ class PivotTable {
         }
     })(); // بستن IIFE خارجی
 </script>
+
