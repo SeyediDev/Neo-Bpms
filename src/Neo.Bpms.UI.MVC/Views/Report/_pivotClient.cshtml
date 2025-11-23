@@ -93,6 +93,7 @@
     var columnFieldsCountText = columnFields.Count.ToString("N0", CultureInfo.InvariantCulture);
     var valueFields = valueColumns.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
     var valueFieldsCountText = valueFields.Count.ToString("N0", CultureInfo.InvariantCulture);
+
     
     // بررسی وجود زیر گزارش برای drill down
     var hasSubReport = Model?.Structure?.SubReports?.Any(sr => sr.Type == Report.SubReportType.DrillDown) == true;
@@ -140,11 +141,11 @@
     </div>
     <div class="pivot-combination-count">
         <span class="pivot-combination-label">تعداد @rowFieldsLabel :</span>
-        <span class="pivot-combination-value">@rowFieldsCountText</span>
+        <span class="pivot-combination-value pivot-row-header-value">0</span>
     </div>
     <div class="pivot-combination-count">
         <span class="pivot-combination-label">تعداد @columnFieldsLabel :</span>
-        <span class="pivot-combination-value">@columnFieldsCountText</span>
+        <span class="pivot-combination-value pivot-column-header-value">0</span>
     </div>
 </section>
 
@@ -465,9 +466,11 @@ class PivotTable {
         const rowFieldsLabel = rowFields.length > 0 ? rowFields.map(f => this.getFieldLabel(f)).join(' / ') : ""ریوارد"";
         html += '<th class=""pivot-row-dimension-header"" rowspan=""' + headerRowCount + '"">' + rowFieldsLabel + '</th>';
         
-        // سلول ""شاخص‌ها"" (عنوان valueFields) - rowspan برای تمام سطرهای header
-        const valueFieldsLabel = valueFields.length > 0 ? ""شاخص‌ها"" : ""مقدار"";
-        html += '<th class=""pivot-value-dimension-header"" rowspan=""' + headerRowCount + '"">' + valueFieldsLabel + '</th>';
+        // سلول ""شاخص‌ها"" (عنوان valueFields) - فقط اگر تعداد شاخص‌ها بیشتر از 1 باشد نمایش بده
+        if (valueFields.length > 1) {
+            const valueFieldsLabel = ""شاخص‌ها"";
+            html += '<th class=""pivot-value-dimension-header"" rowspan=""' + headerRowCount + '"">' + valueFieldsLabel + '</th>';
+        }
         
         // سلول بزرگ که کل columnFields را می‌پوشاند - همه ابعاد را با / جدا می‌کنیم
         const totalCols = colKeys.length * valueFields.length;
@@ -480,10 +483,12 @@ class PivotTable {
         
         html += '</tr>';
         
-        // سطر دوم: colKeys (مقادیر ستون‌ها) - فقط یک بار برای هر colKey، بدون تکرار
+        // سطر دوم: colKeys (مقادیر ستون‌ها) - برای هر colKey، یک ستون برای هر valueField
         html += '<tr>';
         colKeys.forEach(colKey => {
-            html += '<th class=""pivot-col-value"" >' + this.formatKey(colKey) + '</th>';
+            for (let i = 0; i < valueFields.length; i++) {
+                html += '<th class=""pivot-col-value"">' + this.formatKey(colKey) + '</th>';
+            }
         });
         html += '</tr>';
         
@@ -545,6 +550,28 @@ class PivotTable {
         this.container.innerHTML = html;
         this.applyStyles();
         this.attachDrillDownHandlers();
+        this.updateDimensionCounts();
+    }
+    
+    updateDimensionCounts() {
+        // محاسبه تعداد سلول‌های pivot-row-header
+        const rowHeaders = this.container.querySelectorAll('.pivot-row-header');
+        const rowHeaderCount = rowHeaders ? rowHeaders.length : 0;
+        
+        // محاسبه تعداد سلول‌های pivot-column-header (colKeys)
+        const colKeys = this.getAllColumnKeys();
+        const columnHeaderCount = colKeys ? colKeys.length : 0;
+        
+        // به‌روزرسانی مقادیر در footer
+        const rowHeaderValueEl = document.querySelector('.pivot-row-header-value');
+        if (rowHeaderValueEl) {
+            rowHeaderValueEl.textContent = rowHeaderCount;
+        }
+        
+        const columnHeaderValueEl = document.querySelector('.pivot-column-header-value');
+        if (columnHeaderValueEl) {
+            columnHeaderValueEl.textContent = columnHeaderCount;
+        }
     }
     
     attachDrillDownHandlers() {

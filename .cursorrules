@@ -18,4 +18,52 @@
 - اگر در هر مرحله مشکلی بود، باید حل شود قبل از ادامه
 - فقط بعد از موفقیت همه مراحل، کامیت انجام شود
 
-# . یعنی "continue" 
+# . یعنی "continue"
+
+## اتصال به دیتابیس (Database Connection)
+
+**قاعده مهم - همیشه به یاد داشته باش:**
+- **همیشه از connection string با نام "Domain" در appsettings.json استفاده کن**
+- وقتی نیاز به اتصال به دیتابیس داری، از `appsettings.json` استفاده کن
+- connection string "Domain" را به عنوان connection string پیش‌فرض در نظر بگیر
+- در اسکریپت‌های PowerShell یا SQL، همیشه از "Domain" connection string استفاده کن
+
+## مدیریت فایل‌های JavaScript و CSS (JavaScript/CSS File Management)
+
+**وقتی یک فایل JavaScript یا CSS جدید در CommonAssets ایجاد می‌کنی:**
+
+### 1. **اضافه کردن به CommonContentLinks.targets.xml**
+- فایل `CommonAssets/CommonContentLinks.targets.xml` را باز کن
+- یک `<Content>` جدید اضافه کن با این فرمت:
+```xml
+<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\PivotTable.js">
+    <Link>wwwroot\Scripts\common-assets-includes\features\report\PivotTable.js</Link>
+</Content>
+```
+- **نکته مهم:** مسیر `Include` باید نسبت به `$(MSBuildThisFileDirectory)` باشد (که همان پوشه CommonAssets است)
+- **نکته مهم:** مسیر `Link` باید نسبت به `wwwroot` باشد
+
+### 2. **استفاده از مسیر صحیح در View**
+- در فایل‌های `.cshtml`، همیشه از مسیر `~/Scripts/common-assets-includes/...` استفاده کن
+- **نه** از `~/CommonAssets/...` استفاده نکن (این مسیر در runtime در دسترس نیست)
+
+### 3. **ساختار مسیرها**
+- فایل در `CommonAssets/Scripts/Features/Report/PivotTable.js` → در view: `~/Scripts/common-assets-includes/features/report/PivotTable.js`
+- فایل در `CommonAssets/Styles/Features/Report/report-menu.css` → در view: `~/Content/common-assets-includes/features/report/report-menu.css`
+
+### 4. **بعد از اضافه کردن**
+- بیلد بگیر تا فایل به `wwwroot` کپی شود
+- اگر فایل فوراً نیاز است، می‌توانی به صورت دستی کپی کنی (اما بعد از بیلد خودکار کپی می‌شود)
+
+**مثال کامل:**
+```xml
+<!-- در CommonContentLinks.targets.xml -->
+<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Report\PivotTable.js">
+    <Link>wwwroot\Scripts\common-assets-includes\features\report\PivotTable.js</Link>
+</Content>
+```
+
+```html
+<!-- در View -->
+<script src="~/Scripts/common-assets-includes/features/report/PivotTable.js"></script>
+``` 
