@@ -501,12 +501,14 @@
 	var reportKey = "@reportKey";
 
 	@* Process map data from server - with special handling for IranMap *@
+	@* Only include rows with valid Iran province ISO2 codes (IR-XX) *@
 	@foreach (var row in reportInfo.Rows)
 	{
 		var iso2 = row.Data[iso2Column != null ? iso2Column.ColumnTypeName : "Iso2"];
+		@* Skip rows that are not valid Iran provinces *@
 		if(!isValidIranProvinceIso2(iso2))
 		{
-			iso2 = "iran";
+			continue;
 		}
 		var rowIds = row.Data.GetString("Ids").Split(',')[0];
 		double colorValue = 0;
@@ -907,7 +909,10 @@
 			var iframeContainer = $('<div>').css({ width: '100%', height: '100%', border: 'none' });
 			content.html(iframeContainer);
 			try {
-				openSubReportFrame2(subReportsCount, mapInfo[code]['ids'], reportKey, window.top.reportInfo['@reportKey']["parentFilter"], iframeContainer[0], null);
+				var parentFilter = (window.top && window.top.reportInfo && window.top.reportInfo['@reportKey']) 
+					? window.top.reportInfo['@reportKey']["parentFilter"] 
+					: null;
+				openSubReportFrame2(subReportsCount, mapInfo[code]['ids'], reportKey, parentFilter, iframeContainer[0], null);
 			} catch (e) {
 				console.error('Error loading drilldown:', e);
 				content.html('<div style="text-align: center; padding: 40px; color: #dc3545;"><div style="font-size: 48px; margin-bottom: 20px;">❌</div><div>خطا در بارگذاری گزارش</div><div style="margin-top: 10px; font-size: 12px;">' + e.message + '</div></div>');

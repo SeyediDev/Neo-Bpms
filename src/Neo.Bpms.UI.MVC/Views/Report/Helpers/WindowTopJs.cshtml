@@ -31,48 +31,51 @@
 		);
 
 	<script>
-		if (!window.top.subConfigIds || !window.top.subReportConfigNames) {
-			window.top.subConfigIds = {};
-			window.top.subReportConfigNames = {};
+		// پشتیبانی از window.top و window - اگر window.top همان window باشد، از window استفاده می‌کنیم
+		var win = (window.top && window.top !== window) ? window.top : window;
+		
+		if (!win.subConfigIds || !win.subReportConfigNames) {
+			win.subConfigIds = {};
+			win.subReportConfigNames = {};
 		}
-		if (!window.top.subReportNamespaceIds) {
-			window.top.subReportNamespaceIds = {};
+		if (!win.subReportNamespaceIds) {
+			win.subReportNamespaceIds = {};
 		}
-		if (!window.top.subReportEntityIds) {
-			window.top.subReportEntityIds = {};
+		if (!win.subReportEntityIds) {
+			win.subReportEntityIds = {};
 		}
-		if (!window.top.subReportReportIds) {
-			window.top.subReportReportIds = {};
+		if (!win.subReportReportIds) {
+			win.subReportReportIds = {};
 		}
-		if (!window.top.subConfigIds) {
-			window.top.subConfigIds = {};
+		if (!win.subConfigIds) {
+			win.subConfigIds = {};
 		}
-		window.top.subReportNamespaceIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportNamespaceIdsJson);
-		window.top.subReportEntityIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportEntityIdsJson);
-		window.top.subReportReportIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportReportIdsJson);
-		window.top.subConfigIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subConfigIdsJson);
+		win.subReportNamespaceIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportNamespaceIdsJson);
+		win.subReportEntityIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportEntityIdsJson);
+		win.subReportReportIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportReportIdsJson);
+		win.subConfigIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subConfigIdsJson);
 
-		window.top.subReportConfigNames[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportConfigNamesJson);
-		if (!window.top.reportInfo) {
-			window.top.reportInfo = {};
+		win.subReportConfigNames[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportConfigNamesJson);
+		if (!win.reportInfo) {
+			win.reportInfo = {};
 		}
-		if (!window.top.reportInfo[@Html.Raw(reportKeyJson)]) {
-			window.top.reportInfo[@Html.Raw(reportKeyJson)] = {};
+		if (!win.reportInfo[@Html.Raw(reportKeyJson)]) {
+			win.reportInfo[@Html.Raw(reportKeyJson)] = {};
 		}
 		@{
 			var fvs = controllerMethods.CodeFilterValues(ViewBag.FilterValues);
 		}
 
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["DashboardId"] =
+		win.reportInfo[@Html.Raw(reportKeyJson)]["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));
+		win.reportInfo[@Html.Raw(reportKeyJson)]["DashboardId"] =
 			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.DashboardId))));
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["DashboardConfigId"] =
+		win.reportInfo[@Html.Raw(reportKeyJson)]["DashboardConfigId"] =
 			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.DashboardConfigId))));
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["ReportViewType"] =
+		win.reportInfo[@Html.Raw(reportKeyJson)]["ReportViewType"] =
 			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.ViewType.ToString()))));
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["NamespaceId"] =
+		win.reportInfo[@Html.Raw(reportKeyJson)]["NamespaceId"] =
 			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.reportInfo.Structure.NamespaceId ?? ""));
-		window.top.reportInfo[@Html.Raw(reportKeyJson)]["EntityId"] =
+		win.reportInfo[@Html.Raw(reportKeyJson)]["EntityId"] =
 			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.reportInfo.Structure.EntityId ?? ""));
 
 	</script>

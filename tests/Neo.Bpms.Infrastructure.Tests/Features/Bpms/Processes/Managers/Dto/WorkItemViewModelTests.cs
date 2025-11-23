@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Neo.Bpms.Domain.Features.Dynamic;
+using Neo.Bpms.Domain.Models.Bpmn.Core.CommonElements.Events;
 using Neo.Bpms.Domain.Models.Bpmn.Execution;
 using Neo.Bpms.Domain.Models.Bpmn.Processes.Activities;
 using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;

@@ -153,6 +153,18 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     }
 
     /// <summary>
+    /// Add average formula column
+    /// </summary>
+    /// <param name="formula">formula</param>
+    /// <param name="alias">Alias</param>
+    /// <returns></returns>
+    protected void AverageFormula(string formula, string alias = null,
+        params (eControlPropertyId propertyId, object value)[] properties)
+    {
+        AggregationFormula(formula, AggregationType.Average, alias, properties);
+    }
+
+    /// <summary>
     /// Add count column
     /// </summary>
     /// <param name="fieldId">field</param>

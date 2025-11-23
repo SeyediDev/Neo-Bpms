@@ -693,14 +693,19 @@ var bindOpenDrillDownClickEvent = function($a,
 };
 
 function openSubReportFrame2(sReportCount, ids, reportKey, parentFilterValues, obj, evt) {
+	if (!window.top || !window.top.reportInfo || !window.top.reportInfo[reportKey]) {
+		console.error('Report info not found for key: ' + reportKey);
+		return;
+	}
+	
 	var reportInfo = window.top.reportInfo[reportKey];
 	var namespaceId = reportInfo["NamespaceId"];
 	var entityId = reportInfo["EntityId"];
 
-	var subReportNamespaceId = window.top.subReportNamespaceIds[reportKey];
-	var subReportEntityId = window.top.subReportEntityIds[reportKey];
-	var subReportReportId = window.top.subReportReportIds[reportKey];
-	var subConfigId = window.top.subConfigIds[reportKey];
+	var subReportNamespaceId = window.top.subReportNamespaceIds && window.top.subReportNamespaceIds[reportKey] ? window.top.subReportNamespaceIds[reportKey] : null;
+	var subReportEntityId = window.top.subReportEntityIds && window.top.subReportEntityIds[reportKey] ? window.top.subReportEntityIds[reportKey] : null;
+	var subReportReportId = window.top.subReportReportIds && window.top.subReportReportIds[reportKey] ? window.top.subReportReportIds[reportKey] : null;
+	var subConfigId = window.top.subConfigIds && window.top.subConfigIds[reportKey] ? window.top.subConfigIds[reportKey] : null;
 	var reportViewType = reportInfo["ReportViewType"];
 	var dashboardId = reportInfo["DashboardId"];
 	var dashboardConfigId = reportInfo["DashboardConfigId"];

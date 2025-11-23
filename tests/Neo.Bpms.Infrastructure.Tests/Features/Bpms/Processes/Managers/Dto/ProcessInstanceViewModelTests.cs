@@ -52,7 +52,7 @@ public class ProcessInstanceViewModelTests
         var processInstance = Mock.Of<ProcessInstance>(pi =>
             pi.Id == 456L &&
             pi.CloseTime == null &&
-            pi.state == ProcessInstanceStateId.Active &&
+            pi.state == ProcessInstanceStateId.Activated &&
             pi.EntityId == "TestEntity2" &&
             pi.EntityPkv == "PKV456");
 
@@ -62,7 +62,7 @@ public class ProcessInstanceViewModelTests
         // Assert
         viewModel.Id.Should().Be(456L);
         viewModel.ClosedTime.Should().Be("");
-        viewModel.State.Should().Be(ProcessInstanceStateId.Active.ToString());
+        viewModel.State.Should().Be(ProcessInstanceStateId.Activated.ToString());
         viewModel.Entity.Should().Be("TestEntity2");
         viewModel.EntityPkv.Should().Be("PKV456");
     }

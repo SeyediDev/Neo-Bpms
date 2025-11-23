@@ -208,10 +208,14 @@
 								{
 									<text>
 									if (event.point && event.point.ids) {
+										var reportKey = '@reportInfo.Structure.ConfigId';
+										var parentFilter = (window.top && window.top.reportInfo && window.top.reportInfo[reportKey]) 
+											? window.top.reportInfo[reportKey]["parentFilter"] 
+											: null;
 										openSubReportFrame2(@subReportsCount,
 											event.point.ids,
-											'@reportInfo.Structure.ConfigId',
-											window.top.reportInfo['@reportInfo.Structure.ConfigId']["parentFilter"],
+											reportKey,
+											parentFilter,
 											event.toElement || event.target,
 											event);
 									}

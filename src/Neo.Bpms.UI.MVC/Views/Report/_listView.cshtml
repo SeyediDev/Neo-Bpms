@@ -35,6 +35,113 @@
 	</text>;
 }
 
+@if (Model.Errors != null && Model.Errors.Count > 0)
+{
+	<style>
+		.neo-report-error {
+			display: flex;
+			gap: 1rem;
+			padding: 1.5rem;
+			margin-bottom: 1.5rem;
+			border-radius: 1rem;
+			border: 1px solid rgba(239, 68, 68, 0.3);
+			background: linear-gradient(135deg, rgba(254, 202, 202, 0.9), rgba(254, 226, 226, 0.9));
+			box-shadow: 0 15px 35px -25px rgba(0, 0, 0, 0.4);
+			color: #B91C1C;
+			direction: rtl;
+			text-align: right;
+		}
+
+		.neo-report-error__icon {
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			background: rgba(248, 113, 113, 0.25);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			flex-shrink: 0;
+		}
+
+		.neo-report-error__body {
+			flex: 1;
+		}
+
+		.neo-report-error__title {
+			font-size: 1rem;
+			font-weight: 600;
+			margin-bottom: 0.35rem;
+		}
+
+		.neo-report-error__subtitle {
+			font-size: 0.9rem;
+			margin-bottom: 0.75rem;
+			color: #7F1D1D;
+		}
+
+		.neo-report-error__list {
+			margin: 0;
+			padding-inline-start: 1.25rem;
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+			list-style: disc;
+		}
+
+		.neo-report-error__item {
+			font-size: 0.9rem;
+			line-height: 1.5;
+		}
+
+		.neo-report-error__code {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.25rem;
+			margin-right: 0.5rem;
+			padding: 0.05rem 0.6rem;
+			border-radius: 999px;
+			background: rgba(239, 68, 68, 0.14);
+			font-size: 0.8rem;
+		}
+	</style>
+
+	<div class="neo-report-error">
+		<div class="neo-report-error__icon">
+			<i class="fal fa-exclamation-triangle" aria-hidden="true"></i>
+		</div>
+		<div class="neo-report-error__body">
+			<div class="neo-report-error__title">مشکلی در نمایش این گزارش رخ داده است.</div>
+			<div class="neo-report-error__subtitle">لطفاً پس از رفع خطا یا با مدیر سیستم تماس بگیرید.</div>
+			<ul class="neo-report-error__list">
+				@foreach (var error in Model.Errors)
+				{
+					var message = !string.IsNullOrWhiteSpace(error?.Text)
+						? error.Text
+						: error?.GeneralText;
+
+					if (string.IsNullOrWhiteSpace(message))
+					{
+						message = "جزئیات خطا در دسترس نیست.";
+					}
+
+					<li class="neo-report-error__item">
+						@message
+						@if (!string.IsNullOrWhiteSpace(error?.Code))
+						{
+							<span class="neo-report-error__code">کد: @error.Code</span>
+						}
+						@if (!string.IsNullOrWhiteSpace(error?.For))
+						{
+							<span class="neo-report-error__code">@error.For</span>
+						}
+					</li>
+				}
+			</ul>
+		</div>
+	</div>
+}
+
 @if (isDrillDown)
 {
 	<partial name="~/Views/Report/Helpers/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderGrid(Model)}" />

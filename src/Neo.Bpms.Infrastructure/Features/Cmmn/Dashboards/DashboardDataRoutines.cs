@@ -4,11 +4,12 @@ using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
 public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines, 
-    SlowQueryLogger slowQueryLogger, IConfiguration configuration)
+    SlowQueryLogger slowQueryLogger, IConfiguration configuration, IMemoryCache memoryCache)
 {
     internal async Task GetDashboardData(
         DashboardData dashboardData, ConfiguredDashboard config,
@@ -41,6 +42,24 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
             // خواندن timeout از widget properties (پیش‌فرض: 30 ثانیه)
             int widgetTimeoutMs = GetWidgetTimeoutMs(widget);
             int slowQueryThresholdMs = GetWidgetSlowQueryThresholdMs(widget);
+            
+            // خواندن زمان کش از widget properties (پیش‌فرض: 10 دقیقه)
+            int cacheTimeMinutes = GetWidgetCacheTimeMinutes(widget);
+            
+            // بررسی کش قبل از اجرای پرس‌وجو
+            if (cacheTimeMinutes > 0)
+            {
+                string cacheKey = GenerateCacheKey(widget, reportConfig, dashboardData.Structure.FilterValues, user, maxRecord, culture, forPrint);
+                if (memoryCache.TryGetValue(cacheKey, out ReportData? cachedReportData))
+                {
+                    if (cachedReportData != null)
+                    {
+                        cachedReportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+                        dashboardData.ReportsData.Add(cachedReportData);
+                        continue;
+                    }
+                }
+            }
 
             // اجرای پرس‌وجو با timeout
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -80,6 +99,19 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
                 }
                 
                 reportData.Structure.Name = string.IsNullOrEmpty(reportConfig.Name) ? report.Name : reportConfig.Name;
+                
+                // ذخیره در کش اگر زمان کش تنظیم شده باشد
+                if (cacheTimeMinutes > 0)
+                {
+                    string cacheKey = GenerateCacheKey(widget, reportConfig, dashboardData.Structure.FilterValues, user, maxRecord, culture, forPrint);
+                    var cacheOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTimeMinutes),
+                        Priority = CacheItemPriority.Normal
+                    };
+                    memoryCache.Set(cacheKey, reportData, cacheOptions);
+                }
+                
                 dashboardData.ReportsData.Add(reportData);
             }
             catch (OperationCanceledException) when (timeoutCts?.Token.IsCancellationRequested == true)
@@ -209,5 +241,93 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
 
         // پیش‌فرض
         return 5000; // 5 ثانیه
+    }
+
+    /// <summary>
+    /// دریافت زمان کش ویجت از properties (پیش‌فرض: 10 دقیقه)
+    /// </summary>
+    private int GetWidgetCacheTimeMinutes(ConfiguredDashboard.ConfigWidget widget)
+    {
+        // خواندن از widget property
+        var cacheTime = widget.GetPropertyValueInt(eControlPropertyId.WidgetCacheTimeMinutes);
+        if (cacheTime > 0)
+            return cacheTime;
+
+        // خواندن از appsettings
+        var appSettingsCacheTime = configuration.GetValue<int>("Dashboard:WidgetCacheTimeMinutes", 0);
+        if (appSettingsCacheTime > 0)
+            return appSettingsCacheTime;
+
+        // پیش‌فرض: 10 دقیقه
+        return 10;
+    }
+
+    /// <summary>
+    /// تولید کلید کش منحصر به فرد برای داده‌های ویجت
+    /// </summary>
+    private static string GenerateCacheKey(
+        ConfiguredDashboard.ConfigWidget widget,
+        ConfiguredReport reportConfig,
+        ElasticObject filterValues,
+        IdentityUser user,
+        int maxRecord,
+        string culture,
+        bool forPrint)
+    {
+        // ایجاد کلید کش بر اساس تمام پارامترهای مؤثر
+        var keyParts = new List<string>
+        {
+            "DashboardWidget",
+            widget.Id,
+            reportConfig.ConfigId,
+            widget.ReportNamespaceId,
+            widget.ReportEntityId,
+            widget.ReportId,
+            maxRecord.ToString(),
+            culture ?? "fa",
+            forPrint.ToString(),
+            user?.Id ?? "anonymous"
+        };
+
+        // اضافه کردن فیلترها به کلید کش
+        if (filterValues != null && filterValues.Attributes.Any())
+        {
+            var filterHash = filterValues.ToString().GetHashCode().ToString();
+            keyParts.Add($"Filters:{filterHash}");
+        }
+
+        return string.Join(":", keyParts);
+    }
+
+    /// <summary>
+    /// پاک کردن کش یک ویجت خاص
+    /// </summary>
+    public void InvalidateWidgetCache(
+        ConfiguredDashboard.ConfigWidget widget,
+        ConfiguredReport reportConfig,
+        ElasticObject filterValues,
+        IdentityUser user,
+        int maxRecord,
+        string culture,
+        bool forPrint)
+    {
+        if (widget == null || reportConfig == null)
+            return;
+
+        string cacheKey = GenerateCacheKey(widget, reportConfig, filterValues, user, maxRecord, culture, forPrint);
+        memoryCache.Remove(cacheKey);
+    }
+
+    /// <summary>
+    /// پاک کردن تمام کش‌های مربوط به یک ویجت (بدون در نظر گیری فیلترها)
+    /// </summary>
+    public void InvalidateAllWidgetCache(ConfiguredDashboard.ConfigWidget widget)
+    {
+        if (widget == null)
+            return;
+
+        // از آنجایی که IMemoryCache نمی‌تواند pattern-based remove کند،
+        // این متد فقط برای استفاده در آینده با IDistributedCache است
+        // فعلاً باید از InvalidateWidgetCache با پارامترهای مشخص استفاده شود
     }
 }

@@ -31,7 +31,7 @@ public class GatewaySyncWaitingInstanceDeserializeTests
         var method = typeof(GatewaySyncWaitingInstance).GetMethod("Deserialize", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Act
-        var result = (Dictionary<string, ReceiveTokenInfo>)method!.Invoke(null, new object[] { receivedTokens })!;
+        var result = (Dictionary<string, ReceiveTokenInfo>)method!.Invoke(null, new object[] { receivedTokens! })!;
 
         // Assert
         result.Should().BeEmpty();

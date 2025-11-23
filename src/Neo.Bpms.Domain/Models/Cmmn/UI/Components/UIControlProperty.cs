@@ -427,7 +427,15 @@ public enum eControlPropertyId
     [Title("Threshold لاگ پرس‌وجوهای کند (میلی‌ثانیه)")]
     [ValueType(PropertyValueType.Int)]
     [ControlGroup(ControlGroup.None)]
-    SlowQueryThresholdMs = 600002
+    SlowQueryThresholdMs = 600002,
+
+    /// <summary>
+    /// زمان کش برای داده‌های ویجت در داشبورد (به دقیقه)
+    /// </summary>
+    [Title("زمان کش ویجت (دقیقه)")]
+    [ValueType(PropertyValueType.Int)]
+    [ControlGroup(ControlGroup.None)]
+    WidgetCacheTimeMinutes = 600003
 }
 public enum eControlPropertyTarget
 {

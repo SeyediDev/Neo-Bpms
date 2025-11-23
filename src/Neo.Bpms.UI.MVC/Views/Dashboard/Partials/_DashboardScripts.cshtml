@@ -47,134 +47,35 @@
         toggleClientOnlyPanel(null);
     });
 
-    // Show loading overlay - optimized to prevent flash
-    function showDashboardLoading() {
-        // First, immediately hide dashboard content to prevent flash
-        const mainContent = document.getElementById('dashboard-main-content');
-        if (mainContent) {
-            mainContent.classList.remove('content-ready');
-            mainContent.style.opacity = '0';
-            mainContent.style.transition = 'opacity 0.1s ease-out';
-            mainContent.style.pointerEvents = 'none';
-        }
-        
-        // Hide all dashboard widgets immediately
-        const widgets = document.querySelectorAll('.neo-dashboard-widget-container, .neo-dashboard-widget');
-        widgets.forEach(widget => {
-            widget.style.opacity = '0';
-            widget.style.transition = 'opacity 0.1s ease-out';
-        });
-        
-        let overlay = document.getElementById('dashboard-loading-overlay');
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'dashboard-loading-overlay';
-            overlay.className = 'dashboard-loading-overlay';
-            overlay.style.display = 'flex'; // Show immediately without transition
-            overlay.style.opacity = '1'; // Full opacity immediately
-            overlay.innerHTML = `
-                <div class="dashboard-loading-content">
-                    <div class="dashboard-loading-spinner"></div>
-                    <div class="dashboard-loading-text">در حال بارگذاری...</div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        } else {
-            // If overlay exists, show it immediately
-            overlay.style.display = 'flex';
-            overlay.style.opacity = '1';
-            overlay.classList.add('show');
-        }
-    }
-
-    // Hide loading overlay
-    function hideDashboardLoading() {
-        const overlay = document.getElementById('dashboard-loading-overlay');
-        if (overlay) {
-            overlay.classList.remove('show');
-            overlay.style.opacity = '0';
-            // Remove from DOM after transition
-            setTimeout(() => {
-                if (overlay && !overlay.classList.contains('show')) {
-                    overlay.style.display = 'none';
-                    overlay.remove();
-                }
-            }, 200);
-        }
-        
-        // Restore dashboard content visibility
-        const mainContent = document.getElementById('dashboard-main-content');
-        if (mainContent) {
-            mainContent.classList.add('content-ready');
-            mainContent.style.opacity = '1';
-            mainContent.style.transition = 'opacity 0.3s ease-in';
-            mainContent.style.pointerEvents = '';
-        }
-        
-        // Restore widgets visibility
-        const widgets = document.querySelectorAll('.neo-dashboard-widget-container, .neo-dashboard-widget');
-        widgets.forEach(widget => {
-            widget.style.opacity = '1';
-            widget.style.transition = 'opacity 0.3s ease-in';
-        });
-    }
-
-    // Hide loading overlay when page is fully loaded
-    // Ensure content is fully rendered before showing it
-    function ensureContentReady() {
+    // NO LOADER - Content is shown immediately via inline CSS
+    // Just clean up sessionStorage if switching flag exists
+    (function() {
         const isSwitching = sessionStorage.getItem('dashboard-switching');
-        
-        function displayContent() {
-            // Mark content as ready
-            const mainContent = document.getElementById('dashboard-main-content');
-            if (mainContent) {
-                mainContent.classList.add('content-ready');
-            }
-            // Hide loading overlay
-            hideDashboardLoading();
-            // Remove switching flag
-            if (isSwitching) {
-                sessionStorage.removeItem('dashboard-switching');
+        if (isSwitching) {
+            // Clean up switching flag
+            sessionStorage.removeItem('dashboard-switching');
+            if (document.body) {
                 document.body.classList.remove('dashboard-switching');
                 document.body.removeAttribute('data-dashboard-switching');
             }
         }
         
-        function showContent() {
-            // Wait for fonts (especially Font Awesome icons) to load before showing content
-            // This ensures icons are displayed correctly
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(function() {
-                    displayContent();
-                });
-            } else {
-                // Fallback: if fonts API not available, show immediately
-                displayContent();
-            }
+        // Ensure content is visible (should already be visible via CSS, but just in case)
+        const mainContent = document.getElementById('dashboard-main-content');
+        if (mainContent) {
+            mainContent.style.opacity = '1';
+            mainContent.style.display = 'block';
         }
         
-        // Wait for both DOM and all resources (images, stylesheets, etc.) to be loaded
-        if (document.readyState === 'complete') {
-            // Page already loaded, show content immediately (after fonts load)
-            showContent();
-        } else {
-            // If switching tabs, wait for full page load
-            if (isSwitching) {
-                window.addEventListener('load', function() {
-                    showContent();
-                });
-            } else {
-                // For normal page load, show content when DOM is ready
-                document.addEventListener('DOMContentLoaded', function() {
-                    showContent();
-                });
-            }
-        }
-    }
-    
-    ensureContentReady();
+        // Ensure widgets are visible
+        const widgets = document.querySelectorAll('.neo-dashboard-widget-container, .neo-dashboard-widget');
+        widgets.forEach(function(widget) {
+            widget.style.opacity = '1';
+        });
+    })();
 
     // Define switchConfig function before Dashboard.js loads
+    // Replace placeholder if it exists, otherwise define it
     window.dashboard_switchConfig = function (configId) {
         console.log('Dashboard: Switching to config:', configId);
 
@@ -183,8 +84,8 @@
             return;
         }
 
-        // IMMEDIATELY hide content and show loading overlay (synchronously, no delay)
-        showDashboardLoading();
+        // NO LOADER - Just mark that we're switching (for next page load)
+        // Content stays visible during switch for better UX
 
         // Update active tab visual state
         const tabItems = document.querySelectorAll('.dashboard-tab-item');
@@ -203,7 +104,6 @@
 
         const isClientOnlyTab = clientOnlyTabs.has(configId);
         if (isClientOnlyTab) {
-            hideDashboardLoading();
             const panelVisible = toggleClientOnlyPanel(configId);
             if (!panelVisible) {
                 console.warn('Dashboard: Client-only tab selected but no panel found for', configId);
@@ -231,6 +131,19 @@
             }
         }
     };
+    
+    // Process any queued switchConfig calls from before full implementation loaded
+    if (window._dashboard_switchConfig_queue && window._dashboard_switchConfig_queue.length > 0) {
+        console.log('Dashboard: Processing', window._dashboard_switchConfig_queue.length, 'queued switchConfig calls');
+        const queuedCalls = window._dashboard_switchConfig_queue.slice();
+        window._dashboard_switchConfig_queue = [];
+        // Process queued calls after a short delay to ensure DOM is ready
+        setTimeout(function() {
+            queuedCalls.forEach(function(configId) {
+                window.dashboard_switchConfig(configId);
+            });
+        }, 100);
+    }
 
     // ===== EDIT TAB (با مدال و AJAX بدون رفرش صفحه) =====
     window.dashboard_editTab = function (configId, currentName) {

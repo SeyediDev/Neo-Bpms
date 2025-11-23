@@ -472,8 +472,29 @@ public static class EstablishReportQuery
             EntityField key = qd.Entity.KeyFields?.FirstOrDefault();
             if (key != null)
                 qd.OrderBy(key.Id);
-            else if (!string.IsNullOrEmpty(qd.Entity.PartitionField))
-                qd.OrderBy(qd.Entity.PartitionField);
+            else
+            {
+                var addAnyOrderBy = false;
+                if (!string.IsNullOrEmpty(qd.Entity.PartitionField))
+                {
+                    var orderByField = qd.Entity.GetField(qd.Entity.PartitionField);
+                    if (orderByField != null)
+                    {
+                        addAnyOrderBy = true;
+                        qd.OrderBy(orderByField.Id);
+                    }
+                }
+                if(!addAnyOrderBy)
+                {
+                    var orderByField = qd.Entity.entityFields.Values.FirstOrDefault(f => f.IsForeignParam()) ??
+                        qd.Entity.entityFields.Values.FirstOrDefault(f => f.IsLongParam()) ??
+                        qd.Entity.entityFields.Values.FirstOrDefault();
+                    if (orderByField != null)
+                    {
+                        qd.OrderBy(orderByField.Id);
+                    }
+                }
+            }
         }
     }
 

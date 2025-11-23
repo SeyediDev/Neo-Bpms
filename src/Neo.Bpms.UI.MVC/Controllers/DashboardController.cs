@@ -1,5 +1,6 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
+using Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -7,6 +8,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
     ReportConfigBackupRestore reportConfigBackupRestore,
     DashboardConfigManager dashboardConfigManager,
     DashboardStructRoutines dashboardStructRoutines,
+    DashboardDataRoutines dashboardDataRoutines,
     ReportConfigManager reportConfigManager,
     ControllerMethods controllerMethods,
     FilterManager filterController,
@@ -633,6 +635,9 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
 
             int maxRecord = DashboardDataRoutines.GetWidgetMaxRecord(widget, reportConfig.ViewType);
             string culture = CultureHelper.GetCurrentNeutralCulture();
+
+            // پاک کردن کش ویجت قبل از refresh
+            dashboardDataRoutines.InvalidateWidgetCache(widget, reportConfig, filterValues, user, maxRecord, culture, false);
 
             // Get report data
             ReportDataRoutines reportDataRoutines = HttpContext.RequestServices.GetRequiredService<ReportDataRoutines>();

@@ -11,13 +11,15 @@
     var calendar = ViewBag.calendar as string ?? ProjectDefinition.Project.DefaultCalendar;
     var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
     
-    var rowDimensions = selectedColumns
-        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem &&
-                     sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+    var dimensions = selectedColumns
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem )
         .ToList();
-    var columnDimensions = selectedColumns
-        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem &&
-                     sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
+
+    var rowDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+        .ToList();
+    var columnDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
         .ToList();
     var valueColumns = selectedColumns
         .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
@@ -649,21 +651,39 @@ class PivotTable {
         // ساخت فیلتر بر اساس rowKey و colKey
         let filterValues = parentFilter ? JSON.parse(parentFilter) : {};
         
-        // اضافه کردن فیلترهای dimension
+        // اضافه کردن فیلترهای dimension از rowKey
         const rowKeyParts = rowKey.split('|');
         this.options.rowFields.forEach((field, index) => {
             const fieldName = typeof field === 'object' && field.name ? field.name : field;
-            if (rowKeyParts[index] && rowKeyParts[index] !== '(خالی)') {
-                filterValues[fieldName] = rowKeyParts[index];
+            if (rowKeyParts[index] && rowKeyParts[index] !== '(خالی)' && rowKeyParts[index] !== 'Total') {
+                const value = rowKeyParts[index].trim();
+                if (value) {
+                    filterValues[fieldName] = value;
+                }
             }
         });
         
+        // اضافه کردن فیلترهای dimension از colKey
         const colKeyParts = colKey.split('|');
         this.options.columnFields.forEach((field, index) => {
             const fieldName = typeof field === 'object' && field.name ? field.name : field;
-            if (colKeyParts[index] && colKeyParts[index] !== '(خالی)') {
-                filterValues[fieldName] = colKeyParts[index];
+            if (colKeyParts[index] && colKeyParts[index] !== '(خالی)' && colKeyParts[index] !== 'Total') {
+                const value = colKeyParts[index].trim();
+                if (value) {
+                    filterValues[fieldName] = value;
+                }
             }
+        });
+        
+        // لاگ برای دیباگ
+        console.log('Drill down filter values:', {
+            rowKey: rowKey,
+            colKey: colKey,
+            rowKeyParts: rowKeyParts,
+            colKeyParts: colKeyParts,
+            rowFields: this.options.rowFields,
+            columnFields: this.options.columnFields,
+            filterValues: filterValues
         });
         
         // فراخوانی OpenDrillDownModal - ids می‌تواند خالی باشد، فیلترها کافی هستند

@@ -171,6 +171,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
         SetReferFieldsPerRecord(q, referFields, joinQueries, row.Data, culture);
         SetRecordIds(q, result, config, culture, row.Data, bitmaskData);
         FormDataRoutines.SetEnumValues(culture, row.Data, q.Entity);
+        SetEnumValuesForFormulaFields(q, result, culture, row.Data);
         await subReportData.RunSubQueries(this, culture, result, config, row, forPrint, lp, user, cancellationToken);
     }
 
@@ -296,6 +297,91 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
             r[fieldName] = newValue;
             r[fe.Id] = newValue;
         }
+    }
+
+    /// <summary>
+    /// Sets enum values for formula fields that reference enum fields.
+    /// This handles cases where GroupByFormula is used with enum fields like "CustomerTenant.RfmSegment"
+    /// </summary>
+    private static void SetEnumValuesForFormulaFields(QueryUtility q, ReportData result, string culture, ElasticObject rowData)
+    {
+        if (result?.Structure?.SelectedColumns == null) return;
+
+        foreach (ColumnFieldDefinition column in result.Structure.SelectedColumns)
+        {
+            // Skip if not a formula field
+            if (string.IsNullOrEmpty(column.Formula)) continue;
+
+            // Try to find the referenced enum field from the formula first (to avoid unnecessary lookups)
+            EntityField enumField = GetEnumFieldFromFormula(q.Entity, column.Formula);
+            if (enumField == null || !enumField.IsEnum)
+                continue;
+
+            // Try multiple possible field keys where the value might be stored
+            string[] possibleKeys = [
+                column.ColumnTypeName,
+                column.FieldName ?? "",
+                column.Alias ?? ""
+            ];
+
+            object fieldValue = null;
+            string fieldKey = null;
+
+            foreach (string key in possibleKeys)
+            {
+                if (string.IsNullOrEmpty(key)) continue;
+                if (rowData.GetField(key, out fieldValue) && fieldValue != null)
+                {
+                    fieldKey = key;
+                    break;
+                }
+            }
+
+            if (fieldKey == null || fieldValue == null)
+                continue;
+
+            // Apply enum interpretation
+            try
+            {
+                string enumText = FormDataRoutines.GetEnumText(enumField.CSharpType, fieldValue, culture);
+                rowData.SetField(fieldKey, enumText);
+            }
+            catch
+            {
+                // If enum interpretation fails, keep the original value
+            }
+        }
+    }
+
+    /// <summary>
+    /// Extracts the enum field from a formula string like "CustomerTenant.RfmSegment"
+    /// </summary>
+    private static EntityField GetEnumFieldFromFormula(Entity rootEntity, string formula)
+    {
+        if (string.IsNullOrEmpty(formula) || rootEntity == null)
+            return null;
+
+        // Split formula by dots to get association and field names
+        string[] parts = formula.Split('.');
+        if (parts.Length < 2)
+            return null;
+
+        // Find the association field (e.g., "CustomerTenant")
+        string associationName = parts[0];
+        EntityField associationField = rootEntity.GetField(associationName);
+        if (associationField?.AssociationEntity == null)
+            return null;
+
+        // Get the target entity from the association
+        Entity targetEntity = associationField.AssociationEntity.Entity();
+        if (targetEntity == null)
+            return null;
+
+        // Find the field in the target entity (e.g., "RfmSegment")
+        string fieldName = parts[1];
+        EntityField targetField = targetEntity.GetField(fieldName);
+        
+        return targetField;
     }
 
     private class BitmaskData : Dictionary<string, string>

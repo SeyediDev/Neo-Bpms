@@ -9,6 +9,10 @@ public abstract class DashboardWidgetDefinitionBase
     protected virtual int? HeightInPixels { get; } = 200;
     protected virtual int? MaxRecordCount { get; } = 10;
     protected virtual string Icon => "chart-bar";
+    /// <summary>
+    /// زمان کش برای داده‌های ویجت (به دقیقه). پیش‌فرض: 10 دقیقه
+    /// </summary>
+    protected virtual int? CacheTimeMinutes { get; } = 10;
 
     /// <summary>
     /// Widget Properties
@@ -45,6 +49,10 @@ public abstract class DashboardWidgetDefinitionBase
         if(MaxRecordCount!=null)
         {
             widget.AddProperty(eControlPropertyId.MaxRecordCount, MaxRecordCount.ToString());
+        }
+        if(CacheTimeMinutes!=null)
+        {
+            widget.AddProperty(eControlPropertyId.WidgetCacheTimeMinutes, CacheTimeMinutes.ToString());
         }
 
         dashboardConfig.Dashboard.Reports ??= [];
