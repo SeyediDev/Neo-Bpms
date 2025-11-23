@@ -3,6 +3,8 @@
 
 @model Neo.Bpms.UI.MVC.PartialModels.WindowTopJsModel
 @{
+	var reportKeyJson = System.Text.Json.JsonSerializer.Serialize(Model.reportKey ?? "");
+	var reportKeyJs = reportKeyJson.Trim('"'); // Remove outer quotes since we add them in JS
 	var subReportConfigNames = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Name));
 	var subReportNamespaceIds = string.Join(",",
 		Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.entity.model.Id));
@@ -10,6 +12,12 @@
 		string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.entity.Id));
 	var subReportReportIds = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.Report.Id));
 	var subConfigIds = string.Join(",", Model.drillDownSubReports.Select(dsr => dsr.ConfiguredReport.ConfigId));
+	
+	var subReportNamespaceIdsJson = System.Text.Json.JsonSerializer.Serialize(subReportNamespaceIds);
+	var subReportEntityIdsJson = System.Text.Json.JsonSerializer.Serialize(subReportEntityIds);
+	var subReportReportIdsJson = System.Text.Json.JsonSerializer.Serialize(subReportReportIds);
+	var subConfigIdsJson = System.Text.Json.JsonSerializer.Serialize(subConfigIds);
+	var subReportConfigNamesJson = System.Text.Json.JsonSerializer.Serialize(subReportConfigNames);
 
 	var subReportConfigData = Model.drillDownSubReports.Select(
 		dsr => new
@@ -39,33 +47,33 @@
 		if (!window.top.subConfigIds) {
 			window.top.subConfigIds = {};
 		}
-		window.top.subReportNamespaceIds['@Model.reportKey'] = '@subReportNamespaceIds';
-		window.top.subReportEntityIds['@Model.reportKey'] = '@subReportEntityIds';
-		window.top.subReportReportIds['@Model.reportKey'] = '@subReportReportIds';
-		window.top.subConfigIds['@Model.reportKey'] = '@subConfigIds';
+		window.top.subReportNamespaceIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportNamespaceIdsJson);
+		window.top.subReportEntityIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportEntityIdsJson);
+		window.top.subReportReportIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportReportIdsJson);
+		window.top.subConfigIds[@Html.Raw(reportKeyJson)] = @Html.Raw(subConfigIdsJson);
 
-		window.top.subReportConfigNames['@Model.reportKey'] = '@subReportConfigNames';
+		window.top.subReportConfigNames[@Html.Raw(reportKeyJson)] = @Html.Raw(subReportConfigNamesJson);
 		if (!window.top.reportInfo) {
 			window.top.reportInfo = {};
 		}
-		if (!window.top.reportInfo['@Model.reportKey']) {
-			window.top.reportInfo['@Model.reportKey'] = {};
+		if (!window.top.reportInfo[@Html.Raw(reportKeyJson)]) {
+			window.top.reportInfo[@Html.Raw(reportKeyJson)] = {};
 		}
 		@{
 			var fvs = controllerMethods.CodeFilterValues(ViewBag.FilterValues);
 		}
 
-		window.top.reportInfo['@Model.reportKey']["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));
-		window.top.reportInfo['@Model.reportKey']["DashboardId"] =
-			'@string.Join(",", subReportConfigData.Select(sr => sr.DashboardId))';
-		window.top.reportInfo['@Model.reportKey']["DashboardConfigId"] =
-			'@string.Join(",", subReportConfigData.Select(sr => sr.DashboardConfigId))';
-		window.top.reportInfo['@Model.reportKey']["ReportViewType"] =
-			'@string.Join(",", subReportConfigData.Select(sr => sr.ViewType.ToString()))';
-		window.top.reportInfo['@Model.reportKey']["NamespaceId"] =
-			'@Model.reportInfo.Structure.NamespaceId';
-		window.top.reportInfo['@Model.reportKey']["EntityId"] =
-			'@Model.reportInfo.Structure.EntityId';
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["DashboardId"] =
+			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.DashboardId))));
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["DashboardConfigId"] =
+			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.DashboardConfigId))));
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["ReportViewType"] =
+			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(string.Join(",", subReportConfigData.Select(sr => sr.ViewType.ToString()))));
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["NamespaceId"] =
+			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.reportInfo.Structure.NamespaceId ?? ""));
+		window.top.reportInfo[@Html.Raw(reportKeyJson)]["EntityId"] =
+			@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.reportInfo.Structure.EntityId ?? ""));
 
 	</script>
 }

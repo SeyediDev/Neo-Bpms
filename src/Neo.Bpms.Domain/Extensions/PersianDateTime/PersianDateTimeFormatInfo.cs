@@ -432,7 +432,7 @@ public partial class DateUtil
             {
                 PersianCalendar Mdate = new();
                 string[] prdate = shamsi.Split('/');
-                DateTime shamsidate = Mdate.ToDateTime(Convert.ToInt32(prdate[0]), Convert.ToInt32(prdate[1]), Convert.ToInt32(prdate[2]), 1, 1, 1, 1, System.Globalization.GregorianCalendar.ADEra);
+                DateTime shamsidate = Mdate.ToDateTime(Convert.ToInt32(prdate[0]), Convert.ToInt32(prdate[1]), Convert.ToInt32(prdate[2]), 1, 1, 1, 1, GregorianCalendar.ADEra);
                 return Convert.ToDateTime(shamsidate.ToShortDateString());
             }
             catch { return DateTime.Now; }

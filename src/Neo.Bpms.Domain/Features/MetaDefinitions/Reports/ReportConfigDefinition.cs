@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredReport;
@@ -115,7 +114,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
 
         if (fieldIds.Length == 1)
         {
-            AddField(ConfiguredReport.eFieldSelectionType.asColumn, fieldId, alias, properties);
+            AddField(eFieldSelectionType.asColumn, fieldId, alias, properties);
         }
         else
         {
@@ -132,7 +131,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
                 return;
             }
 
-            AddIncludedField(ConfiguredReport.eFieldSelectionType.asColumn, f.Id, associationField.AssociationEntity.Id
+            AddIncludedField(eFieldSelectionType.asColumn, f.Id, associationField.AssociationEntity.Id
                 , associationField.Id, alias, properties);
         }
     }
@@ -156,7 +155,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     protected void DisplayColumnFormula(string formula, string alias = null,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
-        AddFormulaField(ConfiguredReport.eFieldSelectionType.asColumn, null, formula, alias, properties);
+        AddFormulaField(eFieldSelectionType.asColumn, null, formula, alias, properties);
     }
 
     /// <summary>
@@ -188,9 +187,9 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="vAlign"></param>
     /// <returns></returns>
     protected void LayoutColumn(bool isTooltip, string associationName,
-        ConfiguredReport.ReportMatrixType matrixType = ConfiguredReport.ReportMatrixType.Horizontal,
-        double width = 0, ConfiguredReport.eHAlign hAlign = ConfiguredReport.eHAlign.Center,
-        ConfiguredReport.eVAlign vAlign = ConfiguredReport.eVAlign.Top)
+        ReportMatrixType matrixType = ReportMatrixType.Horizontal,
+        double width = 0, eHAlign hAlign = eHAlign.Center,
+        eVAlign vAlign = eVAlign.Top)
     {
         // LayoutColumn should only apply to GroupByItem fields, not DisplayColumn fields
         // Find the GroupByItem field by fieldId (associationName is the fieldId)
@@ -203,7 +202,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         SelectedField groupByField = null;
         foreach (var field in reportConfig.Fields.Values)
         {
-            if (field.type == ConfiguredReport.eFieldSelectionType.asGroupBy &&
+            if (field.type == eFieldSelectionType.asGroupBy &&
                 field.fieldId == associationName)
             {
                 groupByField = field;
@@ -214,7 +213,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         if (groupByField == null)
         {
             // Fallback to selectedField if it's a GroupByItem
-            if (selectedField != null && selectedField.type == ConfiguredReport.eFieldSelectionType.asGroupBy)
+            if (selectedField != null && selectedField.type == eFieldSelectionType.asGroupBy)
             {
                 groupByField = selectedField;
             }
@@ -232,23 +231,23 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         groupByField.VAlign = vAlign;
     }
 
-    protected void AddFormulaField(ConfiguredReport.eFieldSelectionType type,
+    protected void AddFormulaField(eFieldSelectionType type,
         string fieldId, string formula, string alias,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId ?? $"formulaSjvs_{reportConfig.Fields.Count}", report.EntityId, null,
-            alias, formula, false, ConfiguredReport.ReportMatrixType.Horizontal);
+            alias, formula, false, ReportMatrixType.Horizontal);
         ApplySelectedFieldProperties(selectedField, properties);
     }
 
-    protected void AddField(ConfiguredReport.eFieldSelectionType type,
+    protected void AddField(eFieldSelectionType type,
         string fieldId, string alias,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, report.EntityId, null,
-            alias, null, false, ConfiguredReport.ReportMatrixType.Horizontal);
+            alias, null, false, ReportMatrixType.Horizontal);
         if(selectedField==null)
         {
             AddFormulaField(type, fieldId, fieldId, alias, properties);
@@ -256,17 +255,17 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
         else ApplySelectedFieldProperties(selectedField, properties);
     }
 
-    protected void AddIncludedField(ConfiguredReport.eFieldSelectionType type,
+    protected void AddIncludedField(eFieldSelectionType type,
         string fieldId, string associationEntityId, string associationName, string alias,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, associationEntityId, associationName,
-            alias, null, false, ConfiguredReport.ReportMatrixType.Horizontal);
+            alias, null, false, ReportMatrixType.Horizontal);
         ApplySelectedFieldProperties(selectedField, properties);
     }
 
-    private static void ApplySelectedFieldProperties(ConfiguredReport.SelectedField field,
+    private static void ApplySelectedFieldProperties(SelectedField field,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties)
     {
         if (field == null || properties == null)
@@ -378,19 +377,19 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
 
     protected Report report { get; set; }
     protected ConfiguredReport reportConfig;
-    protected ConfiguredReport.SelectedField selectedField;
+    protected SelectedField selectedField;
 
     protected enum AggregationType
     {
-        Sum = ConfiguredReport.eFieldSelectionType.asAggregation_Sum,
-        Average = ConfiguredReport.eFieldSelectionType.asAggregation_Average,
-        Min = ConfiguredReport.eFieldSelectionType.asAggregation_Min,
-        Max = ConfiguredReport.eFieldSelectionType.asAggregation_Max,
-        First = ConfiguredReport.eFieldSelectionType.asAggregation_First,
-        Last = ConfiguredReport.eFieldSelectionType.asAggregation_Last,
-        SD = ConfiguredReport.eFieldSelectionType.asAggregation_SD,
-        Mode = ConfiguredReport.eFieldSelectionType.asAggregation_Mode,
-        Trend = ConfiguredReport.eFieldSelectionType.asAggregation_Trend,
-        Count = ConfiguredReport.eFieldSelectionType.asAggregation_Count
+        Sum = eFieldSelectionType.asAggregation_Sum,
+        Average = eFieldSelectionType.asAggregation_Average,
+        Min = eFieldSelectionType.asAggregation_Min,
+        Max = eFieldSelectionType.asAggregation_Max,
+        First = eFieldSelectionType.asAggregation_First,
+        Last = eFieldSelectionType.asAggregation_Last,
+        SD = eFieldSelectionType.asAggregation_SD,
+        Mode = eFieldSelectionType.asAggregation_Mode,
+        Trend = eFieldSelectionType.asAggregation_Trend,
+        Count = eFieldSelectionType.asAggregation_Count
     }
 }

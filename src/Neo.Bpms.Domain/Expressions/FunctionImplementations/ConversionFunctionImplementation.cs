@@ -45,7 +45,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
             NumberDecimalSeparator = decimalSeperator
         };
         if (!double.TryParse(from,
-            NumberStyles.AllowDecimalPoint | System.Globalization.NumberStyles.AllowThousands,
+            NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands,
             formatInfo, out double d))
             d = 0;
         return d;

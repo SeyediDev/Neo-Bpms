@@ -28,7 +28,7 @@
 @model ReportData;
 
 @* Critical CSS to prevent FOUC - Must be at the very top *@
-<style>
+<style id="fouc-prevention-style">
 	/* Hide icons, tabs, and side navigation initially - Critical inline styles */
 	/* Use display: none to prevent rendering until styles are loaded */
 	.icons-tables,
@@ -364,9 +364,35 @@
 
 <link href="@CommonBundles.SideNaviCssBundle" asp-append-version="true" rel="stylesheet" />
 
+
 @{
     await SideNavi(canScheduleReports, canDesign);
 }
+
+@* Force apply FOUC prevention styles immediately after SideNavi renders *@
+<script>
+	(function() {
+		// Apply styles to any elements that might have been rendered
+		var applyStyles = function() {
+			var elements = document.querySelectorAll('.icons-tables, .top-bar-anchor-icon, #sideNavi, .side-navi-item, .side-navi-data');
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].style.display = 'none';
+			}
+		};
+		
+		// Apply immediately
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', applyStyles);
+		} else {
+			applyStyles();
+		}
+		
+		// Also apply after a short delay to catch any dynamically added elements
+		setTimeout(applyStyles, 0);
+		setTimeout(applyStyles, 50);
+	})();
+</script>
+
 @if (structure != null)
 {
     @using (Html.BeginForm("Index", "Report",
@@ -739,55 +765,90 @@ else
         function showIconsAndTabs() {
             if (iconsShown) return;
             iconsShown = true;
+            
+            // Force a reflow to ensure styles are applied
+            document.body.offsetHeight;
+            
+            // Add the class to show elements
             document.body.classList.add('page-ready');
+            
+            // Force another reflow
+            document.body.offsetHeight;
+            
+            console.log('Page ready - Icons and tabs shown');
         }
         
         function checkStylesheetsLoaded() {
             var stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
-            var allLoaded = true;
+            var loadedCount = 0;
+            var totalCount = stylesheets.length;
+            
+            if (totalCount === 0) {
+                return true;
+            }
             
             for (var i = 0; i < stylesheets.length; i++) {
                 var sheet = stylesheets[i];
-                // Check if stylesheet is loaded
                 try {
-                    if (sheet.sheet === null && sheet.href) {
-                        allLoaded = false;
-                        break;
+                    // Check if stylesheet is loaded
+                    if (sheet.sheet) {
+                        loadedCount++;
+                    } else if (sheet.readyState === 'complete' || sheet.readyState === 'loaded') {
+                        loadedCount++;
                     }
                 } catch (e) {
                     // Cross-origin stylesheet, assume loaded
+                    loadedCount++;
                 }
             }
             
-            return allLoaded;
+            return loadedCount === totalCount;
         }
         
         // Method 1: Wait for window load (all resources including CSS)
-        window.addEventListener('load', function() {
-            setTimeout(showIconsAndTabs, 150);
-        });
+        if (document.readyState === 'complete') {
+            // Page already loaded
+            setTimeout(function() {
+                if (checkStylesheetsLoaded()) {
+                    showIconsAndTabs();
+                } else {
+                    // Wait a bit more for stylesheets
+                    setTimeout(showIconsAndTabs, 300);
+                }
+            }, 100);
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    if (checkStylesheetsLoaded()) {
+                        showIconsAndTabs();
+                    } else {
+                        setTimeout(showIconsAndTabs, 200);
+                    }
+                }, 200);
+            });
+        }
         
         // Method 2: Check when DOM is ready and stylesheets are loaded
         function checkAndShow() {
             if (checkStylesheetsLoaded()) {
-                setTimeout(showIconsAndTabs, 200);
+                setTimeout(showIconsAndTabs, 300);
             } else {
-                setTimeout(checkAndShow, 50);
+                setTimeout(checkAndShow, 100);
             }
         }
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(checkAndShow, 100);
+                setTimeout(checkAndShow, 200);
             });
         } else {
-            setTimeout(checkAndShow, 100);
+            setTimeout(checkAndShow, 200);
         }
         
-        // Fallback: Show after maximum delay (1.5 seconds)
+        // Fallback: Show after maximum delay (2 seconds)
         setTimeout(function() {
             showIconsAndTabs();
-        }, 1500);
+        }, 2000);
     })();
 </script>
 

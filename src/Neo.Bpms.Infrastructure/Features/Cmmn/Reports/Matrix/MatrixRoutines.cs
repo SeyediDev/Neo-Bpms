@@ -12,27 +12,15 @@ public class MatrixRoutines(ReportData reportInfo)
         {
             Verticals = [],
             Horizontals = [],
-            Indexs = [.. reportInfo.Structure.SelectedColumns.Where(
-                sc => sc.aggrType != eAggregationFunctions.InColumn &&
-                      sc.aggrType != eAggregationFunctions.GroupByItem)]
-
         };
-        IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns;
-        // Only use GroupByItem fields with MatrixType for dimensions (DisplayColumn fields don't have MatrixType)
+        IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns.Where(col => col.aggrType != eAggregationFunctions.GroupByItem);
         foreach (ColumnFieldDefinition col in cols)
         {
-            if (col.MatrixType == ConfiguredReport.ReportMatrixType.Vertical &&
-                col.aggrType == eAggregationFunctions.GroupByItem)
-            {
-                MatrixItem matrixItem = new() { Column = col };
+            MatrixItem matrixItem = new() { Column = col };
+            if (col.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
                 matrixData.Verticals.Add(matrixItem);
-            }
-            else if (col.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal &&
-                     col.aggrType == eAggregationFunctions.GroupByItem)
-            {
-                MatrixItem matrixItem = new() { Column = col };
+            else if (col.aggrType == eAggregationFunctions.InColumn)
                 matrixData.Horizontals.Add(matrixItem);
-            }
         }
         foreach (ReportRowInfo row in reportInfo.Rows)
         {
@@ -75,23 +63,30 @@ public class MatrixRoutines(ReportData reportInfo)
     }
     private void ReadHorizontalValue(MatrixData matrixData, ReportRowInfo row, MatrixValue parentMatrixValue, int vIndex)
     {
+        // بررسی اینکه آیا بعدهای افقی وجود دارند
         if (matrixData.Horizontals.Count == 0)
             return; // No horizontal dimensions
-        
+
         if (vIndex >= matrixData.Horizontals.Count)
             return; // Index out of range
-        
+
         MatrixItem matrixItem = matrixData.Horizontals[vIndex];
+        
         if (parentMatrixValue != null)
         {
             parentMatrixValue.Children ??= [];
-            matrixItem = parentMatrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == matrixData.Horizontals[vIndex].Column.ColumnTypeName);
-            if (matrixItem == null)
+            MatrixItem? existingChild = parentMatrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == matrixItem.Column.ColumnTypeName);
+            if (existingChild != null)
+            {
+                matrixItem = existingChild;
+            }
+            else
             {
                 matrixItem = new MatrixItem() { Column = matrixData.Horizontals[vIndex].Column };
                 parentMatrixValue.Children.Add(matrixItem);
             }
         }
+        
         object value = ReportRenderer.GetCelValue(matrixItem.Column, row);
         matrixItem.Values ??= [];
         MatrixValue matrixValue = matrixItem.Values.FirstOrDefault(v => CompareValue(v, value));
@@ -100,34 +95,52 @@ public class MatrixRoutines(ReportData reportInfo)
             matrixValue = new MatrixValue() { Value = value };
             matrixItem.Values.Add(matrixValue);
         }
+        
         if (vIndex + 1 < matrixData.Horizontals.Count)
+        {
             ReadHorizontalValue(matrixData, row, matrixValue, vIndex + 1);
+        }
         else
         {
-            IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns;
-            foreach (ColumnFieldDefinition col in cols.Where(col =>
+            // اگر به آخر بعدهای افقی رسیدیم، باید value columns را اضافه کنیم
+            IEnumerable<ColumnFieldDefinition> cols = reportInfo.Structure.SelectedColumns.Where(col => 
+                col.aggrType != eAggregationFunctions.GroupByItem &&
                     col.aggrType != eAggregationFunctions.InColumn &&
-                    col.aggrType != eAggregationFunctions.GroupByItem &&
-                    col.MatrixType != ConfiguredReport.ReportMatrixType.Vertical &&
-                    col.MatrixType != ConfiguredReport.ReportMatrixType.Horizontal))
+                col.MatrixType != ConfiguredReport.ReportMatrixType.Vertical &&
+                col.MatrixType != ConfiguredReport.ReportMatrixType.Horizontal);
+            
+            foreach (ColumnFieldDefinition col in cols)
             {
                 matrixValue.Children ??= [];
                 MatrixItem child = matrixValue.Children.FirstOrDefault(c => c.Column.ColumnTypeName == col.ColumnTypeName);
                 if (child == null)
                 {
-                    if (matrixData.Verticals.Count == 0)
-                        continue; // Skip if no vertical dimensions
-                    int leafCount = matrixData.Verticals[0].LeafCount;
+                    // محاسبه leafCount: اگر بعدهای عمودی وجود دارند، از آنها استفاده می‌کنیم
+                    int leafCount = 1;
+                    if (matrixData.Verticals != null && matrixData.Verticals.Count > 0)
+                    {
+                        leafCount = matrixData.Verticals[0].LeafCount;
+                    }
+                    
                     child = new MatrixItem() { Column = col, Values = new List<MatrixValue>(leafCount) };
                     for (int i = 0; i < leafCount; i++)
                         child.Values.Add(new MatrixValue());
                     matrixValue.Children.Add(child);
                 }
+                
                 value = ReportRenderer.GetCelValue(col, row);
                 int leafIndex = 0;
+                
+                // فقط اگر بعدهای عمودی وجود دارند، leafIndex را محاسبه می‌کنیم
+                if (matrixData.Verticals != null && matrixData.Verticals.Count > 0)
+                {
                 GetVerticalLeafIndex(matrixData.Verticals, row, ref leafIndex);
-                if (leafIndex < child.Values.Count)
-                    child.Values[leafIndex].Value = value;
+                }
+                
+                if (leafIndex >= 0 && leafIndex < child.Values.Count)
+                {
+                child.Values[leafIndex].Value = value;
+                }
             }
         }
     }
