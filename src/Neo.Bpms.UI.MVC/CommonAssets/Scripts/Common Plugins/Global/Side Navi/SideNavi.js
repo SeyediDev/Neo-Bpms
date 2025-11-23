@@ -52,6 +52,14 @@ var SideNavi = (function () {
     function slideEvent() {
 
         var pos = getPos() * 1;
+        
+        // Ensure side-navi-data is visible during slide
+        if (isVisible) {
+            $(config.data, container).css({
+                'display': 'block',
+                'z-index': '30001'
+            });
+        }
 
         if (isVisible && pos < getPosEnd() || !isVisible && pos > getPosStart()) {
 
@@ -62,6 +70,14 @@ var SideNavi = (function () {
                 pos = (isVisible) ? getPosEnd() : getPosStart();
                 container.css('right', pos + 'px');
                 isSlideing = false;
+                
+                // Ensure visibility after slide completes
+                if (isVisible) {
+                    $(config.data, container).css({
+                        'display': 'block',
+                        'z-index': '30001'
+                    });
+                }
 
             } else {
                 container.css('right', pos + 'px');
@@ -104,14 +120,32 @@ var SideNavi = (function () {
         $(config.item, container).on('click', function (event) {
 
             event.preventDefault();
+            event.stopPropagation();
+            
+            console.log('SideNavi: Tab clicked', {
+                item: $(this).text().trim(),
+                isVisible: isVisible,
+                activeIndex: activeIndex
+            });
+            
             setEventParam($(this));
 
-            if (isVisible) { setActiveTab(); }
+            if (isVisible) { 
+                setActiveTab();
+                // Ensure side-navi-data is visible
+                $(config.data, container).css({
+                    'display': 'block',
+                    'z-index': '30001'
+                });
+            }
 
             if (changeVisibility) {
-
+                // Ensure side-navi-data is visible before sliding
+                $(config.data, container).css({
+                    'display': 'block',
+                    'z-index': '30001'
+                });
                 slide();
-
             }
         });
         $(config.container + ', .keep-side-navi').on('click', function (event) {
@@ -134,8 +168,33 @@ var SideNavi = (function () {
 
         config = conf;
         container = $(config.container);
+        
+        console.log('SideNavi: Initializing', {
+            container: config.container,
+            itemsCount: $(config.item, container).length,
+            tabsCount: $(config.tab, container).length
+        });
 
         eventListener();
+        
+        // Activate first tab (popular filters) by default if not already active
+        setTimeout(function() {
+            var $firstItem = $(config.item + ':first', container);
+            var $firstTab = $(config.tab + ':first', container);
+            if ($firstItem.length && $firstTab.length) {
+                if (!$firstItem.hasClass('active')) {
+                    activeIndex = 0;
+                    setActiveItem($firstItem);
+                }
+                if (!$firstTab.hasClass('active')) {
+                    setActiveTab();
+                }
+                console.log('SideNavi: First tab activated', {
+                    itemActive: $firstItem.hasClass('active'),
+                    tabActive: $firstTab.hasClass('active')
+                });
+            }
+        }, 150);
     }
     
     return {

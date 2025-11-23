@@ -3,7 +3,8 @@
 @model CommonFormStructure
 
 @{
-	var currentPageAddress = new HtmlString(new PageAddress(Model).ToJson());
+	var pageAddress = new PageAddress(Model);
+	var currentPageAddress = new HtmlString(pageAddress.ToJson());
 }
 
 window.PageAddressManager.setPageAddress(@currentPageAddress);

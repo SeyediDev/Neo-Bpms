@@ -3,7 +3,7 @@
 
 <div id="sideNavi">
     <div class="nav-pills">
-        <div class="side-navi-item item1 nav-link p-0">
+        <div class="side-navi-item item1 nav-link p-0 active">
             <div style="padding-top: 6px">@ViewTexts.UsefulFilters</div>
         </div>
         @for (int i = 0; i < Model.titles.Count; i++)
@@ -14,7 +14,7 @@
         }
     </div>
     <div class="side-navi-data bg-light">
-        <div class="side-navi-tab">
+        <div class="side-navi-tab active">
             <div class="sideNavi-top-bar bg-light" style="align-items: center;justify-content: space-between;display: flex;flex-direction: row-reverse;padding: 0 1rem;">
                 <span class="icons-tables" title="@ViewTexts.AddFolder">
                     <svg title="@ViewTexts.AddFolder" style="width:18px;height:18px;vertical-align:middle;margin:4px;" viewBox="0 0 24 24" onclick="FilterTreeManager.newFolder()">

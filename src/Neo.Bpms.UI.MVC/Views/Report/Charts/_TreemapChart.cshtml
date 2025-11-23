@@ -62,25 +62,48 @@
 		.ready(function() {
 			// Wait for treemap module to be available before rendering
 			function waitForTreemapModule(callback, maxAttempts) {
-				maxAttempts = maxAttempts || 50;
+				maxAttempts = maxAttempts || 200; // Increased to 20 seconds
 				var attempts = 0;
+				var callbackCalled = false;
 				
 				function check() {
 					attempts++;
 					if (window.Highcharts && 
 						window.Highcharts.seriesTypes && 
 						window.Highcharts.seriesTypes.treemap) {
-						callback();
+						if (!callbackCalled) {
+							callbackCalled = true;
+							callback();
+						}
 					} else if (attempts < maxAttempts) {
 						setTimeout(check, 100);
 					} else {
-						console.error('Highcharts treemap module not available after ' + (maxAttempts * 100) + 'ms');
-						// Try to render anyway - might work if module loads during render
-						callback();
+						// Silent failure - try to render anyway (module might load during render)
+						// The treemap.js script is loaded in _chartView.cshtml, so it should be available
+						if (!callbackCalled) {
+							callbackCalled = true;
+							callback();
+						}
 					}
 				}
 				
+				// Check immediately
 				check();
+				
+				// Also listen for Highcharts module loaded events
+				if (typeof window.addEventListener !== 'undefined') {
+					var eventHandler = function(event) {
+						if (!callbackCalled && 
+							window.Highcharts && 
+							window.Highcharts.seriesTypes && 
+							window.Highcharts.seriesTypes.treemap) {
+							callbackCalled = true;
+							window.removeEventListener('HighchartsModuleLoaded', eventHandler);
+							callback();
+						}
+					};
+					window.addEventListener('HighchartsModuleLoaded', eventHandler);
+				}
 			}
 			
 			waitForTreemapModule(function() {
