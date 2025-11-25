@@ -53,13 +53,11 @@ var SideNavi = (function () {
 
         var pos = getPos() * 1;
         
-        // Ensure side-navi-data is visible during slide
-        if (isVisible) {
-            $(config.data, container).css({
-                'display': 'block',
-                'z-index': '30001'
-            });
-        }
+        // Ensure side-navi-data is always visible (for width calculation)
+        $(config.data, container).css({
+            'display': 'block',
+            'z-index': '30001'
+        });
 
         if (isVisible && pos < getPosEnd() || !isVisible && pos > getPosStart()) {
 
@@ -70,14 +68,6 @@ var SideNavi = (function () {
                 pos = (isVisible) ? getPosEnd() : getPosStart();
                 container.css('right', pos + 'px');
                 isSlideing = false;
-                
-                // Ensure visibility after slide completes
-                if (isVisible) {
-                    $(config.data, container).css({
-                        'display': 'block',
-                        'z-index': '30001'
-                    });
-                }
 
             } else {
                 container.css('right', pos + 'px');
@@ -172,15 +162,29 @@ var SideNavi = (function () {
         console.log('SideNavi: Initializing', {
             container: config.container,
             itemsCount: $(config.item, container).length,
-            tabsCount: $(config.tab, container).length
+            tabsCount: $(config.tab, container).length,
+            dataExists: $(config.data, container).length > 0
         });
 
+        // Ensure side-navi-data is always block for width calculation
+        var $sideNaviData = $(config.data, container);
+        $sideNaviData.css({
+            'display': 'block',
+            'z-index': '30001'
+        });
+        
         eventListener();
         
-        // Activate first tab (popular filters) by default if not already active
+        // Set initial position - container should be at posStart (hidden)
+        // Do this after eventListener to ensure config is set
         setTimeout(function() {
+            var initialPos = getPosStart();
+            container.css('right', initialPos + 'px');
+            
+            // Activate first tab (popular filters) by default if not already active
             var $firstItem = $(config.item + ':first', container);
             var $firstTab = $(config.tab + ':first', container);
+            
             if ($firstItem.length && $firstTab.length) {
                 if (!$firstItem.hasClass('active')) {
                     activeIndex = 0;
@@ -189,9 +193,14 @@ var SideNavi = (function () {
                 if (!$firstTab.hasClass('active')) {
                     setActiveTab();
                 }
+                
                 console.log('SideNavi: First tab activated', {
                     itemActive: $firstItem.hasClass('active'),
-                    tabActive: $firstTab.hasClass('active')
+                    tabActive: $firstTab.hasClass('active'),
+                    containerRight: container.css('right'),
+                    dataDisplay: $sideNaviData.css('display'),
+                    posStart: getPosStart(),
+                    posEnd: getPosEnd()
                 });
             }
         }, 150);

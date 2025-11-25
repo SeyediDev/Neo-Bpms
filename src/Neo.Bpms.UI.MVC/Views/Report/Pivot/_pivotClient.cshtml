@@ -1,0 +1,30 @@
+@using System.Globalization
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@model ReportData
+
+@{
+    Layout = null;
+    // بررسی وجود زیر گزارش برای drill down
+    var hasSubReport = Model?.Structure?.SubReports?.Any(sr => sr.Type == Report.SubReportType.DrillDown) == true;
+}
+
+@if (hasSubReport)
+{
+	var drillDownSubReports = Model?.Structure?.SubReports?.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
+	var reportKey = Model?.GetReportKey();
+	var windowTopJsModel = new Neo.Bpms.UI.MVC.PartialModels.WindowTopJsModel
+				{
+					drillDownSubReports = drillDownSubReports,
+					reportKey = reportKey,
+					reportInfo = Model,
+					filterValues = ViewBag.FilterValues as ElasticObject
+				};
+	<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="windowTopJsModel" />
+}
+<partial name="~/Views/Report/Pivot/_pivotClientMarkup.cshtml" model="Model" />
+<partial name="~/Views/Report/Pivot/_pivotClientStyles.cshtml" />
+<partial name="~/Views/Report/Pivot/_PivotTable.cshtml" />
+<partial name="~/Views/Report/Pivot/_pivotClientScripts.cshtml" model="Model" />

@@ -291,7 +291,7 @@
 
     @if (canDesign)
     {
-        @Html.Partial("~/Views/Form/_columnSettingsModal.cshtml", structure)
+        @Html.Partial("~/Views/Report/Settings/_columnSettingsModal.cshtml", structure)
     }
     <partial name="Logic/_Logic" model="structure"/>
     @if (controlsRendererData.IncludeNeedingControls != null)

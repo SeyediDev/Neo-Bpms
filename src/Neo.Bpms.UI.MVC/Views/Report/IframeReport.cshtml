@@ -42,24 +42,24 @@
                         switch (structure.ChartType)
                         {
                             case ChartType.IranMap:
-                                @Html.Partial("_IranMap", Model)
+                                @Html.Partial("~/Views/Report/Map/_IranMap.cshtml", Model)
                                 break;
                             case ChartType.WorldMap:
-                                @Html.Partial("_WorldMap", Model)
+                                @Html.Partial("~/Views/Report/Map/_WorldMap.cshtml", Model)
                                 break;
                             case ChartType.BpmnDiagram:
                                 @Html.Partial("_bpmn", Model)
                                 break;
                             default:
                                 <div style="direction: ltr !important;">
-                                    @Html.Partial("_chartView", Model)
+                                    @Html.Partial("~/Views/Report/Charts/_chartView.cshtml", Model)
                                 </div>
                                 break;
                         }
                         break;
                     default:
                         <div>
-                            @Html.Partial("_listView", Model)
+                            @Html.Partial("~/Views/Report/ListView/_listView.cshtml", Model)
                         </div>
                         break;
                 }

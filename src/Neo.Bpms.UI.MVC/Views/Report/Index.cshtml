@@ -73,7 +73,6 @@
 	}
 	
 	body.page-ready .side-navi-data {
-		display: block !important;
 		position: absolute !important;
 		top: 0 !important;
 		left: 50px !important;
@@ -83,6 +82,7 @@
 		z-index: 30001 !important;
 		background-color: white !important;
 		overflow: visible !important;
+		/* Don't force display - let JavaScript control it */
 	}
 	
 	/* Ensure tabs are properly displayed when active */
@@ -94,14 +94,6 @@
 		display: block !important;
 		width: 100% !important;
 		height: 100% !important;
-	}
-	
-	/* Ensure side-navi-data is always visible when page is ready and sideNavi is shown */
-	body.page-ready #sideNavi .side-navi-data {
-		display: block !important;
-		z-index: 30001 !important;
-		visibility: visible !important;
-		opacity: 1 !important;
 	}
 	
 	/* Show icons and tabs after page is ready with critical styles */
@@ -225,13 +217,13 @@
                  <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-blue"></use>
              </svg>
          </a>
-         <partial name="~/Views/Report/Helpers/ExportExcelIcon.cshtml" model="item.structure" />
+         <partial name="~/Views/Report/Export/ExportExcelIcon.cshtml" model="item.structure" />
          <a title="@ViewTexts.Print" href="~/@("Report/PrintPreview?EntityId=" + item.structure.EntityId + "&NamespaceId=" + item.structure.NamespaceId + "&ReportId=" + item.structure.Form_ReportId + "&ConfigId=" + item.structure.ConfigId + "&ParentReportIds=" + item.structure.ParentReportIds)" class="top-bar-anchor-icon text-primary icons-tables" target="_blank">
              <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#print-blue" />
              </svg>
          </a>
-         <partial name="~/Views/Report/Helpers/ExportCSVIcon.cshtml" model="item.structure" />
+         <partial name="~/Views/Report/Export/ExportCSVIcon.cshtml" model="item.structure" />
 
     @if (item.canDesign)
     {
@@ -447,24 +439,24 @@
                                     switch (structure.ChartType)
                                     {
                                         case ChartType.IranMap:
-                                            <partial name="_IranMap" model="Model" />
+                                            <partial name="~/Views/Report/Map/_IranMap.cshtml" model="Model" />
                                             break;
                                         case ChartType.WorldMap:
-                                            <partial name="_WorldMap" model="Model" />
+                                            <partial name="~/Views/Report/Map/_WorldMap.cshtml" model="Model" />
                                             break;
                                         case ChartType.BpmnDiagram:
                                             <partial name="_bpmn" model="Model" />
                                             break;
                                         default:
                                             <div style="direction: ltr !important;">
-                                                <partial name="_chartView" model="Model" />
+                                                <partial name="~/Views/Report/Charts/_chartView.cshtml" model="Model" />
                                             </div>
                                             break;
                                     }
                                     break;
                                 default:
                                     <div>
-                                        <partial name="_listView" model="Model" />
+                                        <partial name="~/Views/Report/ListView/_listView.cshtml" model="Model" />
                                     </div>
                                     break;
                             }
@@ -476,9 +468,9 @@
         </div>
         @if (canDesign)
         {
-            <partial name="_columnSettingsModal" model="Model" />
-            <partial name="_OrderByModal" model="Model" />
-            <partial name="_ColorsModal" model="Model" />
+            <partial name="~/Views/Report/Settings/_columnSettingsModal.cshtml" model="Model" />
+            <partial name="~/Views/Report/Settings/_OrderByModal.cshtml" model="Model" />
+            <partial name="~/Views/Report/Settings/_ColorsModal.cshtml" model="Model" />
             <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
         }
         <partial name="Logic/_Logic" model="structure" />
@@ -624,13 +616,13 @@ else
     </div>
 }
 
-<partial name="~/Views/Report/Helpers/MyDrillDownMenu.cshtml" />
+<partial name="~/Views/Report/DrillDown/MyDrillDownMenu.cshtml" />
 
 @if (canDesign)
 {
-    <partial name="_ReportSettingsModal" model="Model" />
+    <partial name="~/Views/Report/Settings/_ReportSettingsModal.cshtml" model="Model" />
 }
-<partial name="_SleepingModals" model="Model" />
+<partial name="~/Views/Report/Settings/_SleepingModals.cshtml" model="Model" />
 
 <script src="@CommonBundles.SideNaviJsBundle" asp-append-version="true"></script>
 <link href="@CommonBundles.JsTreeCssBundle" asp-append-version="true" rel="stylesheet" />
@@ -804,13 +796,11 @@ else
                     var $firstItem = $('.side-navi-item:first');
                     var $sideNaviData = $('.side-navi-data');
                     
-                    // Ensure side-navi-data is visible
+                    // Don't force display - let SideNavi.js control it
+                    // Just ensure z-index is set
                     if ($sideNaviData.length) {
                         $sideNaviData.css({
-                            'display': 'block',
-                            'z-index': '30001',
-                            'visibility': 'visible',
-                            'opacity': '1'
+                            'z-index': '30001'
                         });
                     }
                     
@@ -821,7 +811,7 @@ else
                         $firstItem.addClass('active');
                         console.log('First tab (Popular Filters) activated', {
                             tabVisible: $firstTab.is(':visible'),
-                            dataVisible: $sideNaviData.is(':visible'),
+                            dataExists: $sideNaviData.length > 0,
                             dataZIndex: $sideNaviData.css('z-index')
                         });
                     }
@@ -919,7 +909,7 @@ else
     }
 </style>
 
-@await Html.PartialAsync("_FilterTooltip", Model)
-@await Html.PartialAsync("_DesignSettings")
+@await Html.PartialAsync("~/Views/Report/Helpers/_FilterTooltip.cshtml", Model)
+@await Html.PartialAsync("~/Views/Report/Settings/_DesignSettings.cshtml")
 @await Html.PartialAsync("_ReportInfo")
-@await Html.PartialAsync("_RefreshSettings")
+@await Html.PartialAsync("~/Views/Report/Settings/_RefreshSettings.cshtml")

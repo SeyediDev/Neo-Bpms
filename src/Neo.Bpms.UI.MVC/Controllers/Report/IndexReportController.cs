@@ -80,11 +80,11 @@ public partial class ReportController
         SetInIframe();
         return PartialView(config.ViewType == ReportViewType.Chart
             ? (config.ChartType == ChartType.IranMap
-                ? "~/Views/Report/_IranMap.cshtml"
+                ? "~/Views/Report/Map/_IranMap.cshtml"
                 : config.ChartType == ChartType.WorldMap
-                ? "~/Views/Report/_WorldMap.cshtml"
-                : "~/Views/Report/_chartView.cshtml")
-            : "~/Views/Report/_listView.cshtml", result);
+                ? "~/Views/Report/Map/_WorldMap.cshtml"
+                : "~/Views/Report/Charts/_chartView.cshtml")
+            : "~/Views/Report/ListView/_listView.cshtml", result);
     }
 
     /// <summary>
@@ -138,11 +138,11 @@ public partial class ReportController
         return DrillDown == 1
             ? PartialView(initPostReportConfigResult.config.ViewType == ReportViewType.Chart
                 ? (initPostReportConfigResult.config.ChartType == ChartType.IranMap
-                    ? "_IranMap"
+                    ? "~/Views/Report/Map/_IranMap.cshtml"
                     : initPostReportConfigResult.config.ChartType == ChartType.WorldMap
-                    ? "_WorldMap"
-                    : "_chartView")
-                : "_listView", result)
+                    ? "~/Views/Report/Map/_WorldMap.cshtml"
+                    : "~/Views/Report/Charts/_chartView.cshtml")
+                : "~/Views/Report/ListView/_listView.cshtml", result)
             : View("Index", result);
     }
 

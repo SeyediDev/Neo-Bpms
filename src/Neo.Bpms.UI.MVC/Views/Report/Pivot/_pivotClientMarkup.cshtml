@@ -1,0 +1,78 @@
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@model ReportData
+@{
+    var structure = Model?.Structure;
+    var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
+    
+    var dimensions = selectedColumns
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var rowDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+        .ToList();
+    var columnDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
+        .ToList();
+    var valueColumns = selectedColumns
+        .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
+                     sc.aggrType != eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var reportKey = Model?.GetReportKey();
+    var recordCount = Model?.RecordCount ?? (Model?.Rows?.Count ?? 0);
+    var recordCountText = recordCount.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+    var hasData = Model?.Rows?.Any() == true;
+    var hasSubReport = Model?.Structure?.SubReports?.Any(sr => sr.Type == Report.SubReportType.DrillDown) == true;
+    var subReport = Model?.Structure?.SubReports?.FirstOrDefault(sr => sr.Type == Report.SubReportType.DrillDown);
+    
+    var valueFields = valueColumns.Select(d => new { name = d.ColumnName, label = d.Alias, aggregationType = d.aggrType.ToString() }).ToList();
+    var valueFieldsCountText = valueFields.Count.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+    string rowFieldsLabel = rowDimensions.Count > 0 ? string.Join(" / ", rowDimensions.Select(d => d.Alias)) : "بعد سطر";
+    string columnFieldsLabel = columnDimensions.Count > 0 ? string.Join(" / ", columnDimensions.Select(d => d.Alias)) : "بعد ستون";
+}
+
+<section class="pivot-matrix-card" data-report-key="@reportKey" data-has-sub-report="@(hasSubReport ? "true" : "false")" data-sub-report-id="@(subReport?.SubReportId ?? "")">
+    <header class="pivot-matrix-card__header">
+        <div class="pivot-matrix-card__title-group">
+            <h3 class="pivot-matrix-card__title">
+                تحلیل تقاطع <span class="subtitle-highlight subtitle-highlight--row">«@string.Join(" / ", rowDimensions.Select(d => d.Alias))»</span> با <span class="subtitle-highlight subtitle-highlight--column">«@string.Join(" / ", columnDimensions.Select(d => d.Alias))»</span> بر اساس <span class="subtitle-highlight subtitle-highlight--value">«@string.Join(" / ", valueColumns.Select(d => d.Alias))»</span>
+            </h3>
+        </div>
+    </header>
+
+    <!-- بدنه جدول -->
+    <div class="pivot-matrix-card__body">
+        @if (!hasData)
+        {
+            <div class="pivot-empty">
+                <strong>داده‌ای برای نمایش نیست</strong>
+                <span>فیلترها یا بازه زمانی را بررسی کنید.</span>
+            </div>
+        }
+        else
+        {
+            <div id="pivot-table-container" class="pivot-table-wrapper"></div>
+        }
+    </div>
+
+    <!-- تعداد ترکیب -->
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد ترکیب:</span>
+        <span class="pivot-combination-value">@recordCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد شاخص:</span>
+        <span class="pivot-combination-value">@valueFieldsCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد @rowFieldsLabel :</span>
+        <span class="pivot-combination-value pivot-row-header-value">0</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد @columnFieldsLabel :</span>
+        <span class="pivot-combination-value pivot-column-header-value">0</span>
+    </div>
+</section>

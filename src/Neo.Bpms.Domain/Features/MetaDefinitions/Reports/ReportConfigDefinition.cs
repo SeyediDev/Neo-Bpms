@@ -114,7 +114,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
 
         if (fieldIds.Length == 1)
         {
-            AddField(eFieldSelectionType.asColumn, fieldId, alias, properties);
+            AddField(eFieldSelectionType.asColumn, fieldId, alias, ReportMatrixType.Horizontal, properties);
         }
         else
         {
@@ -131,8 +131,8 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
                 return;
             }
 
-            AddIncludedField(eFieldSelectionType.asColumn, f.Id, associationField.AssociationEntity.Id
-                , associationField.Id, alias, properties);
+            AddIncludedField(eFieldSelectionType.asColumn, f.Id, associationField.AssociationEntity.Id,
+                associationField.Id, alias, ReportMatrixType.Horizontal, properties);
         }
     }
     /// <summary>
@@ -152,10 +152,11 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void DisplayColumnFormula(string formula, string alias = null,
+    protected void DisplayColumnFormula(string formula, string alias = null, 
+        ReportMatrixType matrixType = ReportMatrixType.Horizontal,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
-        AddFormulaField(eFieldSelectionType.asColumn, null, formula, alias, properties);
+        AddFormulaField(eFieldSelectionType.asColumn, null, formula, alias, matrixType, properties);
     }
 
     /// <summary>
@@ -232,17 +233,17 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     }
 
     protected void AddFormulaField(eFieldSelectionType type,
-        string fieldId, string formula, string alias,
+        string fieldId, string formula, string alias, ReportMatrixType matrixType= ReportMatrixType.Horizontal,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId ?? $"formulaSjvs_{reportConfig.Fields.Count}", report.EntityId, null,
-            alias, formula, false, ReportMatrixType.Horizontal);
+            alias, formula, false, matrixType);
         ApplySelectedFieldProperties(selectedField, properties);
     }
 
     protected void AddField(eFieldSelectionType type,
-        string fieldId, string alias,
+        string fieldId, string alias, ReportMatrixType matrixType = ReportMatrixType.Horizontal,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
@@ -250,18 +251,19 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
             alias, null, false, ReportMatrixType.Horizontal);
         if(selectedField==null)
         {
-            AddFormulaField(type, fieldId, fieldId, alias, properties);
+            AddFormulaField(type, fieldId, fieldId, alias, matrixType, properties);
         }
         else ApplySelectedFieldProperties(selectedField, properties);
     }
 
     protected void AddIncludedField(eFieldSelectionType type,
-        string fieldId, string associationEntityId, string associationName, string alias,
+        string fieldId, string associationEntityId, string associationName, string alias, 
+        ReportMatrixType matrixType = ReportMatrixType.Horizontal,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, associationEntityId, associationName,
-            alias, null, false, ReportMatrixType.Horizontal);
+            alias, null, false, matrixType);
         ApplySelectedFieldProperties(selectedField, properties);
     }
 

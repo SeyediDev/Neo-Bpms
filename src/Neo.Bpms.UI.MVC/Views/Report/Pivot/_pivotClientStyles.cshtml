@@ -1,0 +1,124 @@
+<style>
+    .pivot-matrix-card {
+        direction: rtl;
+        font-family: 'Vazir', 'Vazir FD', 'Yekan', 'Tahoma', 'Arial', sans-serif;
+        background: radial-gradient(circle at top, rgba(59, 130, 246, 0.10), transparent 55%), #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 28px;
+        padding: clamp(20px, 3vw, 32px);
+        box-shadow: 0 30px 80px -50px rgba(15, 23, 42, 0.45);
+        margin-bottom: 32px;
+    }
+
+    .pivot-matrix-card__header {
+        margin-bottom: 24px;
+    }
+
+    .pivot-matrix-card__title {
+        font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+        color: #0f172a;
+        margin: 0.3rem 0;
+        font-weight: 700;
+        line-height: 1.8;
+    }
+
+    .subtitle-highlight {
+        font-weight: 600;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+
+    .subtitle-highlight--row {
+        color: #fde68a;
+    }
+
+    .subtitle-highlight--column {
+        color: #a5b4fc;
+    }
+
+    .subtitle-highlight--value {
+        color: #10b981;
+    }
+
+    /* تعداد ترکیب */
+    .pivot-combination-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 8px 16px;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .pivot-combination-label {
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .pivot-combination-value {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    /* بدنه جدول */
+    .pivot-matrix-card__body {
+        margin-top: 24px;
+    }
+
+    .pivot-table-wrapper {
+        overflow: auto;
+        max-height: 600px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 16px;
+        margin-top: 24px;
+        min-height: 200px;
+    }
+    
+    .pivot-table-wrapper:empty::before {
+        content: "در حال بارگذاری جدول...";
+        display: block;
+        text-align: center;
+        color: #94a3b8;
+        padding: 40px;
+        font-size: 0.9rem;
+    }
+    
+    .pivot-table-wrapper.loading::before {
+        content: "در حال بارگذاری جدول...";
+        display: block;
+        text-align: center;
+        color: #94a3b8;
+        padding: 40px;
+        font-size: 0.9rem;
+    }
+
+    .pivot-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: #94a3b8;
+    }
+
+    .pivot-empty strong {
+        display: block;
+        font-size: 1.1rem;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .pivot-empty span {
+        font-size: 0.9rem;
+        color: #94a3b8;
+    }
+
+    @@media (max-width: 768px) {
+        .pivot-summary-boxes {
+            flex-direction: column;
+        }
+    }
+</style>
+

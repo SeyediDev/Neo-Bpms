@@ -12,7 +12,12 @@
 ### 2. روش سمت کلاینت (جدید)
 - استفاده از `PivotTable.js` (JavaScript خالص)
 - پردازش داده‌ها در مرورگر
-- فایل: `_pivotClient.cshtml`
+- فایل: `Pivot/_pivotClient.cshtml`
+- شامل پارشوال‌های ماژولار:
+  - `Pivot/_pivotClientMarkup.cshtml` - ساختار HTML
+  - `Pivot/_pivotClientStyles.cshtml` - استایل‌های CSS
+  - `Pivot/_PivotTable.cshtml` - کلاس JavaScript PivotTable
+  - `Pivot/_pivotClientScripts.cshtml` - اسکریپت‌های اولیه‌سازی
 
 ## نحوه انتخاب روش
 

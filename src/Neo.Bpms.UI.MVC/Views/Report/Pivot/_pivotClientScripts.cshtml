@@ -1,0 +1,458 @@
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@model ReportData
+@{
+    var structure = Model?.Structure;
+    var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
+    
+    var dimensions = selectedColumns
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var rowDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+        .ToList();
+    var columnDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
+        .ToList();
+    var valueColumns = selectedColumns
+        .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
+                     sc.aggrType != eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var hasData = Model?.Rows?.Any() == true;
+
+    // تبدیل داده‌ها به فرمت JSON برای JavaScript
+    var jsonData = "[]";
+    var rowIdsMap = new Dictionary<string, string>();
+    if (hasData && Model.Rows != null)
+    {
+        var dataList = Model.Rows.Select((row, index) => {
+            var obj = new Dictionary<string, object>();
+            foreach (var col in selectedColumns)
+            {
+                var value = ReportRenderer.GetCelValue(col, row);
+                obj[col.ColumnName] = value;
+            }
+            
+            // ساخت key برای mapping با rowId
+            var rowKeyParts = new List<string>();
+            foreach (var field in rowDimensions)
+            {
+                var value = ReportRenderer.GetCelValue(field, row);
+                rowKeyParts.Add(value?.ToString() ?? "(خالی)");
+            }
+            var colKeyParts = new List<string>();
+            foreach (var field in columnDimensions)
+            {
+                var value = ReportRenderer.GetCelValue(field, row);
+                colKeyParts.Add(value?.ToString() ?? "(خالی)");
+            }
+            var rowKey = string.Join("|", rowKeyParts);
+            var colKey = string.Join("|", colKeyParts);
+            var combinedKey = rowKey + "||" + colKey;
+            
+            // گرفتن rowId از row
+            var rowId = row.GetType().GetProperty("Id")?.GetValue(row)?.ToString() ?? 
+                       row.GetType().GetProperty("RowId")?.GetValue(row)?.ToString() ?? 
+                       index.ToString();
+            
+            if (!rowIdsMap.ContainsKey(combinedKey))
+            {
+                rowIdsMap[combinedKey] = rowId;
+            }
+            else
+            {
+                rowIdsMap[combinedKey] += "," + rowId;
+            }
+            
+            return obj;
+        }).ToList();
+        jsonData = System.Text.Json.JsonSerializer.Serialize(dataList);
+    }
+    
+    var rowIdsMapJson = System.Text.Json.JsonSerializer.Serialize(rowIdsMap);
+
+    var rowFields = rowDimensions.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
+    var columnFields = columnDimensions.Select(d => new { name = d.ColumnName, label = d.Alias }).ToList();
+    var valueFields = valueColumns.Select(d => new { name = d.ColumnName, label = d.Alias, aggregationType = d.aggrType.ToString() }).ToList();
+
+    // تمام فیلدهای GroupByItem برای انتخاب در dropdown
+    var allGroupByFields = selectedColumns
+        .Where(c => c.aggrType == eAggregationFunctions.GroupByItem)
+        .ToList();
+}
+
+<script>
+    // صبر می‌کنیم تا DOM لود شود
+    (function() {
+        function initPivotTable() {
+            if (typeof PivotTable === 'undefined') {
+                const container = document.getElementById('pivot-table-container');
+                if (container) {
+                    container.classList.remove('loading');
+                    container.innerHTML = '<div class="pivot-empty"><strong>خطا در تعریف PivotTable</strong><span>لطفاً صفحه را رفرش کنید.</span></div>';
+                }
+                return;
+            }
+            
+            const container = document.getElementById('pivot-table-container');
+            if (!container) {
+                return;
+            }
+            
+            // اضافه کردن کلاس loading
+            container.classList.add('loading');
+            
+            const data = @Html.Raw(jsonData);
+            const rowIdsMap = @Html.Raw(rowIdsMapJson);
+            
+            if (!data || data.length === 0) {
+                container.classList.remove('loading');
+                container.innerHTML = '<div class="pivot-empty"><strong>داده‌ای برای نمایش نیست</strong><span>فیلترها یا بازه زمانی را بررسی کنید.</span></div>';
+                return;
+            }
+
+            // داده‌های اولیه - استفاده از object با name و label برای نمایش Alias
+            let currentRowFields = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(rowFields));
+            let currentColumnFields = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(columnFields));
+            let currentValueFields = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(valueFields));
+            let currentAggregator = 'sum';
+
+            // تمام فیلدهای موجود
+            const allFields = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(allGroupByFields.Select(f => new { name = f.ColumnName, label = f.Alias })));
+            const allValueFields = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(selectedColumns.Where(f => f.aggrType != eAggregationFunctions.InColumn && f.aggrType != eAggregationFunctions.GroupByItem).Select(f => new { name = f.ColumnName, label = f.Alias, aggregationType = f.aggrType.ToString() })));
+
+            // ایجاد Pivot Table
+            let pivotTable = null;
+            
+            function initializePivotTable() {
+                const container = document.getElementById('pivot-table-container');
+                if (!container) {
+                    console.error('Container not found when initializing pivot table');
+                    return;
+                }
+                
+                try {
+                    if (pivotTable) {
+                        pivotTable.setDimensions(currentRowFields, currentColumnFields, currentValueFields);
+                        pivotTable.setAggregator(currentAggregator);
+                    } else {
+                        const pivotCard = document.querySelector('.pivot-matrix-card');
+                        const hasSubReport = pivotCard ? pivotCard.getAttribute('data-has-sub-report') === 'true' : false;
+                        const subReportId = pivotCard ? pivotCard.getAttribute('data-sub-report-id') : '';
+                        const reportKey = pivotCard ? pivotCard.getAttribute('data-report-key') : '';
+                        
+                        pivotTable = new PivotTable('pivot-table-container', {
+                            data: data,
+                            rowFields: currentRowFields,
+                            columnFields: currentColumnFields,
+                            valueFields: currentValueFields,
+                            aggregator: currentAggregator,
+                            direction: 'rtl',
+                            locale: 'fa-IR',
+                            hasSubReport: hasSubReport,
+                            subReportId: subReportId,
+                            reportKey: reportKey,
+                            rowIdsMap: rowIdsMap
+                        });
+                    }
+                    container.classList.remove('loading');
+                } catch (error) {
+                    if (container) {
+                        container.classList.remove('loading');
+                        container.innerHTML = '<div class="pivot-empty"><strong>خطا در نمایش جدول</strong><span>' + (error.message || 'خطای نامشخص') + '</span></div>';
+                    }
+                }
+            }
+
+            // تابع ایجاد Pill با قابلیت drag & drop
+            function createPill(fieldName, fieldLabel, type) {
+                const pill = document.createElement('div');
+                pill.className = 'pivot-pill' + (type === 'value' ? ' pivot-pill--value' : '');
+                pill.setAttribute('data-field', fieldName);
+                pill.setAttribute('data-type', type);
+                pill.setAttribute('draggable', 'true');
+                const span = document.createElement('span');
+                span.textContent = fieldLabel;
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'pivot-pill-remove';
+                button.setAttribute('aria-label', 'حذف');
+                button.textContent = '×';
+                pill.appendChild(span);
+                pill.appendChild(button);
+                
+                // رویداد حذف
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeField(fieldName, type);
+                });
+                
+                // Drag & Drop
+                pill.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', JSON.stringify({
+                        field: fieldName,
+                        label: fieldLabel,
+                        type: type
+                    }));
+                    pill.style.opacity = '0.5';
+                });
+                
+                pill.addEventListener('dragend', () => {
+                    pill.style.opacity = '1';
+                });
+                
+                pill.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    pill.style.border = '2px dashed #3b82f6';
+                });
+                
+                pill.addEventListener('dragleave', () => {
+                    pill.style.border = '';
+                });
+                
+                pill.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    pill.style.border = '';
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    if (data.type !== type) {
+                        // جابجایی بین بخش‌ها
+                        removeField(data.field, data.type);
+                        addField(data.field, data.label, type);
+                    }
+                });
+                
+                return pill;
+            }
+
+            // تابع حذف فیلد
+            function removeField(fieldName, type) {
+                if (type === 'row') {
+                    currentRowFields = currentRowFields.filter(f => {
+                        const name = typeof f === 'object' && f.name ? f.name : f;
+                        return name !== fieldName;
+                    });
+                } else if (type === 'column') {
+                    currentColumnFields = currentColumnFields.filter(f => {
+                        const name = typeof f === 'object' && f.name ? f.name : f;
+                        return name !== fieldName;
+                    });
+                } else if (type === 'value') {
+                    currentValueFields = currentValueFields.filter(f => {
+                        const name = typeof f === 'object' && f.name ? f.name : f;
+                        return name !== fieldName;
+                    });
+                }
+                
+                updatePills();
+                updateDropdowns();
+                initializePivotTable();
+                updateSummaryBoxes();
+            }
+
+            // تابع افزودن فیلد
+            function addField(fieldName, fieldLabel, type) {
+                const fieldExists = (fields, name) => {
+                    return fields.some(f => {
+                        const n = typeof f === 'object' && f.name ? f.name : f;
+                        return n === name;
+                    });
+                };
+                
+                if (type === 'row' && !fieldExists(currentRowFields, fieldName)) {
+                    currentRowFields.push({ name: fieldName, label: fieldLabel });
+                } else if (type === 'column' && !fieldExists(currentColumnFields, fieldName)) {
+                    currentColumnFields.push({ name: fieldName, label: fieldLabel });
+                } else if (type === 'value' && !fieldExists(currentValueFields, fieldName)) {
+                    currentValueFields.push({ name: fieldName, label: fieldLabel });
+                }
+                
+                updatePills();
+                updateDropdowns();
+                initializePivotTable();
+                updateSummaryBoxes();
+            }
+
+            // به‌روزرسانی Pill ها
+            function updatePills() {
+                ['row', 'column', 'value'].forEach(type => {
+                    const container = document.getElementById('pivot-' + type + '-pills');
+                    if (!container) return;
+                    
+                    container.innerHTML = '';
+                    
+                    // اضافه کردن رویدادهای drag & drop به container
+                    setupContainerDragDrop(container, type);
+                    
+                    const fields = type === 'row' ? currentRowFields : 
+                                  type === 'column' ? currentColumnFields : 
+                                  currentValueFields;
+                    
+                    fields.forEach(field => {
+                        let fieldName, fieldLabel;
+                        if (typeof field === 'object' && field.name) {
+                            fieldName = field.name;
+                            fieldLabel = field.label || field.name;
+                        } else {
+                            fieldName = field;
+                            if (type === 'value') {
+                                const f = allValueFields.find(f => f.name === fieldName);
+                                fieldLabel = f ? f.label : fieldName;
+                            } else {
+                                const f = allFields.find(f => f.name === fieldName);
+                                fieldLabel = f ? f.label : fieldName;
+                            }
+                        }
+                        
+                        container.appendChild(createPill(fieldName, fieldLabel, type));
+                    });
+                });
+                
+                // به‌روزرسانی باکس‌های خلاصه
+                updateSummaryBoxes();
+            }
+
+            // تنظیم drag & drop برای container
+            // استفاده از flag برای جلوگیری از اضافه شدن event listener های تکراری
+            const containerDragDropSetup = new Set();
+            
+            function setupContainerDragDrop(container, type) {
+                const key = container.id + '-' + type;
+                if (containerDragDropSetup.has(key)) {
+                    return; // قبلاً تنظیم شده
+                }
+                containerDragDropSetup.add(key);
+                
+                container.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    container.classList.add('drag-over');
+                });
+
+                container.addEventListener('dragleave', () => {
+                    container.classList.remove('drag-over');
+                });
+
+                container.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    container.classList.remove('drag-over');
+                    try {
+                        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                        if (data && data.type !== type) {
+                            // جابجایی بین بخش‌ها
+                            removeField(data.field, data.type);
+                            addField(data.field, data.label, type);
+                        }
+                    } catch (err) {
+                        // خطا در parse کردن drag data - نادیده بگیر
+                    }
+                });
+            }
+            
+            // به‌روزرسانی باکس‌های خلاصه
+            function updateSummaryBoxes() {
+                const metricsCountEl = document.getElementById('summary-metrics-count');
+                const dimensionsCountEl = document.getElementById('summary-dimensions-count');
+                const recordCountEl = document.getElementById('summary-record-count');
+                
+                if (metricsCountEl) {
+                    metricsCountEl.textContent = currentValueFields.length;
+                }
+                if (dimensionsCountEl) {
+                    dimensionsCountEl.textContent = currentRowFields.length + ' × ' + currentColumnFields.length;
+                }
+                if (recordCountEl && data && data.length) {
+                    recordCountEl.textContent = data.length.toLocaleString('fa-IR');
+                }
+                
+                // به‌روزرسانی باکس‌های خلاصه در HTML (اگر وجود داشته باشند)
+                const summaryMetrics = document.querySelector('.pivot-summary-box:nth-child(1) .pivot-summary-value');
+                const summaryDimensions = document.querySelector('.pivot-summary-box:nth-child(2) .pivot-summary-value');
+                const summaryRecords = document.querySelector('.pivot-summary-box:nth-child(3) .pivot-summary-value');
+                
+                if (summaryMetrics) {
+                    summaryMetrics.textContent = currentValueFields.length;
+                }
+                if (summaryDimensions) {
+                    summaryDimensions.textContent = currentRowFields.length + ' × ' + currentColumnFields.length;
+                }
+                if (summaryRecords && data && data.length) {
+                    summaryRecords.textContent = data.length.toLocaleString('fa-IR');
+                }
+            }
+
+            // به‌روزرسانی Dropdown ها
+            function updateDropdowns() {
+                ['row', 'column', 'value'].forEach(type => {
+                    const dropdown = document.getElementById('pivot-' + type + '-dropdown');
+                    if (!dropdown) return;
+                    
+                const currentFields = type === 'row' ? currentRowFields : 
+                                     type === 'column' ? currentColumnFields : 
+                                     currentValueFields;
+                const availableFields = type === 'value' ? allValueFields : allFields;
+                
+                if (!availableFields || !Array.isArray(availableFields)) return;
+                
+                const fieldExists = (fields, name) => {
+                    return fields.some(f => {
+                        const n = typeof f === 'object' && f.name ? f.name : f;
+                        return n === name;
+                    });
+                };
+                
+                dropdown.innerHTML = '<option value="">افزودن فیلد...</option>';
+                availableFields.forEach(field => {
+                    if (field && field.name && !fieldExists(currentFields, field.name)) {
+                        const option = document.createElement('option');
+                        option.value = field.name;
+                        option.setAttribute('data-label', field.label || field.name);
+                        option.textContent = field.label || field.name;
+                        dropdown.appendChild(option);
+                    }
+                });
+                });
+            }
+
+            // رویدادهای Dropdown
+            ['row', 'column', 'value'].forEach(type => {
+                const dropdown = document.getElementById('pivot-' + type + '-dropdown');
+                if (dropdown) {
+                    dropdown.addEventListener('change', function() {
+                        if (this.value) {
+                            const fieldLabel = this.options[this.selectedIndex] ? this.options[this.selectedIndex].getAttribute('data-label') : null;
+                            addField(this.value, fieldLabel || this.value, type);
+                            this.value = '';
+                        }
+                    });
+                }
+            });
+
+            // رویداد Aggregator
+            const aggregatorEl = document.getElementById('pivot-aggregator');
+            if (aggregatorEl) {
+                aggregatorEl.addEventListener('change', function() {
+                    currentAggregator = this.value;
+                    if (pivotTable) {
+                        pivotTable.setAggregator(currentAggregator);
+                    }
+                });
+            }
+
+            // مقداردهی اولیه
+            updatePills();
+            updateDropdowns();
+            initializePivotTable();
+            updateSummaryBoxes();
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPivotTable);
+        } else {
+            // DOM قبلاً لود شده
+            initPivotTable();
+        }
+    })(); // بستن IIFE خارجی
+</script>
+

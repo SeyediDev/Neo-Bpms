@@ -28,7 +28,7 @@ public partial class ReportController
             EntityId = EntityId,
             ReportId = ReportId
         };
-        return View(result);
+        return View("~/Views/Report/Settings/AddNewConfig.cshtml", result);
     }
 
     /// <summary>
@@ -323,7 +323,7 @@ public partial class ReportController
             config, type, dashboardConfigBackupRestore);
         possibleSubReportSelections.SubReports = [.. config.SubReports.Values];
         ViewBag.SubReportType = type;
-        return View(possibleSubReportSelections);
+        return View("~/Views/Report/Settings/AddSubReport.cshtml", possibleSubReportSelections);
     }
 
     [HttpPost]

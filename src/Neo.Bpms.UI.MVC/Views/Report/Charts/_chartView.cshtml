@@ -103,7 +103,7 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
 
 @if (isDrillDown && !Model.Config.IsInlineSubReport)
 {
-    <partial name="~/Views/Report/Helpers/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderChartTypeSelector(Model)}" />
+    <partial name="~/Views/Report/DrillDown/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderChartTypeSelector(Model)}" />
 }
 
 <div class="col-md-12">

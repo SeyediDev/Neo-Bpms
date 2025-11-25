@@ -38,23 +38,23 @@
 		  {
 				case ReportViewType.Chart:
 				<script src="@CommonBundles.JqueryAloneJsBundle" asp-append-version="true"></script>
-					 if (structure.ChartType == ChartType.IranMap)
-					 {
-	 	 	 	 	 @Html.Partial("_IranMap", Model)
-					 }
-					 else if (structure.ChartType == ChartType.WorldMap)
-					 {
-	 	 	 	 	 @Html.Partial("_WorldMap", Model)
-					 }
+				 if (structure.ChartType == ChartType.IranMap)
+				 {
+	 	 	 	 	 @Html.Partial("~/Views/Report/Map/_IranMap.cshtml", Model)
+				 }
+				 else if (structure.ChartType == ChartType.WorldMap)
+				 {
+	 	 	 	 	 @Html.Partial("~/Views/Report/Map/_WorldMap.cshtml", Model)
+				 }
 			else
 			{
 	 	 	 <div style="direction: ltr !important;">
-	 	 	 	 @Html.Partial("_chartView", Model)
+	 	 	 	 @Html.Partial("~/Views/Report/Charts/_chartView.cshtml", Model)
 	 	 </div>
 	}
 	break;
 default:
-@Html.Partial("_printPreviewListView", Model)
+@Html.Partial("~/Views/Report/ListView/_printPreviewListView.cshtml", Model)
 break;
 }
 }

@@ -205,23 +205,23 @@
 							foreach (var lReport in listReports)
 							{
 								ViewBag.subReportRowNumber = 1;
-								@Html.Partial("~/Views/Report/_listViewGenerator.cshtml", lReport)
+								@Html.Partial("~/Views/Report/ListView/_listViewGenerator.cshtml", lReport)
 							}
 						}
 						@foreach (var cReport in chartReports)
 						{
 							ViewBag.Counter = co;
-						if (cReport.Structure.ChartType == ChartType.IranMap)
-						{
-							@Html.Partial("_IranMap", cReport)
-						}
-						else if (cReport.Structure.ChartType == ChartType.WorldMap)
-						{
-							@Html.Partial("_WorldMap", cReport)
-						}
+					if (cReport.Structure.ChartType == ChartType.IranMap)
+					{
+						@Html.Partial("~/Views/Report/Map/_IranMap.cshtml", cReport)
+					}
+					else if (cReport.Structure.ChartType == ChartType.WorldMap)
+					{
+						@Html.Partial("~/Views/Report/Map/_WorldMap.cshtml", cReport)
+					}
 							else
 							{
-								@Html.Partial("~/Views/Report/_chartView.cshtml", cReport)
+								@Html.Partial("~/Views/Report/Charts/_chartView.cshtml", cReport)
 							}
 							co++;
 						}

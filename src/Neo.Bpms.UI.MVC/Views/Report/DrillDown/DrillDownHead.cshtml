@@ -12,7 +12,7 @@
                 <i title="@ViewTexts.Print" class="fa fa-print"></i>
             </a>
 
-            <partial name="~/Views/Report/Helpers/ExportExcelIcon.cshtml" model="Model.reportInfo.Structure"/>
+            <partial name="~/Views/Report/Export/ExportExcelIcon.cshtml" model="Model.reportInfo.Structure"/>
 
             @if (Model.canDesign)
             {
@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-sm-10 col-lg-11 float-start">
-            <partial name="~/Views/Report/Helpers/DrillDownFilteredBy.cshtml" model="new DrillDownFilteredByModel {structure = Model.reportInfo.Structure, user = ViewBag.User, parentFilterValues = ViewBag.ParentFilterValues}"/>
+            <partial name="~/Views/Report/DrillDown/DrillDownFilteredBy.cshtml" model="new DrillDownFilteredByModel {structure = Model.reportInfo.Structure, user = ViewBag.User, parentFilterValues = ViewBag.ParentFilterValues}"/>
         </div>
     </div></div>
 
@@ -50,10 +50,10 @@
 
     if (Model.canDesign)
     {
-        <partial name="~/Views/Report/Helpers/AddSubReportModal.cshtml"/>
-        <partial name="_columnSettingsModal" model="Model.reportInfo"/>
-        <partial name="_OrderByModal" model="Model.reportInfo"/>
-        <partial name="_ColorsModal" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Settings/AddSubReportModal.cshtml"/>
+        <partial name="~/Views/Report/Settings/_columnSettingsModal.cshtml" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Settings/_OrderByModal.cshtml" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Settings/_ColorsModal.cshtml" model="Model.reportInfo"/>
         <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
     }
 }

@@ -125,11 +125,11 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
 {
     if (reportData.Structure.ChartType == ChartType.IranMap)
     {
-        <partial name="~/Views/Report/_IranMap.cshtml" model="reportData" />
+        <partial name="~/Views/Report/Map/_IranMap.cshtml" model="reportData" />
     }
     else if (reportData.Structure.ChartType == ChartType.WorldMap)
     {
-        <partial name="~/Views/Report/_WorldMap.cshtml" model="reportData" />
+        <partial name="~/Views/Report/Map/_WorldMap.cshtml" model="reportData" />
     }
     else if (reportData.Structure.ChartType == ChartType.BpmnDiagram)
     {
@@ -187,10 +187,10 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
     }
     else
     {
-        <partial name="~/Views/Report/_chartView.cshtml" model="reportData" />
+        <partial name="~/Views/Report/Charts/_chartView.cshtml" model="reportData" />
     }
 }
 else
 {
-    <partial name="~/Views/Report/_listView.cshtml" model="reportData" />
+    <partial name="~/Views/Report/ListView/_listView.cshtml" model="reportData" />
 }

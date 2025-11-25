@@ -106,7 +106,7 @@
     {
         foreach (var subReport in row.SubReports)
         {
-            @Html.Partial("_ColorsModal", subReport)
+            @Html.Partial("~/Views/Report/Settings/_ColorsModal.cshtml", subReport)
         }
     }
 }

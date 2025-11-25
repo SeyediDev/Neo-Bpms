@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Base;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
@@ -60,6 +61,10 @@ public class ReportData
         var hasFraction = Math.Abs(singleValue % 1) > double.Epsilon;
         var format = hasFraction ? "#,0.00" : "#,0";
         return singleValue.ToString(format, culture);
+    }
+    public string GetReportKey() 
+    {
+        return Structure?.ConfigId ?? Structure?.Form_ReportId ?? Config?.ConfigId ?? Guid.NewGuid().ToString("N");
     }
 }
 

@@ -20,7 +20,7 @@
 				{
 					@if (useClientSidePivot)
 					{
-						<partial name="~/Views/Report/_pivotClient.cshtml" model="item" />
+						<partial name="~/Views/Report/Pivot/_pivotClient.cshtml" model="item" />
 					}
 					else
 					{
@@ -29,7 +29,7 @@
 				}
 				else
 				{
-					<partial name="~/Views/Report/_listViewGenerator.cshtml" model="item" />
+					<partial name="~/Views/Report/ListView/_listViewGenerator.cshtml" model="item" />
 				}
 			</div>
 	</text>;
@@ -144,7 +144,7 @@
 
 @if (isDrillDown)
 {
-	<partial name="~/Views/Report/Helpers/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderGrid(Model)}" />
+	<partial name="~/Views/Report/DrillDown/DrillDownHead.cshtml" model="new DrillDownHeadModel {reportInfo = Model, canDesign = canDesign, inFormContent = RenderGrid(Model)}" />
 
 	<script src="~/Scripts/common-assets-includes/features/common-features/drf.common.js?v=1.1.0"></script>
 }

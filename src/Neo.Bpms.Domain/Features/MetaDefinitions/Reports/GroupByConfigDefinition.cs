@@ -1,8 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 
 public abstract class GroupByConfigDefinition : ReportConfigDefinition
 {
@@ -32,18 +28,18 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     /// <param name="field">field</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void GroupBy(string field, string alias = null, bool addAsDisplayColumn = true)
+    protected void GroupBy(string field, string alias = null, bool addAsDisplayColumn = true, ReportMatrixType matrixType = ReportMatrixType.Horizontal)
     {
         string[] fieldIds = field.Split('.');
         if (fieldIds.Length > 2)
         {
-            GroupByFormula(field, alias, addAsDisplayColumn);
+            GroupByFormula(field, alias, addAsDisplayColumn, matrixType);
             return;//todo more than one dot is not supported in this method
         }
 
         if (fieldIds.Length == 1)
         {
-            AddField(ConfiguredReport.eFieldSelectionType.asGroupBy, field, alias);
+            AddField(eFieldSelectionType.asGroupBy, field, alias, matrixType);
         }
         else
         {
@@ -60,8 +56,8 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
                 return;
             }
 
-            AddIncludedField(ConfiguredReport.eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id
-                , associationField.Id, alias);
+            AddIncludedField(eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id
+                , associationField.Id, alias, matrixType);
         }
         if (addAsDisplayColumn)
         {
@@ -73,7 +69,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     {
         foreach (string field in fields)
         {
-            AddField(ConfiguredReport.eFieldSelectionType.asGroupBy, field, null);
+            AddField(eFieldSelectionType.asGroupBy, field, null);
         }
     }
     /// <summary>
@@ -82,12 +78,12 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     /// <param name="formula">formula</param>
     /// <param name="alias">Alias</param>
     /// <returns></returns>
-    protected void GroupByFormula(string formula, string alias = null, bool addAsDisplayColumn = true)
+    protected void GroupByFormula(string formula, string alias = null, bool addAsDisplayColumn = true, ReportMatrixType matrixType = ReportMatrixType.Horizontal)
     {
-        AddFormulaField(ConfiguredReport.eFieldSelectionType.asGroupBy, null, formula, alias);
+        AddFormulaField(eFieldSelectionType.asGroupBy, null, formula, alias, matrixType);
         if (addAsDisplayColumn)
         {
-            AddFormulaField(ConfiguredReport.eFieldSelectionType.asColumn, selectedField?.fieldId, formula, alias);
+            AddFormulaField(eFieldSelectionType.asColumn, selectedField?.fieldId, formula, alias);
         }
     }
     /// <summary>
@@ -100,7 +96,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     protected void Aggregation(string fieldId, AggregationType aggregationType, string alias = null,
         params (eControlPropertyId propertyId, object value)[] properties)
     {
-        AddField((ConfiguredReport.eFieldSelectionType)aggregationType, fieldId, alias, properties);
+        AddField((eFieldSelectionType)aggregationType, fieldId, alias, ReportMatrixType.Horizontal, properties);
     }
 
     /// <summary>
@@ -111,9 +107,9 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     /// <param name="alias">Alias</param>
     /// <returns></returns>
     protected void AggregationFormula(string formula, AggregationType aggregationType, string alias = null,
-        params (eControlPropertyId propertyId, object value)[] properties)
+        params(eControlPropertyId propertyId, object value)[] properties)
     {
-        AddFormulaField((ConfiguredReport.eFieldSelectionType)aggregationType, null, formula, alias, properties);
+        AddFormulaField((eFieldSelectionType)aggregationType, null, formula, alias, ReportMatrixType.Horizontal, properties);
     }
 
     /// <summary>
@@ -123,6 +119,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     /// <param name="alias">Alias</param>
     /// <returns></returns>
     protected void Sum(string fieldId, string alias = null,
+        ReportMatrixType matrixType = ReportMatrixType.Horizontal,
         params (eControlPropertyId propertyId, object value)[] properties)
     {
         Aggregation(fieldId, AggregationType.Sum, alias, properties);
@@ -248,7 +245,8 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     /// <param name="alias">Display alias</param>
     /// <param name="category">Category identifier for this field</param>
     /// <param name="addAsDisplayColumn">Whether to add as display column</param>
-    protected void GroupByWithCategory(string field, string alias, string category, bool addAsDisplayColumn = true)
+    protected void GroupByWithCategory(string field, string alias, string category, 
+        bool addAsDisplayColumn = true, ReportMatrixType matrixType = ReportMatrixType.Horizontal)
     {
         string[] fieldIds = field.Split('.');
         if (fieldIds.Length > 2)
@@ -258,8 +256,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
 
         if (fieldIds.Length == 1)
         {
-            AddField(ConfiguredReport.eFieldSelectionType.asGroupBy, field, alias,
-                [(eControlPropertyId.Category, category)]);
+            AddField(eFieldSelectionType.asGroupBy, field, alias, matrixType, [(eControlPropertyId.Category, category)]);
         }
         else
         {
@@ -275,9 +272,8 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
                 return;
             }
 
-            AddIncludedField(ConfiguredReport.eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id,
-                associationField.Id, alias,
-                [(eControlPropertyId.Category, category)]);
+            AddIncludedField(eFieldSelectionType.asGroupBy, f.Id, associationField.AssociationEntity.Id,
+                associationField.Id, alias, matrixType, [(eControlPropertyId.Category, category)]);
         }
 
         if (addAsDisplayColumn)

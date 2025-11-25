@@ -139,7 +139,7 @@
 	{
 		foreach (var subReport in row.SubReports)
 		{
-			@Html.Partial("_OrderByModal", subReport)
+			@Html.Partial("~/Views/Report/Settings/_OrderByModal.cshtml", subReport)
 		}
 	}
 }
