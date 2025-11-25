@@ -4,8 +4,8 @@
 
 @{
 	var pageAddress = new PageAddress(Model);
-	var currentPageAddress = new HtmlString(pageAddress.ToJson());
+	var jsonString = pageAddress.ToJson();
 }
 
-window.PageAddressManager.setPageAddress(@currentPageAddress);
+window.PageAddressManager.setPageAddress(@Html.Raw(jsonString));
 

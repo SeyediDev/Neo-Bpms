@@ -18,19 +18,26 @@ var SideNavi = (function () {
 
     function getPosStart() {
         if (posStart === null) {
-            posStart = $(config.item + ':eq(0)', container).height() * 1;
+            // posStart should be the initial position where only tabs are visible
+            // This is typically the width of one tab item (50px from CSS)
+            var initialRight = container.css('right');
+            posStart = initialRight ? parseFloat(initialRight.replace('px', '')) || 50 : 50;
         }
         return posStart;
     }
     function getPosEnd() {
         if (posEnd === null) {
-            posEnd = $(config.item + ':eq(0)', container).height() * 1;
-            posEnd += $(config.data, container).width() * 1;
+            // posEnd should be posStart + width of side-navi-data
+            var dataWidth = $(config.data, container).width() * 1;
+            posEnd = getPosStart() + (dataWidth || 400);
         }
         return posEnd;
     }
     function getPos() {
-        return container.css('right').replace('px', '');
+        var rightValue = container.css('right');
+        var pos = rightValue ? rightValue.replace('px', '') : '50';
+        var numPos = parseFloat(pos) || 50;
+        return numPos;
     }
     function toggleIsVisible() {
         isVisible = !(isVisible);
@@ -52,22 +59,40 @@ var SideNavi = (function () {
     function slideEvent() {
 
         var pos = getPos() * 1;
+        var posStart = getPosStart();
+        var posEnd = getPosEnd();
+        
+        console.log('SideNavi: slideEvent', {
+            currentPos: pos,
+            posStart: posStart,
+            posEnd: posEnd,
+            isVisible: isVisible,
+            isSlideing: isSlideing
+        });
         
         // Ensure side-navi-data is always visible (for width calculation)
         $(config.data, container).css({
             'display': 'block',
-            'z-index': '30001'
+            'z-index': '30001',
+            'visibility': 'visible',
+            'opacity': '1'
         });
 
-        if (isVisible && pos < getPosEnd() || !isVisible && pos > getPosStart()) {
+        if (isVisible && pos < posEnd || !isVisible && pos > posStart) {
 
             pos = (isVisible) ? pos + posStep : pos - posStep;
 
-            if (isVisible && pos + posStep >= getPosEnd() || !isVisible && pos - posStep <= getPosStart()) {
+            if (isVisible && pos + posStep >= posEnd || !isVisible && pos - posStep <= posStart) {
 
-                pos = (isVisible) ? getPosEnd() : getPosStart();
+                pos = (isVisible) ? posEnd : posStart;
                 container.css('right', pos + 'px');
                 isSlideing = false;
+                
+                console.log('SideNavi: Slide completed', {
+                    finalPos: pos,
+                    isVisible: isVisible,
+                    dataDisplay: $(config.data, container).css('display')
+                });
 
             } else {
                 container.css('right', pos + 'px');
@@ -76,6 +101,12 @@ var SideNavi = (function () {
 
         } else {
             isSlideing = false;
+            console.log('SideNavi: Slide not needed', {
+                pos: pos,
+                posStart: posStart,
+                posEnd: posEnd,
+                isVisible: isVisible
+            });
         }
 
     }
@@ -107,25 +138,37 @@ var SideNavi = (function () {
     }
     function eventListener() {
 
-        $(config.item, container).on('click', function (event) {
+        // Use event delegation to ensure clicks work even if elements are dynamically added
+        $(container).on('click', config.item, function (event) {
 
             event.preventDefault();
             event.stopPropagation();
             
+            var $item = $(this);
             console.log('SideNavi: Tab clicked', {
-                item: $(this).text().trim(),
+                item: $item.text().trim(),
                 isVisible: isVisible,
-                activeIndex: activeIndex
+                activeIndex: activeIndex,
+                itemExists: $item.length > 0
             });
             
-            setEventParam($(this));
+            setEventParam($item);
+            
+            console.log('SideNavi: After setEventParam', {
+                isVisible: isVisible,
+                changeVisibility: changeVisibility,
+                activeIndex: activeIndex
+            });
 
             if (isVisible) { 
                 setActiveTab();
                 // Ensure side-navi-data is visible
                 $(config.data, container).css({
                     'display': 'block',
-                    'z-index': '30001'
+                    'z-index': '30001',
+                    'pointer-events': 'auto',
+                    'visibility': 'visible',
+                    'opacity': '1'
                 });
             }
 
@@ -133,10 +176,22 @@ var SideNavi = (function () {
                 // Ensure side-navi-data is visible before sliding
                 $(config.data, container).css({
                     'display': 'block',
-                    'z-index': '30001'
+                    'z-index': '30001',
+                    'pointer-events': 'auto',
+                    'visibility': 'visible',
+                    'opacity': '1'
                 });
+                
+                console.log('SideNavi: Starting slide', {
+                    currentRight: container.css('right'),
+                    posStart: getPosStart(),
+                    posEnd: getPosEnd()
+                });
+                
                 slide();
             }
+            
+            return false;
         });
         $(config.container + ', .keep-side-navi').on('click', function (event) {
             event.stopPropagation();
@@ -170,7 +225,14 @@ var SideNavi = (function () {
         var $sideNaviData = $(config.data, container);
         $sideNaviData.css({
             'display': 'block',
-            'z-index': '30001'
+            'z-index': '30001',
+            'pointer-events': 'auto'
+        });
+        
+        // Ensure side-navi-items are clickable
+        $(config.item, container).css({
+            'pointer-events': 'auto',
+            'z-index': '30002'
         });
         
         eventListener();
@@ -178,8 +240,20 @@ var SideNavi = (function () {
         // Set initial position - container should be at posStart (hidden)
         // Do this after eventListener to ensure config is set
         setTimeout(function() {
+            // Reset posStart and posEnd to recalculate
+            posStart = null;
+            posEnd = null;
+            
             var initialPos = getPosStart();
             container.css('right', initialPos + 'px');
+            
+            console.log('SideNavi: Initial position set', {
+                initialPos: initialPos,
+                containerRight: container.css('right'),
+                posStart: getPosStart(),
+                posEnd: getPosEnd(),
+                dataWidth: $sideNaviData.width()
+            });
             
             // Activate first tab (popular filters) by default if not already active
             var $firstItem = $(config.item + ':first', container);
