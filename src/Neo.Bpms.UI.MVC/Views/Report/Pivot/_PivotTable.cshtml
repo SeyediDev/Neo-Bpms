@@ -21,6 +21,7 @@ class PivotTable {
             hasSubReport: options.hasSubReport || false,
             subReportId: options.subReportId || '',
             reportKey: options.reportKey || '',
+            showTotal: options.showTotal !== undefined ? options.showTotal : false,
             ...options
         };
 
@@ -65,14 +66,27 @@ class PivotTable {
             const colKey = this.buildKey(row, columnFields);
             
             // جمع‌آوری colKeys در colKeysList
-            if (colKey && colKey !== 'Total') {
-                if (!this.colKeysList[colKey]) {
-                    this.colKeysList[colKey] = {};
-                    this.colKeysList[colKey].colKey = colKey;
-                    this.colKeysList[colKey].label = this.formatKey(colKey); // استفاده از formatKey برای label
-                    this.colKeysList[colKey].count = 0;
+            if (colKey) {
+                // اگر showTotal فعال است، Total را هم اضافه کن، در غیر این صورت فقط غیر Total
+                if (colKey === 'Total') {
+                    if (this.options.showTotal) {
+                        if (!this.colKeysList[colKey]) {
+                            this.colKeysList[colKey] = {};
+                            this.colKeysList[colKey].colKey = colKey;
+                            this.colKeysList[colKey].label = this.formatKey(colKey);
+                            this.colKeysList[colKey].count = 0;
+                        }
+                        this.colKeysList[colKey].count = this.colKeysList[colKey].count + 1;
+                    }
+                } else {
+                    if (!this.colKeysList[colKey]) {
+                        this.colKeysList[colKey] = {};
+                        this.colKeysList[colKey].colKey = colKey;
+                        this.colKeysList[colKey].label = this.formatKey(colKey); // استفاده از formatKey برای label
+                        this.colKeysList[colKey].count = 0;
+                    }
+                    this.colKeysList[colKey].count = this.colKeysList[colKey].count + 1;
                 }
-                this.colKeysList[colKey].count = this.colKeysList[colKey].count + 1;
             }
 
             // ایجاد ساختار pivotData - داده‌ها از سرور aggregate شده می‌آیند
@@ -94,6 +108,57 @@ class PivotTable {
                 this.pivotData[rowKey][colKey][fieldName] = value;
             });
         });
+
+        // محاسبه Total برای هر rowKey - اگر showTotal فعال باشد
+        if (this.options.showTotal && columnFields.length > 0) {
+            // برای هر rowKey، Total را محاسبه کن
+            Object.keys(this.pivotData).forEach(rowKey => {
+                if (!this.pivotData[rowKey]['Total']) {
+                    this.pivotData[rowKey]['Total'] = {};
+                }
+
+                // برای هر valueField، مجموع یا میانگین همه colKeyها (به جز Total) را محاسبه کن
+                valueFields.forEach(field => {
+                    const fieldName = typeof field === 'object' && field.name ? field.name : field;
+                    const aggregationType = typeof field === 'object' && field.aggregationType ? field.aggregationType.toString().toLowerCase() : 'sum';
+                    const isAverage = aggregationType === 'average' || aggregationType === 'avg' || aggregationType === 'mean';
+                    
+                    let total = 0;
+                    let count = 0;
+                    
+                    // جمع یا شمارش مقادیر همه colKeyها (به جز Total)
+                    Object.keys(this.pivotData[rowKey]).forEach(colKey => {
+                        if (colKey !== 'Total' && this.pivotData[rowKey][colKey] && this.pivotData[rowKey][colKey][fieldName] !== null && this.pivotData[rowKey][colKey][fieldName] !== undefined) {
+                            const value = this.parseValue(this.pivotData[rowKey][colKey][fieldName]);
+                            if (value !== null && !isNaN(value)) {
+                                total += value;
+                                count++;
+                            }
+                        }
+                    });
+                    
+                    // اگر میانگین است، تقسیم بر تعداد کن
+                    if (isAverage && count > 0) {
+                        this.pivotData[rowKey]['Total'][fieldName] = total / count;
+                    } else {
+                        this.pivotData[rowKey]['Total'][fieldName] = total;
+                    }
+                });
+
+                // اضافه کردن Total به colKeysList
+                if (!this.colKeysList['Total']) {
+                    this.colKeysList['Total'] = {};
+                    this.colKeysList['Total'].colKey = 'Total';
+                    this.colKeysList['Total'].label = this.formatKey('Total');
+                    this.colKeysList['Total'].count = 0;
+                }
+            });
+        } else {
+            // اگر showTotal غیرفعال است، Total را از colKeysList حذف کن
+            if (this.colKeysList['Total']) {
+                delete this.colKeysList['Total'];
+            }
+        }
         
     }
 
@@ -131,19 +196,35 @@ class PivotTable {
 			return;
 		}
 
-		// کنترل‌های Hide/Show برای شاخص‌ها
-		let html = '<div class="pivot-controls">';
-		html += '<div class="pivot-control-group">';
-		html += '<label>نمایش شاخص‌ها:</label>';
-		valueFields.forEach((valueField, index) => {
-			const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
-			const label = this.getFieldLabel(valueField);
-			html += '<label class="pivot-checkbox-label"><input type="checkbox" class="pivot-value-field-toggle" data-value-field="' + valueFieldName + '" checked> ' + label + '</label>';
+		// مرتب‌سازی colKeys - Total همیشه در انتها
+		const sortedColKeys = Object.keys(this.colKeysList).sort((a, b) => {
+			if (a === 'Total') return 1; // Total همیشه آخر
+			if (b === 'Total') return -1;
+			return a.localeCompare(b);
 		});
-		html += '</div>';
-		html += '</div>';
 
-			html += '<table class="pivot-table" dir="' + this.options.direction + '">';
+		// کنترل‌های Hide/Show برای شاخص‌ها - قرار دادن در container جداگانه
+		const controlsContainer = document.getElementById('pivot-controls-container');
+		if (controlsContainer) {
+			let controlsHtml = '<div class="pivot-controls">';
+			controlsHtml += '<div class="pivot-control-group">';
+			controlsHtml += '<label>نمایش شاخص‌ها:</label>';
+			valueFields.forEach((valueField, index) => {
+				const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
+				const label = this.getFieldLabel(valueField);
+				controlsHtml += '<label class="pivot-checkbox-label"><input type="checkbox" class="pivot-value-field-toggle" data-value-field="' + valueFieldName + '" checked> ' + label + '</label>';
+			});
+			controlsHtml += '</div>';
+			// کنترل نمایش ستون Total
+			controlsHtml += '<div class="pivot-control-group">';
+			controlsHtml += '<label class="pivot-checkbox-label"><input type="checkbox" class="pivot-total-toggle" ' + (this.options.showTotal ? 'checked' : '') + '> نمایش ستون کل</label>';
+			controlsHtml += '</div>';
+			controlsHtml += '</div>';
+			controlsContainer.innerHTML = controlsHtml;
+		}
+
+		// شروع ساخت جدول
+		let html = '<table class="pivot-table" dir="' + this.options.direction + '">';
 
 		html += '<thead>';
 
@@ -179,11 +260,12 @@ class PivotTable {
 
 		// سطر دوم: colKeys (مقادیر ستون‌ها) - برای هر colKey، یک ستون برای هر valueField
 		html += '<tr>';
-		// استفاده مستقیم از colKeysList
-		for (const colKey in this.colKeysList) {
+		for (const colKey of sortedColKeys) {
 			const colKeyInfo = this.colKeysList[colKey];
 			const colKeyLabel = colKeyInfo.label || this.formatKey(colKey);
-			html += '<th class="pivot-col-value" data-col-key="' + colKey + '" >' + colKeyLabel + '</th>';
+			const isTotalColumn = colKey === 'Total';
+			const totalClass = isTotalColumn ? ' pivot-col-value--total' : '';
+			html += '<th class="pivot-col-value' + totalClass + '" data-col-key="' + colKey + '" >' + colKeyLabel + '</th>';
 		}
 		html += '</tr>';
 
@@ -220,14 +302,14 @@ class PivotTable {
 					}
 
 					// برای هر colKey، یک سلول برای هر valueField
-					// استفاده مستقیم از colKeysList
-					for (const colKey in this.colKeysList) {
+					// استفاده از sortedColKeys برای حفظ ترتیب (Total در انتها)
+					for (const colKey of sortedColKeys) {
 						const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
 						const value = this.pivotData[rowKey]?.[colKey]?.[valueFieldName] ?? null;
 						const hasValue = value !== null && value !== undefined;
 						const tooltip = this.buildTooltip(this.getFieldLabel(valueField), value, rowKey, colKey);
-						// فقط برای سطر اول (vfIndex === 0) آیکون drill down را نمایش بده
-						const showDrillDown = this.options.hasSubReport && hasValue && vfIndex === 0;
+						// فقط برای سطر اول (vfIndex === 0) و فقط برای colKeyهایی که Total نیستند، آیکون drill down را نمایش بده
+						const showDrillDown = this.options.hasSubReport && hasValue && vfIndex === 0 && colKey !== 'Total';
 						const cellClass = showDrillDown ? 'pivot-value pivot-value-clickable' : 'pivot-value';
 						const dataAttrs = showDrillDown ?
 							' data-row-key="' + rowKey + '" data-col-key="' + colKey + '" data-value-field="' + valueFieldName + '"' : '';
@@ -272,7 +354,10 @@ class PivotTable {
         }
 
         // Toggle برای شاخص‌ها - استفاده از CSS برای hide/show
-        const valueFieldToggles = this.container.querySelectorAll('.pivot-value-field-toggle');
+        // جستجو در controls container به جای container اصلی
+        const controlsContainer = document.getElementById('pivot-controls-container');
+        const searchContainer = controlsContainer || this.container;
+        const valueFieldToggles = searchContainer.querySelectorAll('.pivot-value-field-toggle');
         valueFieldToggles.forEach(toggle => {
             toggle.addEventListener('change', (e) => {
                 const valueFieldName = toggle.getAttribute('data-value-field');
@@ -285,6 +370,16 @@ class PivotTable {
                 }
             });
         });
+
+        // Toggle برای ستون Total - نیاز به re-render کامل
+        const totalToggle = searchContainer.querySelector('.pivot-total-toggle');
+        if (totalToggle) {
+            totalToggle.addEventListener('change', (e) => {
+                this.options.showTotal = totalToggle.checked;
+                this.processData();
+                this.render();
+            });
+        }
     }
 
     adjustStickyHeaders() {
@@ -427,7 +522,7 @@ class PivotTable {
 
 
     formatKey(key) {
-        if (key === 'Total') return 'جمع کل';
+        if (key === 'Total') return 'کل';
         return key.split('|').join(' / ');
     }
     

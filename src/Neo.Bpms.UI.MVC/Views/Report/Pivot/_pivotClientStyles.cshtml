@@ -1,4 +1,13 @@
 <style>
+    #pivot-controls-container {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: white;
+        padding: 8px 0;
+        margin-bottom: 8px;
+    }
+
     .pivot-matrix-card {
         direction: rtl;
         font-family: 'Vazir', 'Vazir FD', 'Yekan', 'Tahoma', 'Arial', sans-serif;
@@ -242,6 +251,11 @@
         position: sticky;
         top: 0;
         z-index: 4;
+    }
+
+    .pivot-col-value--total {
+        background-color: #c4b5fd !important;
+        font-weight: 600;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
@@ -299,6 +313,7 @@
         border-radius: 8px;
         margin-bottom: 16px;
         border: 1px solid #e2e8f0;
+        font-size: 0.875rem;
     }
 
     .pivot-control-group {
@@ -312,6 +327,7 @@
         font-weight: 600;
         color: #475569;
         margin: 0;
+        font-size: 0.875rem;
     }
 
     .pivot-checkbox-label {
@@ -324,6 +340,7 @@
         padding: 4px 8px;
         border-radius: 4px;
         transition: background 0.2s;
+        font-size: 0.8125rem;
     }
 
     .pivot-checkbox-label:hover {
