@@ -186,11 +186,7 @@ class PivotTable {
         for (const colKey in this.colKeysList) {
             const colKeyInfo = this.colKeysList[colKey];
             const colKeyLabel = colKeyInfo.label || this.formatKey(colKey);
-            // برای هر colKey، به تعداد valueFields ستون ایجاد کن
-            valueFields.forEach((valueField, vfIndex) => {
-                const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
-                html += '<th class=""pivot-col-value"" data-col-key=""' + colKey + '"" data-value-field=""' + valueFieldName + '"">' + colKeyLabel + '</th>';
-            });
+            html += '<th class=""pivot-col-value"" data-col-key=""' + colKey + '"" >' + colKeyLabel + '</th>';
         }
         html += '</tr>';
         
