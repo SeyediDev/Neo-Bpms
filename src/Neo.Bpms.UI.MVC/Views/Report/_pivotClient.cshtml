@@ -517,6 +517,21 @@ class PivotTable {
         this.applyStyles();
         this.attachDrillDownHandlers();
         this.updateDimensionCounts();
+        this.adjustStickyHeaders();
+    }
+
+    adjustStickyHeaders() {
+        // محاسبه ارتفاع سطر اول header و تنظیم top برای سطر دوم
+        const firstHeaderRow = this.container.querySelector('.pivot-table thead tr:first-child');
+        const secondHeaderRow = this.container.querySelector('.pivot-table thead tr:last-child');
+        
+        if (firstHeaderRow && secondHeaderRow) {
+            const firstRowHeight = firstHeaderRow.offsetHeight;
+            const colValueCells = secondHeaderRow.querySelectorAll('.pivot-col-value');
+            colValueCells.forEach(cell => {
+                cell.style.top = firstRowHeight + 'px';
+            });
+        }
     }
     
     updateDimensionCounts() {
@@ -810,7 +825,7 @@ class PivotTable {
                 '    background-color: #a5b4fc !important;' +
                 '    font-weight: 500;' +
                 '    position: sticky;' +
-                '    top: 50px;' +
+                '    top: 0;' +
                 '    z-index: 4;' +
                 '    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);' +
                 '}' +
