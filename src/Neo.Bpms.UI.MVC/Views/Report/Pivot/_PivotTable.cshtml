@@ -217,7 +217,9 @@ class PivotTable {
                         const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
                         const aggregationType = typeof valueField === 'object' && valueField.aggregationType ? valueField.aggregationType : null;
                         const icon = this.getAggregationIcon(aggregationType);
-                        html += '<th class=""pivot-value-label"" data-value-field=""' + valueFieldName + '"">' + icon + ' ' + this.getFieldLabel(valueField) + '</th>';
+                        const iconHtml = icon ? '<span class=""pivot-value-label__icon"" aria-hidden=""true"">' + icon + '</span>' : '';
+                        const labelHtml = '<span class=""pivot-value-label__text"">' + this.getFieldLabel(valueField) + '</span>';
+                        html += '<th class=""pivot-value-label"" data-value-field=""' + valueFieldName + '"">' + labelHtml + iconHtml + '</th>';
                     }
                     
                     // برای هر colKey، یک سلول برای هر valueField
@@ -589,6 +591,19 @@ class PivotTable {
                 '    background-color: #86efac !important;' +
                 '    color: #065f46 !important;' +
                 '    font-weight: 600;' +
+                '    position: relative;' +
+                '    padding-right: 28px;' +
+                '    text-align: center;' +
+                '}' +
+                '.pivot-value-label__icon {' +
+                '    position: absolute;' +
+                '    right: 8px;' +
+                '    top: 50%;' +
+                '    transform: translateY(-50%);' +
+                '    font-size: 0.9rem;' +
+                '}' +
+                '.pivot-value-label__text {' +
+                '    display: inline-block;' +
                 '}' +
                 '.pivot-col-value {' +
                 '    background-color: #a5b4fc !important;' +
