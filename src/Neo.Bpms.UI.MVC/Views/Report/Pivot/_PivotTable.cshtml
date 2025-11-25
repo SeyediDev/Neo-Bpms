@@ -1,5 +1,4 @@
 <script>
-@Html.Raw(@"
 /**
  * PivotTable - یک کامپوننت ساده و سبک برای ساخت Pivot Table سمت کلاینت
  * بدون وابستگی به کتابخانه‌های خارجی
@@ -8,7 +7,7 @@ class PivotTable {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
-            throw new Error('Container with id ""' + containerId + '"" not found');
+            throw new Error('Container with id "' + containerId + '" not found');
         }
 
         this.options = {
@@ -31,24 +30,23 @@ class PivotTable {
 
     init() {
         if (this.options.data.length === 0) {
-            this.container.innerHTML = '<div class=""pivot-empty"">داده‌ای برای نمایش موجود نیست</div>';
+            this.container.innerHTML = '<div class="pivot-empty">داده‌ای برای نمایش موجود نیست</div>';
             return;
         }
 
         if (this.options.rowFields.length === 0 && this.options.columnFields.length === 0) {
-            this.container.innerHTML = '<div class=""pivot-empty"">لطفاً حداقل یک فیلد سطر یا ستون انتخاب کنید</div>';
+            this.container.innerHTML = '<div class="pivot-empty">لطفاً حداقل یک فیلد سطر یا ستون انتخاب کنید</div>';
             return;
         }
 
         if (this.options.valueFields.length === 0) {
-            this.container.innerHTML = '<div class=""pivot-empty"">لطفاً حداقل یک فیلد مقدار انتخاب کنید</div>';
+            this.container.innerHTML = '<div class="pivot-empty">لطفاً حداقل یک فیلد مقدار انتخاب کنید</div>';
             return;
         }
 
         this.processData();
         this.render();
     }
-
     processData() {
         const { data, rowFields, columnFields, valueFields } = this.options;
 
@@ -123,140 +121,139 @@ class PivotTable {
         return isNaN(parsed) ? null : parsed;
     }
 
+	render() {
+		const { rowFields, columnFields, valueFields } = this.options;
 
-    render() {
-        const { rowFields, columnFields, valueFields } = this.options;
-        
-        const rowKeys = Object.keys(this.pivotData).sort();
-        
-        if (rowKeys.length === 0 || !this.colKeysList || Object.keys(this.colKeysList).length === 0) {
-            this.container.innerHTML = '<div class=""pivot-empty"">داده‌ای برای نمایش موجود نیست</div>';
-            return;
-        }
+		const rowKeys = Object.keys(this.pivotData).sort();
 
-        // کنترل‌های Hide/Show برای شاخص‌ها
-        let html = '<div class=""pivot-controls"">';
-        html += '<div class=""pivot-control-group"">';
-        html += '<label>نمایش شاخص‌ها:</label>';
-        valueFields.forEach((valueField, index) => {
-            const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
-            const label = this.getFieldLabel(valueField);
-            html += '<label class=""pivot-checkbox-label""><input type=""checkbox"" class=""pivot-value-field-toggle"" data-value-field=""' + valueFieldName + '"" checked> ' + label + '</label>';
-        });
-        html += '</div>';
-        html += '</div>';
+		if (rowKeys.length === 0 || !this.colKeysList || Object.keys(this.colKeysList).length === 0) {
+				this.container.innerHTML = '<div class="pivot-empty">داده‌ای برای نمایش موجود نیست</div>';
+			return;
+		}
 
-        html += '<table class=""pivot-table"" dir=""' + this.options.direction + '"">';
-        
-        html += '<thead>';
-        
-        // محاسبه تعداد سطرهای header
-        // سطر اول: header اصلی
-        // سطر دوم: colKeys (مقادیر ستون‌ها) - فقط یک بار
-        let headerRowCount = 2;
-        
-        // سطر اول: سلول‌های اصلی
-        html += '<tr>';
-        
-        // سلول ""ریوارد"" (عنوان rowFields) - rowspan برای تمام سطرهای header
-        const rowFieldsLabel = rowFields.length > 0 ? rowFields.map(f => this.getFieldLabel(f)).join(' / ') : ""ریوارد"";
-        html += '<th class=""pivot-row-dimension-header"" rowspan=""' + headerRowCount + '"">' + rowFieldsLabel + '</th>';
-        
-        // سلول ""شاخص‌ها"" (عنوان valueFields) - فقط اگر تعداد شاخص‌ها بیشتر از 1 باشد نمایش بده
-        if (valueFields.length > 1) {
-            const valueFieldsLabel = ""شاخص‌ها"";
-            html += '<th class=""pivot-value-dimension-header"" rowspan=""' + headerRowCount + '"">' + valueFieldsLabel + '</th>';
-        }
-        
-        // سلول بزرگ که کل columnFields را می‌پوشاند - همه ابعاد را با / جدا می‌کنیم
-        const colKeysCount = Object.keys(this.colKeysList).length;
-        const totalCols = colKeysCount * valueFields.length;
-        if (columnFields.length > 0) {
-            const columnFieldsLabel = columnFields.map(f => this.getFieldLabel(f)).join(' / ');
-            html += '<th class=""pivot-header"" colspan=""' + totalCols + '"">' + columnFieldsLabel + '</th>';
-        } else {
-            html += '<th class=""pivot-header"" colspan=""' + totalCols + '"">ستون</th>';
-        }
-        
-        html += '</tr>';
-        
-        // سطر دوم: colKeys (مقادیر ستون‌ها) - برای هر colKey، یک ستون برای هر valueField
-        html += '<tr>';
-        // استفاده مستقیم از colKeysList
-        for (const colKey in this.colKeysList) {
-            const colKeyInfo = this.colKeysList[colKey];
-            const colKeyLabel = colKeyInfo.label || this.formatKey(colKey);
-            html += '<th class=""pivot-col-value"" data-col-key=""' + colKey + '"" >' + colKeyLabel + '</th>';
-        }
-        html += '</tr>';
-        
-        html += '</thead>';
-        
-        html += '<tbody>';
-        
-        // گروه‌بندی rowKeys بر اساس اولین dimension برای تفکیک بصری
-        const groupedRowKeys = this.groupRowKeysByFirstDimension(rowKeys);
-        
-        groupedRowKeys.forEach((group, groupIndex) => {
-            group.forEach((rowKey, keyIndex) => {
-                const rowSpan = valueFields.length;
-                const isFirstInGroup = keyIndex === 0;
-                const isLastInGroup = keyIndex === group.length - 1;
-                
-                valueFields.forEach((valueField, vfIndex) => {
-                    const isFirstRow = vfIndex === 0;
-                    const isLastRow = vfIndex === valueFields.length - 1;
-                    
-                    html += '<tr class=""' + (isFirstInGroup && isFirstRow ? 'pivot-row-group-start' : '') + ' ' + (isLastInGroup && isLastRow ? 'pivot-row-group-end' : '') + '"">';
-                    
-                    if (vfIndex === 0) {
-                        html += '<th class=""pivot-row-header"" rowspan=""' + rowSpan + '"">' + this.formatKey(rowKey) + '</th>';
-                    }
-                    
-                    if (valueFields.length > 1) {
-                        const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
-                        const aggregationType = typeof valueField === 'object' && valueField.aggregationType ? valueField.aggregationType : null;
-                        const icon = this.getAggregationIcon(aggregationType);
-                        const iconHtml = icon ? '<span class=""pivot-value-label__icon"" aria-hidden=""true"">' + icon + '</span>' : '';
-                        const labelHtml = '<span class=""pivot-value-label__text"">' + this.getFieldLabel(valueField) + '</span>';
-                        html += '<th class=""pivot-value-label"" data-value-field=""' + valueFieldName + '"">' + labelHtml + iconHtml + '</th>';
-                    }
-                    
-                    // برای هر colKey، یک سلول برای هر valueField
-                    // استفاده مستقیم از colKeysList
-                    for (const colKey in this.colKeysList) {
-                        const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
-                        const value = this.pivotData[rowKey]?.[colKey]?.[valueFieldName] ?? null;
-                        const hasValue = value !== null && value !== undefined;
-                        const tooltip = this.buildTooltip(this.getFieldLabel(valueField), value, rowKey, colKey);
-                        // فقط برای سطر اول (vfIndex === 0) آیکون drill down را نمایش بده
-                        const showDrillDown = this.options.hasSubReport && hasValue && vfIndex === 0;
-                        const cellClass = showDrillDown ? 'pivot-value pivot-value-clickable' : 'pivot-value';
-                        const dataAttrs = showDrillDown ? 
-                            ' data-row-key=""' + rowKey + '"" data-col-key=""' + colKey + '"" data-value-field=""' + valueFieldName + '""' : '';
-                        const drillDownIcon = showDrillDown ? '<span class=""pivot-drill-down-icon"">🔍</span>' : '';
-                        html += '<td class=""' + cellClass + '"" title=""' + tooltip + '"" data-value-field=""' + valueFieldName + '""' + dataAttrs + '>' + 
-                                '<span class=""pivot-value-text"">' + this.formatValue(value) + '</span>' + 
-                                drillDownIcon + 
-                                '</td>';
-                    }
-                    
-                    html += '</tr>';
-                });
-            });
-        });
-        
-        html += '</tbody>';
-        html += '</table>';
+		// کنترل‌های Hide/Show برای شاخص‌ها
+		let html = '<div class="pivot-controls">';
+		html += '<div class="pivot-control-group">';
+		html += '<label>نمایش شاخص‌ها:</label>';
+		valueFields.forEach((valueField, index) => {
+			const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
+			const label = this.getFieldLabel(valueField);
+			html += '<label class="pivot-checkbox-label"><input type="checkbox" class="pivot-value-field-toggle" data-value-field="' + valueFieldName + '" checked> ' + label + '</label>';
+		});
+		html += '</div>';
+		html += '</div>';
 
-        this.container.innerHTML = html;
-        
-        this.applyStyles();
-        this.attachDrillDownHandlers();
-        this.attachToggleHandlers();
-        this.updateDimensionCounts();
-        this.adjustStickyHeaders();
-    }
+			html += '<table class="pivot-table" dir="' + this.options.direction + '">';
+
+		html += '<thead>';
+
+		// محاسبه تعداد سطرهای header
+		// سطر اول: header اصلی
+		// سطر دوم: colKeys (مقادیر ستون‌ها) - فقط یک بار
+		let headerRowCount = 2;
+
+		// سطر اول: سلول‌های اصلی
+		html += '<tr>';
+
+		// سلول "ریوارد" (عنوان rowFields) - rowspan برای تمام سطرهای header
+		const rowFieldsLabel = rowFields.length > 0 ? rowFields.map(f => this.getFieldLabel(f)).join(' / ') : "ریوارد";
+			html += '<th class="pivot-row-dimension-header" rowspan="' + headerRowCount + '">' + rowFieldsLabel + '</th>';
+
+			// سلول "شاخص‌ها" (عنوان valueFields) - فقط اگر تعداد شاخص‌ها بیشتر از 1 باشد نمایش بده
+		if (valueFields.length > 1) {
+			const valueFieldsLabel = "شاخص‌ها";
+			html += '<th class="pivot-value-dimension-header" rowspan="' + headerRowCount + '">' + valueFieldsLabel + '</th>';
+		}
+
+		// سلول بزرگ که کل columnFields را می‌پوشاند - همه ابعاد را با / جدا می‌کنیم
+		const colKeysCount = Object.keys(this.colKeysList).length;
+		const totalCols = colKeysCount * valueFields.length;
+		if (columnFields.length > 0) {
+			const columnFieldsLabel = columnFields.map(f => this.getFieldLabel(f)).join(' / ');
+			html += '<th class="pivot-header" colspan="' + totalCols + '">' + columnFieldsLabel + '</th>';
+		} else {
+			html += '<th class="pivot-header" colspan="' + totalCols + '">ستون</th>';
+		}
+
+		html += '</tr>';
+
+		// سطر دوم: colKeys (مقادیر ستون‌ها) - برای هر colKey، یک ستون برای هر valueField
+		html += '<tr>';
+		// استفاده مستقیم از colKeysList
+		for (const colKey in this.colKeysList) {
+			const colKeyInfo = this.colKeysList[colKey];
+			const colKeyLabel = colKeyInfo.label || this.formatKey(colKey);
+			html += '<th class="pivot-col-value" data-col-key="' + colKey + '" >' + colKeyLabel + '</th>';
+		}
+		html += '</tr>';
+
+		html += '</thead>';
+
+		html += '<tbody>';
+
+		// گروه‌بندی rowKeys بر اساس اولین dimension برای تفکیک بصری
+		const groupedRowKeys = this.groupRowKeysByFirstDimension(rowKeys);
+
+		groupedRowKeys.forEach((group, groupIndex) => {
+			group.forEach((rowKey, keyIndex) => {
+				const rowSpan = valueFields.length;
+				const isFirstInGroup = keyIndex === 0;
+				const isLastInGroup = keyIndex === group.length - 1;
+
+				valueFields.forEach((valueField, vfIndex) => {
+					const isFirstRow = vfIndex === 0;
+					const isLastRow = vfIndex === valueFields.length - 1;
+
+							html += '<tr class="' + (isFirstInGroup && isFirstRow ? 'pivot-row-group-start' : '') + ' ' + (isLastInGroup && isLastRow ? 'pivot-row-group-end' : '') + '">';
+
+					if (vfIndex === 0) {
+						html += '<th class="pivot-row-header" rowspan="' + rowSpan + '">' + this.formatKey(rowKey) + '</th>';
+					}
+
+					if (valueFields.length > 1) {
+						const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
+						const aggregationType = typeof valueField === 'object' && valueField.aggregationType ? valueField.aggregationType : null;
+						const icon = this.getAggregationIcon(aggregationType);
+						const iconHtml = icon ? '<span class="pivot-value-label__icon" aria-hidden="true">' + icon + '</span>' : '';
+						const labelHtml = '<span class="pivot-value-label__text">' + this.getFieldLabel(valueField) + '</span>';
+						html += '<th class="pivot-value-label" data-value-field="' + valueFieldName + '">' + labelHtml + iconHtml + '</th>';
+					}
+
+					// برای هر colKey، یک سلول برای هر valueField
+					// استفاده مستقیم از colKeysList
+					for (const colKey in this.colKeysList) {
+						const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
+						const value = this.pivotData[rowKey]?.[colKey]?.[valueFieldName] ?? null;
+						const hasValue = value !== null && value !== undefined;
+						const tooltip = this.buildTooltip(this.getFieldLabel(valueField), value, rowKey, colKey);
+						// فقط برای سطر اول (vfIndex === 0) آیکون drill down را نمایش بده
+						const showDrillDown = this.options.hasSubReport && hasValue && vfIndex === 0;
+						const cellClass = showDrillDown ? 'pivot-value pivot-value-clickable' : 'pivot-value';
+						const dataAttrs = showDrillDown ?
+							' data-row-key="' + rowKey + '" data-col-key="' + colKey + '" data-value-field="' + valueFieldName + '"' : '';
+						const drillDownIcon = showDrillDown ? '<span class="pivot-drill-down-icon">🔍</span>' : '';
+						html += '<td class="' + cellClass + '" title="' + tooltip + '" data-value-field="' + valueFieldName + '"' + dataAttrs + '>' +
+									'<span class="pivot-value-text">' + this.formatValue(value) + '</span>' +
+								drillDownIcon +
+								'</td>';
+					}
+
+					html += '</tr>';
+				});
+			});
+		});
+
+		html += '</tbody>';
+		html += '</table>';
+
+		this.container.innerHTML = html;
+
+		this.applyStyles();
+		this.attachDrillDownHandlers();
+		this.attachToggleHandlers();
+		this.updateDimensionCounts();
+		this.adjustStickyHeaders();
+	}
 
     attachToggleHandlers() {
         // ایجاد CSS rules برای hide/show هر valueField
@@ -269,7 +266,7 @@ class PivotTable {
                 const valueFieldName = typeof valueField === 'object' && valueField.name ? valueField.name : valueField;
                 // Escape کردن کاراکترهای خاص در نام فیلد برای استفاده در CSS selector
                 const safeFieldName = valueFieldName.replace(/[^a-zA-Z0-9]/g, '_');
-                cssRules += `.pivot-table.hide-value-field-${safeFieldName} [data-value-field=""${valueFieldName}""] { display: none !important; }`;
+                cssRules += `.pivot-table.hide-value-field-${safeFieldName} [data-value-field="${valueFieldName}"] { display: none !important; }`;
             });
             style.textContent = cssRules;
             document.head.appendChild(style);
@@ -501,6 +498,23 @@ class PivotTable {
         return icons[type] || '📋';
     }
 
+    updateData(data) {
+        this.options.data = data;
+        this.init();
+    }
+
+    setDimensions(rowFields, columnFields, valueFields) {
+        this.options.rowFields = rowFields;
+        this.options.columnFields = columnFields;
+        this.options.valueFields = valueFields;
+        this.init();
+    }
+
+    setAggregator(aggregator) {
+        this.options.aggregator = aggregator;
+        this.init();
+    }
+
     applyStyles() {
         if (!document.getElementById('pivot-table-styles')) {
             const style = document.createElement('style');
@@ -510,7 +524,7 @@ class PivotTable {
                 '    width: 100%;' +
                 '    border-collapse: collapse;' +
                 '    font-size: 0.9rem;' +
-                '    font-family: ""Vazir"", ""Vazir FD"", ""Yekan"", ""Tahoma"", ""Arial"", sans-serif;' +
+                '    font-family: "Vazir", "Vazir FD", "Yekan", "Tahoma", "Arial", sans-serif;' +
                 '    direction: rtl;' +
                 '    background: #ffffff;' +
                 '}' +
@@ -692,7 +706,7 @@ class PivotTable {
                 '.pivot-checkbox-label:hover {' +
                 '    background: #e2e8f0;' +
                 '}' +
-                '.pivot-checkbox-label input[type=""checkbox""] {' +
+                '.pivot-checkbox-label input[type="checkbox"] {' +
                 '    cursor: pointer;' +
                 '    width: 16px;' +
                 '    height: 16px;' +
@@ -700,23 +714,5 @@ class PivotTable {
             document.head.appendChild(style);
         }
     }
-
-    updateData(data) {
-        this.options.data = data;
-        this.init();
-    }
-
-    setDimensions(rowFields, columnFields, valueFields) {
-        this.options.rowFields = rowFields;
-        this.options.columnFields = columnFields;
-        this.options.valueFields = valueFields;
-        this.init();
-    }
-
-    setAggregator(aggregator) {
-        this.options.aggregator = aggregator;
-        this.init();
-    }
 }
-")
 </script>
