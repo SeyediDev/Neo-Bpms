@@ -88,7 +88,7 @@
     // صبر می‌کنیم تا DOM لود شود
     (function() {
         function initPivotTable() {
-            if (typeof PivotTable === 'undefined') {
+            if (typeof window.PivotTable === 'undefined') {
                 const container = document.getElementById('pivot-table-container');
                 if (container) {
                     container.classList.remove('loading');

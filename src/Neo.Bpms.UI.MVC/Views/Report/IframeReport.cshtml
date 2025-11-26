@@ -48,7 +48,7 @@
                                 @Html.Partial("~/Views/Report/Map/_WorldMap.cshtml", Model)
                                 break;
                             case ChartType.BpmnDiagram:
-                                @Html.Partial("_bpmn", Model)
+                                @Html.Partial("~/Views/Report/Charts/_bpmn.cshtml", Model)
                                 break;
                             default:
                                 <div style="direction: ltr !important;">

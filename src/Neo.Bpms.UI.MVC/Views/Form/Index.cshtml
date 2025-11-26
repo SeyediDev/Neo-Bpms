@@ -256,6 +256,88 @@ new
 <script src="~/Content/common-assets-includes/features/sbvr/sbvr-init.js" asp-append-version="true"></script>
 <script src="~/Content/common-assets-includes/features/combo/combo-clear.js" asp-append-version="true"></script>
 
+<script>
+    // بهبود نمایش فرم‌های ایندکس با ستون‌های زیاد - با رعایت اصول UI/UX
+    (function() {
+        function improveTableDisplay() {
+            // پیدا کردن تمام جداول ایندکس
+            var tableWrappers = document.querySelectorAll('.modern-table-wrapper, .t-table-wrapper');
+            
+            tableWrappers.forEach(function(wrapper) {
+                var table = wrapper.querySelector('table');
+                if (!table) return;
+                
+                // شمارش تعداد ستون‌ها
+                var headerRow = table.querySelector('thead tr');
+                if (!headerRow) return;
+                
+                var columnCount = headerRow.querySelectorAll('th').length;
+                
+                // اگر تعداد ستون‌ها بیشتر از 6 باشد، کلاس has-many-columns را اضافه کن
+                if (columnCount > 6) {
+                    wrapper.classList.add('has-many-columns');
+                    
+                    // بهبود نمایش ستون‌ها - کاهش عرض برای نمایش بهتر
+                    var ths = table.querySelectorAll('thead th');
+                    var tds = table.querySelectorAll('tbody td');
+                    
+                    // تنظیم عرض ستون‌ها بر اساس محتوا - با عرض کمتر
+                    ths.forEach(function(th, index) {
+                        // ستون‌های اول و آخر را کمی بزرگ‌تر نگه دار
+                        if (index === 0 || index === columnCount - 1) {
+                            th.style.minWidth = '80px';
+                            th.style.maxWidth = '150px';
+                        } else {
+                            th.style.minWidth = '60px';
+                            th.style.maxWidth = '120px';
+                        }
+                    });
+                    
+                    // تنظیم عرض سلول‌ها
+                    tds.forEach(function(td, index) {
+                        var colIndex = index % columnCount;
+                        if (colIndex === 0 || colIndex === columnCount - 1) {
+                            td.style.minWidth = '80px';
+                            td.style.maxWidth = '150px';
+                        } else {
+                            td.style.minWidth = '60px';
+                            td.style.maxWidth = '120px';
+                        }
+                    });
+                }
+                
+                // بهبود نمایش آیکن‌ها - اطمینان از نمایش صحیح
+                var actionLinks = table.querySelectorAll('.modern-action-link, .icon-link');
+                actionLinks.forEach(function(link) {
+                    link.style.display = 'inline-flex';
+                    link.style.visibility = 'visible';
+                    link.style.opacity = '1';
+                    link.style.width = '24px';
+                    link.style.height = '24px';
+                    link.style.margin = '0 2px';
+                });
+            });
+        }
+        
+        // اجرا بعد از لود شدن صفحه
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', improveTableDisplay);
+        } else {
+            improveTableDisplay();
+        }
+        
+        // اجرا بعد از تغییرات دینامیک (مثلاً بعد از فیلتر)
+        var observer = new MutationObserver(function(mutations) {
+            improveTableDisplay();
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    })();
+</script>
+
 <script type="text/javascript">
     @if (needsSelection)
     {

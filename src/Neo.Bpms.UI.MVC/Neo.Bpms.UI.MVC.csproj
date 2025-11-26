@@ -28,6 +28,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="NWebsec.AspNetCore.Middleware" />
+    <PackageReference Include="Asp.Versioning.Mvc" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" />
   </ItemGroup>
   <ItemGroup>

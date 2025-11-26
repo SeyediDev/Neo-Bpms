@@ -32,50 +32,52 @@
     var valueFieldsCountText = valueFields.Count.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
     string rowFieldsLabel = rowDimensions.Count > 0 ? string.Join(" / ", rowDimensions.Select(d => d.Alias)) : "بعد سطر";
     string columnFieldsLabel = columnDimensions.Count > 0 ? string.Join(" / ", columnDimensions.Select(d => d.Alias)) : "بعد ستون";
+    
+    // تشخیص اینکه آیا باید نمایش ساده استفاده شود (وقتی rowFields یا columnFields خالی است)
+    var useSimpleGrid = rowDimensions.Count == 0 || columnDimensions.Count == 0;
 }
 
-<section class="pivot-matrix-card" data-report-key="@reportKey" data-has-sub-report="@(hasSubReport ? "true" : "false")" data-sub-report-id="@(subReport?.SubReportId ?? "")">
-    <header class="pivot-matrix-card__header">
-        <div class="pivot-matrix-card__title-group">
-            <h3 class="pivot-matrix-card__title">
-                تحلیل تقاطع <span class="subtitle-highlight subtitle-highlight--row">«@string.Join(" / ", rowDimensions.Select(d => d.Alias))»</span> با <span class="subtitle-highlight subtitle-highlight--column">«@string.Join(" / ", columnDimensions.Select(d => d.Alias))»</span> بر اساس <span class="subtitle-highlight subtitle-highlight--value">«@string.Join(" / ", valueColumns.Select(d => d.Alias))»</span>
-            </h3>
+@if (useSimpleGrid)
+{
+    <partial name="~/Views/Report/Pivot/_pivotSimpleGrid.cshtml" model="Model" />
+}
+else
+{
+    <section class="pivot-matrix-card" data-report-key="@reportKey" data-has-sub-report="@(hasSubReport ? "true" : "false")" data-sub-report-id="@(subReport?.SubReportId ?? "")">
+        <!-- کنترل‌های جدول -->
+        <div id="pivot-controls-container"></div>
+
+        <!-- بدنه جدول -->
+        <div class="pivot-matrix-card__body">
+            @if (!hasData)
+            {
+                <div class="pivot-empty">
+                    <strong>داده‌ای برای نمایش نیست</strong>
+                    <span>فیلترها یا بازه زمانی را بررسی کنید.</span>
+                </div>
+            }
+            else
+            {
+                <div id="pivot-table-container" class="pivot-table-wrapper"></div>
+            }
         </div>
-    </header>
 
-    <!-- کنترل‌های جدول -->
-    <div id="pivot-controls-container"></div>
-
-    <!-- بدنه جدول -->
-    <div class="pivot-matrix-card__body">
-        @if (!hasData)
-        {
-            <div class="pivot-empty">
-                <strong>داده‌ای برای نمایش نیست</strong>
-                <span>فیلترها یا بازه زمانی را بررسی کنید.</span>
-            </div>
-        }
-        else
-        {
-            <div id="pivot-table-container" class="pivot-table-wrapper"></div>
-        }
-    </div>
-
-    <!-- تعداد ترکیب -->
-    <div class="pivot-combination-count">
-        <span class="pivot-combination-label">تعداد ترکیب:</span>
-        <span class="pivot-combination-value">@recordCountText</span>
-    </div>
-    <div class="pivot-combination-count">
-        <span class="pivot-combination-label">تعداد شاخص:</span>
-        <span class="pivot-combination-value">@valueFieldsCountText</span>
-    </div>
-    <div class="pivot-combination-count">
-        <span class="pivot-combination-label">تعداد @rowFieldsLabel :</span>
-        <span class="pivot-combination-value pivot-row-header-value">0</span>
-    </div>
-    <div class="pivot-combination-count">
-        <span class="pivot-combination-label">تعداد @columnFieldsLabel :</span>
-        <span class="pivot-combination-value pivot-column-header-value">0</span>
-    </div>
-</section>
+        <!-- تعداد ترکیب -->
+        <div class="pivot-combination-count">
+            <span class="pivot-combination-label">تعداد ترکیب:</span>
+            <span class="pivot-combination-value">@recordCountText</span>
+        </div>
+        <div class="pivot-combination-count">
+            <span class="pivot-combination-label">تعداد شاخص:</span>
+            <span class="pivot-combination-value">@valueFieldsCountText</span>
+        </div>
+        <div class="pivot-combination-count">
+            <span class="pivot-combination-label">تعداد @rowFieldsLabel :</span>
+            <span class="pivot-combination-value pivot-row-header-value">0</span>
+        </div>
+        <div class="pivot-combination-count">
+            <span class="pivot-combination-label">تعداد @columnFieldsLabel :</span>
+            <span class="pivot-combination-value pivot-column-header-value">0</span>
+        </div>
+    </section>
+}

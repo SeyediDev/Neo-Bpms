@@ -3,6 +3,7 @@
 @using Neo.Bpms.Domain.Entities.Cmmn.UI
 @using Neo.Bpms.Domain.Model.Project
 @using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.UI.MVC.PartialModels.Report
 @model ReportData
 
 @{
@@ -23,6 +24,7 @@
 					filterValues = ViewBag.FilterValues as ElasticObject
 				};
 	<partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="windowTopJsModel" />
+	<partial name="~/Views/Report/DrillDown/DrillDownInclude.cshtml" model="new DrillDownIncludeModel {report = Model}" />
 }
 <partial name="~/Views/Report/Pivot/_pivotClientMarkup.cshtml" model="Model" />
 <partial name="~/Views/Report/Pivot/_pivotClientStyles.cshtml" />

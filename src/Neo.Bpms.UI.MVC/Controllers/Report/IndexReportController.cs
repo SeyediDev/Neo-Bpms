@@ -244,8 +244,10 @@ public partial class ReportController
         }
 
         IIdentityUserService identityUserService = HttpContext.RequestServices.GetRequiredService<IIdentityUserService>();
+        IClubRolesService clubRolesService = HttpContext.RequestServices.GetRequiredService<IClubRolesService>();
         ViewBag.user = user;
         ViewBag.UserGroups = await identityUserService.GetIdentityRoles();
+        ViewBag.ClubRoles = clubRolesService.GetClubRoles();
         ViewBag.CanDesign = CheckAccess(user, SystemFeatureId.ReportDesign);
         ViewBag.CanDesignFilter = CanDesignForms(user); // todo OK?
         ViewBag.CanPublishConfigs = CheckAccess(user, SystemFeatureId.PublishConfigs);

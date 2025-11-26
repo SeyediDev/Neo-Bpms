@@ -1,0 +1,235 @@
+@using System.Linq
+@using Neo.Bpms.Domain.Entities.Cmmn.UI
+@using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Reports
+@model ReportData
+@{
+    var structure = Model?.Structure;
+    var selectedColumns = structure?.SelectedColumns ?? new List<ColumnFieldDefinition>();
+    
+    var dimensions = selectedColumns
+        .Where(sc => sc.aggrType == eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var rowDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Vertical)
+        .ToList();
+    var columnDimensions = dimensions
+        .Where(sc => sc.MatrixType == ConfiguredReport.ReportMatrixType.Horizontal)
+        .ToList();
+    var valueColumns = selectedColumns
+        .Where(sc => sc.aggrType != eAggregationFunctions.InColumn &&
+                     sc.aggrType != eAggregationFunctions.GroupByItem)
+        .ToList();
+
+    var reportKey = Model?.GetReportKey();
+    var recordCount = Model?.RecordCount ?? (Model?.Rows?.Count ?? 0);
+    var recordCountText = recordCount.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+    var hasData = Model?.Rows?.Any() == true;
+    var hasSubReport = Model?.Structure?.SubReports?.Any(sr => sr.Type == Report.SubReportType.DrillDown) == true;
+    var subReport = Model?.Structure?.SubReports?.FirstOrDefault(sr => sr.Type == Report.SubReportType.DrillDown);
+    
+    var valueFields = valueColumns.Select(d => new { name = d.ColumnName, label = d.Alias, aggregationType = d.aggrType.ToString() }).ToList();
+    var valueFieldsCountText = valueFields.Count.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+    
+    // تشخیص اینکه آیا باید نمایش ساده استفاده شود
+    // اگر rowDimensions خالی باشد، از columnDimensions استفاده می‌کنیم و برعکس
+    var allDimensions = rowDimensions.Count == 0 ? columnDimensions : rowDimensions;
+    var dimensionLabel = allDimensions.Count > 0 ? string.Join(" / ", allDimensions.Select(d => d.Alias)) : "بعد";
+}
+
+<section class="pivot-matrix-card pivot-simple-grid" data-report-key="@reportKey" data-has-sub-report="@(hasSubReport ? "true" : "false")" data-sub-report-id="@(subReport?.SubReportId ?? "")">
+    @if (!hasData)
+    {
+        <div class="pivot-empty">
+            <strong>داده‌ای برای نمایش نیست</strong>
+            <span>فیلترها یا بازه زمانی را بررسی کنید.</span>
+        </div>
+    }
+    else
+    {
+        <div class="pivot-simple-grid__container">
+            <table class="pivot-simple-grid__table">
+                <thead>
+                    <tr>
+                        @if (allDimensions.Count > 0)
+                        {
+                            <th class="pivot-simple-grid__header pivot-simple-grid__header--dimension">@dimensionLabel</th>
+                        }
+                        @foreach (var valueField in valueColumns)
+                        {
+                            <th class="pivot-simple-grid__header pivot-simple-grid__header--value">
+                                <span class="pivot-simple-grid__value-label">@valueField.Alias</span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr class="pivot-simple-grid__row">
+                            @if (allDimensions.Count > 0)
+                            {
+                                <td class="pivot-simple-grid__cell pivot-simple-grid__cell--dimension">
+                                    @{
+                                        var dimensionValues = new List<string>();
+                                        foreach (var dim in allDimensions)
+                                        {
+                                            var value = ReportRenderer.GetCelValue(dim, row);
+                                            dimensionValues.Add(value?.ToString() ?? "(خالی)");
+                                        }
+                                    }
+                                    @string.Join(" / ", dimensionValues)
+                                </td>
+                            }
+                            @foreach (var valueField in valueColumns)
+                            {
+                                var value = ReportRenderer.GetCelValue(valueField, row);
+                                var formattedValue = value != null ? 
+                                    (value is decimal || value is double || value is float ? 
+                                        ((decimal)Convert.ChangeType(value, typeof(decimal))).ToString("N0") : 
+                                        value.ToString()) : 
+                                    "—";
+                                
+                                <td class="pivot-simple-grid__cell pivot-simple-grid__cell--value">
+                                    <span class="pivot-simple-grid__value">@formattedValue</span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <!-- تعداد ترکیب -->
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد ترکیب:</span>
+        <span class="pivot-combination-value">@recordCountText</span>
+    </div>
+    <div class="pivot-combination-count">
+        <span class="pivot-combination-label">تعداد شاخص:</span>
+        <span class="pivot-combination-value">@valueFieldsCountText</span>
+    </div>
+    @if (allDimensions.Count > 0)
+    {
+        <div class="pivot-combination-count">
+            <span class="pivot-combination-label">تعداد @dimensionLabel:</span>
+            <span class="pivot-combination-value">@recordCountText</span>
+        </div>
+    }
+</section>
+
+<style>
+    .pivot-simple-grid {
+        padding: 12px;
+    }
+
+    .pivot-simple-grid__container {
+        overflow-x: auto;
+        margin-top: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+    }
+
+    .pivot-simple-grid__table {
+        width: 100%;
+        border-collapse: collapse;
+        direction: rtl;
+        font-family: 'Vazir', 'Vazir FD', 'Yekan', 'Tahoma', 'Arial', sans-serif;
+    }
+
+    .pivot-simple-grid__header {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 14px 20px;
+        text-align: center;
+        font-weight: 700;
+        color: #0f172a;
+        border-bottom: 3px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        white-space: nowrap;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .pivot-simple-grid__header--dimension {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        color: #78350f;
+        font-weight: 800;
+        min-width: 200px;
+        border-bottom: 3px solid #fbbf24;
+    }
+
+    .pivot-simple-grid__header--value {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        color: #166534;
+        font-weight: 700;
+        border-bottom: 3px solid #86efac;
+    }
+
+    .pivot-simple-grid__row {
+        transition: background-color 0.2s;
+    }
+
+    .pivot-simple-grid__row:hover {
+        background-color: #f8fafc;
+    }
+
+    .pivot-simple-grid__row:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .pivot-simple-grid__row:nth-child(even):hover {
+        background-color: #f1f5f9;
+    }
+
+    .pivot-simple-grid__cell {
+        padding: 10px 16px;
+        text-align: right;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: middle;
+    }
+
+    .pivot-simple-grid__cell--dimension {
+        background-color: #fffbeb;
+        font-weight: 600;
+        color: #78350f;
+        position: sticky;
+        right: 0;
+        z-index: 2;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .pivot-simple-grid__cell--value {
+        text-align: center;
+        font-weight: 500;
+        color: #0f172a;
+    }
+
+    .pivot-simple-grid__value {
+        display: inline-block;
+        font-family: 'Courier New', monospace;
+    }
+
+    .pivot-simple-grid__value-label {
+        display: inline-block;
+    }
+
+    @@media (max-width: 768px) {
+        .pivot-simple-grid__container {
+            overflow-x: scroll;
+        }
+
+        .pivot-simple-grid__header,
+        .pivot-simple-grid__cell {
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+    }
+</style>
+

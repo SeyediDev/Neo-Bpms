@@ -105,7 +105,12 @@ var ScheduledReport = function() {
         result.FileTypeId = $scheduleModal.find('#file-type').val();
         result.OutputTypeId = $scheduleModal.find('#output-type').val();
         result.MaxRecordCount = $scheduleModal.find('#max-record').val();
-        result.UserGroupId = $scheduleModal.find('#scheduled-report-userGroup').val();
+        // جمع‌آوری نقش‌های انتخاب شده و جدا کردن با کاما
+        var selectedRoles = [];
+        $scheduleModal.find('#scheduled-report-roles option:selected').each(function() {
+            selectedRoles.push($(this).val());
+        });
+        result.Roles = selectedRoles.join(',');
         result.UserId = $scheduleModal.find('#scheduled-report-user').val();
         result.DestinationPath = $scheduleModal.find('#destination-path').val();
         result.DestinationUserName = $scheduleModal.find('#destination-user-name').val();
@@ -200,7 +205,15 @@ var ScheduledReport = function() {
         $scheduleModal.find('#file-type').val(data.FileTypeId).trigger('change');
         $scheduleModal.find('#output-type').val(data.OutputTypeId).trigger('change');
         $scheduleModal.find('#max-record').val(data.MaxRecordCount);
-        $scheduleModal.find('#scheduled-report-userGroup').val(data.UserGroupId).trigger('change');
+        // پر کردن نقش‌های انتخاب شده از رشته جدا شده با کاما
+        if (data.Roles) {
+            var rolesArray = data.Roles.split(',').map(function(r) { return r.trim(); });
+            $scheduleModal.find('#scheduled-report-roles option').each(function() {
+                $(this).prop('selected', rolesArray.indexOf($(this).val()) !== -1);
+            });
+        } else {
+            $scheduleModal.find('#scheduled-report-roles option').prop('selected', false);
+        }
         $scheduleModal.find('#scheduled-report-user').val(data.UserId);
         $scheduleModal.find('#destination-path').val(data.DestinationPath);
         $scheduleModal.find('#destination-user-name').val(data.DestinationUserName);
@@ -237,7 +250,7 @@ var ScheduledReport = function() {
                 "ActionName": null,
                 "FileTypeId": 2,
                 "OutputTypeId": 2,
-                "UserGroupId": null,
+                "Roles": "",
                 "UserId": "",
                 "MaxRecordCount": 100,
                 "DestinationPath": null,

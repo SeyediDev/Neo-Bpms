@@ -153,10 +153,9 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     /// <param name="alias">Alias</param>
     /// <returns></returns>
     protected void DisplayColumnFormula(string formula, string alias = null, 
-        ReportMatrixType matrixType = ReportMatrixType.Horizontal,
         IEnumerable<(eControlPropertyId propertyId, object value)> properties = null)
     {
-        AddFormulaField(eFieldSelectionType.asColumn, null, formula, alias, matrixType, properties);
+        AddFormulaField(eFieldSelectionType.asColumn, null, formula, alias, ReportMatrixType.Horizontal, properties);
     }
 
     /// <summary>
@@ -248,7 +247,7 @@ public abstract class ReportConfigDefinition : BaseModelingDefinition
     {
         selectedField = reportConfig?.AddField(type,
             fieldId, report.EntityId, null,
-            alias, null, false, ReportMatrixType.Horizontal);
+            alias, null, false, matrixType);
         if(selectedField==null)
         {
             AddFormulaField(type, fieldId, fieldId, alias, matrixType, properties);

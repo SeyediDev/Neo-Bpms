@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Asp.Versioning.Routing;
 
 namespace Neo.Bpms.UI.MVC;
 
@@ -98,6 +100,15 @@ public static class DependencyInjection
                 jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
+
+        // Register apiVersion constraint for route templates
+        services.Configure<RouteOptions>(options =>
+        {
+            if (!options.ConstraintMap.ContainsKey("apiVersion"))
+            {
+                options.ConstraintMap.Add("apiVersion", typeof(ApiVersionRouteConstraint));
+            }
+        });
 
         _ = services.AddResponseCaching();
     }

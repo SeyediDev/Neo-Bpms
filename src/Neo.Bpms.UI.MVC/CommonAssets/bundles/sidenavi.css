@@ -37,6 +37,7 @@
     position: fixed;
     right: 50px;
     z-index: 30000;
+    transition: transform 0.3s ease;
 } 
 .side-navi-item-default {
     height: 50px;

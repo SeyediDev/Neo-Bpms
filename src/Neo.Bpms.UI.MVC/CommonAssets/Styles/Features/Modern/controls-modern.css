@@ -2039,10 +2039,10 @@ body {
 
 /* ===== Table Header Improvements ===== */
 .modern-table thead th {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem !important; /* کاهش padding */
   text-align: right;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem !important; /* کاهش font-size */
   border-bottom: 2px solid #e5e7eb;
   position: relative;
   vertical-align: middle;
@@ -2056,6 +2056,8 @@ body {
   font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-left: 1px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
+  line-height: 1.3 !important; /* کاهش line-height */
+  min-height: auto !important; /* حذف min-height */
 }
 
 .modern-table thead th:first-child {
@@ -2112,8 +2114,132 @@ body {
 }
 
 .modern-table-wrapper {
+  /* بهبود نمایش برای فرم‌های با ستون‌های زیاد */
   overflow-x: auto;
+  overflow-y: visible;
   border-radius: 12px;
+  /* جلوگیری از اسکرول افقی زشت */
+  position: relative;
+  /* بهبود اسکرول */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modern-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* بهبود نمایش جدول برای ستون‌های زیاد */
+.modern-table-wrapper .modern-table {
+  /* استفاده از auto layout برای اندازه‌گیری خودکار ستون‌ها */
+  table-layout: auto;
+  /* اجازه wrap شدن متن در ستون‌ها */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* محدود کردن عرض ستون‌ها برای جلوگیری از گسترش بیش از حد */
+.modern-table-wrapper .modern-table th,
+.modern-table-wrapper .modern-table td {
+  /* حداکثر عرض ستون - کاهش یافته */
+  max-width: 150px !important;
+  min-width: 60px !important;
+  /* اجازه wrap شدن متن */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* متن را در چند خط نمایش بده */
+  line-height: 1.4;
+  /* padding مناسب - کاهش یافته */
+  padding: 0.5rem 0.4rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* برای ستون‌های مهم، عرض بیشتری بده - کاهش یافته */
+.modern-table-wrapper .modern-table th:first-child,
+.modern-table-wrapper .modern-table td:first-child,
+.modern-table-wrapper .modern-table th:last-child,
+.modern-table-wrapper .modern-table td:last-child {
+  max-width: 180px !important;
+  min-width: 80px !important;
+}
+
+/* بهبود نمایش header */
+.modern-table-wrapper .modern-table thead th {
+  /* header را sticky نگه دار */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8fafc;
+  /* اجازه wrap شدن در header */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* کاهش ارتفاع header */
+  min-height: auto !important;
+  padding: 0.5rem 0.4rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.3 !important;
+}
+
+/* وقتی تعداد ستون‌ها زیاد است، اسکرول را بهتر نمایش بده */
+.modern-table-wrapper.has-many-columns {
+  /* نمایش بهتر اسکرول */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* برای صفحات کوچک‌تر، ستون‌ها را کوچک‌تر کن */
+@media (max-width: 1200px) {
+  .modern-table-wrapper .modern-table th,
+  .modern-table-wrapper .modern-table td {
+    max-width: 150px;
+    min-width: 60px;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-table-wrapper .modern-table th,
+  .modern-table-wrapper .modern-table td {
+    max-width: 120px;
+    min-width: 50px;
+    padding: 0.4rem 0.3rem;
+    font-size: 0.75rem;
+  }
 }
 
 /* ===== Modern Sort Button Styles ===== */
@@ -2202,11 +2328,6 @@ body {
   line-height: 1;
 }
 
-.modern-table-wrapper {
-  overflow-x: auto;
-  border-radius: 12px;
-}
-
 .modern-table {
   width: 100%;
   border-collapse: separate;
@@ -2274,7 +2395,7 @@ body {
 }
 
 .modern-table tbody td {
-  padding: 0.75rem 1rem !important;
+  padding: 0.5rem 0.75rem !important; /* کاهش padding */
   vertical-align: middle !important;
   border-bottom: 1px solid #f3f4f6;
   text-align: right !important;
@@ -2284,6 +2405,8 @@ body {
   direction: rtl !important;
   box-sizing: border-box !important;
   width: auto !important;
+  font-size: 0.8rem !important; /* کاهش font-size */
+  line-height: 1.4 !important;
 }
 
 /* ===== Modern Action Links - Enhanced ===== */
@@ -2291,12 +2414,12 @@ body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
+  width: 24px !important; /* کاهش از 32px */
+  height: 24px !important; /* کاهش از 32px */
+  border-radius: 6px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   text-decoration: none !important;
-  margin: 0 3px !important;
+  margin: 0 2px !important; /* کاهش margin */
   background: transparent !important;
   position: relative !important;
   overflow: hidden !important;
@@ -2341,8 +2464,8 @@ body {
 }
 
 .action-link-icon {
-  width: 18px !important;
-  height: 18px !important;
+  width: 14px !important; /* کاهش از 18px */
+  height: 14px !important; /* کاهش از 18px */
   color: #6b7280 !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   visibility: visible !important;

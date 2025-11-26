@@ -182,7 +182,42 @@
   margin: var(--index-spacing-lg);
   box-shadow: var(--index-shadow-sm);
   border: 1px solid var(--index-border-light);
+  /* بهبود برای ستون‌های زیاد - اسکرول بهتر */
   overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+}
+
+/* بهبود نمایش جدول برای ستون‌های زیاد */
+.modern-table-container table {
+  /* استفاده از auto layout برای اندازه‌گیری خودکار */
+  table-layout: auto;
+  /* اجازه wrap شدن متن */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* محدود کردن عرض ستون‌ها */
+.modern-table-container th,
+.modern-table-container td {
+  /* حداکثر عرض ستون */
+  max-width: 200px;
+  min-width: 80px;
+  /* اجازه wrap شدن متن */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* متن را در چند خط نمایش بده */
+  line-height: 1.5;
+}
+
+/* برای ستون‌های مهم، عرض بیشتری بده */
+.modern-table-container th:first-child,
+.modern-table-container td:first-child,
+.modern-table-container th:last-child,
+.modern-table-container td:last-child {
+  max-width: 250px;
+  min-width: 100px;
 }
 
 /* ===== Table Styling ===== */

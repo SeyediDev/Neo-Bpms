@@ -36,6 +36,7 @@ public class ScheduledReportViewModel
         FileTypeId = (long)csr.FileTypeId;
         OutputTypeId = (long)csr.OutputTypeId;
         UserGroupId = csr.UserGroupId;
+        Roles = csr.Roles;
         Username = csr.UserId;
         MaxRecordCount = csr.MaxRecordCount;
         DestinationUserName = csr.DestinationUserName;
@@ -67,6 +68,7 @@ public class ScheduledReportViewModel
     public long FileTypeId { get; set; }
     public long OutputTypeId { get; set; }
     public long UserGroupId { get; set; }
+    public string Roles { get; set; } // نقش‌های انتخاب شده با کاما جدا شده
     public string Username { get; set; }
     public long MaxRecordCount { get; set; }
     public string DestinationPath { get; set; }
@@ -102,6 +104,7 @@ public class ScheduledReportViewModel
             FileTypeId = (ScheduledReportFileTypeId)FileTypeId,
             OutputTypeId = (ScheduledReportOutputTypeId)OutputTypeId,
             UserGroupId = UserGroupId,
+            Roles = Roles,
             UserId = Username,
             MaxRecordCount = MaxRecordCount,
             DestinationPath = DestinationPath,

@@ -2646,7 +2646,8 @@
 .t-table-wrapper .table {
   /* Ensure table doesn't break layout */
   width: 100% !important;
-  table-layout: fixed !important;
+  /* استفاده از auto layout برای اندازه‌گیری خودکار ستون‌ها - بهبود برای ستون‌های زیاد */
+  table-layout: auto !important;
   
   /* Better spacing */
   margin-bottom: 0 !important;
@@ -2660,6 +2661,10 @@
   /* FIX: Remove any extra spacing */
   margin: 0 !important;
   padding: 0 !important;
+  
+  /* اجازه wrap شدن متن */
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 /* Column width optimization */
@@ -2673,10 +2678,22 @@
   /* Better padding */
   padding: 12px 16px !important;
   
-  /* Flexible width */
+  /* Flexible width - بهبود برای ستون‌های زیاد */
   width: auto !important;
-  min-width: 100px !important;
+  min-width: 80px !important;
   max-width: 200px !important;
+  
+  /* اجازه wrap شدن متن در چند خط */
+  line-height: 1.5 !important;
+}
+
+/* برای ستون‌های مهم، عرض بیشتری بده */
+.t-table-wrapper th:first-child,
+.t-table-wrapper td:first-child,
+.t-table-wrapper th:last-child,
+.t-table-wrapper td:last-child {
+  max-width: 250px !important;
+  min-width: 100px !important;
 }
 
 /* Sticky header improvements */

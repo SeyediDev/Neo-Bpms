@@ -24,6 +24,7 @@ public class ConfiguredScheduledReport : JobSchedule, IConfiguredScheduledAction
     public ScheduledReportOutputTypeId OutputTypeId { get; set; }
     public string UserId { get; set; }
     public long UserGroupId { get; set; }
+    public string Roles { get; set; } // نقش‌های انتخاب شده با کاما جدا شده
     public long? ContactFunctionTypeId { get; set; }
     public long MaxRecordCount { get; set; }
     public string DestinationPath { get; set; }
@@ -60,6 +61,7 @@ public class ConfiguredScheduledReport : JobSchedule, IConfiguredScheduledAction
         OutputTypeId = scheduledReport.OutputTypeId;
         UserId = scheduledReport.UserId;
         UserGroupId = scheduledReport.UserGroupId;
+        Roles = scheduledReport.Roles;
         MaxRecordCount = scheduledReport.MaxRecordCount;
         DestinationPath = scheduledReport.DestinationPath;
         DestinationUserName = scheduledReport.DestinationUserName;

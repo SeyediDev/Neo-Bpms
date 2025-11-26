@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Neo.Bpms.Domain.Models.Cmmn.Data.Provider;
+using OfficeOpenXml;
 
 namespace Neo.Bpms.UI.MVC;
 internal interface IApplicationSetup
@@ -17,6 +18,9 @@ internal class ApplicationSetup(IHostApplicationLifetime lifetime) : IApplicatio
         {
             StringEscapeHandling = StringEscapeHandling.EscapeHtml
         };
+        
+        // Set EPPlus LicenseContext to avoid LicenseException
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
     private static void Shutdown(IApplicationBuilder app)

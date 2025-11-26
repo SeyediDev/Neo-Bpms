@@ -136,6 +136,7 @@ public abstract class GroupByConfigDefinition : ReportConfigDefinition
     {
         Aggregation(fieldId, AggregationType.Average, alias, properties);
     }
+    protected void AverageDD1(string fieldId, string alias) => Average(fieldId, alias, (eControlPropertyId.DecimalDigits, 1));
 
     /// <summary>
     /// Add sum formula column

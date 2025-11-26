@@ -25,6 +25,7 @@
     
     <!-- UI.MVC packages - matched with Neo Framework -->
     <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="BuildBundlerMinifier2022" Version="2.9.10" />
     <PackageVersion Include="Captcha" Version="3.0.14.6" />

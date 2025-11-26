@@ -304,6 +304,19 @@
 	body.page-ready .top-bar-anchor-icon.text-danger {
 		color: #dc3545 !important;
 	}
+	
+	/* Ensure scheduling icon is rightmost (last in RTL) */
+	.icons {
+		display: flex !important;
+		padding-right: 28px !important; /* Shift icons to the right by 3/4 of an icon size (36px * 0.75 = 27px, rounded to 28px) */
+		padding-left: 8px !important;
+	}
+	
+	/* In RTL layout, flex container flows right-to-left */
+	/* To put the scheduling icon at the rightmost position (start of flex container), use order: -1 */
+	.scheduling-icon-rightmost {
+		order: -1 !important; /* Puts it at the start of flex container, which is rightmost in RTL */
+	}
 </style>
 
 @{
@@ -430,24 +443,24 @@
         </a>
     }
 
-    @* Report Designs Icon - First in list *@
+    @* Report Designs Icon *@
     @if (item.canDesign)
     {
-        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="toggleReportDesignsModal(event); return false;">
+        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleReportDesignsModal(event); return false;">
             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"/>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                <path d="M12 20h9" fill="none"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="none"/>
             </svg>
         </a>
     }
     
-    @* Scheduling Icon - Last in list *@
+    @* Scheduling Icon - Rightmost icon (must be last) *@
     @if (item.canScheduleReports)
     {
-        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="toggleSchedulingModal(event); return false;">
+        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" onclick="toggleSchedulingModal(event); return false;">
             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
+                <circle cx="12" cy="12" r="10" fill="none"/>
+                <polyline points="12 6 12 12 16 14" fill="none"/>
             </svg>
         </a>
     }
@@ -1127,91 +1140,100 @@ else
 }
 
 <script>
-    // Toggle Report Designs Modal
-    function toggleReportDesignsModal(event) {
-        if (event) {
+    // Ensure functions are defined immediately when script loads
+    (function() {
+        // Toggle Report Designs Modal - Make it globally accessible
+        window.toggleReportDesignsModal = function(event) {
+            if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
         
         const modal = document.getElementById('report-designs-modal');
-        if (modal) {
-            const isShowing = modal.classList.contains('show');
-            
-            if (!isShowing) {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-                
-                // Initialize tree if not already initialized
-                var $configsTree = $('#configs-tree-modal');
-                if ($configsTree.length && !$configsTree.data('initialized')) {
-                    if (typeof window.configsTree !== 'undefined') {
-                        $configsTree.jstree({
-                            'core': {
-                                'data': window.configsTree,
-                                "check_callback": true
-                            },
-                            "contextmenu": {
-                                "select_node": false,
-                                'items': function(node) {
-                                    if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.getContextMenu) {
-                                        return ConfigsTreeManager.getContextMenu(node);
-                                    }
-                                    return {};
-                                }
-                            },
-                            "types": {
-                                "default": {
-                                    "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
-                                    "valid_children": ["default", "Chart", "ReportList", "GroupByList"]
-                                },
-                                "Chart": {
-                                    "icon": "fa fa-bar-chart",
-                                    "valid_children": []
-                                },
-                                "ReportList": {
-                                    "icon": "fa fa-list",
-                                    "valid_children": []
-                                },
-                                "GroupByList": {
-                                    "icon": "fa fa-table",
-                                    "valid_children": []
-                                }
-                            },
-                            "conditionalselect": function (node, event) {
-                                if (node.type === 'default')
-                                    return false;
-                                if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
-                                    ConfigsTreeManager.goToConfig(node.id);
-                                }
-                                return false;
-                            },
-                            "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
-                        });
-                        
-                        $('#configs-search-input-modal').off('keyup').on('keyup', function() {
-                            $configsTree.jstree('search', $(this).val());
-                        });
-                        
-                        $configsTree.data('initialized', true);
-                    }
-                }
-            } else {
-                modal.classList.remove('show');
-                document.body.style.overflow = '';
-            }
-        }
-    }
-    
-    // Toggle Scheduling Modal
-    function toggleSchedulingModal(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (!modal) {
+            console.warn('Report designs modal not found');
+            return;
         }
         
-        const modal = document.getElementById('scheduling-modal');
-        if (modal) {
+        const isShowing = modal.classList.contains('show');
+        
+        if (!isShowing) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize tree if not already initialized
+            var $configsTree = $('#configs-tree-modal');
+            if ($configsTree.length && !$configsTree.data('initialized')) {
+                if (typeof window.configsTree !== 'undefined') {
+                    $configsTree.jstree({
+                        'core': {
+                            'data': window.configsTree,
+                            "check_callback": true
+                        },
+                        "contextmenu": {
+                            "select_node": false,
+                            'items': function(node) {
+                                if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.getContextMenu) {
+                                    return ConfigsTreeManager.getContextMenu(node);
+                                }
+                                return {};
+                            }
+                        },
+                        "types": {
+                            "default": {
+                                "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
+                                "valid_children": ["default", "Chart", "ReportList", "GroupByList"]
+                            },
+                            "Chart": {
+                                "icon": "fa fa-bar-chart",
+                                "valid_children": []
+                            },
+                            "ReportList": {
+                                "icon": "fa fa-list",
+                                "valid_children": []
+                            },
+                            "GroupByList": {
+                                "icon": "fa fa-table",
+                                "valid_children": []
+                            }
+                        },
+                        "conditionalselect": function (node, event) {
+                            if (node.type === 'default')
+                                return false;
+                            if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
+                                ConfigsTreeManager.goToConfig(node.id);
+                            }
+                            return false;
+                        },
+                        "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
+                    });
+                    
+                    $('#configs-search-input-modal').off('keyup').on('keyup', function() {
+                        $configsTree.jstree('search', $(this).val());
+                    });
+                    
+                    $configsTree.data('initialized', true);
+                }
+            }
+        } else {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        };
+    
+        // Toggle Scheduling Modal - Make it globally accessible
+        window.toggleSchedulingModal = function(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const modal = document.getElementById('scheduling-modal');
+            if (!modal) {
+                console.warn('Scheduling modal not found');
+                return;
+            }
+            
             const isShowing = modal.classList.contains('show');
             
             if (!isShowing) {
@@ -1236,36 +1258,36 @@ else
                 modal.classList.remove('show');
                 document.body.style.overflow = '';
             }
-        }
-    }
+        };
     
-    // Close modals when clicking outside
-    document.addEventListener('click', function(e) {
-        const designsModal = document.getElementById('report-designs-modal');
-        const schedulingModal = document.getElementById('scheduling-modal');
-        
-        if (designsModal && e.target === designsModal) {
-            toggleReportDesignsModal(null);
-        }
-        
-        if (schedulingModal && e.target === schedulingModal) {
-            toggleSchedulingModal(null);
-        }
-    });
-    
-    // Close modals with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
             const designsModal = document.getElementById('report-designs-modal');
             const schedulingModal = document.getElementById('scheduling-modal');
             
-            if (designsModal && designsModal.classList.contains('show')) {
-                toggleReportDesignsModal(null);
+            if (designsModal && e.target === designsModal) {
+                window.toggleReportDesignsModal(null);
             }
             
-            if (schedulingModal && schedulingModal.classList.contains('show')) {
-                toggleSchedulingModal(null);
+            if (schedulingModal && e.target === schedulingModal) {
+                window.toggleSchedulingModal(null);
             }
-        }
-    });
+        });
+        
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const designsModal = document.getElementById('report-designs-modal');
+                const schedulingModal = document.getElementById('scheduling-modal');
+                
+                if (designsModal && designsModal.classList.contains('show')) {
+                    window.toggleReportDesignsModal(null);
+                }
+                
+                if (schedulingModal && schedulingModal.classList.contains('show')) {
+                    window.toggleSchedulingModal(null);
+                }
+            }
+        });
+    })(); // Immediately invoke to ensure functions are defined
 </script>

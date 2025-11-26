@@ -14,6 +14,8 @@ using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaProcess;
 using Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
 using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
 using Neo.Bpms.Infrastructure.Features.MetaLoader;
+using Neo.Bpms.Domain.Features.Security;
+using Neo.Bpms.Infrastructure.Features.Security;
 
 namespace Neo.Bpms.Infrastructure;
 
@@ -27,6 +29,7 @@ public static class DependencyInjection
         _ = services.AddScoped<ISsoIntegrator, SsoIntegrator>();
         _ = services.AddScoped<IAccessServices, NeoAccessServices>();
         _ = services.AddScoped<ISendFormCommand, SendFormCommand>();
+        _ = services.AddScoped<IClubRolesService, ClubRolesService>();
 
         _ = services.AddSingleton<IBpmsEngine, BpmsEngine>();
         _ = services.AddSingleton<MigrationSingleton>();
