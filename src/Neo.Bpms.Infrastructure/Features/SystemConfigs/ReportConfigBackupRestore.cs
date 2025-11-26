@@ -48,9 +48,36 @@ public class ReportConfigBackupRestore(IBpmsSubjectSettingRepository repository)
     
     public async Task<List<ConfiguredReport>> Configurations(Report report, CancellationToken cancellationToken = default)
     {
-        List<ConfiguredReport> configs = report.MetaConfigures?.Values.ToList() ?? [];
-        configs.AddRange(await repository.GetAllConfigsAsync<ConfiguredReport>(
-            SubjectTitle, SubjectId(report), (config, setting) => Extract(config, report, setting.Key), cancellationToken));
+        List<ConfiguredReport> configs = [];
+        
+        // Add meta configs that have FromMeta=true or are explicitly marked as meta
+        if (report.MetaConfigures != null)
+        {
+            foreach (var metaConfig in report.MetaConfigures.Values)
+            {
+                // Mark as FromMeta if not already marked
+                if (!metaConfig.FromMeta && metaConfig.IsMeta)
+                {
+                    metaConfig.FromMeta = true;
+                }
+                configs.Add(metaConfig);
+            }
+        }
+        
+        // Add database configs
+        var dbConfigs = await repository.GetAllConfigsAsync<ConfiguredReport>(
+            SubjectTitle, SubjectId(report), (config, setting) => Extract(config, report, setting.Key), cancellationToken);
+        
+        // Mark configs as FromMeta=false if they come from database
+        foreach (var dbConfig in dbConfigs)
+        {
+            if (!dbConfig.FromMeta && !dbConfig.IsMeta)
+            {
+                dbConfig.FromMeta = false;
+            }
+            configs.Add(dbConfig);
+        }
+        
         return configs;
     }
 

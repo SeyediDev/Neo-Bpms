@@ -27,6 +27,160 @@
 
 @model ReportData;
 
+@* Modal Styles for Report Designs and Scheduling *@
+<style>
+    /* Report Modal Styles */
+    .report-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+    
+    .report-modal.show {
+        display: flex;
+    }
+    
+    .report-modal-content {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 800px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: modalSlideIn 0.3s ease;
+    }
+    
+    @@keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .report-modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #1869AA 0%, #3b82f6 100%);
+        color: #ffffff;
+    }
+    
+    .report-modal-header h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    
+    .report-modal-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: #ffffff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .report-modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+    
+    .report-modal-body {
+        padding: 20px 24px;
+        overflow-y: auto;
+        flex: 1;
+    }
+    
+    .report-tree-container {
+        min-height: 300px;
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+    
+    .search-box {
+        margin-bottom: 16px;
+    }
+    
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .report-modal-content {
+            width: 95%;
+            max-height: 90vh;
+        }
+        
+        .report-modal-header {
+            padding: 16px 20px;
+        }
+        
+        .report-modal-body {
+            padding: 16px 20px;
+        }
+    }
+    
+    /* Smooth scrollbar */
+    .report-tree-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .report-tree-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    .report-tree-container::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 4px;
+    }
+    
+    .report-tree-container::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+    }
+    
+    /* Responsive header icons */
+    @@media (max-width: 768px) {
+        .top-page .icons {
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .top-page .icons a {
+            min-width: 40px;
+            width: 40px;
+            height: 40px;
+            padding: 6px;
+        }
+        
+        .top-page .icons svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+</style>
+
 @* Critical CSS to prevent FOUC - Must be at the very top *@
 <style id="fouc-prevention-style">
 	/* Hide icons, tabs, and side navigation initially - Critical inline styles */
@@ -37,10 +191,7 @@
 	.side-navi-body .icons-tables,
 	#sideNavi,
 	.side-navi-item,
-	.side-navi-data {
-		display: none !important;
-	}
-	
+	.side-navi-data,
 	/* Show side navigation after page is ready with critical styles */
 	body.page-ready #sideNavi {
 		display: block !important;
@@ -75,7 +226,7 @@
 	}
 	
 	body.page-ready .side-navi-data {
-		display: block !important;
+		/* Don't force display - let JavaScript control visibility */
 		position: absolute !important;
 		top: 0 !important;
 		left: 50px !important;
@@ -83,11 +234,8 @@
 		height: 100vh !important;
 		box-shadow: 0px 0px 5px #888888 !important;
 		z-index: 30001 !important;
-		visibility: visible !important;
-		opacity: 1 !important;
 		background-color: white !important;
 		overflow: visible !important;
-		/* Don't force display - let JavaScript control it */
 	}
 	
 	/* Ensure tabs are properly displayed when active */
@@ -282,11 +430,33 @@
         </a>
     }
 
+    @* Report Designs Icon - First in list *@
+    @if (item.canDesign)
+    {
+        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="toggleReportDesignsModal(event); return false;">
+            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+        </a>
+    }
+    
+    @* Scheduling Icon - Last in list *@
+    @if (item.canScheduleReports)
+    {
+        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="toggleSchedulingModal(event); return false;">
+            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+            </svg>
+        </a>
+    }
+
     </text>;
 
     async Task TopBar(ReportStructure structure, bool canDesign, string pageIcon, IdentityUser user)
     {
-        var topBarToolsModel = new { structure, canDesign, user, model = Model };
+        var topBarToolsModel = new { structure, canDesign, canScheduleReports, user, model = Model };
         <partial name="Common/TopBar" model="new TopBarModel { Title = structure.Name, PageIcon = pageIcon, Tools = TopBarTools(topBarToolsModel) }" />
     }
 
@@ -382,9 +552,8 @@
 <link href="@CommonBundles.SideNaviCssBundle" asp-append-version="true" rel="stylesheet" />
 
 
-@{
-    await SideNavi(canScheduleReports, canDesign);
-}
+@* SideNavi removed - replaced with dropdown in top-bar *@
+@* @{ await SideNavi(canScheduleReports, canDesign); } *@
 
 @* Force apply FOUC prevention styles immediately after SideNavi renders *@
 <script>
@@ -430,6 +599,7 @@
         @Html.AntiForgeryToken()
 
         await TopBar(structure, canDesign, pageIcon, ViewBag.User);
+        
         <div @formLogicHelper.HtmlLogicEvent(structure, null, null)>
         <div class="row no-margin-row" id="ReportContainer">
             <div class="col-md-12 col-sm-12 noPadding">
@@ -792,53 +962,7 @@ else
             // Force another reflow
             document.body.offsetHeight;
             
-            // Initialize SideNavi and activate first tab after a short delay
-            setTimeout(function() {
-                // Ensure SideNavi is initialized
-                if (typeof SideNavi !== 'undefined') {
-                    // Activate the first tab (popular filters) by default
-                    var $firstTab = $('.side-navi-tab:first');
-                    var $firstItem = $('.side-navi-item:first');
-                    var $sideNaviData = $('.side-navi-data');
-                    var $sideNaviItems = $('.side-navi-item');
-                    
-                    // Ensure side-navi-items are clickable
-                    $sideNaviItems.css({
-                        'pointer-events': 'auto',
-                        'z-index': '30002',
-                        'cursor': 'pointer'
-                    });
-                    
-                    // Don't force display - let SideNavi.js control it
-                    // Just ensure z-index is set
-                    if ($sideNaviData.length) {
-                        $sideNaviData.css({
-                            'z-index': '30001',
-                            'pointer-events': 'auto'
-                        });
-                    }
-                    
-                    if ($firstTab.length && !$firstTab.hasClass('active')) {
-                        $('.side-navi-tab').removeClass('active');
-                        $('.side-navi-item').removeClass('active');
-                        $firstTab.addClass('active');
-                        $firstItem.addClass('active');
-                        console.log('First tab (Popular Filters) activated', {
-                            tabVisible: $firstTab.is(':visible'),
-                            dataExists: $sideNaviData.length > 0,
-                            dataZIndex: $sideNaviData.css('z-index'),
-                            itemsClickable: $sideNaviItems.css('pointer-events')
-                        });
-                    }
-                    
-                    // Test click handler
-                    $sideNaviItems.on('click', function() {
-                        console.log('SideNavi item clicked directly:', $(this).text().trim());
-                    });
-                }
-            }, 100);
-            
-            console.log('Page ready - Icons and tabs shown');
+            console.log('Page ready - Icons shown');
         }
         
         function checkStylesheetsLoaded() {
@@ -933,3 +1057,215 @@ else
 @await Html.PartialAsync("~/Views/Report/Settings/_DesignSettings.cshtml")
 @await Html.PartialAsync("~/Views/Report/Helpers/_ReportInfo.cshtml")
 @await Html.PartialAsync("~/Views/Report/Settings/_RefreshSettings.cshtml")
+
+@* Report Designs Modal *@
+@if (canDesign)
+{
+    <div id="report-designs-modal" class="report-modal">
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h5>@ViewTexts.ReportDesigns</h5>
+                <button type="button" class="report-modal-close" onclick="toggleReportDesignsModal(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    @if (canDesign)
+                    {
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-success" onclick="ConfigsTreeManager.showAddConfigModal()" title="@ViewTexts.AddReportConfig">
+                                <i class="fa fa-plus"></i> @ViewTexts.AddReportConfig
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="ConfigsTreeManager.newFolder()" title="@ViewTexts.AddFolder">
+                                <i class="fa fa-folder-plus"></i> @ViewTexts.AddFolder
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="search-box">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="configs-search-input-modal" placeholder="@ViewTexts.Search" />
+                    </div>
+                </div>
+                <div id="configs-tree-modal" class="report-tree-container"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Scheduling Modal *@
+@if (canScheduleReports)
+{
+    <div id="scheduling-modal" class="report-modal">
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h5>@ViewTexts.ReportScheduling</h5>
+                <button type="button" class="report-modal-close" onclick="toggleSchedulingModal(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button type="button" class="btn btn-sm btn-outline-success" onclick="ScheduledReport.showModal()" title="@ViewTexts.AddSchedule">
+                        <i class="fa fa-plus"></i> @ViewTexts.AddSchedule
+                    </button>
+                </div>
+                <div id="scheduled-reports-tree-modal" class="report-tree-container"></div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    // Toggle Report Designs Modal
+    function toggleReportDesignsModal(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const modal = document.getElementById('report-designs-modal');
+        if (modal) {
+            const isShowing = modal.classList.contains('show');
+            
+            if (!isShowing) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Initialize tree if not already initialized
+                var $configsTree = $('#configs-tree-modal');
+                if ($configsTree.length && !$configsTree.data('initialized')) {
+                    if (typeof window.configsTree !== 'undefined') {
+                        $configsTree.jstree({
+                            'core': {
+                                'data': window.configsTree,
+                                "check_callback": true
+                            },
+                            "contextmenu": {
+                                "select_node": false,
+                                'items': function(node) {
+                                    if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.getContextMenu) {
+                                        return ConfigsTreeManager.getContextMenu(node);
+                                    }
+                                    return {};
+                                }
+                            },
+                            "types": {
+                                "default": {
+                                    "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
+                                    "valid_children": ["default", "Chart", "ReportList", "GroupByList"]
+                                },
+                                "Chart": {
+                                    "icon": "fa fa-bar-chart",
+                                    "valid_children": []
+                                },
+                                "ReportList": {
+                                    "icon": "fa fa-list",
+                                    "valid_children": []
+                                },
+                                "GroupByList": {
+                                    "icon": "fa fa-table",
+                                    "valid_children": []
+                                }
+                            },
+                            "conditionalselect": function (node, event) {
+                                if (node.type === 'default')
+                                    return false;
+                                if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
+                                    ConfigsTreeManager.goToConfig(node.id);
+                                }
+                                return false;
+                            },
+                            "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
+                        });
+                        
+                        $('#configs-search-input-modal').off('keyup').on('keyup', function() {
+                            $configsTree.jstree('search', $(this).val());
+                        });
+                        
+                        $configsTree.data('initialized', true);
+                    }
+                }
+            } else {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    }
+    
+    // Toggle Scheduling Modal
+    function toggleSchedulingModal(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const modal = document.getElementById('scheduling-modal');
+        if (modal) {
+            const isShowing = modal.classList.contains('show');
+            
+            if (!isShowing) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Initialize tree if not already initialized
+                var $scheduledTree = $('#scheduled-reports-tree-modal');
+                if ($scheduledTree.length && !$scheduledTree.data('initialized')) {
+                    if (typeof window.scheduledReportsTree !== 'undefined') {
+                        $scheduledTree.jstree({
+                            'core': {
+                                'data': window.scheduledReportsTree,
+                                "check_callback": true
+                            },
+                            "plugins": ["types", "wholerow", "state"]
+                        });
+                        $scheduledTree.data('initialized', true);
+                    }
+                }
+            } else {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    }
+    
+    // Close modals when clicking outside
+    document.addEventListener('click', function(e) {
+        const designsModal = document.getElementById('report-designs-modal');
+        const schedulingModal = document.getElementById('scheduling-modal');
+        
+        if (designsModal && e.target === designsModal) {
+            toggleReportDesignsModal(null);
+        }
+        
+        if (schedulingModal && e.target === schedulingModal) {
+            toggleSchedulingModal(null);
+        }
+    });
+    
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const designsModal = document.getElementById('report-designs-modal');
+            const schedulingModal = document.getElementById('scheduling-modal');
+            
+            if (designsModal && designsModal.classList.contains('show')) {
+                toggleReportDesignsModal(null);
+            }
+            
+            if (schedulingModal && schedulingModal.classList.contains('show')) {
+                toggleSchedulingModal(null);
+            }
+        }
+    });
+</script>

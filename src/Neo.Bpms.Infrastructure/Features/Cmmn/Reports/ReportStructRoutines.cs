@@ -4,6 +4,7 @@ using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using CultureInfo = System.Globalization.CultureInfo;
+using System;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
@@ -64,7 +65,111 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         structure.ConfiguredFolders = configuredFolders?.Where(cfg =>
                 cfg.CheckAccess(user))
             .ToList();
+        
+        // Auto-folder grouping for reports with more than 6 configs
+        await EnsureAutoFolderGrouping(structure, report, user);
+        
         structure.UserGroups = [.. user.Roles.Values.Where(role => report.CheckRole(role.Code))];
+    }
+    
+    /// <summary>
+    /// Ensures auto-folder grouping for reports with more than 6 configs
+    /// </summary>
+    private async Task EnsureAutoFolderGrouping(ReportStructure structure, Report report, IdentityUser user)
+    {
+        const int configThreshold = 6;
+        
+        // Only process if we have more than threshold configs
+        if (structure.Configs == null || structure.Configs.Count <= configThreshold)
+            return;
+        
+        // Get existing folders
+        var existingFolders = structure.ConfiguredFolders?.Where(f => f.IsForConfig).ToList() ?? [];
+        
+        // Check if auto-folder already exists
+        var autoFolderName = "گروه‌بندی خودکار";
+        var autoFolder = existingFolders.FirstOrDefault(f => f.Name == autoFolderName);
+        
+        // Create auto-folder if it doesn't exist
+        if (autoFolder == null)
+        {
+            autoFolder = new ConfiguredFolder
+            {
+                Name = autoFolderName,
+                IsForConfig = true,
+                IsPublic = true,
+                ConfigId = Guid.NewGuid().ToString(),
+                EntityItem = new EntityItem
+                {
+                    ItemType = "Report",
+                    NamespaceId = report.NamespaceId,
+                    EntityId = report.entity.Id,
+                    ItemId = report.Id
+                }
+            };
+            
+            await folderConfigBackupRestore.Save(autoFolder);
+            structure.ConfiguredFolders ??= [];
+            structure.ConfiguredFolders.Add(autoFolder);
+        }
+        
+        // Group configs into folders (max 6 per folder)
+        const int configsPerFolder = 6;
+        var configsWithoutFolder = structure.Configs.Where(c => c.FolderId == null || c.FolderId == 0).ToList();
+        
+        if (configsWithoutFolder.Count > 0)
+        {
+            var folderGroups = configsWithoutFolder
+                .Select((config, index) => new { config, index })
+                .GroupBy(x => x.index / configsPerFolder)
+                .ToList();
+            
+            foreach (var group in folderGroups)
+            {
+                ConfiguredFolder targetFolder;
+                
+                if (group.Key == 0)
+                {
+                    // Use the main auto-folder for first group
+                    targetFolder = autoFolder;
+                }
+                else
+                {
+                    // Create sub-folders for additional groups
+                    var subFolderName = $"{autoFolderName} ({group.Key + 1})";
+                    targetFolder = existingFolders.FirstOrDefault(f => f.Name == subFolderName);
+                    
+                    if (targetFolder == null)
+                    {
+                        targetFolder = new ConfiguredFolder
+                        {
+                            Name = subFolderName,
+                            IsForConfig = true,
+                            IsPublic = true,
+                            FolderId = autoFolder.Id,
+                            ConfigId = Guid.NewGuid().ToString(),
+                            EntityItem = new EntityItem
+                            {
+                                ItemType = "Report",
+                                NamespaceId = report.NamespaceId,
+                                EntityId = report.entity.Id,
+                                ItemId = report.Id
+                            }
+                        };
+                        
+                        await folderConfigBackupRestore.Save(targetFolder);
+                        structure.ConfiguredFolders.Add(targetFolder);
+                    }
+                }
+                
+                // Assign configs to folder
+                foreach (var item in group)
+                {
+                    item.config.FolderId = targetFolder.Id;
+                    await reportConfigBackupRestore.Save(item.config);
+                }
+            }
+        }
     }
 
     private static void SetFilter(ConfiguredReport config, ReportStructure structure)

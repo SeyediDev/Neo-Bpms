@@ -11,21 +11,12 @@
 @{
 	var isDrillDown = ViewBag.DrillDown ?? false;
 	bool canDesign = ViewBag.CanDesign ?? false;
-	// انتخاب روش نمایش ماتریس: true = سمت کلاینت (PivotTable.js), false = سمت سرور (MatrixReportRenderer)
-	bool useClientSidePivot = true;// ViewBag.UseClientSidePivot ?? false;
 	Func<ReportData, HelperResult> RenderGrid = @<text>
 			<div>
 				@if (item.Structure.ReportViewType == ReportViewType.GroupByList && 
 					 item.Structure.GroupByViewType == GroupByViewType.Matrix)
 				{
-					@if (useClientSidePivot)
-					{
-						<partial name="~/Views/Report/Pivot/_pivotClient.cshtml" model="item" />
-					}
-					else
-					{
-						<partial name="~/Views/Report/_matrix.cshtml" model="item" />
-					}
+					<partial name="~/Views/Report/Pivot/_pivotClient.cshtml" model="item" />
 				}
 				else
 				{

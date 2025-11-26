@@ -42,6 +42,7 @@ public class ConfiguredReport : ConfiguredItem
     public ChartType ChartType { get; set; } = ChartType.Line;
     public ReportViewType ViewType { get; set; }
     public bool IsMeta { get; set; }
+    public bool FromMeta { get; set; }
 
     public string SortFields { get; set; }
     public string HavingCondition { get; set; }
