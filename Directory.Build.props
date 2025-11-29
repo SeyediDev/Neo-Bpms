@@ -30,6 +30,5 @@
     
     <!-- Disable NuGet vulnerability audit to prevent build failures when offline -->
     <EnableNuGetAudit>false</EnableNuGetAudit>
-    <NuGetAuditMode>none</NuGetAuditMode>
   </PropertyGroup>
 </Project>
