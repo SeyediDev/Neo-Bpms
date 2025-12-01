@@ -1223,6 +1223,12 @@ var eTargetArea =
 };
 
 function Client_AddClass(This, scope, fieldName, className, targetArea, formula) {
+    alert("This:" + This +
+        "\nscope:" + scope +
+        "\nfieldName:" + fieldName +
+        "\nclassName:" + className +
+        "\ntargetArea:" + targetArea +
+        "\nformula:" + formula);
 	if (scope) {
 		var rowIndex = $(This).closest("tr").index();
 		var table = $('table[name="' + scope + '"]');
