@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions;
 
 public abstract class ProjectDefinition
 {

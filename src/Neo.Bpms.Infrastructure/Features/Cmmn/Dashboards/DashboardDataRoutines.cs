@@ -2,8 +2,6 @@
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;

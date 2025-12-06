@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 
 /// <summary>
 /// Base class to define reports and their details. All report definitions in the business and meta models are sub classes of this object.

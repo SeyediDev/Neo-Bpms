@@ -14,8 +14,6 @@ using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaProcess;
 using Neo.Bpms.Infrastructure.Features.MetaLoader.Loader;
 using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
 using Neo.Bpms.Infrastructure.Features.MetaLoader;
-using Neo.Bpms.Domain.Features.Security;
-using Neo.Bpms.Infrastructure.Features.Security;
 
 namespace Neo.Bpms.Infrastructure;
 

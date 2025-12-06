@@ -1,6 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
-using Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 

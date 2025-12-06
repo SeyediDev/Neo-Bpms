@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-
-namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
+﻿namespace Neo.Bpms.Domain.Features.UiDefinitions.Cmmn;
 
 public class DatabaseTablesDefinitions : EntityDefinition
 {

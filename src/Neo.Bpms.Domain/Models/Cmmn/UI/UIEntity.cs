@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-
-namespace Neo.Bpms.Domain.Models.Cmmn.UI;
+﻿namespace Neo.Bpms.Domain.Models.Cmmn.UI;
 
 /// <summary>
 /// this is an extension to entity to manage ui components related to the entity

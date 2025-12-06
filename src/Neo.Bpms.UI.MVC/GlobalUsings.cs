@@ -56,7 +56,6 @@ global using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.FormStructures;
 global using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic;
 global using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.User;
 global using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
-global using Neo.Bpms.Infrastructure.Features.Cmmn.Reports.Matrix;
 global using Neo.Bpms.Infrastructure.Features.Cmmn.Reports.ReportView;
 global using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaEntity;
 global using Neo.Bpms.Infrastructure.Features.MetaLoader.MetaProcess;

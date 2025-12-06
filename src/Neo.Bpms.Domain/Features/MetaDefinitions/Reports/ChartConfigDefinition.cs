@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 
 public abstract class ChartConfigDefinition(ChartType chartType) : GroupByConfigDefinition
 {

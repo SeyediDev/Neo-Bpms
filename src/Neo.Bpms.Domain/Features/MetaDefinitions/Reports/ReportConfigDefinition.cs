@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
-using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredReport;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 
 namespace Neo.Bpms.Domain.Features.MetaDefinitions.Reports;
 

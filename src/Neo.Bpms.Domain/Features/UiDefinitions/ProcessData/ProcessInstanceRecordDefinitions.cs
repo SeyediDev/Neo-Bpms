@@ -1,5 +1,4 @@
 ﻿using Neo.Bpms.Domain.Entities.ProcessData;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 using Neo.Bpms.MetaModel.ProcessData;
 
 namespace Neo.Bpms.Domain.Features.UiDefinitions.ProcessData;

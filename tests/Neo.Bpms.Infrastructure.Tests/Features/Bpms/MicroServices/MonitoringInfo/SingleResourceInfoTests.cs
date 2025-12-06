@@ -1,6 +1,4 @@
 using FluentAssertions;
-using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices;
-using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.Definitions;
 using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.MonitoringInfo;
 
 namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.MicroServices.MonitoringInfo;
