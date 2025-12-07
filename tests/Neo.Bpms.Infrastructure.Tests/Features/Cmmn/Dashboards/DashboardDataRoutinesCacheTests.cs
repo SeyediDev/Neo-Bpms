@@ -303,10 +303,10 @@ public class DashboardDataRoutinesCacheTests
             "GenerateCacheKey",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
         
-        return (string)method!.Invoke(null, new object[] 
-        { 
+        return (string)method!.Invoke(null,
+        [
             widget, reportConfig, filterValues!, user, maxRecord, culture, forPrint 
-        })!;
+        ])!;
     }
 
     private T GetPrivateMethodResult<T>(DashboardDataRoutines instance, string methodName, params object[] parameters)
