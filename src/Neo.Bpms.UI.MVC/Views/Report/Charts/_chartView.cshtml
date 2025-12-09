@@ -23,31 +23,119 @@
 @model ReportData
 
 @{
-
-    void RenderChartTypeOption(ChartType chartType, ChartType selectedChartType)
+    // Helper function to get icon class for each chart type
+    string GetChartTypeIcon(ChartType chartType)
     {
-        //var editorBug = ":(";
-        <!option value="@chartType" @(selectedChartType == chartType ? "selected=\" selected\"" : "" )>
-            @chartType
-        </!option>
+        return chartType switch
+        {
+            ChartType.Area => "fa fa-area-chart",
+            ChartType.Bar => "fa fa-bar-chart",
+            ChartType.Column => "fa fa-bar-chart",
+            ChartType.Line => "fa fa-line-chart",
+            ChartType.Pie => "fa fa-pie-chart",
+            ChartType.Spline => "fa fa-line-chart",
+            ChartType.Areaspline => "fa fa-area-chart",
+            ChartType.Scatter => "fa fa-dot-circle-o",
+            ChartType.Treemap => "fa fa-sitemap",
+            ChartType.Gauge => "fa fa-tachometer",
+            ChartType.MetricBox => "fa fa-cube",
+            _ => "fa fa-bar-chart"
+        };
+    }
+
+    // Helper function to get display name for chart type
+    string GetChartTypeDisplayName(ChartType chartType)
+    {
+        return chartType switch
+        {
+            ChartType.Areaspline => "Area Spline",
+            ChartType.MetricBox => "Metric",
+            _ => chartType.ToString()
+        };
+    }
+
+    // Helper function to get tooltip/title for chart type
+    string GetChartTypeTooltip(ChartType chartType)
+    {
+        return chartType switch
+        {
+            ChartType.Area => "Area Chart",
+            ChartType.Bar => "Bar Chart",
+            ChartType.Column => "Column Chart",
+            ChartType.Line => "Line Chart",
+            ChartType.Pie => "Pie Chart",
+            ChartType.Spline => "Spline Chart",
+            ChartType.Areaspline => "Area Spline Chart",
+            ChartType.Scatter => "Scatter Chart",
+            ChartType.Treemap => "Treemap Chart",
+            ChartType.Gauge => "Gauge Chart",
+            ChartType.MetricBox => "Metric Box",
+            _ => chartType.ToString()
+        };
+    }
+
+    void RenderChartTypeButton(ChartType chartType, ChartType selectedChartType, string formId)
+    {
+        var iconClass = GetChartTypeIcon(chartType);
+        var displayName = GetChartTypeDisplayName(chartType);
+        var tooltip = GetChartTypeTooltip(chartType);
+        var isActive = selectedChartType == chartType;
+        var iconRotateClass = chartType == ChartType.Bar ? "chart-icon-rotate-90" : "";
+        
+        <button type="button" 
+                class="chart-type-btn @(isActive ? "active" : "")" 
+                data-chart-type="@chartType"
+                data-form-id="@formId"
+                title="@tooltip"
+                aria-label="@tooltip">
+            <i class="@iconClass @iconRotateClass"></i>
+            <span class="chart-type-btn-label">@displayName</span>
+        </button>
     }
 
     Func<dynamic, HelperResult> RenderChartTypeSelector =
-    @<select class="form-control" name="SelectedChartType" onchange="this.form.submit()">
-	    @{
-                RenderChartTypeOption(ChartType.Area, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Bar, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Column, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Line, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Pie, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Spline, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Areaspline, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Scatter, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Treemap, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.Gauge, item.Structure.ChartType);
-                RenderChartTypeOption(ChartType.MetricBox, item.Structure.ChartType);
+    @<text>
+        @{
+            var formId = "chartTypeForm_" + item.Structure.ConfigId;
+            var actionUrl = Url.Action("Index", "Report");
+        }
+        <form method="post" action="@actionUrl" id="@formId" style="display: none;" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="SelectedChartType" id="selectedChartType_@(item.Structure.ConfigId)" />
+            <input type="hidden" name="NamespaceId" value="@item.Structure.NamespaceId" />
+            <input type="hidden" name="EntityId" value="@item.Structure.EntityId" />
+            <input type="hidden" name="ReportId" value="@item.Structure.Form_ReportId" />
+            <input type="hidden" name="ConfigId" value="@item.Structure.ConfigId" />
+            <input type="hidden" name="Page" value="1" />
+            <input type="hidden" name="DrillDown" value="0" />
+            <input type="hidden" name="calendar" value="@(ViewBag.calendar ?? "shamsi")" />
+            @if (ViewBag.ParentReportIds != null)
+            {
+                <input type="hidden" name="ParentReportIds" value="@ViewBag.ParentReportIds" />
             }
-        </select>;
+            @if (ViewBag.SortFields != null)
+            {
+                <input type="hidden" name="sortFields" value="@ViewBag.SortFields" />
+            }
+        </form>
+        <div class="chart-type-selector-modern">
+            <div class="chart-type-buttons-group">
+	    @{
+                    RenderChartTypeButton(ChartType.Column, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Bar, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Line, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Area, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Pie, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Spline, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Areaspline, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Scatter, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Treemap, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.Gauge, item.Structure.ChartType, formId);
+                    RenderChartTypeButton(ChartType.MetricBox, item.Structure.ChartType, formId);
+            }
+            </div>
+        </div>
+    </text>;
 
 Layout = null;
 var reportInfo = Model;
@@ -116,7 +204,9 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
         }
         if (!isDrillDown && !bFromDashboard && !isIframeReport && !Model.Config.IsInlineSubReport)
         {
+            <div class="chart-type-selector-toolbar">
             @RenderChartTypeSelector(reportInfo)
+            </div>
         }
     }
 
@@ -228,3 +318,283 @@ else
 }
 
 <partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}" />
+
+<style>
+    /* Modern Chart Type Selector - Tab/Button Group Style */
+    .chart-type-selector-toolbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 12px 0;
+    }
+
+    .chart-type-selector-modern {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .chart-type-buttons-group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        background: #f8fafc;
+        padding: 6px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+    }
+
+    .chart-type-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        outline: none;
+        white-space: nowrap;
+        min-height: 40px;
+    }
+
+    .chart-type-btn i {
+        font-size: 16px;
+        transition: transform 0.2s ease;
+    }
+
+    /* Rotate Bar Chart icon 90 degrees to differentiate from Column */
+    .chart-type-btn i.chart-icon-rotate-90 {
+        transform: rotate(90deg);
+    }
+
+    .chart-type-btn:hover:not(.active) i.chart-icon-rotate-90 {
+        transform: rotate(90deg) scale(1.1);
+    }
+
+    .chart-type-btn.active i.chart-icon-rotate-90 {
+        transform: rotate(90deg) scale(1.15);
+    }
+
+    .chart-type-btn-label {
+        font-size: 13px;
+    }
+
+    /* Hover State */
+    .chart-type-btn:hover:not(.active) {
+        background: #ffffff;
+        color: #475569;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-type-btn:hover:not(.active) i {
+        transform: scale(1.1);
+    }
+
+    /* Active State */
+    .chart-type-btn.active {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .chart-type-btn.active i {
+        color: #ffffff;
+        transform: scale(1.15);
+    }
+
+    /* Focus State */
+    .chart-type-btn:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+    }
+
+    /* Active Button Animation */
+    .chart-type-btn.active::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 8px;
+        padding: 2px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 1200px) {
+        .chart-type-btn-label {
+            display: none;
+        }
+        
+        .chart-type-btn {
+            padding: 10px 14px;
+            min-width: 44px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .chart-type-buttons-group {
+            gap: 4px;
+            padding: 4px;
+        }
+
+        .chart-type-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            min-height: 36px;
+        }
+
+        .chart-type-btn i {
+            font-size: 14px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .chart-type-selector-toolbar {
+            margin-bottom: 16px;
+            padding: 8px 0;
+        }
+
+        .chart-type-buttons-group {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .chart-type-btn {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 8px 6px;
+        }
+    }
+
+    /* RTL Support */
+    [dir="rtl"] .chart-type-buttons-group {
+        direction: rtl;
+    }
+
+    /* Dark mode support */
+    @@media (prefers-color-scheme: dark) {
+        .chart-type-buttons-group {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .chart-type-btn {
+            color: #94a3b8;
+        }
+
+        .chart-type-btn:hover:not(.active) {
+            background: #334155;
+            color: #cbd5e1;
+        }
+
+        .chart-type-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+    }
+
+    /* Smooth transitions for all interactive elements */
+    .chart-type-btn * {
+        transition: inherit;
+    }
+</style>
+
+<script>
+    (function() {
+        // Initialize chart type button handlers
+        function initializeChartTypeButtons() {
+            var buttons = document.querySelectorAll('.chart-type-btn');
+            
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var chartType = this.getAttribute('data-chart-type');
+                    var formId = this.getAttribute('data-form-id');
+                    
+                    if (!chartType) {
+                        console.error('Chart type is missing');
+                        return;
+                    }
+                    
+                    // Always try to use main filter-form first (has all FilterValues and AntiForgeryToken)
+                    var mainForm = document.getElementById('filter-form');
+                    var form = mainForm;
+                    
+                    if (mainForm) {
+                        // Use main form - it has all FilterValues and required fields
+                        // Set or update SelectedChartType in the form
+                        var hiddenInput = mainForm.querySelector('input[type="hidden"][name="SelectedChartType"]');
+                        if (!hiddenInput) {
+                            // Create the input if it doesn't exist
+                            hiddenInput = document.createElement('input');
+                            hiddenInput.type = 'hidden';
+                            hiddenInput.name = 'SelectedChartType';
+                            mainForm.appendChild(hiddenInput);
+                        }
+                        hiddenInput.value = chartType;
+                    } else {
+                        // Fallback: use hidden form (for drill-down or special cases)
+                        form = document.getElementById(formId);
+                        if (!form) {
+                            console.error('Form not found. Looking for: filter-form or', formId);
+                            return;
+                        }
+                        
+                        // Set SelectedChartType in hidden form
+                        var hiddenInput = form.querySelector('input[type="hidden"][name="SelectedChartType"]');
+                        if (hiddenInput) {
+                            hiddenInput.value = chartType;
+                        } else {
+                            console.error('SelectedChartType input not found in form');
+                            return;
+                        }
+                    }
+                    
+                    // Update active state visually (will refresh anyway, but gives immediate feedback)
+                    var buttonGroup = this.closest('.chart-type-buttons-group');
+                    if (buttonGroup) {
+                        var allButtons = buttonGroup.querySelectorAll('.chart-type-btn');
+                        allButtons.forEach(function(btn) {
+                            btn.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                    
+                    // Submit the form - this will refresh the page with new chart type
+                    try {
+                        form.submit();
+                    } catch (error) {
+                        console.error('Error submitting form:', error);
+                        // Fallback: create a submit event
+                        var submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                        if (form.dispatchEvent(submitEvent)) {
+                            form.submit();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeChartTypeButtons);
+        } else {
+            initializeChartTypeButtons();
+        }
+    })();
+</script>
+

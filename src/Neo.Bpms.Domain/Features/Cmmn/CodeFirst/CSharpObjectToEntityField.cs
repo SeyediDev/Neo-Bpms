@@ -228,8 +228,8 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
                     }
                 case RangeAttribute range:
                     {
-                        field.MaxLen = range.Maximum.ToInt();
-                        field.MinLen = range.Minimum.ToInt();
+                        field.Maximum = range.Maximum;
+                        field.Minimum = range.Minimum;
                         break;
                     }
             }

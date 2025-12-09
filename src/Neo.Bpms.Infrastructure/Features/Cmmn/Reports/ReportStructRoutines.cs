@@ -79,7 +79,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         const int configThreshold = 6;
         
         // Only process if we have more than threshold configs
-        if (structure.Configs == null || structure.Configs.Count <= configThreshold)
+        if (structure.Configs == null || structure.Configs.Count(c=>c.FolderId is 0 or null) <= configThreshold)
             return;
         
         // Get existing folders

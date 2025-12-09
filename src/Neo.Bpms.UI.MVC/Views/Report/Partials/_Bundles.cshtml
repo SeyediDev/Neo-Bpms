@@ -1,0 +1,29 @@
+@{
+    var canScheduleReports = ViewBag.CanScheduleReports ?? false;
+}
+
+@* Required JavaScript Bundles *@
+<script src="@CommonBundles.SideNaviJsBundle" asp-append-version="true"></script>
+<link href="@CommonBundles.JsTreeCssBundle" asp-append-version="true" rel="stylesheet" />
+<script src="@CommonBundles.JsTreeJsBundle" asp-append-version="true"></script>
+<script src="@CommonBundles.FlagsJsBundle" asp-append-version="true"></script>
+<script src="@CommonBundles.TreeFoldersJsBundle" asp-append-version="true"></script>
+<script src="@CommonBundles.ReportConfigsTreeJsBundle" asp-append-version="true"></script>
+
+@if (canScheduleReports)
+{
+    <script src="@CommonBundles.ReportSchedulesTreeJsBundle" asp-append-version="true"></script>
+}
+
+<script src="@CommonBundles.FiltersTreeJsBundle" asp-append-version="true"></script>
+<script src="~/CommonAssets/bundles/report-tree-cleanup.js" asp-append-version="true"></script>
+
+@* Report Feature Scripts *@
+<script src="~/Scripts/common-assets-includes/features/report/Report.js"></script>
+<script src="~/Scripts/common-assets-includes/features/modern/modern-multi-select.js"></script>
+<script src="~/Scripts/common-assets-includes/features/report/report-modern-multi-select.js"></script>
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
+<script src="~/Content/common-assets-includes/features/filter/boolean-button-group.js" asp-append-version="true"></script>
+

@@ -1,0 +1,90 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@model ReportData
+
+@{
+    var canDesign = ViewBag.CanDesign ?? false;
+    var canScheduleReports = ViewBag.CanScheduleReports ?? false;
+}
+
+@* Report Designs Modal *@
+@if (canDesign)
+{
+    <div id="report-designs-modal" class="report-modal">
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h5>@ViewTexts.ReportDesigns</h5>
+                <button type="button" class="report-modal-close" onclick="toggleReportDesignsModal(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    @if (canDesign)
+                    {
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-success" onclick="ConfigsTreeManager.showAddConfigModal()" title="@ViewTexts.AddReportConfig">
+                                <i class="fa fa-plus"></i> @ViewTexts.AddReportConfig
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="ConfigsTreeManager.newFolder()" title="@ViewTexts.AddFolder">
+                                <i class="fa fa-folder-plus"></i> @ViewTexts.AddFolder
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="search-box">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="configs-search-input-modal" placeholder="@ViewTexts.Search" />
+                    </div>
+                </div>
+                <div id="configs-tree-modal" class="report-tree-container"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Scheduling Modal *@
+@if (canScheduleReports)
+{
+    <div id="scheduling-modal" class="report-modal">
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h5>@ViewTexts.ReportScheduling</h5>
+                <button type="button" class="report-modal-close" onclick="toggleSchedulingModal(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button type="button" class="btn btn-sm btn-outline-success" onclick="ScheduledReport.showModal()" title="@ViewTexts.AddSchedule">
+                        <i class="fa fa-plus"></i> @ViewTexts.AddSchedule
+                    </button>
+                </div>
+                <div id="scheduled-reports-tree-modal" class="report-tree-container"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Other Modals and Tooltips *@
+<partial name="~/Views/Report/DrillDown/MyDrillDownMenu.cshtml" />
+
+@if (canDesign)
+{
+    <partial name="~/Views/Report/Settings/_ReportSettingsModal.cshtml" model="Model" />
+}
+
+<partial name="~/Views/Report/Settings/_SleepingModals.cshtml" model="Model" />
+<partial name="~/Views/Report/Helpers/_FilterTooltip.cshtml" model="Model" />
+<partial name="~/Views/Report/Settings/_DesignSettings.cshtml" />
+<partial name="~/Views/Report/Helpers/_ReportInfo.cshtml" />
+<partial name="~/Views/Report/Settings/_RefreshSettings.cshtml" />
+

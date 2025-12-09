@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+﻿using Neo.Bpms.Domain.Extensions;
+using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms.UIRules;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;
@@ -276,6 +277,12 @@ public class ApplyFormField: IApplyFormField
                 {
                     value = ReformFormData.ReformBool(field, record, value);
                 }
+
+                // Validate Maximum and Minimum values
+                if (value != null && !ValidateFieldRange(field, value, ref errors))
+                {
+                    return false;
+                }
             }
         }
         if (bExist || formField?.ControlTypeId == eControlTypeId.File ||
@@ -283,6 +290,202 @@ public class ApplyFormField: IApplyFormField
         {
             _ = record.SetField(field?.Id ?? formField?.Id, value);
             _ = (apply?.AddField(field.Id ?? formField?.Id, value));
+        }
+
+        return true;
+    }
+
+    private static bool ValidateFieldRange(EntityField field, object value, ref ExceptionInfos errors)
+    {
+        if (field.Maximum == null && field.Minimum == null)
+        {
+            return true;
+        }
+
+        try
+        {
+            // Validate based on field type
+            if (field.IsDoubleParam())
+            {
+                return ValidateDoubleRange(field, value, ref errors);
+            }
+            else if (field.IsLongParam() || field.IsForeignParam() || field.IsTimeSpan())
+            {
+                return ValidateNumericRange(field, value, ref errors);
+            }
+            else if (field.IsDateTime())
+            {
+                return ValidateDateTimeRange(field, value, ref errors);
+            }
+            else if (field.IsTextParam())
+            {
+                // For text fields, Maximum and Minimum might be used for length validation
+                // But MinLen and MaxLen already handle this, so we skip here
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            ApplyFormData.AddError(ref errors, field.Id, $"خطا در اعتبارسنجی محدوده فیلد {field.Name ?? field.Id}: {ex.Message}");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool ValidateNumericRange(EntityField field, object value, ref ExceptionInfos errors)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+
+        long fieldValue = ConvUtill.ToInt64(value);
+        string fieldName = field.Name ?? field.Id;
+
+        if (field.Minimum != null)
+        {
+            long minValue = ConvUtill.ToInt64(field.Minimum);
+            if (fieldValue < minValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"مقدار فیلد {fieldName} باید بزرگتر یا مساوی {minValue} باشد. مقدار وارد شده: {fieldValue}");
+                return false;
+            }
+        }
+
+        if (field.Maximum != null)
+        {
+            long maxValue = ConvUtill.ToInt64(field.Maximum);
+            if (fieldValue > maxValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"مقدار فیلد {fieldName} باید کوچکتر یا مساوی {maxValue} باشد. مقدار وارد شده: {fieldValue}");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool ValidateDoubleRange(EntityField field, object value, ref ExceptionInfos errors)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+
+        double fieldValue = ConvUtill.ToDouble(value);
+        string fieldName = field.Name ?? field.Id;
+
+        if (field.Minimum != null)
+        {
+            double minValue = ConvUtill.ToDouble(field.Minimum);
+            if (fieldValue < minValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"مقدار فیلد {fieldName} باید بزرگتر یا مساوی {minValue} باشد. مقدار وارد شده: {fieldValue}");
+                return false;
+            }
+        }
+
+        if (field.Maximum != null)
+        {
+            double maxValue = ConvUtill.ToDouble(field.Maximum);
+            if (fieldValue > maxValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"مقدار فیلد {fieldName} باید کوچکتر یا مساوی {maxValue} باشد. مقدار وارد شده: {fieldValue}");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool ValidateDateTimeRange(EntityField field, object value, ref ExceptionInfos errors)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+
+        DateTime fieldValue;
+        if (value is DateTime dt)
+        {
+            fieldValue = dt;
+        }
+        else if (value is long ticks)
+        {
+            fieldValue = new DateTime(ticks);
+        }
+        else if (DateTime.TryParse(value.ToString(), out DateTime parsed))
+        {
+            fieldValue = parsed;
+        }
+        else
+        {
+            ApplyFormData.AddError(ref errors, field.Id, 
+                $"نمی‌توان مقدار فیلد {field.Name ?? field.Id} را به تاریخ تبدیل کرد.");
+            return false;
+        }
+
+        string fieldName = field.Name ?? field.Id;
+
+        if (field.Minimum != null)
+        {
+            DateTime minValue;
+            if (field.Minimum is DateTime minDt)
+            {
+                minValue = minDt;
+            }
+            else if (field.Minimum is long minTicks)
+            {
+                minValue = new DateTime(minTicks);
+            }
+            else if (DateTime.TryParse(field.Minimum.ToString(), out DateTime minParsed))
+            {
+                minValue = minParsed;
+            }
+            else
+            {
+                return true; // Skip validation if Minimum cannot be parsed
+            }
+
+            if (fieldValue < minValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"تاریخ فیلد {fieldName} باید بزرگتر یا مساوی {minValue:yyyy/MM/dd} باشد. تاریخ وارد شده: {fieldValue:yyyy/MM/dd}");
+                return false;
+            }
+        }
+
+        if (field.Maximum != null)
+        {
+            DateTime maxValue;
+            if (field.Maximum is DateTime maxDt)
+            {
+                maxValue = maxDt;
+            }
+            else if (field.Maximum is long maxTicks)
+            {
+                maxValue = new DateTime(maxTicks);
+            }
+            else if (DateTime.TryParse(field.Maximum.ToString(), out DateTime maxParsed))
+            {
+                maxValue = maxParsed;
+            }
+            else
+            {
+                return true; // Skip validation if Maximum cannot be parsed
+            }
+
+            if (fieldValue > maxValue)
+            {
+                ApplyFormData.AddError(ref errors, field.Id, 
+                    $"تاریخ فیلد {fieldName} باید کوچکتر یا مساوی {maxValue:yyyy/MM/dd} باشد. تاریخ وارد شده: {fieldValue:yyyy/MM/dd}");
+                return false;
+            }
         }
 
         return true;

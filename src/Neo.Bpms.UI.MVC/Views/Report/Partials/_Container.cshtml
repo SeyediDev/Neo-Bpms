@@ -1,0 +1,122 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Logic
+@using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common
+@using Neo.Bpms.UI.MVC.Controls
+@inject IFormLogicHelper formLogicHelper
+@model ReportData
+
+@{
+    var structure = Model?.Structure;
+    var canDesign = ViewBag.CanDesign ?? false;
+    var calendar = ProjectDefinition.Project.DefaultCalendar;
+    var refreshTime = structure?.FilterValues?.GetLong("__RefreshTime") ?? 0;
+    
+    var options = new RendererOptions
+    {
+        IsFilter = true
+    };
+    var controlsRendererData = structure != null 
+        ? new ControlsRendererData(structure, structure.FilterValues, options, ViewBag.user, Url)
+        : null;
+}
+
+@if (structure != null)
+{
+    @using (Html.BeginForm("Index", "Report",
+    new
+    {
+       structure.NamespaceId,
+       structure.EntityId,
+       ReportId = structure.Form_ReportId,
+       structure.ConfigId
+    }, FormMethod.Post, true, new { enctype = "multipart/form-data", id = "filter-form" }))
+    {
+        @Html.Hidden("ParentReportIds", structure.ParentReportIds)
+        @Html.Hidden("calendar", calendar)
+        <input type="hidden" name="newPage" value="1" />
+        <input type="hidden" name="Page" value="@ViewBag.Page" />
+        <input type="hidden" id="soValues" name="sortFields" value="@ViewBag.SortFields" />
+        <input type="hidden" name="__RefreshTime" value="@refreshTime" />
+        @Html.AntiForgeryToken()
+
+        <div @formLogicHelper.HtmlLogicEvent(structure, null, null)>
+            <div class="row no-margin-row" id="ReportContainer">
+                <div class="col-md-12 col-sm-12 noPadding">
+                    <div class="customDiv">
+                        <div class="row no-margin-row" id="ReportBody">
+                            <div class="col-md-12 col-sm-12 reportBody">
+                                @if (Model != null)
+                                {
+                                    switch (structure.ReportViewType)
+                                    {
+                                        case ReportViewType.Chart:
+                                            switch (structure.ChartType)
+                                            {
+                                                case ChartType.IranMap:
+                                                    <partial name="~/Views/Report/Map/_IranMap.cshtml" model="Model" />
+                                                    break;
+                                                case ChartType.WorldMap:
+                                                    <partial name="~/Views/Report/Map/_WorldMap.cshtml" model="Model" />
+                                                    break;
+                                                case ChartType.BpmnDiagram:
+                                                    <partial name="~/Views/Report/Charts/_bpmn.cshtml" model="Model" />
+                                                    break;
+                                                default:
+                                                    <div style="direction: ltr !important;">
+                                                        <partial name="~/Views/Report/Charts/_chartView.cshtml" model="Model" />
+                                                    </div>
+                                                    break;
+                                            }
+                                            break;
+                                        default:
+                                            <div>
+                                                <partial name="~/Views/Report/ListView/_listView.cshtml" model="Model" />
+                                            </div>
+                                            break;
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @if (canDesign)
+            {
+                <partial name="~/Views/Report/Settings/_columnSettingsModal.cshtml" model="Model" />
+                <partial name="~/Views/Report/Settings/_OrderByModal.cshtml" model="Model" />
+                <partial name="~/Views/Report/Settings/_ColorsModal.cshtml" model="Model" />
+                <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
+            }
+            
+            <partial name="Logic/_Logic" model="structure" />
+            
+            @if (controlsRendererData?.IncludeNeedingControls != null)
+            {
+                <partial name="Controls/_ControlIncludes" model="controlsRendererData.IncludeNeedingControls" />
+            }
+            
+            <script>
+                var persistentIsNull = @(ViewBag.PersistentIsNull == null || ViewBag.PersistentIsNull == true ? "true" : "false");
+                $(function () {
+                    if (persistentIsNull) {
+                        $('#submit-filter').click();
+                        var $emptyRequiredFields = $(':invalid:required');
+                        if ($emptyRequiredFields.length !== 0) {
+                            window.toast.warning(window.tetaI18n.t('PleaseSetRequiredFilters'));
+                        }
+                    }
+                });
+            </script>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-danger">
+        <h4>خطا</h4>
+        <p>ساختار گزارش موجود نیست. لطفاً با مدیر سیستم تماس بگیرید.</p>
+    </div>
+}
+

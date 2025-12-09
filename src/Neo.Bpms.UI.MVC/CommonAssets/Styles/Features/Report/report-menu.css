@@ -315,6 +315,39 @@
     /* این قسمت با JavaScript کامل میشه */
 }
 
+/* ===== Report Header Buttons - Simple Fix ===== */
+/* راه حل ساده: دکمه‌ها را به راست shift می‌کند و کلیک‌پذیری را تضمین می‌کند */
+.reportHeader {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+}
+
+.reportHeader .icons {
+    margin-right: 24px !important;
+}
+
+.reportHeader .icons a,
+.reportHeader .icons .top-bar-anchor-icon {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    margin: 0 6px !important;
+    padding: 6px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.reportHeader .icons a:hover,
+.reportHeader .icons .top-bar-anchor-icon:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
 /* ===== Prevent Conflicts ===== */
 /* این CSS ها فقط برای Report هستند و با .modern-form تداخلی ندارند */
 

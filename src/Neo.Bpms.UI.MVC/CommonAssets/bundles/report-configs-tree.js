@@ -196,6 +196,21 @@ var ConfigsTreeManager = function () {
 		FolderManager.registerSubmissionCallback(createFolderNode);
 		FolderManager.showModal(true, parentId);
 	};
+
+	var showAddConfigModal = function () {
+		var $modal = $('#reportConfigModal');
+		if ($modal.length === 0) {
+			console.error('reportConfigModal not found');
+			return;
+		}
+		$modal.find('.modal-body').html(
+			"<iframe src='" +
+			window.top.rootUrl +
+			"Report/AddNewConfig?" +
+			window.PageAddressManager.getQueryParameters() +
+			"' style='width:100%; height:100%;' frameborder='0' allowtransparency='true'></iframe>");
+		$modal.modal('show');
+	};
 	
 	var addNewFolderToContextMenu = function(items, node) {
 		if (window.jsCanDesign && node.type === "default") {
@@ -318,6 +333,9 @@ var ConfigsTreeManager = function () {
 
 	$(instantiateTree);
 	return {
-		newFolder: newFolder
+		newFolder: newFolder,
+		showAddConfigModal: showAddConfigModal,
+		goToConfig: goToConfig,
+		getContextMenu: contextMenu
 	};
 }();

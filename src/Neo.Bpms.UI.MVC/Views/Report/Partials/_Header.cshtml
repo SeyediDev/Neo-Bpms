@@ -1,0 +1,101 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Model.Project
+@using Neo.Bpms.Domain.Models.Security.Authentication
+@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.PartialModels.Common
+@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Microsoft.AspNetCore.Html
+@model ReportData
+
+@{
+    var structure = Model?.Structure;
+    var canDesign = ViewBag.CanDesign ?? false;
+    var canScheduleReports = ViewBag.CanScheduleReports ?? false;
+    var pageIcon = ViewBag.PageIcon as string;
+    var user = ViewBag.User as IdentityUser;
+    var refreshTime = structure?.FilterValues?.GetLong("__RefreshTime") ?? 0;
+}
+
+@{
+    Func<dynamic, HelperResult> TopBarTools =
+     @<text>
+         <!-- آیکن اطلاعات گزارش -->
+         <a title="اطلاعات گزارش" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleReportInfo(event); return false;">
+             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                 <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                 <path d="M8 5.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                 <circle cx="8" cy="10.5" r="0.5" fill="currentColor"/>
+             </svg>
+         </a>
+         <a title="@ViewTexts.RefreshTime" href="#" class="top-bar-anchor-icon text-success icons-tables refresh-settings-toggle @(refreshTime > 0 ? "active" : "")" onclick="toggleRefreshSettings(event); return false;">
+             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                 <path d="M8 1.5a6.5 6.5 0 1 0 0 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                 <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
+             </svg>
+             @if (refreshTime > 0)
+             {
+                 <span class="refresh-time-badge">@refreshTime</span>
+             }
+         </a>
+         <a title="@ViewTexts.Refresh" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="location.reload();">
+             <svg style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 16 16">
+                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-blue"></use>
+             </svg>
+         </a>
+         <partial name="~/Views/Report/Export/ExportExcelIcon.cshtml" model="item.structure" />
+         <a title="@ViewTexts.Print" href="~/@("Report/PrintPreview?EntityId=" + item.structure.EntityId + "&NamespaceId=" + item.structure.NamespaceId + "&ReportId=" + item.structure.Form_ReportId + "&ConfigId=" + item.structure.ConfigId + "&ParentReportIds=" + item.structure.ParentReportIds)" class="top-bar-anchor-icon text-primary icons-tables" target="_blank">
+             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#print-blue" />
+             </svg>
+         </a>
+         <partial name="~/Views/Report/Export/ExportCSVIcon.cshtml" model="item.structure" />
+
+    @if (item.canDesign)
+    {
+        <partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel { report = Model, forInlineSubReport = false }" />
+    }
+
+    @if (item.structure.Fields != null && item.structure.Fields.Count > 0)
+    {
+        <a title="@ViewTexts.Filter" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleFilterTooltip(event); return false;">
+            <svg title="@ViewTexts.Filter" style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
+            </svg>
+        </a>
+    }
+
+    @* Report Designs Icon *@
+    @if (item.canDesign)
+    {
+        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleReportDesignsModal(event); return false;">
+            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9" fill="none"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="none"/>
+            </svg>
+        </a>
+    }
+    
+    @* Scheduling Icon - Rightmost icon (must be last) *@
+    @if (item.canScheduleReports)
+    {
+        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" onclick="toggleSchedulingModal(event); return false;">
+            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" fill="none"/>
+                <polyline points="12 6 12 12 16 14" fill="none"/>
+            </svg>
+        </a>
+    }
+
+    </text>;
+
+    async Task TopBar(ReportStructure reportStructure, bool canDesign, string pageIcon, IdentityUser identityUser)
+    {
+        var topBarToolsModel = new { structure = reportStructure, canDesign, canScheduleReports, user = identityUser, model = Model };
+        <partial name="Common/TopBar" model="new TopBarModel { Title = reportStructure.Name, PageIcon = pageIcon, Tools = TopBarTools(topBarToolsModel) }" />
+    }
+}
+
+@{
+    await TopBar(structure, canDesign, pageIcon, user);
+}
+

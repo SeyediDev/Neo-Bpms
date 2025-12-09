@@ -531,6 +531,9 @@ public class EntityField : BaseModelClass, ISBVRContainer
 
     public bool IsRelationShipField => AssociationEntity != null || BaseEntity != null || CompositionEntity != null;
     public List<SBVR> SBVRs { get; set; } = [];
+    public object? Maximum { get; internal set; }
+    public object? Minimum { get; internal set; }
+
     public void AddSBVR(SBVRAttribute sbvr)
     {
         SBVRs.Add(new SBVR()
