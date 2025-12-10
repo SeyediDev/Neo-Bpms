@@ -117,14 +117,30 @@ public static class DependencyInjection
         Guard.Against.Null(commandConnectionString, message: $"Connection string '{nameof(DomainProvider.Domain)}CommandConnection' not found.");
         services.AddDbContext<BpmsContextCommand>((serviceProvider, options) =>
         {
-            options.UseSqlServer(commandConnectionString);
+            options.UseSqlServer(commandConnectionString, sqlServerOptions =>
+            {
+                sqlServerOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+                sqlServerOptions.CommandTimeout(120);
+                //sqlServerOptions.EnableServiceProviderCaching();
+            });
             options.AddInterceptors(serviceProvider.GetServices<ISaveChangesInterceptor>());
         }, ServiceLifetime.Scoped);
         services.AddScoped<IBpmsUnitOfWorkCommand>(serviceProvider => serviceProvider.GetRequiredService<BpmsContextCommand>());
 
         var queryConnectionString = configuration.GetConnectionString($"{nameof(DomainProvider.Domain)}QueryConnection");
         Guard.Against.Null(queryConnectionString, message: $"Connection string '{nameof(DomainProvider.Domain)}QueryConnection' not found.");
-        services.AddDbContextPool<BpmsContextQuery>(options => options.UseSqlServer(queryConnectionString)
+        services.AddDbContextPool<BpmsContextQuery>(options => options.UseSqlServer(queryConnectionString, sqlServerOptions =>
+        {
+            sqlServerOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+            sqlServerOptions.CommandTimeout(120);
+            //sqlServerOptions.EnableServiceProviderCaching();
+        })
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         services.AddScoped<IBpmsUnitOfWorkQuery>(serviceProvider => serviceProvider.GetRequiredService<BpmsContextQuery>());
 

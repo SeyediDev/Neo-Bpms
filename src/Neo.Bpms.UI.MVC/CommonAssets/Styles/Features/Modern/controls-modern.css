@@ -2993,8 +2993,8 @@ body {
 }
 
 .choice-form-link {
-  width: 24px !important; /* Reduced from 32px (25% smaller) */
-  height: 24px !important; /* Reduced from 32px (25% smaller) */
+  width: 20px !important; /* Reduced from 32px (25% smaller) */
+  height: 20px !important; /* Reduced from 32px (25% smaller) */
   background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%) !important;
   color: #1e40af !important;
   border-radius: 6px !important; /* Reduced from 8px */
