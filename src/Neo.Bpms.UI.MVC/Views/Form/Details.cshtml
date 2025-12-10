@@ -55,6 +55,12 @@
 			<div class="modern-title-content">
 				<div class="modern-title-text">
 					<h2 class="modern-title">
+						@if (!string.IsNullOrEmpty(pageIcon))
+						{
+							<span class="page-header-icon">
+								@Html.Raw(MenuHelper.IconSvg(pageIcon))
+							</span>
+						}
 						<i class="fa fa-info-circle" style="margin-left: 8px; color: #3b82f6;"></i>
 						@structure.Name
              @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))

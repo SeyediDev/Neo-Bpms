@@ -88,7 +88,15 @@
             <div class="modern-title-box">
                 <div class="modern-title-content">
                     <div class="modern-title-text">
-                        <h2 class="modern-title">ایجاد گروهی فرآیند @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))</h2>
+                        <h2 class="modern-title">
+                            @if (!string.IsNullOrEmpty(pageIcon))
+                            {
+                                <span class="page-header-icon">
+                                    @Html.Raw(MenuHelper.IconSvg(pageIcon))
+                                </span>
+                            }
+                            ایجاد گروهی فرآیند @structure.Name @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
+                        </h2>
                     </div>
                     <div class="modern-title-actions">
                         @if (processId != null && taskId != null && canSeeBpmn)

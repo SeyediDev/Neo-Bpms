@@ -137,14 +137,16 @@
     </style>
 
     <script>
-        // Filter Tooltip Functions
-        function toggleFilterTooltip(event) {
+        // Filter Tooltip Functions - Make globally accessible
+        window.toggleFilterTooltip = function(event) {
             console.log('toggleFilterTooltip called');
-            event.preventDefault();
-            event.stopPropagation();
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
 
             const panel = document.getElementById('filterTooltipPanel');
-            const toggle = event.target.closest('a');
+            const toggle = event ? event.target.closest('a') : document.querySelector('[onclick*="toggleFilterTooltip"]');
             
             console.log('Panel found:', !!panel);
             console.log('Toggle found:', !!toggle);

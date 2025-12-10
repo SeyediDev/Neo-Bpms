@@ -1185,44 +1185,32 @@ body {
 }
 
 /* ===== Modern Title Box Variations ===== */
-/* Details Page - Soft Orange */
-.modern-title-box.details-page {
-  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-}
-
-.modern-title-box.details-page::after {
-  background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-}
-
-/* Delete Page - Soft Red */
-.modern-title-box.delete-page {
-  background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
-}
-
-.modern-title-box.delete-page::after {
-  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-}
-
-/* Edit Page - Soft Purple */
-.modern-title-box.edit-page {
-  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
-}
-
-.modern-title-box.edit-page::after {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-}
-
-/* Index Page - Dark Navy Theme */
-.modern-title-box.index-page {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+/* All form pages use the same menu color theme */
+.modern-title-box.details-page,
+.modern-title-box.delete-page,
+.modern-title-box.edit-page,
+.modern-title-box.index-page,
+.modern-title-box {
+  background: linear-gradient(to right, #5C96C6, #387CB4);
   padding: 21px 25px;
 }
 
+.modern-title-box.details-page::after,
+.modern-title-box.delete-page::after,
+.modern-title-box.edit-page::after,
 .modern-title-box.index-page::after {
-  background: linear-gradient(135deg, #0f2a47 0%, #1e3a5f 100%);
+  background: linear-gradient(to right, #387CB4, #2d6a9f);
   bottom: -18px;
   height: 32px;
   border-radius: 0 0 32px 32px;
+}
+
+/* All form titles use flex layout for proper icon and text alignment */
+.modern-title-box .modern-title {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
 }
 
 /* Page Header Icon Styles - Override sidemenu-icon for header context */
@@ -1232,19 +1220,85 @@ body {
     vertical-align: middle !important;
     line-height: 1 !important;
     margin-left: 8px !important;
-    margin-right: 20px !important;
+    margin-right: 12px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     width: auto !important;
     height: auto !important;
     flex-shrink: 0 !important;
-    background-color: rgba(0, 0, 0, 0.3) !important;
-    border-radius: 4px !important;
-    padding: 4px !important;
     /* Prevent text from overlapping */
     float: none !important;
     clear: none !important;
     white-space: nowrap !important;
+}
+
+.page-header-icon .sidemenu-icon {
+    position: static !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible !important;
+}
+
+.page-header-icon .sidemenu-icon svg {
+    width: 24px !important;
+    height: 24px !important;
+    display: block !important;
+    vertical-align: middle !important;
+}
+
+.page-header-icon .sidemenu-icon use {
+    fill: currentColor !important;
+}
+
+/* For index page with white text */
+.modern-title-box.index-page .page-header-icon {
+    color: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon {
+    color: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon svg {
+    color: white !important;
+    fill: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon use {
+    fill: white !important;
+}
+
+/* For other pages with dark text */
+.modern-title-box:not(.index-page) .page-header-icon {
+    color: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon {
+    color: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon svg {
+    color: #1e293b !important;
+    fill: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon use {
+    fill: #1e293b !important;
 }
 
 /* ===== Header Club Badge Styles ===== */
@@ -1750,22 +1804,25 @@ body {
 
 /* ===== Modern Refresh Button (بروزرسانی) ===== */
 .modern-refresh-btn {
-  background: linear-gradient(135deg, #ffffff, #f8f9fa) !important; /* سفید */
-  border: 1px solid #e2e8f0 !important;
-  color: #374151 !important;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)) !important;
+  border: none !important;
+  color: white !important;
 }
 
 .modern-refresh-btn:hover {
-  background: linear-gradient(135deg, #f8f9fa, #e2e8f0) !important;
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary-dark)) !important;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .modern-refresh-btn svg {
-  color: #374151 !important;
+  color: white !important;
+  fill: white !important;
 }
 
 .modern-refresh-btn:hover svg {
-  color: #1f2937 !important;
+  color: white !important;
+  fill: white !important;
 }
 
 .modern-refresh-btn:active {
@@ -2014,6 +2071,16 @@ body {
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
+}
+
+/* Hide default btn-group in filters when boolean-button-group exists */
+.modern-filter-wrapper .dWrapper:has(.boolean-button-group) .btn-group {
+  display: none !important;
+}
+
+/* Also hide labels that contain radio buttons when boolean-button-group exists */
+.modern-filter-wrapper .dWrapper:has(.boolean-button-group) label:has(input[type="radio"]) {
+  display: none !important;
 }
 
 /* ===== Modern Table Styles ===== */

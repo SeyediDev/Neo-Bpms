@@ -76,5 +76,4 @@
     <ProjectReference Include="..\Neo.Bpms.Infrastructure\Neo.Bpms.Infrastructure.csproj" />
     <ProjectReference Include="..\Neo.Bpms.UI.Resources\Neo.Bpms.UI.Resources.csproj" />
   </ItemGroup>
-  <Import Project="CommonAssets\CommonContentLinks.targets.xml" />
 </Project>

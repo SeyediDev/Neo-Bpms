@@ -141,10 +141,37 @@
                             "conditionalselect": function (node, event) {
                                 if (node.type === 'default')
                                     return false;
-                                if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
-                                    ConfigsTreeManager.goToConfig(node.id);
-                                }
-                                return false;
+                                // Allow selection and navigate to config
+                                var navigateToConfig = function(configId) {
+                                    // Try multiple ways to access ConfigsTreeManager
+                                    if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
+                                        ConfigsTreeManager.goToConfig(configId);
+                                    } else if (typeof window.ConfigsTreeManager !== 'undefined' && window.ConfigsTreeManager.goToConfig) {
+                                        window.ConfigsTreeManager.goToConfig(configId);
+                                    } else if (window.top && typeof window.top.ConfigsTreeManager !== 'undefined' && window.top.ConfigsTreeManager.goToConfig) {
+                                        window.top.ConfigsTreeManager.goToConfig(configId);
+                                    } else {
+                                        // Fallback: direct navigation using PageAddressManager
+                                        var currentFilterId = (typeof FilterConfig !== 'undefined' && FilterConfig.getCurrentPageFilterId) ? FilterConfig.getCurrentPageFilterId() : null;
+                                        var queryParams = (typeof window.PageAddressManager !== 'undefined' && window.PageAddressManager.getQueryParameters) 
+                                            ? window.PageAddressManager.getQueryParameters() 
+                                            : '';
+                                        var url = 'Report?' + queryParams + '&ConfigId=' + configId + (currentFilterId ? ('&FilterId=' + currentFilterId) : '');
+                                        if (window.top && window.top.PageAddressManager && window.top.PageAddressManager.navigateTo) {
+                                            window.top.PageAddressManager.navigateTo(url);
+                                        } else if (window.PageAddressManager && window.PageAddressManager.navigateTo) {
+                                            window.PageAddressManager.navigateTo(url);
+                                        } else {
+                                            window.location.href = url;
+                                        }
+                                    }
+                                };
+                                // Navigate after a short delay to allow visual selection feedback
+                                setTimeout(function() {
+                                    navigateToConfig(node.id);
+                                }, 150);
+                                // Return true to allow selection (visual feedback)
+                                return true;
                             },
                             "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
                         });

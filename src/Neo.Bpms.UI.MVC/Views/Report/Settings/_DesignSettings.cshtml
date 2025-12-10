@@ -9,13 +9,15 @@
 }
 
 <script>
-    // Toggle design settings tooltip
-    function toggleDesignSettings(event) {
-        event.preventDefault();
-        event.stopPropagation();
+    // Toggle design settings tooltip - Make globally accessible
+    window.toggleDesignSettings = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
 
         const panel = document.getElementById('designSettingsPanel');
-        const toggle = event.target.closest('a');
+        const toggle = event ? event.target.closest('a') : document.querySelector('[onclick*="toggleDesignSettings"]');
 
         if (panel && toggle) {
             // Hide all other tooltips first
