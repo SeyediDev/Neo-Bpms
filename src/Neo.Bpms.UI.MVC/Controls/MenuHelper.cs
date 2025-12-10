@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Features.Security;
+﻿using Minio.DataModel;
+using Neo.Bpms.Domain.Features.Security;
 
 namespace Neo.Bpms.UI.MVC.Controls;
 
@@ -186,13 +187,22 @@ public class MenuHelper(IAccessServices accessServices)
     private static void AddIconName(StringBuilder sb, MenuItem item)
     {
         if (string.IsNullOrEmpty(item.iconName)) return;
-        
-        // Check if icon exists in Club sprite (modern icons), fallback to common sprite
-        var iconHref = UseClubIcon(item.iconName) 
-            ? $"/Content/club-icons/club-sprite.svg#{item.iconName}"
-            : $"/Content/common-assets-includes/icons/svgSprite.svg#{item.iconName}";
-            
-        sb.Append($"<svg class=\"sidemenu-icon\" data-icon=\"{item.iconName}\" viewBox=\"0 0 24 24\">\n <use xlink:href=\"{iconHref}\"></use>\n </svg>");
+           
+        sb.Append(IconSvg(item.iconName));
+    }
+    
+    public static string IconSvg(string iconName)
+    {
+        return $"<svg class=\"sidemenu-icon\" data-icon=\"{iconName}\" viewBox=\"0 0 24 24\">" +
+                    $"<use xlink:href=\"{IconHref(iconName)}\"></use>" +
+               $"</svg>";
+    }
+    
+    public static string IconHref(string iconName)
+    {
+        return UseClubIcon(iconName)
+            ? $"/Content/club-icons/club-sprite.svg#{iconName}"
+            : $"/Content/common-assets-includes/icons/svgSprite.svg#{iconName}";
     }
     
     private static bool UseClubIcon(string iconName)

@@ -220,7 +220,7 @@
 	{
 		foreach (var subReport in row.SubReports)
 		{
-			@Html.Partial("_reportSettingsModal", subReport)
+			@Html.Partial("~/Views/Report/Settings/_ReportSettingsModal.cshtml", subReport)
 		}
 	}
 }

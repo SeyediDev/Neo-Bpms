@@ -1212,17 +1212,39 @@ body {
   background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
 }
 
-/* Index Page - Soft Teal/Cyan */
+/* Index Page - Dark Navy Theme */
 .modern-title-box.index-page {
-  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
   padding: 21px 25px;
 }
 
 .modern-title-box.index-page::after {
-  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  background: linear-gradient(135deg, #0f2a47 0%, #1e3a5f 100%);
   bottom: -18px;
   height: 32px;
   border-radius: 0 0 32px 32px;
+}
+
+/* Page Header Icon Styles - Override sidemenu-icon for header context */
+.page-header-icon {
+    position: static !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    margin-left: 8px !important;
+    margin-right: 20px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 4px !important;
+    padding: 4px !important;
+    /* Prevent text from overlapping */
+    float: none !important;
+    clear: none !important;
+    white-space: nowrap !important;
 }
 
 /* ===== Header Club Badge Styles ===== */
