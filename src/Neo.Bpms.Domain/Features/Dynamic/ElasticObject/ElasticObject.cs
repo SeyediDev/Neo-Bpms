@@ -716,25 +716,25 @@ public partial class ElasticObject : DynamicObject, IElasticHierarchyWrapper, IN
         if (Attributes?.Any() ?? false)
         {
             StringBuilder s = new();
-            s.Append("{");
+            s.Append('{');
             foreach (KeyValuePair<string, ElasticObject> attribute in Attributes)
             {
                 if (!first)
-                    s.Append(",");
+                    s.Append(',');
                 s.Append("\"" + attribute.Key + "\":");
                 if (attribute.Value?.InternalValue is List<object> valueAsList)
                 {
-                    s.Append("[");
+                    s.Append('[');
                     bool firstItem = true;
                     foreach (object item in valueAsList)
                     {
                         if (!firstItem)
-                            s.Append(",");
+                            s.Append(',');
                         s.Append((item as ElasticObject)?.ToString2(level + 1) ?? item.ToString());
                         firstItem = false;
                     }
 
-                    s.Append("]");
+                    s.Append(']');
                 }
                 else
                     s.Append("\"" + attribute.Value?.ToString2(level + 1) + "\"");
@@ -742,34 +742,34 @@ public partial class ElasticObject : DynamicObject, IElasticHierarchyWrapper, IN
                 first = false;
             }
 
-            s.Append("}");
+            s.Append('}');
             return s.ToString();
         }
 
         if (Elements?.Any() ?? false)
         {
             StringBuilder s = new();
-            s.Append("[");
+            s.Append('[');
             foreach (ElasticObject element in Elements)
             {
                 if (!first)
-                    s.Append(",");
+                    s.Append(',');
                 s.Append("{" + element?.ToString2(level + 1) + "}");
                 first = false;
             }
 
-            s.Append("]");
+            s.Append(']');
             return s.ToString();
         }
 
         if (InternalValue is Dictionary<string, object> attributesAsDic)
         {
             StringBuilder s = new();
-            s.Append("{");
+            s.Append('{');
             foreach (KeyValuePair<string, object> attributeAsDic in attributesAsDic)
             {
                 if (!first)
-                    s.Append(",");
+                    s.Append(',');
                 s.Append("\"" + attributeAsDic.Key + "\":\"" +
                          ((attributeAsDic.Value as ElasticObject)?.ToString2(level + 1) ??
                           attributeAsDic.Value.ToString())
@@ -777,23 +777,23 @@ public partial class ElasticObject : DynamicObject, IElasticHierarchyWrapper, IN
                 first = false;
             }
 
-            s.Append("}");
+            s.Append('}');
             return s.ToString();
         }
 
         if (InternalValue is List<object> attributesAsList)
         {
             StringBuilder s = new();
-            s.Append("[");
+            s.Append('[');
             foreach (object attribute in attributesAsList)
             {
                 if (!first)
-                    s.Append(",");
+                    s.Append(',');
                 s.Append((attribute as ElasticObject)?.ToString2(level + 1) ?? attribute.ToString());
                 first = false;
             }
 
-            s.Append("]");
+            s.Append(']');
             return s.ToString();
         }
 

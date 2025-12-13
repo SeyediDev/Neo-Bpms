@@ -67,7 +67,16 @@
         </div>
     </div>
 
-    <script src="~/Scripts/common-assets-includes/features/report/Report.js"></script>
+    @* Report Feature Scripts - Modular Structure *@
+    <partial name="Partials/_Scripts.report-filter" />
+    <partial name="Partials/_Scripts.report-popular-filters" />
+    <partial name="Partials/_Scripts.report-toggles" />
+    <partial name="Partials/_Scripts.report-modal-zindex" />
+    <partial name="Partials/_Scripts.report-modals" />
+    <partial name="Partials/_Scripts.report-filter-parameter" />
+    <partial name="Partials/_Scripts.report-refresh" />
+    <partial name="Partials/_Scripts.report-config" />
+    <partial name="Partials/_Scripts.report-events" />
     <script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
 }
 

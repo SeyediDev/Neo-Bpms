@@ -68,7 +68,7 @@ public static class DynamicExtensions
 
     public static ElasticObject FromJSON(this string json)
     {
-        return ElasticFromJSON(json);
+        return ElasticFromJson(json);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public static class DynamicExtensions
     /// <returns></returns>
     public static string ToJSON(this ElasticObject e)
     {
-        return JSONFromElastic(0, e);
+        return JsonFromElastic(0, e);
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ public static class DynamicExtensions
     /// </summary>
     /// <param name="json">The json.</param>
     /// <returns></returns>
-    private static ElasticObject ElasticFromJSON(string json)
+    private static ElasticObject ElasticFromJson(string json)
     {
         JSONParser parser = new();
         return parser.parse(json, "") ?? new ElasticObject();
@@ -232,46 +232,46 @@ public static class DynamicExtensions
     /// <param name="indent">The indent.</param>
     /// <param name="elastic">The elastic.</param>
     /// <returns></returns>
-    private static string JSONFromElastic(int indent, ElasticObject elastic)
+    private static string JsonFromElastic(int indent, ElasticObject elastic)
     {
         StringBuilder s = new();
         if (elastic.InternalValue != null)
         {
             if (elastic.InternalValue is ElasticObject)
             {
-                _ = s.Append(JSONFromElastic(indent, elastic.InternalValue as ElasticObject));
+                _ = s.Append(JsonFromElastic(indent, elastic.InternalValue as ElasticObject));
             }
             else
             {
-                //	s.Append("\"" + elastic.InternalName + "\": " + elastic.InternalValue.ToString() + ",");
-                _ = s.Append(elastic.InternalValue);
+                s.Append("\"" + elastic.InternalName + "\": " + elastic.InternalValue.ToString());
+                //_ = s.Append(elastic.InternalValue);
             }
         }
         else
         {
             bool firstline = true;
-            if (elastic.Attributes.Count() == 0 && elastic.ElementCollections.Count() == 1)
+            if (!elastic.Attributes.Any() && elastic.ElementCollections.Count == 1)
             {
                 KeyValuePair<string, List<ElasticObject>> item = elastic.ElementCollections.FirstOrDefault(); //if (item.Key == elastic.InternalName) { 
-                _ = s.Append("[");
+                _ = s.Append('[');
                 indent++;
                 bool firstline2 = true;
                 foreach (ElasticObject c in item.Value)
                 {
                     if (!firstline2)
                     {
-                        _ = s.Append(",");
+                        _ = s.Append(',');
                     }
                     //s.Append('\t', indent);
                     firstline2 = false;
-                    _ = s.Append(JSONFromElastic(indent, c));
+                    _ = s.Append(JsonFromElastic(indent, c));
                 }
 
-                _ = s.Append("]");
+                _ = s.Append(']');
             }
             else
             {
-                _ = s.Append("{");
+                _ = s.Append('{');
                 indent++;
                 foreach (KeyValuePair<string, ElasticObject> a in elastic.Attributes)
                 {
@@ -282,13 +282,13 @@ public static class DynamicExtensions
 
                     if (!firstline)
                     {
-                        _ = s.Append(",");
+                        _ = s.Append(',');
                     }
                     //s.Append('\t', indent);
                     firstline = false;
                     if (a.Value.InternalValue is ElasticObject)
                     {
-                        _ = s.Append(JSONFromElastic(indent, a.Value.InternalValue as ElasticObject));
+                        _ = s.Append(JsonFromElastic(indent, a.Value.InternalValue as ElasticObject));
                     }
                     else if (a.Value.InternalValue is string)
                     {
@@ -304,7 +304,7 @@ public static class DynamicExtensions
                 {
                     if (!firstline)
                     {
-                        _ = s.Append(",");
+                        _ = s.Append(',');
                     }
                     //s.Append('\t', indent);
                     firstline = false;
@@ -315,18 +315,18 @@ public static class DynamicExtensions
                     {
                         if (!firstline2)
                         {
-                            _ = s.Append(",");
+                            _ = s.Append(',');
                         }
                         //s.Append('\t', indent);
                         firstline2 = false;
-                        _ = s.Append(JSONFromElastic(indent, c));
+                        _ = s.Append(JsonFromElastic(indent, c));
                     }
 
                     indent++;
-                    _ = s.Append("]");
+                    _ = s.Append(']');
                 }
 
-                _ = s.Append("}");
+                _ = s.Append('}');
             }
         }
 

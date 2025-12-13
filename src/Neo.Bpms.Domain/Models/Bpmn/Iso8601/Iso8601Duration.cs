@@ -101,7 +101,7 @@ public static class Iso8601Duration
 
         if (timeSpan.TotalSeconds > 0)
         {
-            _ = builder.Append("T");
+            _ = builder.Append('T');
         }
 
         if (timeSpan.Hours > 0)

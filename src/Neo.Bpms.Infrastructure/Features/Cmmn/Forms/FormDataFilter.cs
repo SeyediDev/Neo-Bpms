@@ -73,7 +73,7 @@ public static class FormDataFilter
 
     private static void CorrectArrayValuesInFilterRecord(ElasticObject filterValues)
     {
-        List<KeyValuePair<string, ElasticObject>> list = [.. filterValues.Attributes];
+        List<KeyValuePair<string, ElasticObject>> list = filterValues!=null ? [.. filterValues.Attributes] : [];
         for (int i = 0; i < list.Count; i++)
         {
             KeyValuePair<string, ElasticObject> item = list[i];

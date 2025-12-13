@@ -1,0 +1,125 @@
+@* report-events.js - Event Handlers for Report Pages *@
+<script>
+/**
+ * report-events.js
+ * Event Handlers for Report Pages
+ */
+
+$(document).ready(function() {
+    // Close tooltips when clicking outside
+    document.addEventListener('click', function(e) {
+        // Hide report info tooltip
+        if (!e.target.closest('[onclick*="toggleReportInfo"]') && !e.target.closest('#reportInfoPanel')) {
+            const panel = document.getElementById('reportInfoPanel');
+            const toggle = document.querySelector('[onclick*="toggleReportInfo"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Hide refresh settings tooltip
+        if (!e.target.closest('[onclick*="toggleRefreshSettings"]') && !e.target.closest('#refreshSettingsPanel')) {
+            const panel = document.getElementById('refreshSettingsPanel');
+            const toggle = document.querySelector('[onclick*="toggleRefreshSettings"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Hide design settings tooltip
+        if (!e.target.closest('[onclick*="toggleDesignSettings"]') && !e.target.closest('#designSettingsPanel')) {
+            const panel = document.getElementById('designSettingsPanel');
+            const toggle = document.querySelector('[onclick*="toggleDesignSettings"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Hide filter tooltip
+        if (!e.target.closest('[onclick*="toggleFilterTooltip"]') && !e.target.closest('#filterTooltipPanel')) {
+            const panel = document.getElementById('filterTooltipPanel');
+            const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Close modals when clicking outside
+        const designsModal = document.getElementById('report-designs-modal');
+        const schedulingModal = document.getElementById('scheduling-modal');
+        
+        if (designsModal && e.target === designsModal) {
+            if (typeof window.toggleReportDesignsModal === 'function') {
+                window.toggleReportDesignsModal(null);
+            }
+        }
+        
+        if (schedulingModal && e.target === schedulingModal) {
+            if (typeof window.toggleSchedulingModal === 'function') {
+                window.toggleSchedulingModal(null);
+            }
+        }
+        
+        // Close dropdowns when clicking outside
+        if (!e.target.closest('.dropdown')) {
+            const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
+            openDropdowns.forEach(function(dropdown) {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+    
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const designsModal = document.getElementById('report-designs-modal');
+            const schedulingModal = document.getElementById('scheduling-modal');
+            
+            if (designsModal && designsModal.classList.contains('show')) {
+                if (typeof window.toggleReportDesignsModal === 'function') {
+                    window.toggleReportDesignsModal(null);
+                }
+            }
+            
+            if (schedulingModal && schedulingModal.classList.contains('show')) {
+                if (typeof window.toggleSchedulingModal === 'function') {
+                    window.toggleSchedulingModal(null);
+                }
+            }
+        }
+    });
+    
+    // Fix dropdown positioning
+    // Handle dropdown positioning
+    const dropdownToggles = document.querySelectorAll('[data-toggle="dropdown"]');
+    dropdownToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const dropdown = this.nextElementSibling;
+            if (dropdown && dropdown.classList.contains('dropdown-menu')) {
+                const rect = this.getBoundingClientRect();
+                dropdown.style.position = 'fixed';
+                dropdown.style.top = (rect.bottom + 5) + 'px';
+                dropdown.style.left = (rect.left) + 'px';
+                dropdown.style.zIndex = '999999';
+                dropdown.classList.toggle('show');
+            }
+        });
+    });
+});
+</script>
+

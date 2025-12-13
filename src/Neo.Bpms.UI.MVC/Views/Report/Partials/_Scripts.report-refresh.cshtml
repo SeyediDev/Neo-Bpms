@@ -1,0 +1,165 @@
+@* report-refresh.js - Refresh Manager and Refresh Settings Handler *@
+<script>
+/**
+ * report-refresh.js
+ * Refresh Manager and Refresh Settings Handler
+ */
+
+var RefreshManager = (function() {
+    var refreshTimeout = null;
+    var refreshReport = function() {
+        window.location.reload(1);
+    };
+    var refreshTimeChanged = function() {
+        if (refreshTimeout !== null)
+            clearTimeout(refreshTimeout);
+        if ($('#refresh-time-select').val() !== '0')
+            $(this).closest('form').submit();
+    };
+    var setChangeHandler = function() {
+        $('#refresh-time-select').on('change', refreshTimeChanged);
+    };
+    var initializeTimeout = function() {
+        var refreshTime = $('#refresh-time-select').val();
+        if ($.isNumeric(refreshTime) && refreshTime > 0) {
+            refreshTimeout = setTimeout(refreshReport, refreshTime * 1000);
+        }
+    };
+
+    var initialize = function() {
+        initializeTimeout();
+        setChangeHandler();
+    };
+
+    return {
+        initialize: initialize
+    };
+})();
+
+// Initialize RefreshManager when DOM is ready
+$(document).ready(function() {
+    RefreshManager.initialize();
+
+    // Handle apply refresh settings functionality
+    const refreshIntervalSelect = document.getElementById('refresh-time-select');
+    const applyBtn = document.getElementById('applyRefreshSettings');
+
+    let refreshTimer = null;
+
+    if (applyBtn && refreshIntervalSelect) {
+        applyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const interval = parseInt(refreshIntervalSelect.value);
+            
+            console.log('Apply button clicked, interval:', interval);
+            
+            // Clear existing timer
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+            
+            // Update hidden input to save refresh time
+            const form = document.querySelector('form');
+            const refreshTimeInput = form ? form.querySelector('input[name="__RefreshTime"]') : null;
+            if (refreshTimeInput) {
+                refreshTimeInput.value = interval.toString();
+            }
+            
+            // Set new timer if interval > 0
+            if (interval > 0) {
+                refreshTimer = setInterval(() => {
+                    location.reload();
+                }, interval * 1000);
+                
+                // Show notification
+                showNotification(`بروزرسانی خودکار هر ${interval} ثانیه فعال شد`, 'success');
+            } else {
+                showNotification('بروزرسانی خودکار غیرفعال شد', 'info');
+            }
+            
+            // Hide settings panel
+            const panel = document.getElementById('refreshSettingsPanel');
+            if (panel) {
+                panel.classList.remove('show');
+            }
+            
+            // Update icon and badge
+            updateRefreshIcon(interval);
+            
+            // Submit form to save refresh time to server
+            if (form) {
+                setTimeout(() => {
+                    form.submit();
+                }, 1000); // Wait 1 second to show notification first
+            }
+        });
+    }
+    
+    // Notification function
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-size: 14px;
+            font-weight: 500;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+    
+    // Update refresh icon and badge based on interval
+    function updateRefreshIcon(interval) {
+        const toggle = document.querySelector('.refresh-settings-toggle');
+        if (!toggle) return;
+        
+        let badge = toggle.querySelector('.refresh-time-badge');
+        
+        if (interval > 0) {
+            // Add active class for animation
+            toggle.classList.add('active');
+            
+            // Create or update badge
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'refresh-time-badge';
+                toggle.appendChild(badge);
+            }
+            badge.textContent = interval;
+            
+            console.log('Refresh icon activated with interval:', interval);
+        } else {
+            // Remove active class
+            toggle.classList.remove('active');
+            
+            // Remove badge
+            if (badge) {
+                badge.remove();
+            }
+            
+            console.log('Refresh icon deactivated');
+        }
+    }
+    
+    // Initialize icon state on page load
+    if (refreshIntervalSelect) {
+        const initialInterval = parseInt(refreshIntervalSelect.value);
+        updateRefreshIcon(initialInterval);
+    }
+});
+</script>
+

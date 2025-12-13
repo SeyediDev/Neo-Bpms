@@ -34,7 +34,7 @@ public partial class FormController
             AiList = aiList,
             Filter = filter,
             QueryType = queryType.Value,
-            IndexFormFilterValues = controllerMethods.CodeFilterValues(indexFormFilterValues),
+            IndexFormFilterValues = ControllerMethods.CodeFilterValues(indexFormFilterValues),
             Caller = caller
         };
         if (!string.IsNullOrEmpty(indexFormId))

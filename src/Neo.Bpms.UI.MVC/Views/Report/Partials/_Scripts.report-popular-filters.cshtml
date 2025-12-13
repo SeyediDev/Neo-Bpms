@@ -1,0 +1,83 @@
+@* report-popular-filters.js - Popular Filters Tree Initialization *@
+<script>
+/**
+ * report-popular-filters.js
+ * Popular Filters Tree Initialization
+ */
+
+// Initialize popular filters tree - Make globally accessible
+window.initializePopularFiltersTree = function() {
+    var $popularFiltersTree = $('#popular-filters-tree');
+    if ($popularFiltersTree.length && !$popularFiltersTree.data('initialized')) {
+        if (typeof window.filtersTree !== 'undefined') {
+            $popularFiltersTree.jstree({
+                'core': {
+                    'data': window.filtersTree,
+                    "check_callback": true
+                },
+                "contextmenu": {
+                    "select_node": false,
+                    'items': function(node) {
+                        if (typeof FilterTreeManager !== 'undefined' && FilterTreeManager.getContextMenu) {
+                            return FilterTreeManager.getContextMenu(node);
+                        }
+                        return {};
+                    }
+                },
+                "types": {
+                    "default": {
+                        "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
+                        "valid_children": ["default", "filter"]
+                    },
+                    "filter": {
+                        "icon": "fa fa-filter",
+                        "valid_children": []
+                    }
+                },
+                "conditionalselect": function (node, event) {
+                    if (node.type === 'default')
+                        return true;
+                    if (typeof FilterConfig !== 'undefined' && FilterConfig.navigateTo) {
+                        FilterConfig.navigateTo(node.data.filterId);
+                    }
+                    return false;
+                },
+                "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
+            });
+            
+            $('#popular-filters-search-input').off('keyup').on('keyup', function() {
+                $popularFiltersTree.jstree('search', $(this).val());
+            });
+            
+            $popularFiltersTree.data('initialized', true);
+        }
+    }
+};
+
+// Initialize multi-select when tooltip is shown - Make globally accessible
+window.initializeMultiSelectInTooltip = function() {
+    console.log('Initializing multi-select in tooltip...');
+    
+    // Wait a bit for DOM to be ready
+    setTimeout(function() {
+        // Ensure all filter inputs are associated with the form
+        const filterForm = document.getElementById('filter-form');
+        if (filterForm) {
+            const filterInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+            filterInputs.forEach(function(input) {
+                input.setAttribute('form', 'filter-form');
+                console.log('Associated input with form:', input.name || input.id);
+            });
+        }
+        
+        // Check if modern multi-select is available
+        if (typeof window.initializeReportModernMultiSelect === 'function') {
+            console.log('Calling initializeReportModernMultiSelect...');
+            window.initializeReportModernMultiSelect();
+        } else {
+            console.log('initializeReportModernMultiSelect not available');
+        }
+    }, 100);
+};
+</script>
+

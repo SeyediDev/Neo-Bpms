@@ -18,10 +18,62 @@
 <script src="@CommonBundles.FiltersTreeJsBundle" asp-append-version="true"></script>
 <script src="~/CommonAssets/bundles/report-tree-cleanup.js" asp-append-version="true"></script>
 
-@* Report Feature Scripts *@
-<script src="~/Scripts/common-assets-includes/features/report/Report.js"></script>
+@* Report Feature Scripts - Modular Structure (loaded in dependency order) *@
+@* All scripts are embedded as partial views to avoid path issues *@
+<partial name="Partials/_Scripts.report-filter" />
+<partial name="Partials/_Scripts.report-popular-filters" />
+<partial name="Partials/_Scripts.report-toggles" />
+<partial name="Partials/_Scripts.report-modal-zindex" />
+<partial name="Partials/_Scripts.report-modals" />
+<partial name="Partials/_Scripts.report-filter-parameter" />
+<partial name="Partials/_Scripts.report-refresh" />
+<partial name="Partials/_Scripts.report-config" />
+<partial name="Partials/_Scripts.report-events" />
+
+@* Verification script - Ensure all required functions are loaded *@
+<script>
+    (function() {
+        var requiredFunctions = [
+            'toggleReportInfo',
+            'toggleRefreshSettings',
+            'toggleFilterTooltip',
+            'toggleDesignSettings',
+            'toggleReportDesignsModal',
+            'toggleSchedulingModal',
+            'hideDesignSettingsTooltip',
+            'submitReportFilter',
+            'openColumnSettingsModal',
+            'closeModal',
+            'toggleFilterParameterTooltip',
+            'selectFilterParameter',
+            'deleteConfigId'
+        ];
+        
+        var missingFunctions = [];
+        requiredFunctions.forEach(function(funcName) {
+            if (typeof window[funcName] === 'undefined') {
+                missingFunctions.push(funcName);
+            }
+        });
+        
+        if (missingFunctions.length > 0) {
+            console.error('Report: Missing required functions:', missingFunctions);
+            console.error('Report: This may cause errors when clicking buttons');
+        } else {
+            console.log('Report: All required functions loaded successfully');
+        }
+        
+        // Also check for ConfigsTreeManager and ScheduledReport if needed
+        if (typeof ConfigsTreeManager === 'undefined') {
+            console.warn('Report: ConfigsTreeManager not loaded yet (may be in bundle)');
+        }
+        if (typeof ScheduledReport === 'undefined') {
+            console.warn('Report: ScheduledReport not loaded yet (may be in bundle)');
+        }
+    })();
+</script>
 <script src="~/Scripts/common-assets-includes/features/modern/modern-multi-select.js"></script>
-<script src="~/Scripts/common-assets-includes/features/report/report-modern-multi-select.js"></script>
+<script src="~/Scripts/common-assets-includes/features/report/report-modern-multi-select.js" asp-append-version="true"></script>
 <script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
 <link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
 <script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>

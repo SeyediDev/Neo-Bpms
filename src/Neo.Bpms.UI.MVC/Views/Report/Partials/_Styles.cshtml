@@ -1,3 +1,31 @@
+@* Modal Z-Index Management Styles *@
+<style>
+    /* Ensure modals can have dynamic z-index */
+    .modal {
+        z-index: 1050 !important; /* Bootstrap default, will be overridden by JS */
+    }
+    
+    .modal-backdrop {
+        z-index: 1040 !important; /* Bootstrap default, will be overridden by JS */
+    }
+    
+    /* Support for nested modals - each nested modal gets higher z-index */
+    .modal.show {
+        position: fixed !important;
+    }
+    
+    /* Ensure modal-dialog is positioned correctly */
+    .modal.show .modal-dialog {
+        position: relative !important;
+        z-index: inherit !important;
+    }
+    
+    /* Multiple backdrops support */
+    .modal-backdrop + .modal-backdrop {
+        /* Each additional backdrop should be behind the previous one */
+    }
+</style>
+
 @* Modal Styles for Report Designs and Scheduling - Scoped to prevent conflicts *@
 <style>
     /* Report Modal Styles - Unique namespace to prevent conflicts with included CSS */

@@ -5,60 +5,7 @@
 ;
 @using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
 
-<script>
-    // Toggle report info tooltip
-    function toggleReportInfo(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const panel = document.getElementById('reportInfoPanel');
-        const toggle = event.target.closest('a');
-
-        if (panel && toggle) {
-            // Hide all other tooltips first
-            const allPanels = document.querySelectorAll('.report-info-panel');
-            allPanels.forEach(p => {
-                if (p !== panel) {
-                    p.style.display = 'none';
-                }
-            });
-
-            // Toggle current panel
-            if (!panel.classList.contains('show')) {
-                panel.classList.add('show');
-                toggle.classList.add('active');
-                
-                // Position tooltip relative to toggle button
-                const toggleRect = toggle.getBoundingClientRect();
-                panel.style.position = 'fixed';
-                panel.style.top = (toggleRect.bottom + 8) + 'px';
-                panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
-                panel.style.zIndex = '10000';
-                
-                console.log('Report info tooltip shown');
-            } else {
-                panel.classList.remove('show');
-                toggle.classList.remove('active');
-                console.log('Report info tooltip hidden');
-            }
-        }
-    }
-
-    // Close tooltip when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('[onclick*="toggleReportInfo"]') && !e.target.closest('#reportInfoPanel')) {
-            const panel = document.getElementById('reportInfoPanel');
-            const toggle = document.querySelector('[onclick*="toggleReportInfo"]');
-            if (panel && panel.classList.contains('show')) {
-                panel.classList.remove('show');
-                if (toggle) {
-                    toggle.classList.remove('active');
-                }
-                console.log('Report info tooltip hidden by outside click');
-            }
-        }
-    });
-</script>
+@* JavaScript functions are now in Report.js *@
 
 <style>
     .report-info-panel {

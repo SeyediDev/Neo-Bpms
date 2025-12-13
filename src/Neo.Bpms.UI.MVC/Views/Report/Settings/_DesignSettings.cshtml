@@ -8,69 +8,7 @@
     var structure = Model.Structure;
 }
 
-<script>
-    // Toggle design settings tooltip - Make globally accessible
-    window.toggleDesignSettings = function(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        const panel = document.getElementById('designSettingsPanel');
-        const toggle = event ? event.target.closest('a') : document.querySelector('[onclick*="toggleDesignSettings"]');
-
-        if (panel && toggle) {
-            // Hide all other tooltips first
-            const allPanels = document.querySelectorAll('.design-settings-panel');
-            allPanels.forEach(p => {
-                if (p !== panel) {
-                    p.classList.remove('show');
-                }
-            });
-
-            // Toggle current panel
-            if (!panel.classList.contains('show')) {
-                panel.classList.add('show');
-                toggle.classList.add('active');
-                
-                // Position tooltip relative to toggle button (left-aligned)
-                const toggleRect = toggle.getBoundingClientRect();
-                panel.style.position = 'fixed';
-                panel.style.top = (toggleRect.bottom + 8) + 'px';
-                panel.style.left = toggleRect.left + 'px';
-                panel.style.right = 'auto';
-                panel.style.zIndex = '10000';
-                
-                // Ensure tooltip doesn't go off-screen to the right
-                const panelWidth = 380; // max-width from CSS
-                const rightEdge = toggleRect.left + panelWidth;
-                if (rightEdge > window.innerWidth) {
-                    panel.style.left = (window.innerWidth - panelWidth - 16) + 'px';
-                }
-                
-                // Design settings tooltip shown
-            } else {
-                panel.classList.remove('show');
-                toggle.classList.remove('active');
-                // Design settings tooltip hidden
-            }
-        }
-    }
-
-    // Hide design settings tooltip
-    function hideDesignSettingsTooltip() {
-        const panel = document.getElementById('designSettingsPanel');
-        const toggle = document.querySelector('[onclick*="toggleDesignSettings"]');
-        
-        if (panel && panel.classList.contains('show')) {
-            panel.classList.remove('show');
-            if (toggle) {
-                toggle.classList.remove('active');
-            }
-            // Design settings tooltip hidden after link click
-        }
-    }
-</script>
+@* JavaScript functions are now in Report.js *@
 
 <style>
     /* Design Settings Panel - Modern UI/UX */
@@ -331,7 +269,7 @@
             
             @if (structure.ReportViewType.In(ReportViewType.List, ReportViewType.GroupByList))
             {
-                <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addInline('@structure.NamespaceId', '@structure.EntityId', '@structure.Form_ReportId', '@structure.ConfigId'); hideDesignSettingsTooltip();">
+                <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addInline('@Html.Raw(structure.NamespaceId)', '@Html.Raw(structure.EntityId)', '@Html.Raw(structure.Form_ReportId)', '@Html.Raw(structure.ConfigId)'); hideDesignSettingsTooltip();">
                     <div class="design-settings-link-icon">
                         <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
                             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-internal-icon" />
@@ -345,7 +283,7 @@
                 </a>
             }
             
-            <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addLinked('@structure.NamespaceId', '@structure.EntityId', '@structure.Form_ReportId', '@structure.ConfigId'); hideDesignSettingsTooltip();">
+            <a class="design-settings-link" data-toggle="modal" data-target="#SubReportModal" href="" onclick="SubReportManager.addLinked('@Html.Raw(structure.NamespaceId)', '@Html.Raw(structure.EntityId)', '@Html.Raw(structure.Form_ReportId)', '@Html.Raw(structure.ConfigId)'); hideDesignSettingsTooltip();">
                 <div class="design-settings-link-icon">
                     <svg style="width: 20px;height: 20px;vertical-align: middle;" viewBox="0 0 24 24">
                         <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-link-icon" />

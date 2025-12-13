@@ -52,7 +52,7 @@ public partial class FormController
         ViewBag.QueryType = queryType;
         ViewBag.RecordsIds = recordsIds;
         ViewBag.IndexFormId = indexFormId;
-        ViewBag.IndexFormFilterValues = controllerMethods.CodeFilterValues(indexFormFilterValues);
+        ViewBag.IndexFormFilterValues = ControllerMethods.CodeFilterValues(indexFormFilterValues);
         ViewBag.IndexFormPageNo = indexFormPageNo ?? 1;
     }
 

@@ -125,47 +125,47 @@ public partial class LocalParameters : ConcurrentDictionary<string, object>
     public override string ToString()
     {
         StringBuilder s = new();
-        s.Append("{");
+        s.Append('{');
         bool first = true;
         foreach (KeyValuePair<string, object> item in this)
         {
             if (!first)
-                s.Append(",");
+                s.Append(',');
             s.Append("\"" + item.Key + "\":");
             Dictionary<string, object> valueAsDic = item.Value as Dictionary<string, object>;
             List<object> valueAsList = item.Value as List<object>;
             if (valueAsDic != null)
             {
-                s.Append("{");
+                s.Append('{');
                 bool firstItem = true;
                 foreach (KeyValuePair<string, object> itemValue in valueAsDic)
                 {
                     if (!firstItem)
-                        s.Append(",");
+                        s.Append(',');
                     s.Append("\"" + itemValue.Key + "\":");
                     s.Append("\"" + itemValue.Value + "\"");
                     firstItem = false;
                 }
-                s.Append("}");
+                s.Append('}');
             }
             else if (valueAsList != null)
             {
-                s.Append("[");
+                s.Append('[');
                 bool firstItem = true;
                 foreach (object itemValue in valueAsList)
                 {
                     if (!firstItem)
-                        s.Append(",");
+                        s.Append(',');
                     s.Append(itemValue);
                     firstItem = false;
                 }
-                s.Append("]");
+                s.Append(']');
             }
             else
                 s.Append("\"" + item.Value + "\"");
             first = false;
         }
-        s.Append("}");
+        s.Append('}');
         return s.ToString();
     }
 

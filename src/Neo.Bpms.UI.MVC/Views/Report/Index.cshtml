@@ -48,6 +48,9 @@
 @* JavaScript Initialization *@
 <partial name="Partials/_Scripts" model="Model" />
 
+@* JavaScript Bundles - Load BEFORE HTML to ensure functions are available *@
+<partial name="Partials/_Bundles" />
+
 @* Header with TopBar and Icons *@
 <partial name="Partials/_Header" model="Model" />
 
@@ -56,6 +59,3 @@
 
 @* Modals and Tooltips *@
 <partial name="Partials/_Modals" model="Model" />
-
-@* JavaScript Bundles *@
-<partial name="Partials/_Bundles" />

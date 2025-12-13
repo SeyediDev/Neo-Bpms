@@ -1,0 +1,205 @@
+@* report-modal-zindex.js - Modal Z-Index Management for Nested Modals *@
+<script>
+/**
+ * report-modal-zindex.js
+ * Modal Z-Index Management for Nested Modals
+ * Handles z-index stacking for modals opened from within other modals
+ */
+
+// Modal stack to track open modals
+window.modalStack = window.modalStack || [];
+const BASE_Z_INDEX = 1050; // Bootstrap default modal z-index
+const Z_INDEX_INCREMENT = 10; // Increment for each nested modal
+
+/**
+ * Get the highest z-index from currently open modals
+ */
+function getHighestModalZIndex() {
+    let highestZIndex = BASE_Z_INDEX;
+    
+    // Check all modals with .modal.show class
+    const openModals = document.querySelectorAll('.modal.show');
+    openModals.forEach(function(modal) {
+        const zIndex = parseInt(window.getComputedStyle(modal).zIndex) || 0;
+        if (zIndex > highestZIndex) {
+            highestZIndex = zIndex;
+        }
+    });
+    
+    // Check all modal backdrops
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(function(backdrop) {
+        const zIndex = parseInt(window.getComputedStyle(backdrop).zIndex) || 0;
+        if (zIndex > highestZIndex) {
+            highestZIndex = zIndex;
+        }
+    });
+    
+    return highestZIndex;
+}
+
+/**
+ * Set z-index for modal and its backdrop
+ */
+function setModalZIndex(modal, backdrop) {
+    const currentHighest = getHighestModalZIndex();
+    const newZIndex = currentHighest + Z_INDEX_INCREMENT;
+    
+    // Set modal z-index
+    if (modal) {
+        modal.style.zIndex = newZIndex.toString();
+        console.log('Modal z-index set to:', newZIndex, 'for modal:', modal.id);
+    }
+    
+    // Set backdrop z-index (should be one less than modal)
+    if (backdrop) {
+        backdrop.style.zIndex = (newZIndex - 1).toString();
+        console.log('Backdrop z-index set to:', newZIndex - 1);
+    }
+    
+    return newZIndex;
+}
+
+/**
+ * Initialize modal z-index management
+ */
+function initializeModalZIndexManagement() {
+    // Listen to Bootstrap modal events
+    $(document).on('show.bs.modal', '.modal', function(event) {
+        const modal = event.target;
+        if (!modal || !modal.classList.contains('modal')) {
+            return;
+        }
+        
+        // Calculate z-index before modal is shown
+        const highestZIndex = getHighestModalZIndex();
+        const newZIndex = highestZIndex + Z_INDEX_INCREMENT;
+        
+        // Set z-index immediately
+        modal.style.zIndex = newZIndex.toString();
+        
+        // Store in stack
+        window.modalStack.push({ modal: modal, zIndex: newZIndex });
+        
+        console.log('Modal opening, z-index set to:', newZIndex, 'for modal:', modal.id);
+    });
+    
+    $(document).on('shown.bs.modal', '.modal', function(event) {
+        const modal = event.target;
+        if (!modal || !modal.classList.contains('modal')) {
+            return;
+        }
+        
+        // Find the backdrop that was just created (should be the last one)
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        const backdrop = backdrops[backdrops.length - 1];
+        
+        if (backdrop && modal) {
+            // Get z-index from modal
+            const modalZIndex = parseInt(window.getComputedStyle(modal).zIndex) || BASE_Z_INDEX;
+            backdrop.style.zIndex = (modalZIndex - 1).toString();
+            
+            // Update stack
+            const stackItem = window.modalStack.find(item => item.modal === modal);
+            if (stackItem) {
+                stackItem.backdrop = backdrop;
+            }
+            
+            console.log('Modal shown, backdrop z-index set to:', modalZIndex - 1);
+        }
+    });
+    
+    $(document).on('hide.bs.modal', '.modal', function(event) {
+        const modal = event.target;
+        if (!modal || !modal.classList.contains('modal')) {
+            return;
+        }
+        
+        // Remove from stack
+        window.modalStack = window.modalStack.filter(function(item) {
+            return item.modal !== modal;
+        });
+        
+        console.log('Modal hiding, removed from stack:', modal.id);
+    });
+    
+    $(document).on('hidden.bs.modal', '.modal', function(event) {
+        const modal = event.target;
+        if (!modal || !modal.classList.contains('modal')) {
+            return;
+        }
+        
+        // Recalculate z-index for remaining modals after backdrop is removed
+        setTimeout(function() {
+            const remainingModals = document.querySelectorAll('.modal.show');
+            remainingModals.forEach(function(remainingModal, index) {
+                const zIndex = BASE_Z_INDEX + (index + 1) * Z_INDEX_INCREMENT;
+                remainingModal.style.zIndex = zIndex.toString();
+                
+                // Update corresponding backdrop
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops[index]) {
+                    backdrops[index].style.zIndex = (zIndex - 1).toString();
+                }
+            });
+            
+            // Update stack
+            window.modalStack.forEach(function(item, index) {
+                const zIndex = BASE_Z_INDEX + (index + 1) * Z_INDEX_INCREMENT;
+                if (item.modal) {
+                    item.modal.style.zIndex = zIndex.toString();
+                }
+                if (item.backdrop) {
+                    item.backdrop.style.zIndex = (zIndex - 1).toString();
+                }
+            });
+        }, 150);
+    });
+    
+    // Also handle programmatic modal opens via data-toggle
+    $(document).on('click', '[data-toggle="modal"]', function(e) {
+        const target = $(this).data('target');
+        if (target) {
+            const modal = document.querySelector(target);
+            if (modal) {
+                // Wait for Bootstrap to handle the modal show
+                setTimeout(function() {
+                    const backdrops = document.querySelectorAll('.modal-backdrop');
+                    const backdrop = backdrops[backdrops.length - 1];
+                    if (backdrop && modal) {
+                        const modalZIndex = parseInt(window.getComputedStyle(modal).zIndex) || getHighestModalZIndex() + Z_INDEX_INCREMENT;
+                        if (!modal.style.zIndex || parseInt(modal.style.zIndex) < modalZIndex) {
+                            modal.style.zIndex = modalZIndex.toString();
+                            backdrop.style.zIndex = (modalZIndex - 1).toString();
+                        }
+                    }
+                }, 100);
+            }
+        }
+    });
+    
+    console.log('Modal z-index management initialized');
+}
+
+// Initialize when DOM is ready
+if (typeof $ !== 'undefined') {
+    $(document).ready(function() {
+        initializeModalZIndexManagement();
+    });
+} else {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for jQuery to load
+        var checkJQuery = setInterval(function() {
+            if (typeof $ !== 'undefined') {
+                clearInterval(checkJQuery);
+                initializeModalZIndexManagement();
+            }
+        }, 100);
+    });
+}
+
+// Export functions for manual use
+window.setModalZIndex = setModalZIndex;
+window.getHighestModalZIndex = getHighestModalZIndex;
+</script>
+

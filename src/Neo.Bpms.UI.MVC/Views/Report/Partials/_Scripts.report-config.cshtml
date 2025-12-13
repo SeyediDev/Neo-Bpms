@@ -1,0 +1,30 @@
+@* report-config.js - Config Management Functions *@
+<script>
+/**
+ * report-config.js
+ * Config Management Functions
+ */
+
+window.deleteConfigId = function(configId, cb) {
+    var result = confirm(window.tetaI18n.t('SureToDeleteConfig'));
+    if (!result) return;
+    $.ajax({
+        type: 'POST',
+        url: window.top.rootUrl + 'Report/DeleteConfig?ConfigId=' + configId,
+        async: true,
+        processData: true,
+        cache: false,
+        headers: window.AddAntiForgeryToken(),
+        success: function(res) {
+            if (res && cb) {
+                cb();
+            }
+        },
+        error: function(e) {
+            alert(window.tetaI18n.t('Error Occured') /*+ e.responseText*/);
+            console.error("Error deleting config:", e);
+        }
+    });
+};
+</script>
+

@@ -88,14 +88,8 @@
 
     </text>;
 
-    async Task TopBar(ReportStructure reportStructure, bool canDesign, string pageIcon, IdentityUser identityUser)
-    {
-        var topBarToolsModel = new { structure = reportStructure, canDesign, canScheduleReports, user = identityUser, model = Model };
-        <partial name="Common/TopBar" model="new TopBarModel { Title = reportStructure.Name, PageIcon = pageIcon, Tools = TopBarTools(topBarToolsModel) }" />
-    }
+    var topBarToolsModel = new { structure = structure, canDesign, canScheduleReports, user = user, model = Model };
+    <partial name="Common/TopBar" model="new TopBarModel { Title = structure.Name, PageIcon = pageIcon, Tools = TopBarTools(topBarToolsModel) }" />
 }
 
-@{
-    await TopBar(structure, canDesign, pageIcon, user);
-}
 

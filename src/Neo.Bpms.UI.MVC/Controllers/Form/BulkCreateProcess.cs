@@ -152,7 +152,7 @@ public partial class FormController
         ViewBag.RecordsIds = recordsIds;
         ViewBag.IndexFormId = indexFormId;
         ViewBag.AssociationFieldId = associationFieldId;
-        ViewBag.IndexFormFilterValues = controllerMethods.CodeFilterValues(indexFormFilterValues);
+        ViewBag.IndexFormFilterValues = ControllerMethods.CodeFilterValues(indexFormFilterValues);
         ViewBag.IndexFormPageNo = indexFormPageNo ?? 1;
     }
 }

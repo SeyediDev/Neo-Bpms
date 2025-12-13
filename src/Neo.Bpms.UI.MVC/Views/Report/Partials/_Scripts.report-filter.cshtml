@@ -1,0 +1,95 @@
+@* report-filter.js - Filter Functions for Report Pages *@
+<script>
+/**
+ * report-filter.js
+ * Filter Functions for Report Pages
+ */
+
+// Global submitFilter function for report pages
+window.submitReportFilter = function() {
+    console.log('Report: Submitting filter...');
+    
+    // Ensure all filter inputs are associated with the form
+    if (typeof window.ensureFilterFormAssociation === 'function') {
+        window.ensureFilterFormAssociation();
+    }
+    
+    // Submit the form
+    const form = document.getElementById('filter-form');
+    if (form) {
+        console.log('Report: Submitting form with filter values...');
+        form.submit();
+    } else {
+        console.error('Report: Filter form not found');
+    }
+};
+
+// Keep backward compatibility for report pages
+window.submitFilter = window.submitReportFilter;
+
+// Function to collect all filter values for reports
+function collectReportFilterValues() {
+    const filterForm = document.getElementById('filter-form');
+    if (!filterForm) return;
+    
+    console.log('Report Tooltip: Collecting filter values...');
+    
+    // Find all filter inputs (including hidden ones)
+    const allFilterInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+    
+    allFilterInputs.forEach(function(input) {
+        // Ensure input is associated with form
+        input.setAttribute('form', 'filter-form');
+        
+        // For hidden inputs or inputs with special handling
+        if (input.type === 'hidden' || input.style.display === 'none') {
+            console.log('Report Tooltip: Found hidden input:', input.name, '=', input.value);
+        } else {
+            console.log('Report Tooltip: Found visible input:', input.name, '=', input.value);
+        }
+        
+        // For select elements, ensure values are properly set
+        if (input.tagName === 'SELECT') {
+            const selectedOptions = Array.from(input.selectedOptions).map(option => option.value);
+            console.log('Report Tooltip: Select values for', input.name, ':', selectedOptions);
+        }
+    });
+    
+    // Also check for any dynamically created inputs
+    const dynamicInputs = document.querySelectorAll('input[name*="FilterParameter"], input[name*="[]"]');
+    dynamicInputs.forEach(function(input) {
+        if (!input.getAttribute('form')) {
+            input.setAttribute('form', 'filter-form');
+            console.log('Report Tooltip: Associated dynamic input:', input.name, '=', input.value);
+        }
+    });
+}
+
+// Submit filter function for report tooltip
+function submitReportFilterFromTooltip() {
+    console.log('Report Tooltip: Submitting filter...');
+
+    // Collect all filter values and ensure they're properly associated
+    collectReportFilterValues();
+
+    // Hide the tooltip first
+    const panel = document.getElementById('filterTooltipPanel');
+    const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
+    if (panel && panel.classList.contains('show')) {
+        panel.classList.remove('show');
+        if (toggle) {
+            toggle.classList.remove('active');
+        }
+    }
+
+    // Submit the form
+    const form = document.getElementById('filter-form');
+    if (form) {
+        console.log('Report Tooltip: Submitting form with filter values...');
+        form.submit();
+    } else {
+        console.error('Report Tooltip: Filter form not found');
+    }
+}
+</script>
+

@@ -6,8 +6,12 @@ namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
 public class ControllerMethods(IAccessServices accessServices,
     FolderConfigBackupRestore folderConfigBackupRestore)
 {
-    public string CodeFilterValues(ElasticObject filterValues)
+    public static string CodeFilterValues(ElasticObject filterValues)
     {
+        if(filterValues ==null)
+        {
+            return "";
+        }
         ElasticObject fv = filterValues.Clone(false);
         fv.RemoveAttribute("sortFields");
         fv.RemoveAttribute("user");
