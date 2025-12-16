@@ -12,7 +12,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
     ReportConfigBackupRestore reportConfigBackupRestore,
     FilterConfigBackupRestore filterConfigBackupRestore,
     FolderConfigBackupRestore folderConfigBackupRestore,
-    IEnsureAutoFolderGrouping ensureAutoFolderGrouping)
+    IReportConfigFolderGrouping ensureAutoFolderGrouping)
 {
     public async Task<(ReportStructure reportStructure, int configRecordsPerPage)>
         GetReportStructure(ConfiguredReport config, string persistenceSortedFields, string culture, IdentityUser user)
@@ -71,7 +71,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
             .ToList();
 
         // Auto-folder grouping for reports with more than 6 configs
-        await ensureAutoFolderGrouping.Run(structure, report, user);
+        await ensureAutoFolderGrouping.EnsureAutoFolderGrouping(structure, report, user);
 
         structure.UserGroups = [.. user.Roles.Values.Where(role => report.CheckRole(role.Code))];
     }

@@ -1,21 +1,19 @@
 ﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using Neo.Bpms.Domain.Repository.Entities;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Common;
-using static Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ConfiguredDashboard;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
-public interface IEnsureAutoFolderGrouping
+public interface IReportConfigFolderGrouping
 {
     public List<ConfigTreeItem> ConfigsTree(ReportStructure structure);
-    Task Run(ReportStructure structure, Report report, IdentityUser user);
+    Task EnsureAutoFolderGrouping(ReportStructure structure, Report report, IdentityUser user);
 }
-public class EnsureAutoFolderGrouping(
+public class ReportConfigFolderGrouping(
     FolderConfigBackupRestore folderConfigBackupRestore,
     ReportConfigBackupRestore reportConfigBackupRestore) 
-    : IEnsureAutoFolderGrouping
+    : IReportConfigFolderGrouping
 {
     public List<ConfigTreeItem> ConfigsTree(ReportStructure structure)
     {
@@ -43,7 +41,7 @@ public class EnsureAutoFolderGrouping(
                 };
             }).ToList();
 
-        result?.AddRange(configs?.Where(cf => cf.Parent == null /*&& cf.viewType!= eReportViewType.Dashboard*/)
+        result?.AddRange(configs?.Where(cf => cf.Parent == null )
                              .OrderBy(f => f.ViewType + f.IsPublic.ToString() + string.Join(",", f.Roles ?? []) + f.Name)
                              .Select(c =>
                              {
@@ -53,7 +51,7 @@ public class EnsureAutoFolderGrouping(
                                  string treeType = c.ViewType == ReportViewType.List 
                                      ? "ReportList" 
                                      : c.ViewType == ReportViewType.Chart 
-                                         ? $"Chart.{GetChartType(c.ChartType)}" 
+                                         ? $"Chart.{c.ChartType}" 
                                          : c.ViewType.ToString();
                                  return new ConfigTreeItem
                                  {
@@ -76,7 +74,7 @@ public class EnsureAutoFolderGrouping(
 
         return result;
     }
-    public async Task Run(ReportStructure structure, Report report, IdentityUser user)
+    public async Task EnsureAutoFolderGrouping(ReportStructure structure, Report report, IdentityUser user)
     {
         const int configThreshold = 6;
 

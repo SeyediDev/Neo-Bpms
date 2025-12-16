@@ -92,19 +92,4 @@ public class ReportStructure : CommonFormStructure
         string[] property = Properties?.Where(p => p.PropertyId == id).Select(p2 => p2.Value).ToArray();
         return property;
     }
-
-    /// <summary>
-    /// Normalizes ChartType for tree type naming - same logic as ReportStructRoutines.GetChartType
-    /// </summary>
-    private static ChartType GetChartType(ChartType chartType)
-    {
-        return chartType switch
-        {
-            ChartType.IranMap or ChartType.WorldMap or ChartType.Treemap => ChartType.Treemap,
-            ChartType.BpmnDiagram => ChartType.BpmnDiagram,
-            ChartType.MetricBox => ChartType.MetricBox,
-            ChartType.Gauge => ChartType.Gauge,
-            _ => ChartType.Column
-        };
-    }
 }

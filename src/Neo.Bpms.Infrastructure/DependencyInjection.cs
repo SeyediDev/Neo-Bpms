@@ -72,7 +72,7 @@ public static class DependencyInjection
         _ = services.AddScoped<FormStructRoutines>();
         _ = services.AddScoped<IEnrichFieldsSbvr, EnrichFieldsSbvr>();
         _ = services.AddScoped<ReportStructRoutines>();
-        _ = services.AddScoped<IEnsureAutoFolderGrouping, EnsureAutoFolderGrouping>();
+        _ = services.AddScoped<IReportConfigFolderGrouping, ReportConfigFolderGrouping>();
         _ = services.AddScoped<ScheduledReportLoader>();
         _ = services.AddScoped<WorkItemManager>();
         _ = services.AddScoped<ReportFilterName>();
