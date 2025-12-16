@@ -11,9 +11,10 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
     ScheduledReportConfigBackupRestore scheduledReportConfigBackupRestore,
     ReportConfigBackupRestore reportConfigBackupRestore,
     FilterConfigBackupRestore filterConfigBackupRestore,
-    FolderConfigBackupRestore folderConfigBackupRestore)
+    FolderConfigBackupRestore folderConfigBackupRestore,
+    IEnsureAutoFolderGrouping ensureAutoFolderGrouping)
 {
-    public async Task<(ReportStructure reportStructure, int configRecordsPerPage)> 
+    public async Task<(ReportStructure reportStructure, int configRecordsPerPage)>
         GetReportStructure(ConfiguredReport config, string persistenceSortedFields, string culture, IdentityUser user)
     {
         Report report = config.Report;
@@ -27,11 +28,15 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         //config.Formats
         GetSelectionColumns(config, culture, entity, structure.SelectedColumns, out IList<ReportColumnFilter> selectedFilters, report);
         structure.SelectedFilters = selectedFilters;
-        
-        structure.ChartType = config.ChartType;
+
+        // Set ChartType from config, with fallback to Column if None or Line (default)
+        // Line is the default value in ConfiguredReport, so we treat it as unset and use Column
+        structure.ChartType = (config.ChartType != ChartType.None && config.ChartType != ChartType.Line) 
+            ? config.ChartType 
+            : ChartType.Column;
         structure.ReportViewType = config.ViewType;
         structure.GroupByViewType = config.GroupByViewType;
-        
+
         if (config.ViewType == ReportViewType.GroupByList && config.GroupByViewType == GroupByViewType.Matrix)
             configRecordsPerPage = 10000;
         AddFieldsToStructure(structure, entity, report.reportFields, "", "", culture);
@@ -64,112 +69,14 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         structure.ConfiguredFolders = configuredFolders?.Where(cfg =>
                 cfg.CheckAccess(user))
             .ToList();
-        
+
         // Auto-folder grouping for reports with more than 6 configs
-        await EnsureAutoFolderGrouping(structure, report, user);
-        
+        await ensureAutoFolderGrouping.Run(structure, report, user);
+
         structure.UserGroups = [.. user.Roles.Values.Where(role => report.CheckRole(role.Code))];
     }
-    
-    /// <summary>
-    /// Ensures auto-folder grouping for reports with more than 6 configs
-    /// </summary>
-    private async Task EnsureAutoFolderGrouping(ReportStructure structure, Report report, IdentityUser user)
-    {
-        const int configThreshold = 6;
-        
-        // Only process if we have more than threshold configs
-        if (structure.Configs == null || structure.Configs.Count(c=>c.FolderId is 0 or null) <= configThreshold)
-            return;
-        
-        // Get existing folders
-        var existingFolders = structure.ConfiguredFolders?.Where(f => f.IsForConfig).ToList() ?? [];
-        
-        // Check if auto-folder already exists
-        var autoFolderName = "گروه‌بندی خودکار";
-        var autoFolder = existingFolders.FirstOrDefault(f => f.Name == autoFolderName);
-        
-        // Create auto-folder if it doesn't exist
-        if (autoFolder == null)
-        {
-            autoFolder = new ConfiguredFolder
-            {
-                Name = autoFolderName,
-                IsForConfig = true,
-                IsPublic = true,
-                ConfigId = Guid.NewGuid().ToString(),
-                EntityItem = new EntityItem
-                {
-                    ItemType = "Report",
-                    NamespaceId = report.NamespaceId,
-                    EntityId = report.entity.Id,
-                    ItemId = report.Id
-                }
-            };
-            
-            await folderConfigBackupRestore.Save(autoFolder);
-            structure.ConfiguredFolders ??= [];
-            structure.ConfiguredFolders.Add(autoFolder);
-        }
-        
-        // Group configs into folders (max 6 per folder)
-        const int configsPerFolder = 6;
-        var configsWithoutFolder = structure.Configs.Where(c => c.FolderId == null || c.FolderId == 0).ToList();
-        
-        if (configsWithoutFolder.Count > 0)
-        {
-            var folderGroups = configsWithoutFolder
-                .Select((config, index) => new { config, index })
-                .GroupBy(x => x.index / configsPerFolder)
-                .ToList();
-            
-            foreach (var group in folderGroups)
-            {
-                ConfiguredFolder targetFolder;
-                
-                if (group.Key == 0)
-                {
-                    // Use the main auto-folder for first group
-                    targetFolder = autoFolder;
-                }
-                else
-                {
-                    // Create sub-folders for additional groups
-                    var subFolderName = $"{autoFolderName} ({group.Key + 1})";
-                    targetFolder = existingFolders.FirstOrDefault(f => f.Name == subFolderName);
-                    
-                    if (targetFolder == null)
-                    {
-                        targetFolder = new ConfiguredFolder
-                        {
-                            Name = subFolderName,
-                            IsForConfig = true,
-                            IsPublic = true,
-                            FolderId = autoFolder.Id,
-                            ConfigId = Guid.NewGuid().ToString(),
-                            EntityItem = new EntityItem
-                            {
-                                ItemType = "Report",
-                                NamespaceId = report.NamespaceId,
-                                EntityId = report.entity.Id,
-                                ItemId = report.Id
-                            }
-                        };
-                        
-                        await folderConfigBackupRestore.Save(targetFolder);
-                        structure.ConfiguredFolders.Add(targetFolder);
-                    }
-                }
-                
-                // Assign configs to folder
-                foreach (var item in group)
-                {
-                    item.config.FolderId = targetFolder.Id;
-                    await reportConfigBackupRestore.Save(item.config);
-                }
-            }
-        }
-    }
+
+
 
     private static void SetFilter(ConfiguredReport config, ReportStructure structure)
     {
@@ -217,7 +124,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
             }
         }
     }
-    
+
     private static void AddSubReports(ConfiguredReport config, ReportStructure structure)
     {
         foreach (KeyValuePair<string, ConfiguredReport.ConfiguredSubReport> item in config.SubReports)
@@ -913,7 +820,7 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
         };
 
         UiEntity entity = ProjectDefinition.Project.GetUiEntity(namespaceId, entityId);
-        foreach (Dashboard dashboard in entity?.GetDashboards()?.Values??[])
+        foreach (Dashboard dashboard in entity?.GetDashboards()?.Values ?? [])
         {
             List<ConfiguredDashboard> configurations = await dashboardConfigBackupRestore.Configurations(dashboard);
             foreach (ConfiguredDashboard configuration in configurations)

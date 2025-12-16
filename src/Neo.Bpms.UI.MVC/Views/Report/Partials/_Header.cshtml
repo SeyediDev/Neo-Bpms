@@ -20,14 +20,14 @@
     Func<dynamic, HelperResult> TopBarTools =
      @<text>
          <!-- آیکن اطلاعات گزارش -->
-         <a title="اطلاعات گزارش" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleReportInfo(event); return false;">
+         <a title="اطلاعات گزارش" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-report-info">
              <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
                  <path d="M8 5.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                  <circle cx="8" cy="10.5" r="0.5" fill="currentColor"/>
              </svg>
          </a>
-         <a title="@ViewTexts.RefreshTime" href="#" class="top-bar-anchor-icon text-success icons-tables refresh-settings-toggle @(refreshTime > 0 ? "active" : "")" onclick="toggleRefreshSettings(event); return false;">
+         <a title="@ViewTexts.RefreshTime" href="#" class="top-bar-anchor-icon text-success icons-tables refresh-settings-toggle @(refreshTime > 0 ? "active" : "")" data-action="toggle-refresh-settings">
              <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <path d="M8 1.5a6.5 6.5 0 1 0 0 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                  <circle cx="8" cy="8" r="2" fill="currentColor"></circle>
@@ -37,7 +37,7 @@
                  <span class="refresh-time-badge">@refreshTime</span>
              }
          </a>
-         <a title="@ViewTexts.Refresh" href="#" class="top-bar-anchor-icon text-primary icons-tables" onclick="location.reload();">
+         <a title="@ViewTexts.Refresh" href="#" class="top-bar-anchor-icon text-primary icons-tables" data-action="reload-page">
              <svg style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-blue"></use>
              </svg>
@@ -57,7 +57,7 @@
 
     @if (item.structure.Fields != null && item.structure.Fields.Count > 0)
     {
-        <a title="@ViewTexts.Filter" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleFilterTooltip(event); return false;">
+        <a title="@ViewTexts.Filter" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-filter-tooltip">
             <svg title="@ViewTexts.Filter" style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
             </svg>
@@ -67,7 +67,7 @@
     @* Report Designs Icon *@
     @if (item.canDesign)
     {
-        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" onclick="toggleReportDesignsModal(event); return false;">
+        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-report-designs-modal">
             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 20h9" fill="none"/>
                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="none"/>
@@ -78,7 +78,7 @@
     @* Scheduling Icon - Rightmost icon (must be last) *@
     @if (item.canScheduleReports)
     {
-        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" onclick="toggleSchedulingModal(event); return false;">
+        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" data-action="toggle-scheduling-modal">
             <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10" fill="none"/>
                 <polyline points="12 6 12 12 16 14" fill="none"/>

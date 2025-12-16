@@ -33,57 +33,6 @@ public class ReportStructure : CommonFormStructure
 
     public List<ConfiguredReport> Configs { get; set; } = [];
 
-    public List<ConfigTreeItem> ConfigsTree
-    {
-        get
-        {
-            List<ConfigTreeItem> result = ConfiguredFolders?.Where(f => f.IsForConfig)
-                .OrderBy(f => f.IsPublic.ToString() + string.Join(",", f.Roles ?? []) + f.Name)
-                .Select(f =>
-                {
-                    ConfiguredFolder folder = ConfiguredFolders?.FirstOrDefault(ff => ff.Id == f.FolderId);
-                    return new ConfigTreeItem
-                    {
-                        id = f.Id.ToString(),
-                        data = new
-                        {
-                            isPublic = f.IsPublic,
-                            userGroupId = string.Join(",", f.Roles ?? []),
-                            isForConfig = true,
-                            parentFolderId = folder?.Id
-                        },
-                        parent = folder?.Id.ToString() ?? "#",
-                        text = f.Name,
-                        type = "default"
-                    };
-                }).ToList();
-
-            result?.AddRange(Configs?.Where(cf => cf.Parent == null /*&& cf.viewType!= eReportViewType.Dashboard*/)
-                                 .OrderBy(f => f.ViewType + f.IsPublic.ToString() + string.Join(",", f.Roles ?? []) + f.Name)
-                                 .Select(c =>
-                                 {
-                                     ConfiguredFolder folder = ConfiguredFolders?.FirstOrDefault(ff => ff.Id == c.FolderId);
-                                     return new ConfigTreeItem
-                                     {
-                                         id = c.ConfigId,
-                                         parent = folder?.Id.ToString() ?? "#",
-                                         text = c.Name,
-                                         type = c.ViewType.ToString(),
-                                         data = new
-                                         {
-                                             hasSchedules = c.ScheduledReports?.Any() ?? false,
-                                             configId = c.ConfigId,
-                                             isPublic = c.IsPublic,
-                                             isMeta = c.IsMeta
-                                         }
-                                     };
-                                 }) ?? []);
-
-            return result;
-        }
-    }
-
-
     public List<ConfigTreeItem> ScheduledReportsTree
     {
         get
@@ -142,5 +91,20 @@ public class ReportStructure : CommonFormStructure
     {
         string[] property = Properties?.Where(p => p.PropertyId == id).Select(p2 => p2.Value).ToArray();
         return property;
+    }
+
+    /// <summary>
+    /// Normalizes ChartType for tree type naming - same logic as ReportStructRoutines.GetChartType
+    /// </summary>
+    private static ChartType GetChartType(ChartType chartType)
+    {
+        return chartType switch
+        {
+            ChartType.IranMap or ChartType.WorldMap or ChartType.Treemap => ChartType.Treemap,
+            ChartType.BpmnDiagram => ChartType.BpmnDiagram,
+            ChartType.MetricBox => ChartType.MetricBox,
+            ChartType.Gauge => ChartType.Gauge,
+            _ => ChartType.Column
+        };
     }
 }

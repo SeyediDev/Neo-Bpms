@@ -63,7 +63,7 @@
 			win.reportInfo[@Html.Raw(reportKeyJson)] = {};
 		}
 		@{
-			var fvs = controllerMethods.CodeFilterValues(ViewBag.FilterValues);
+			var fvs = ControllerMethods.CodeFilterValues(ViewBag.FilterValues);
 		}
 
 		win.reportInfo[@Html.Raw(reportKeyJson)]["parentFilter"] = JSON.stringify(@(new HtmlString(fvs)));

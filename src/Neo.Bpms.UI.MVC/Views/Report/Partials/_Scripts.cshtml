@@ -5,6 +5,7 @@
 @using Neo.Bpms.UI.MVC.PartialModels.Filter
 @using Newtonsoft.Json
 @using Microsoft.AspNetCore.Html
+@inject IEnsureAutoFolderGrouping ensureAutoFolderGrouping
 @model ReportData
 	
 @{
@@ -26,7 +27,7 @@
         }
     }).ToDictionary(g => g.Key, g => g.Value)));
 
-    var configsTree = new HtmlString(JsonConvert.SerializeObject(structure?.ConfigsTree ?? new List<ConfigTreeItem>()));
+	var configsTree = new HtmlString(JsonConvert.SerializeObject(ensureAutoFolderGrouping.ConfigsTree(structure) ?? new List<ConfigTreeItem>()));
     var scheduledReportsTree = new HtmlString(JsonConvert.SerializeObject(structure?.ScheduledReportsTree ?? new List<ConfigTreeItem>()));
 }
 

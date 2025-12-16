@@ -348,6 +348,21 @@
     background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+/* ===== Active Config Visual Difference ===== */
+/* کانفیگ فعال تفاوت دیداری دارد */
+#configs-tree .jstree-node.jstree-active-config > .jstree-anchor,
+#configs-tree .jstree-node.jstree-active-config.jstree-selected > .jstree-anchor {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #0284c7 !important;
+    padding-left: 5px !important;
+}
+
+#configs-tree .jstree-node.jstree-active-config > .jstree-anchor:hover {
+    background-color: #bae6fd !important;
+}
+
 /* ===== Prevent Conflicts ===== */
 /* این CSS ها فقط برای Report هستند و با .modern-form تداخلی ندارند */
 

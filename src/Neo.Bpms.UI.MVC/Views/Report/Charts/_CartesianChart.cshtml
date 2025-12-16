@@ -12,7 +12,12 @@
     var chartTitle = Model.ChartTitle;
     var showTitle = Model.ShouldShowTitle;
     var hr = new HighchartRenderer(reportInfo);
-    var chartType = reportInfo.Structure.ChartType.ToString().ToLower();
+    // Ensure ChartType is set - default to 'column' if None, Line (default), or invalid
+    // Line is the default value in ConfiguredReport, so we treat it as unset and use Column
+    var chartTypeValue = reportInfo.Structure.ChartType;
+    var chartType = (chartTypeValue != ChartType.None && chartTypeValue != ChartType.Line) 
+        ? chartTypeValue.ToString().ToLower() 
+        : "column";
     var aggregationCount = reportInfo.AggregationColumns.Count();
     var hasSingleAggregation = aggregationCount == 1;
     var hasMultipleAggregations = aggregationCount > 1;

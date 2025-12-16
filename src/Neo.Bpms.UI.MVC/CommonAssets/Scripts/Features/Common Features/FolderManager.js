@@ -40,6 +40,11 @@
 
     var showModal = function (isForConfig, parentId, folderInfo) {
         var $modal = $('#new-folder-modal');
+        
+        // Try to find modal in parent window if not found
+        if ($modal.length === 0 && window.top && window.top.$) {
+            $modal = window.top.$('#new-folder-modal');
+        }
 
         if (folderInfo === undefined) {
             folderInfo = {
@@ -52,7 +57,36 @@
         }
         fillTheForm(folderInfo);
 
-        $modal.modal('show');
+        // Ensure modal has high z-index - higher than report-designs-modal (10000)
+        // Set z-index before showing to ensure it's applied immediately
+        $modal.css('z-index', '10070');
+        
+        // Show modal using Bootstrap
+        if (typeof $modal.modal === 'function') {
+            $modal.modal('show');
+            // After modal is shown, ensure z-index is correct and backdrop is above report-designs-modal
+            setTimeout(function() {
+                $modal.css('z-index', '10070');
+                // Update backdrop z-index - should be above report-designs-modal (10000) but below modal (10070)
+                var $backdrops = $('.modal-backdrop');
+                if ($backdrops.length > 0) {
+                    $backdrops.last().css('z-index', '10069');
+                }
+            }, 50);
+        } else {
+            // Fallback if Bootstrap modal not available
+            $modal.addClass('show').css({
+                'display': 'block',
+                'z-index': '10070'
+            });
+            $('body').addClass('modal-open');
+            // Create backdrop if needed
+            var $backdrop = $('.modal-backdrop').last();
+            if ($backdrop.length === 0) {
+                $backdrop = $('<div class="modal-backdrop fade show"></div>').appendTo('body');
+            }
+            $backdrop.css('z-index', '10069');
+        }
     };
 
     var submissionCallback = null;

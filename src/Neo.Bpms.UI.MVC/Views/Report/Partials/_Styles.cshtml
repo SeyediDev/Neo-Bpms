@@ -62,6 +62,85 @@
         flex-direction: column !important;
         overflow: hidden !important;
         animation: report-modal-slide-in 0.3s ease !important;
+        position: relative !important;
+        z-index: 10001 !important;
+    }
+    
+    /* Ensure buttons in modal are above modal content */
+    #report-designs-modal .btn-group,
+    #report-designs-modal .btn,
+    #scheduling-modal .btn-group,
+    #scheduling-modal .btn {
+        position: relative !important;
+        z-index: 10002 !important;
+    }
+    
+    /* Ensure reportConfigModal has high z-index when shown */
+    #reportConfigModal.modal.show {
+        z-index: 10050 !important;
+    }
+    
+    #reportConfigModal.modal.show ~ .modal-backdrop {
+        z-index: 10049 !important;
+    }
+    
+    /* Ensure new-folder-modal has high z-index when shown - higher than report-designs-modal (10000) */
+    #new-folder-modal.modal.show,
+    #new-folder-modal.modal.fade.show,
+    #new-folder-modal.modal {
+        z-index: 10070 !important;
+    }
+    
+    /* Ensure backdrop for new-folder-modal is above report-designs-modal */
+    /* When new-folder-modal is shown, its backdrop should be above report-designs-modal backdrop */
+    body.modal-open .modal-backdrop:last-of-type {
+        z-index: 10069 !important;
+    }
+    
+    /* Specific backdrop for new-folder-modal - ensure it's above report-designs-modal */
+    #new-folder-modal.modal.show ~ .modal-backdrop,
+    #new-folder-modal.modal.show + .modal-backdrop {
+        z-index: 10069 !important;
+    }
+    
+    /* Fix radio buttons overlapping issue in new-folder-modal */
+    #new-folder-modal .custom-control {
+        position: relative !important;
+        z-index: auto !important;
+        display: inline-block !important;
+        margin-right: 1rem !important;
+    }
+    
+    #new-folder-modal .custom-control-input {
+        position: absolute !important;
+        z-index: 1 !important;
+        opacity: 0 !important;
+    }
+    
+    #new-folder-modal .custom-control-label {
+        position: relative !important;
+        z-index: 2 !important;
+        cursor: pointer !important;
+    }
+    
+    #new-folder-modal .custom-control-inline {
+        display: inline-block !important;
+        margin-right: 1rem !important;
+    }
+    
+    /* Ensure buttons in report-designs-modal are clickable even when new-folder-modal backdrop is shown */
+    #report-designs-modal.report-modal.show {
+        z-index: 10000 !important;
+    }
+    
+    #report-designs-modal .report-modal-content {
+        z-index: 10001 !important;
+    }
+    
+    #report-designs-modal .btn-group,
+    #report-designs-modal .btn {
+        z-index: 10002 !important;
+        position: relative !important;
     }
     
     @@keyframes report-modal-slide-in {
@@ -201,6 +280,14 @@
 
 @* Critical CSS to prevent FOUC - Must be at the very top *@
 <style id="fouc-prevention-style">
+	/* CSS Variables for icon sizes - Prevents size changes */
+	:root {
+		--report-icon-size: 42px;
+		--report-icon-svg-size: 22px;
+		--report-icon-svg-small-size: 20px;
+		--report-icon-border-radius: 8px;
+	}
+	
 	/* Hide icons, tabs, and side navigation initially - Critical inline styles */
 	.icons-tables,
 	.top-bar-anchor-icon,
@@ -210,6 +297,35 @@
 	.side-navi-item,
 	.side-navi-data {
 		display: none !important;
+	}
+	
+	/* Critical: Set icon sizes immediately to prevent FOUC */
+	.icons-tables,
+	.top-bar-anchor-icon {
+		width: var(--report-icon-size) !important;
+		height: var(--report-icon-size) !important;
+		min-width: var(--report-icon-size) !important;
+		min-height: var(--report-icon-size) !important;
+		max-width: var(--report-icon-size) !important;
+		max-height: var(--report-icon-size) !important;
+		box-sizing: border-box !important;
+	}
+	
+	.icons-tables svg,
+	.top-bar-anchor-icon svg {
+		width: var(--report-icon-svg-size) !important;
+		height: var(--report-icon-svg-size) !important;
+		max-width: var(--report-icon-svg-size) !important;
+		max-height: var(--report-icon-svg-size) !important;
+		box-sizing: border-box !important;
+	}
+	
+	/* Specific size for smaller icons (16px) */
+	.top-bar-anchor-icon svg {
+		width: var(--report-icon-svg-small-size) !important;
+		height: var(--report-icon-svg-small-size) !important;
+		max-width: var(--report-icon-svg-small-size) !important;
+		max-height: var(--report-icon-svg-small-size) !important;
 	}
 	
 	/* Show side navigation after page is ready with critical styles */
@@ -269,17 +385,23 @@
 	
 	/* Show icons and tabs after page is ready with critical styles */
 	/* Scoped to report page only to prevent conflicts */
+	/* Using CSS variables to ensure consistent sizing */
 	body.page-ready .reportHeader .icons-tables,
 	body.page-ready .top-page .icons-tables {
 		display: inline-flex !important;
 		align-items: center !important;
 		justify-content: center !important;
-		width: 36px !important;
-		height: 36px !important;
-		border-radius: 8px !important;
+		width: var(--report-icon-size) !important;
+		height: var(--report-icon-size) !important;
+		min-width: var(--report-icon-size) !important;
+		min-height: var(--report-icon-size) !important;
+		max-width: var(--report-icon-size) !important;
+		max-height: var(--report-icon-size) !important;
+		border-radius: var(--report-icon-border-radius) !important;
 		opacity: 1 !important;
 		transition: all 0.2s ease !important;
 		margin: 0 4px !important;
+		box-sizing: border-box !important;
 	}
 	
 	body.page-ready .reportHeader .top-bar-anchor-icon,
@@ -287,27 +409,56 @@
 	body.page-ready .sideNavi-top-bar .icons-tables,
 	body.page-ready .side-navi-body .icons-tables {
 		display: inline-block !important;
+		width: var(--report-icon-size) !important;
+		height: var(--report-icon-size) !important;
+		min-width: var(--report-icon-size) !important;
+		min-height: var(--report-icon-size) !important;
+		max-width: var(--report-icon-size) !important;
+		max-height: var(--report-icon-size) !important;
 		opacity: 1 !important;
 		transition: opacity 0.2s ease-in !important;
 		color: #1869AA !important;
 		cursor: pointer !important;
 		text-decoration: none !important;
 		vertical-align: middle !important;
+		box-sizing: border-box !important;
+	}
+	
+	/* Ensure design-menu button is always visible when page is ready */
+	/* Override any inline styles that might hide it */
+	body.page-ready #design-menu,
+	body.page-ready .inline-dropdown #design-menu,
+	body.page-ready .dropdown.inline-dropdown #design-menu {
+		display: inline-block !important;
+		visibility: visible !important;
+		opacity: 1 !important;
+	}
+	
+	/* Force display even if inline style is set */
+	#design-menu[style*="display: none"],
+	#design-menu[style*="display:none"] {
+		display: inline-block !important;
 	}
 	
 	body.page-ready .reportHeader .icons-tables svg,
 	body.page-ready .top-page .icons-tables svg {
-		width: 18px !important;
-		height: 18px !important;
+		width: var(--report-icon-svg-size) !important;
+		height: var(--report-icon-svg-size) !important;
+		max-width: var(--report-icon-svg-size) !important;
+		max-height: var(--report-icon-svg-size) !important;
 		display: block !important;
+		box-sizing: border-box !important;
 	}
 	
 	body.page-ready .reportHeader .top-bar-anchor-icon svg,
 	body.page-ready .top-page .top-bar-anchor-icon svg {
 		display: inline-block !important;
-		width: 16px !important;
-		height: 16px !important;
+		width: var(--report-icon-svg-small-size) !important;
+		height: var(--report-icon-svg-small-size) !important;
+		max-width: var(--report-icon-svg-small-size) !important;
+		max-height: var(--report-icon-svg-small-size) !important;
 		vertical-align: middle !important;
+		box-sizing: border-box !important;
 	}
 	
 	body.page-ready .reportHeader .icons-tables.text-success,

@@ -25,7 +25,7 @@
                     @if (canDesign)
                     {
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-sm btn-outline-success" onclick="ConfigsTreeManager.showAddConfigModal()" title="@ViewTexts.AddReportConfig">
+                            <button type="button" class="btn btn-sm btn-outline-success" id="btn-add-config-modal" onclick="if(typeof showAddConfigModalFallback === 'function') { showAddConfigModalFallback(); } else { console.error('showAddConfigModalFallback not available'); }" title="@ViewTexts.AddReportConfig">
                                 <i class="fa fa-plus"></i> @ViewTexts.AddReportConfig
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="ConfigsTreeManager.newFolder()" title="@ViewTexts.AddFolder">

@@ -74,7 +74,7 @@ function submitReportFilterFromTooltip() {
 
     // Hide the tooltip first
     const panel = document.getElementById('filterTooltipPanel');
-    const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
+    const toggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
     if (panel && panel.classList.contains('show')) {
         panel.classList.remove('show');
         if (toggle) {

@@ -1,10 +1,23 @@
-﻿using Minio.DataModel;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Neo.Bpms.Domain.Features.Security;
 
 namespace Neo.Bpms.UI.MVC.Controls;
 
-public class MenuHelper(IAccessServices accessServices)
+public class MenuHelper(
+    IAccessServices accessServices, ICustomIconProvider? customIconProvider = null) 
+    : IMenuHelper
 {
+    private static IHttpContextAccessor? _httpContextAccessor;
+    
+    /// <summary>
+    /// Sets the HttpContextAccessor for static method resolution (called during app startup)
+    /// </summary>
+    public static void SetHttpContextAccessor(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+
     /// <summary>
     /// get Navigation Menu Items.
     /// </summary>
@@ -172,7 +185,7 @@ public class MenuHelper(IAccessServices accessServices)
         return culture == "en" && !string.IsNullOrWhiteSpace(item.EnName) ? item.EnName : item.Name;
     }
 
-    private static void AddLabel(StringBuilder sb, MenuItem item)
+    private void AddLabel(StringBuilder sb, MenuItem item)
     {
         sb.Append("<span>");
         if (!string.IsNullOrEmpty(item.iconName))
@@ -184,44 +197,62 @@ public class MenuHelper(IAccessServices accessServices)
         sb.Append("</span>");
     }
 
-    private static void AddIconName(StringBuilder sb, MenuItem item)
+    private void AddIconName(StringBuilder sb, MenuItem item)
     {
         if (string.IsNullOrEmpty(item.iconName)) return;
            
         sb.Append(IconSvg(item.iconName));
     }
     
-    public static string IconSvg(string iconName)
+    private string IconSvg(string iconName)
     {
         return $"<svg class=\"sidemenu-icon\" data-icon=\"{iconName}\" viewBox=\"0 0 24 24\">" +
                     $"<use xlink:href=\"{IconHref(iconName)}\"></use>" +
                $"</svg>";
     }
     
-    public static string IconHref(string iconName)
+    /// <summary>
+    /// Static method for backward compatibility. Resolves ICustomIconProvider from DI if available.
+    /// </summary>
+    public static string IconSvg(string iconName, ICustomIconProvider? customIconProvider = null)
     {
-        return UseClubIcon(iconName)
-            ? $"/Content/club-icons/club-sprite.svg#{iconName}"
+        var iconHref = IconHref(iconName, customIconProvider);
+        return $"<svg class=\"sidemenu-icon\" data-icon=\"{iconName}\" viewBox=\"0 0 24 24\">" +
+                    $"<use xlink:href=\"{iconHref}\"></use>" +
+               $"</svg>";
+    }
+    
+    private string IconHref(string iconName)
+    {
+        return UseCustomIcon(iconName)
+            ? $"/Content/custom-icons/custom-sprite.svg#{iconName}"
             : $"/Content/common-assets-includes/icons/svgSprite.svg#{iconName}";
     }
     
-    private static bool UseClubIcon(string iconName)
+    /// <summary>
+    /// Static method for backward compatibility. Resolves ICustomIconProvider from DI if available.
+    /// </summary>
+    private static string IconHref(string iconName, ICustomIconProvider? customIconProvider = null)
     {
-        // Modern Club icons - maintain alphabetically for easy lookup
-        var clubIcons = new HashSet<string>
+        // Try to resolve from DI if not provided
+        if (customIconProvider == null)
         {
-            "bolt-lightning", "box-package", "building-organization",
-            "calendar-event", "chart-bar", "cog-settings", "cog-wheel", "coins-money", "cube-3d",
-            "file-document", "flag-trigger", "gift-present", "grid-layout",
-            "home-dashboard", "info-circle", "list-checklist", "medal-award",
-            "piggy-bank", "question-circle", "rule-checklist", "rss-signal",
-            "sliders-h", "star-badge", "store-shop", "ticket-lottery", "trophy-star",
-            "user-admin", "user-badge", "user-circle", "user-settings",
-            "users-analysis", "users-group", "users-info", "users-network",
-            "wallet-money"
-        };
+            var httpContext = _httpContextAccessor?.HttpContext;
+            if (httpContext != null)
+            {
+                customIconProvider = httpContext.RequestServices.GetService<ICustomIconProvider>();
+            }
+        }
         
-        return clubIcons.Contains(iconName);
+        bool isCustom = customIconProvider?.IsCustomIcon(iconName) ?? false;
+        return isCustom
+            ? $"/Content/custom-icons/custom-sprite.svg#{iconName}"
+            : $"/Content/common-assets-includes/icons/svgSprite.svg#{iconName}";
+    }
+    
+    private bool UseCustomIcon(string iconName)
+    {
+        return !string.IsNullOrEmpty(iconName) && (customIconProvider?.IsCustomIcon(iconName) ?? false);
     }
 
     private static void AppendRouteUrl(StringBuilder sb, MenuItem item, IUrlHelper urlHelper, string routeName)

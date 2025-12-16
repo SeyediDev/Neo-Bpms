@@ -61,6 +61,24 @@ public partial class ReportController
         ReportData result = await reportDataRoutines.GetReportData(config, loadData, filters,
             pageNo, po?.SortFields, null, null, listIds,
             culture, false, user, ReportPerPageCount, false, cancellationToken);
+        
+        // Ensure ChartType is set from config if ViewType is Chart
+        // This is important when navigating from dashboard where ChartType is not posted
+        if (config.ViewType == ReportViewType.Chart)
+        {
+            // Always use config.ChartType - it should be set in GetReportStructure, but ensure it here too
+            // If config.ChartType is None or Line (default), use Column as fallback
+            // Line is the default value in ConfiguredReport, so we treat it as unset
+            if (config.ChartType == ChartType.None || config.ChartType == ChartType.Line)
+            {
+                result.Structure.ChartType = ChartType.Column;
+            }
+            else
+            {
+                result.Structure.ChartType = config.ChartType;
+            }
+        }
+        
         await SetReportViewBag(user, ParentReportIds, po?.SortFields,
             filters, DrillDown == 1, pageNo,
             po == null, result, configuredFilter);
@@ -128,10 +146,16 @@ public partial class ReportController
         ReportData result = await reportDataRoutines.GetReportData(initPostReportConfigResult.config, true, FilterValues, Page,
             sortFields, null, null, arr,
             culture, false, user, ReportPerPageCount, false, cancellationToken);
+        // Use posted ChartType if provided, otherwise use config's ChartType
         if (!string.IsNullOrEmpty(SelectedChartType))
         {
             result.Structure.ChartType =
                 (ChartType)Enum.Parse(typeof(ChartType), SelectedChartType);
+        }
+        else if (initPostReportConfigResult.config.ViewType == ReportViewType.Chart)
+        {
+            // Use config's ChartType if not posted
+            result.Structure.ChartType = initPostReportConfigResult.config.ChartType;
         }
 
         await SetReportViewBag(user, ParentReportIds, sortFields, FilterValues, DrillDown == 1, Page, false, result, null);
