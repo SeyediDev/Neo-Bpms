@@ -48,7 +48,7 @@ public static class ReportTotalRecord
             result.RecordCount = (int)qCount.GetRecordCount(result.Structure.FilterValues, lp);
             if (result.RecordCount == 0 && !string.IsNullOrEmpty(qCount.ErrorText))
             {
-                //result.Errors.AddError(qCount.ErrorText, "Query", "13.0.2", qCount.ErrorText);
+                //TODO Temp : result.Errors.AddError(qCount.ErrorText, "Query", "13.0.2", qCount.ErrorText);
             }
         }
         catch (Exception e)
