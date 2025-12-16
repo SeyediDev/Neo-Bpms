@@ -1,0 +1,33 @@
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@model ReportData
+
+@{
+    var canScheduleReports = ViewBag.CanScheduleReports ?? false;
+}
+
+@* Scheduling Modal *@
+@if (canScheduleReports)
+{
+    <div id="scheduling-modal" class="report-modal">
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h5>@ViewTexts.ReportScheduling</h5>
+                <button type="button" class="report-modal-close" onclick="toggleSchedulingModal(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button type="button" class="btn btn-sm btn-outline-success" onclick="ScheduledReport.showModal()" title="@ViewTexts.AddSchedule">
+                        <i class="fa fa-plus"></i> @ViewTexts.AddSchedule
+                    </button>
+                </div>
+                <div id="scheduled-reports-tree-modal" class="report-tree-container"></div>
+            </div>
+        </div>
+    </div>
+}
+

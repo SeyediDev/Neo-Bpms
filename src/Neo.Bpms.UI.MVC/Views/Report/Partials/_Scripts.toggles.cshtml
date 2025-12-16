@@ -1,0 +1,432 @@
+@* report-toggles.js - Toggle Functions for Report Info, Filter, Refresh Settings, and Design Settings *@
+<script>
+/**
+ * report-toggles.js
+ * Toggle Functions for Report Info, Filter, Refresh Settings, and Design Settings
+ */
+
+// Toggle report info tooltip
+window.toggleReportInfo = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const panel = document.getElementById('reportInfoPanel');
+    const toggle = event ? event.target.closest('a') : document.querySelector('[data-action="toggle-report-info"]');
+
+    if (panel && toggle) {
+        // Hide all other tooltips first
+        const allPanels = document.querySelectorAll('.report-info-panel');
+        allPanels.forEach(p => {
+            if (p !== panel) {
+                p.classList.remove('show');
+                p.style.display = 'none';
+            }
+        });
+
+        // Toggle current panel
+        if (!panel.classList.contains('show')) {
+            panel.classList.add('show');
+            toggle.classList.add('active');
+            
+            // Remove inline display:none if exists
+            panel.style.display = '';
+            
+            // Position tooltip relative to toggle button
+            const toggleRect = toggle.getBoundingClientRect();
+            panel.style.position = 'fixed';
+            panel.style.top = (toggleRect.bottom + 8) + 'px';
+            panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
+            panel.style.zIndex = '10000';
+        } else {
+            panel.classList.remove('show');
+            panel.style.display = 'none';
+            toggle.classList.remove('active');
+        }
+    } else {
+        console.error('Report info: Panel or toggle not found', {
+            panel: !!panel,
+            toggle: !!toggle
+        });
+    }
+};
+
+// Toggle refresh settings tooltip
+window.toggleRefreshSettings = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const panel = document.getElementById('refreshSettingsPanel');
+    const toggle = event ? event.target.closest('a') : document.querySelector('[data-action="toggle-refresh-settings"]');
+
+    if (panel && toggle) {
+        // Hide all other tooltips first
+        const allPanels = document.querySelectorAll('.refresh-settings-panel');
+        allPanels.forEach(p => {
+            if (p !== panel) {
+                p.classList.remove('show');
+                p.style.display = 'none';
+            }
+        });
+
+        // Toggle current panel
+        if (!panel.classList.contains('show')) {
+            panel.classList.add('show');
+            toggle.classList.add('active');
+            
+            // Remove inline display:none if exists
+            panel.style.display = '';
+            
+            // Position tooltip relative to toggle button
+            const toggleRect = toggle.getBoundingClientRect();
+            panel.style.position = 'fixed';
+            panel.style.top = (toggleRect.bottom + 8) + 'px';
+            panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
+            panel.style.zIndex = '10000';
+        } else {
+            panel.classList.remove('show');
+            panel.style.display = 'none';
+            toggle.classList.remove('active');
+        }
+    } else {
+        console.error('Refresh settings: Panel or toggle not found', {
+            panel: !!panel,
+            toggle: !!toggle
+        });
+    }
+};
+
+// Toggle filter tooltip - Simple and reliable implementation
+window.toggleFilterTooltip = function(event, targetElement) {
+    console.log('[FilterTooltip] Function called');
+    
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const panel = document.getElementById('filterTooltipPanel');
+    if (!panel) {
+        console.error('[FilterTooltip] ❌ Panel not found');
+        return;
+    }
+    console.log('[FilterTooltip] ✅ Panel found');
+
+    // Find toggle button
+    let toggle = targetElement;
+    if (!toggle && event) {
+        toggle = event.target.closest('[data-action="toggle-filter-tooltip"]');
+    }
+    if (!toggle) {
+        toggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
+    }
+    if (!toggle) {
+        console.error('[FilterTooltip] ❌ Toggle button not found');
+        return;
+    }
+    console.log('[FilterTooltip] ✅ Toggle button found');
+
+    // Check if panel is currently visible
+    const isVisible = panel.classList.contains('show');
+    console.log('[FilterTooltip] Current state:', { isVisible });
+
+    if (isVisible) {
+        // Hide panel
+        console.log('[FilterTooltip] Hiding panel...');
+        panel.classList.remove('show');
+        toggle.classList.remove('active');
+        // Remove inline styles to let CSS handle hiding
+        panel.style.removeProperty('display');
+        panel.style.removeProperty('visibility');
+        panel.style.removeProperty('opacity');
+        panel.style.removeProperty('pointer-events');
+    } else {
+        // Show panel
+        console.log('[FilterTooltip] Showing panel...');
+        
+        // CRITICAL: Always move panel to body to avoid parent hiding issues
+        const currentParent = panel.parentElement;
+        if (!document.body.contains(panel) || (currentParent && currentParent !== document.body)) {
+            console.log('[FilterTooltip] Moving panel to body. Current parent:', currentParent?.tagName || 'none');
+            // Store current styles before moving
+            const currentTop = panel.style.top;
+            const currentLeft = panel.style.left;
+            document.body.appendChild(panel);
+            // Restore styles after moving
+            if (currentTop) panel.style.top = currentTop;
+            if (currentLeft) panel.style.left = currentLeft;
+        }
+
+        // Get button position
+        const toggleRect = toggle.getBoundingClientRect();
+        console.log('[FilterTooltip] Toggle position:', {
+            top: toggleRect.top,
+            bottom: toggleRect.bottom,
+            left: toggleRect.left,
+            right: toggleRect.right
+        });
+        
+        // Calculate panel dimensions - Wider panel for two columns layout
+        const panelWidth = Math.min(1800, window.innerWidth * 0.98);
+        const panelHeight = Math.min(window.innerHeight - 40, window.innerHeight * 0.95); // Use almost full height
+        
+        // Calculate position - Start from higher position
+        let top = Math.max(20, toggleRect.bottom + 8); // Start from at least 20px from top
+        let left = toggleRect.left;
+        
+        // Adjust if goes off-screen right
+        if (left + panelWidth > window.innerWidth) {
+            left = window.innerWidth - panelWidth - 16;
+        }
+        
+        // Adjust if goes off-screen bottom
+        if (top + panelHeight > window.innerHeight) {
+            top = toggleRect.top - panelHeight - 8;
+            // If still off-screen top, position below button
+            if (top < 0) {
+                top = toggleRect.bottom + 8;
+            }
+        }
+        
+        console.log('[FilterTooltip] Panel position:', { top, left, width: panelWidth, height: panelHeight });
+        
+        // Check parent element styles
+        let parent = panel.parentElement;
+        while (parent && parent !== document.body) {
+            const parentStyle = window.getComputedStyle(parent);
+            if (parentStyle.display === 'none' || parentStyle.visibility === 'hidden' || parentStyle.opacity === '0') {
+                console.warn('[FilterTooltip] ⚠️ Parent element might be hiding panel:', {
+                    parentTag: parent.tagName,
+                    parentId: parent.id,
+                    parentClass: parent.className,
+                    display: parentStyle.display,
+                    visibility: parentStyle.visibility,
+                    opacity: parentStyle.opacity
+                });
+            }
+            parent = parent.parentElement;
+        }
+        
+        // Remove any conflicting inline styles first
+        panel.style.removeProperty('display');
+        panel.style.removeProperty('visibility');
+        panel.style.removeProperty('opacity');
+        panel.style.removeProperty('pointer-events');
+        
+        // Apply ALL positioning and display styles with !important
+        panel.style.setProperty('position', 'fixed', 'important');
+        panel.style.setProperty('top', top + 'px', 'important');
+        panel.style.setProperty('left', left + 'px', 'important');
+        panel.style.setProperty('width', panelWidth + 'px', 'important');
+        panel.style.setProperty('min-width', '1800px', 'important');
+        panel.style.setProperty('max-width', '98vw', 'important');
+        panel.style.setProperty('max-height', panelHeight + 'px', 'important');
+        panel.style.setProperty('overflow', 'hidden', 'important');
+        panel.style.setProperty('z-index', '1050', 'important');
+        panel.style.setProperty('display', 'flex', 'important');
+        panel.style.setProperty('visibility', 'visible', 'important');
+        panel.style.setProperty('opacity', '1', 'important');
+        panel.style.setProperty('pointer-events', 'auto', 'important');
+        
+        // Add show class
+        panel.classList.add('show');
+        toggle.classList.add('active');
+        
+        // Force multiple reflows to ensure browser processes all changes
+        void panel.offsetHeight;
+        void panel.offsetWidth;
+        void panel.scrollHeight;
+        
+        console.log('[FilterTooltip] Panel styles applied, checking visibility...');
+        
+        // Verify visibility after a short delay
+        setTimeout(function() {
+            const rect = panel.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(panel);
+            const parentStyle = panel.parentElement ? window.getComputedStyle(panel.parentElement) : null;
+            
+            console.log('[FilterTooltip] Panel visibility check:', {
+                display: computedStyle.display,
+                visibility: computedStyle.visibility,
+                opacity: computedStyle.opacity,
+                width: rect.width,
+                height: rect.height,
+                top: rect.top,
+                left: rect.left,
+                hasShowClass: panel.classList.contains('show'),
+                isInDOM: document.body.contains(panel),
+                parentElement: panel.parentElement?.tagName || 'none',
+                parentDisplay: parentStyle?.display || 'N/A',
+                parentVisibility: parentStyle?.visibility || 'N/A',
+                inlineDisplay: panel.style.display,
+                inlineVisibility: panel.style.visibility,
+                inlineOpacity: panel.style.opacity
+            });
+            
+            // If panel is still not visible, log detailed error
+            if (computedStyle.display === 'none' || (rect.width === 0 && rect.height === 0)) {
+                console.error('[FilterTooltip] ❌ Panel still not visible!', {
+                    computedDisplay: computedStyle.display,
+                    computedVisibility: computedStyle.visibility,
+                    computedOpacity: computedStyle.opacity,
+                    rectWidth: rect.width,
+                    rectHeight: rect.height,
+                    rectTop: rect.top,
+                    rectLeft: rect.left,
+                    hasShowClass: panel.classList.contains('show'),
+                    parentTag: panel.parentElement?.tagName,
+                    parentId: panel.parentElement?.id,
+                    allComputedStyles: {
+                        position: computedStyle.position,
+                        top: computedStyle.top,
+                        left: computedStyle.left,
+                        width: computedStyle.width,
+                        height: computedStyle.height,
+                        zIndex: computedStyle.zIndex
+                    }
+                });
+            }
+            
+            // Ensure all filter inputs are associated with the form
+            if (typeof window.ensureFilterFormAssociation === 'function') {
+                console.log('[FilterTooltip] Ensuring filter form association...');
+                window.ensureFilterFormAssociation();
+            }
+            
+            // Initialize popular filters tree
+            if (typeof window.initializePopularFiltersTree === 'function') {
+                console.log('[FilterTooltip] Initializing popular filters tree...');
+                window.initializePopularFiltersTree();
+            }
+            
+            // Initialize multi-select
+            if (typeof window.initializeMultiSelectInTooltip === 'function') {
+                console.log('[FilterTooltip] Initializing multi-select...');
+                window.initializeMultiSelectInTooltip();
+            }
+            
+            // Ensure form association again after multi-select initialization
+            setTimeout(function() {
+                if (typeof window.ensureFilterFormAssociation === 'function') {
+                    window.ensureFilterFormAssociation();
+                }
+            }, 200);
+        }, 50);
+    }
+};
+
+// Toggle design settings modal - Support both data-toggle and programmatic calls
+window.toggleDesignSettings = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const modal = $('#designSettingsModal');
+    
+    if (modal.length === 0) {
+        console.error('designSettingsModal not found in DOM');
+        return;
+    }
+    
+    // CRITICAL FIX: Ensure modal is a direct child of body, not nested inside another modal
+    // Move modal to body if it's not already there
+    if (modal.parent().is('body') === false) {
+        console.log('Moving designSettingsModal to body');
+        modal.appendTo('body');
+    }
+    
+    // Toggle modal using Bootstrap
+    if (modal.hasClass('show')) {
+        modal.modal('hide');
+    } else {
+        modal.modal('show');
+    }
+};
+
+// Hide design settings modal (for backward compatibility)
+window.hideDesignSettingsTooltip = function() {
+    const modal = $('#designSettingsModal');
+    if (modal.length > 0 && modal.hasClass('show')) {
+        modal.modal('hide');
+    }
+};
+
+// Handle clicks on links inside designSettingsModal that should open another modal
+$(document).on('click', '#designSettingsModal .design-settings-link[data-action="open-modal-from-design-settings"]', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const $link = $(this);
+    const targetModal = $link.data('target');
+    
+    if (targetModal) {
+        // Close the current modal first
+        const $currentModal = $('#designSettingsModal');
+        if ($currentModal.length > 0 && $currentModal.hasClass('show')) {
+            $currentModal.modal('hide');
+        }
+        
+        // Wait for the current modal to close, then open the next modal
+        setTimeout(function() {
+            const $nextModal = $(targetModal);
+            if ($nextModal.length > 0) {
+                console.log('Opening modal:', targetModal);
+                $nextModal.modal('show');
+            } else {
+                console.error('Modal not found:', targetModal);
+            }
+        }, 300);
+    }
+});
+
+// Handle clicks on sub-report links inside designSettingsModal
+$(document).on('click', '#designSettingsModal .design-settings-link[data-action="open-subreport-modal"]', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const $link = $(this);
+    const subreportType = $link.data('subreport-type');
+    const namespaceId = $link.data('namespace');
+    const entityId = $link.data('entity');
+    const reportId = $link.data('report');
+    const configId = $link.data('config');
+    
+    // Check if SubReportManager is available
+    if (typeof SubReportManager === 'undefined') {
+        console.error('SubReportManager not available');
+        alert('SubReportManager در دسترس نیست. لطفاً صفحه را رفرش کنید.');
+        return;
+    }
+    
+    // Close the current modal first
+    const $currentModal = $('#designSettingsModal');
+    if ($currentModal.length > 0 && $currentModal.hasClass('show')) {
+        $currentModal.modal('hide');
+    }
+    
+    // Wait for the current modal to close, then open SubReportModal and call the appropriate function
+    setTimeout(function() {
+        const $subReportModal = $('#SubReportModal');
+        if ($subReportModal.length > 0) {
+            // Open the modal first
+            $subReportModal.modal('show');
+            
+            // Then call the appropriate SubReportManager function
+            if (subreportType === 'inline' && SubReportManager.addInline) {
+                SubReportManager.addInline(namespaceId, entityId, reportId, configId);
+            } else if (subreportType === 'linked' && SubReportManager.addLinked) {
+                SubReportManager.addLinked(namespaceId, entityId, reportId, configId);
+            } else {
+                console.error('Invalid subreport type or function not available:', subreportType);
+            }
+        } else {
+            console.error('SubReportModal not found');
+        }
+    }, 300);
+});
+</script>
+

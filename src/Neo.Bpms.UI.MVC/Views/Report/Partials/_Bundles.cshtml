@@ -9,6 +9,8 @@
 <script src="@CommonBundles.FlagsJsBundle" asp-append-version="true"></script>
 <script src="@CommonBundles.TreeFoldersJsBundle" asp-append-version="true"></script>
 <script src="@CommonBundles.ReportConfigsTreeJsBundle" asp-append-version="true"></script>
+@* Report Design Bundle - Contains SubReportManager *@
+<script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
 
 @if (canScheduleReports)
 {
@@ -20,18 +22,33 @@
 
 @* Report Feature Scripts - Modular Structure (loaded in dependency order) *@
 @* All scripts are embedded as partial views to avoid path issues *@
-<partial name="Partials/_Scripts.report-filter" />
-<partial name="Partials/_Scripts.report-popular-filters" />
-<partial name="Partials/_Scripts.report-toggles" />
-<partial name="Partials/_Scripts.report-modal-zindex" />
-<partial name="Partials/_Scripts.report-modals" />
-<partial name="Partials/_Scripts.report-filter-parameter" />
-<partial name="Partials/_Scripts.report-refresh" />
-<partial name="Partials/_Scripts.report-config" />
+@* Load multi-select scripts BEFORE popular-filters so initializeReportModernMultiSelect is available *@
+<script src="~/Scripts/common-assets-includes/features/modern/modern-multi-select.js"></script>
+@await Html.PartialAsync("Partials/_Scripts.report-modern-multi-select")
+<partial name="Partials/_Scripts.filter" />
+<partial name="Partials/_Scripts.popular-filters" />
+<partial name="Partials/_Scripts.toggles" />
+<partial name="Partials/_Scripts.modal-zindex" />
+<partial name="Partials/_Scripts.modal-designs" />
+<partial name="Partials/_Scripts.modal-scheduling" />
+<partial name="Partials/_Scripts.modal-column-settings" />
+<partial name="Partials/_Scripts.modal-column-settings-functions" />
+<partial name="Partials/_Scripts.modal-order-settings-functions" />
+<partial name="Partials/_Scripts.modal-colors-settings-functions" />
+<partial name="Partials/_Scripts.modal-add-config" />
+<partial name="Partials/_Scripts.filter-parameter" />
+<partial name="Partials/_Scripts.refresh" />
+<partial name="Partials/_Scripts.config" />
+<partial name="Partials/_Scripts.report-settings" />
 @* Event Manager must be loaded AFTER all functions are defined *@
-<partial name="Partials/_Scripts.report-event-manager" />
-<partial name="Partials/_Scripts.report-events" />
+<partial name="Partials/_Scripts.event-manager" />
+<partial name="Partials/_Scripts.events" />
 
+@* Multi-select scripts moved above to load before popular-filters *@
+<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
+<script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
+<script src="~/Content/common-assets-includes/features/filter/boolean-button-group.js" asp-append-version="true"></script>
 @* Verification script - Ensure all required functions are loaded *@
 <script>
     (function() {
@@ -72,12 +89,11 @@
         if (typeof ScheduledReport === 'undefined') {
             console.warn('Report: ScheduledReport not loaded yet (may be in bundle)');
         }
+        
+        // Verify initializeReportModernMultiSelect is loaded (critical for filter tooltip)
+        if (typeof window.initializeReportModernMultiSelect !== 'function') {
+            console.error('Report: ❌ initializeReportModernMultiSelect NOT loaded! Filter multi-select will not work.');
+        }
     })();
 </script>
-<script src="~/Scripts/common-assets-includes/features/modern/modern-multi-select.js"></script>
-<script src="~/Scripts/common-assets-includes/features/report/report-modern-multi-select.js" asp-append-version="true"></script>
-<script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
-<link rel="stylesheet" href="~/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
-<script src="@CommonBundles.IndexPagesJsBundle" asp-append-version="true"></script>
-<script src="~/Content/common-assets-includes/features/filter/boolean-button-group.js" asp-append-version="true"></script>
 

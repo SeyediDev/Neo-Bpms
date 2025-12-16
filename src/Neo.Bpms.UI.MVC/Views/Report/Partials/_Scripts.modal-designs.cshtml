@@ -1,0 +1,134 @@
+@* modal-designs.js - Report Designs Modal Functions *@
+<script>
+/**
+ * modal-designs.js
+ * Report Designs Modal Functions
+ */
+
+// Toggle Report Designs Modal - Make it globally accessible
+window.toggleReportDesignsModal = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    const modal = document.getElementById('report-designs-modal');
+    if (!modal) {
+        console.warn('Report designs modal not found');
+        return;
+    }
+    
+    const isShowing = modal.classList.contains('show');
+    
+    if (!isShowing) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Initialize tree if not already initialized
+        var $configsTree = $('#configs-tree-modal');
+        if ($configsTree.length && !$configsTree.data('initialized')) {
+            if (typeof window.configsTree !== 'undefined') {
+                $configsTree.jstree({
+                    'core': {
+                        'data': window.configsTree,
+                        "check_callback": true
+                    },
+                    "contextmenu": {
+                        "select_node": false,
+                        'items': function(node) {
+                            if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.getContextMenu) {
+                                return ConfigsTreeManager.getContextMenu(node);
+                            }
+                            return {};
+                        }
+                    },
+                    "types": {
+                        "default": {
+                            "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
+                            "valid_children": ["default", "Chart", "Chart.Column", "Chart.Bar", "Chart.Line", "Chart.Area", "Chart.Pie", "Chart.Spline", "Chart.Areaspline", "Chart.Scatter", "Chart.Treemap", "Chart.Gauge", "Chart.MetricBox", "Chart.IranMap", "Chart.WorldMap", "Chart.BpmnDiagram", "List", "ReportList", "GroupByList"]
+                        },
+                        "Chart": {
+                            "icon": "fa fa-bar-chart",
+                            "valid_children": []
+                        },
+                        // Chart types with specific icons based on GetChartType normalization
+                        // GetChartType normalizes: IranMap/WorldMap/Treemap -> Treemap, others -> Column
+                        "Chart.Column": { "icon": "fa fa-bar-chart", "valid_children": [] },
+                        "Chart.Bar": { "icon": "fa fa-bar-chart", "valid_children": [] },
+                        "Chart.Line": { "icon": "fa fa-line-chart", "valid_children": [] },
+                        "Chart.Area": { "icon": "fa fa-area-chart", "valid_children": [] },
+                        "Chart.Pie": { "icon": "fa fa-pie-chart", "valid_children": [] },
+                        "Chart.Spline": { "icon": "fa fa-line-chart", "valid_children": [] },
+                        "Chart.Areaspline": { "icon": "fa fa-area-chart", "valid_children": [] },
+                        "Chart.Scatter": { "icon": "fa fa-dot-circle-o", "valid_children": [] },
+                        "Chart.Treemap": { "icon": "fa fa-sitemap", "valid_children": [] }, // Normalized from IranMap/WorldMap/Treemap
+                        "Chart.Gauge": { "icon": "fa fa-tachometer", "valid_children": [] },
+                        "Chart.MetricBox": { "icon": "fa fa-cube", "valid_children": [] },
+                        "Chart.IranMap": { "icon": "fa fa-map", "valid_children": [] },
+                        "Chart.WorldMap": { "icon": "fa fa-globe", "valid_children": [] },
+                        "Chart.BpmnDiagram": { "icon": "fa fa-project-diagram", "valid_children": [] },
+                        "List": {
+                            "icon": "fa fa-list",
+                            "valid_children": []
+                        },
+                        "ReportList": {
+                            "icon": "fa fa-list",
+                            "valid_children": []
+                        },
+                        "GroupByList": {
+                            "icon": "fa fa-table",
+                            "valid_children": []
+                        }
+                    },
+                    "conditionalselect": function (node, event) {
+                        if (node.type === 'default')
+                            return false;
+                        // Allow selection and navigate to config
+                        var navigateToConfig = function(configId) {
+                            // Try multiple ways to access ConfigsTreeManager
+                            if (typeof ConfigsTreeManager !== 'undefined' && ConfigsTreeManager.goToConfig) {
+                                ConfigsTreeManager.goToConfig(configId);
+                            } else if (typeof window.ConfigsTreeManager !== 'undefined' && window.ConfigsTreeManager.goToConfig) {
+                                window.ConfigsTreeManager.goToConfig(configId);
+                            } else if (window.top && typeof window.top.ConfigsTreeManager !== 'undefined' && window.top.ConfigsTreeManager.goToConfig) {
+                                window.top.ConfigsTreeManager.goToConfig(configId);
+                            } else {
+                                // Fallback: direct navigation using PageAddressManager
+                                var currentFilterId = (typeof FilterConfig !== 'undefined' && FilterConfig.getCurrentPageFilterId) ? FilterConfig.getCurrentPageFilterId() : null;
+                                var queryParams = (typeof window.PageAddressManager !== 'undefined' && window.PageAddressManager.getQueryParameters) 
+                                    ? window.PageAddressManager.getQueryParameters() 
+                                    : '';
+                                var url = 'Report?' + queryParams + '&ConfigId=' + configId + (currentFilterId ? ('&FilterId=' + currentFilterId) : '');
+                                if (window.top && window.top.PageAddressManager && window.top.PageAddressManager.navigateTo) {
+                                    window.top.PageAddressManager.navigateTo(url);
+                                } else if (window.PageAddressManager && window.PageAddressManager.navigateTo) {
+                                    window.PageAddressManager.navigateTo(url);
+                                } else {
+                                    window.location.href = url;
+                                }
+                            }
+                        };
+                        // Navigate after a short delay to allow visual selection feedback
+                        setTimeout(function() {
+                            navigateToConfig(node.id);
+                        }, 150);
+                        // Return true to allow selection (visual feedback)
+                        return true;
+                    },
+                    "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
+                });
+                
+                $('#configs-search-input-modal').off('keyup').on('keyup', function() {
+                    $configsTree.jstree('search', $(this).val());
+                });
+                
+                $configsTree.data('initialized', true);
+            }
+        }
+    } else {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+};
+</script>
+

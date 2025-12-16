@@ -25,3 +25,8 @@
 		addLinked: addLinked
 	};
 }();
+
+// Make SubReportManager globally accessible
+if (typeof window !== 'undefined') {
+	window.SubReportManager = SubReportManager;
+}

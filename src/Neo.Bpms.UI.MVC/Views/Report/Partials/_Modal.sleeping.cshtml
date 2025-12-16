@@ -126,54 +126,46 @@
 			</h5>
 		</div>
 		<div class="section-content">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="scheduled-report-name" class="form-label">
-							<i class="fa fa-tag"></i> @ViewTexts.Name
-						</label>
-						<input class="form-control modern-input" id="scheduled-report-name" name="name" type="text" value="" placeholder="نام زمانبندی"/>
-					</div>
+			<div class="form-grid-3">
+				<div class="form-group">
+					<label for="scheduled-report-name" class="form-label">
+						<i class="fa fa-tag"></i> @ViewTexts.Name
+					</label>
+					<input class="form-control modern-input" id="scheduled-report-name" name="name" type="text" value="" placeholder="نام زمانبندی"/>
 				</div>
-				<div class="col-md-3">
-					<div class="form-group">
-						<label for="schedule-type" class="form-label">
-							<i class="fa fa-calendar-alt"></i> @ViewTexts.ScheduleType
-						</label>
-						<select class="form-control modern-select schedule-type-select" id="schedule-type" name="scheduleType" onchange="showOrHideJobScheduleFeatures();">
-							<option value="1">@ViewTexts.Once</option>
-							<option value="2">@ViewTexts.Repetetive</option>
-						</select>
-					</div>
+				<div class="form-group">
+					<label for="schedule-type" class="form-label">
+						<i class="fa fa-calendar-alt"></i> @ViewTexts.ScheduleType
+					</label>
+					<select class="form-control modern-select schedule-type-select" id="schedule-type" name="scheduleType" onchange="showOrHideJobScheduleFeatures();">
+						<option value="1">@ViewTexts.Once</option>
+						<option value="2">@ViewTexts.Repetetive</option>
+					</select>
 				</div>
-				<div class="col-md-3">
-					<div class="form-group">
-						<label class="form-label">&nbsp;</label>
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" name="isDisable" id="schedule-is-disabled" value="0">
-							<label class="custom-control-label" for="schedule-is-disabled">
-								@ViewTexts.Disabled
-							</label>
-						</div>
+				<div class="form-group">
+					<label class="form-label">
+						<i class="fa fa-toggle-off"></i> وضعیت
+					</label>
+					<div class="custom-control custom-switch switch-container">
+						<input type="checkbox" class="custom-control-input" name="isDisable" id="schedule-is-disabled" value="0">
+						<label class="custom-control-label" for="schedule-is-disabled">
+							@ViewTexts.Disabled
+						</label>
 					</div>
 				</div>
 			</div>
-			<div class="row scheduled-report-DateTime">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="scheduled-report-date" class="form-label">
-							<i class="fa fa-calendar"></i> @ViewTexts.Day
-						</label>
-						<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-date" name="date" type="text" value=""/>
-					</div>
+			<div class="form-grid-2 scheduled-report-DateTime">
+				<div class="form-group">
+					<label for="scheduled-report-date" class="form-label">
+						<i class="fa fa-calendar"></i> @ViewTexts.Day
+					</label>
+					<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-date" name="date" type="text" value=""/>
 				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="scheduled-report-time" class="form-label">
-							<i class="fa fa-clock"></i> @ViewTexts.Hour
-						</label>
-						<input class="form-control modern-input time-input" id="scheduled-report-time" name="time" type="time" value=""/>
-					</div>
+				<div class="form-group">
+					<label for="scheduled-report-time" class="form-label">
+						<i class="fa fa-clock"></i> @ViewTexts.Hour
+					</label>
+					<input class="form-control modern-input time-input" id="scheduled-report-time" name="time" type="time" value=""/>
 				</div>
 			</div>
 		</div>
@@ -187,94 +179,99 @@
 		</div>
 		<div class="section-content">
 			<fieldset class="job-frequency">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label class="form-label">تکرار</label>
-						<div class="d-flex align-items-center gap-3">
-							<span class="text-muted">هر</span>
-							<input class="form-control modern-input repetition-input" id="scheduled-report-repetition" name="every" type="number" value="" min="1"/>
-							<select class="form-control modern-select frequency-select" id="schedule-job-frequency" name="jobfrequency" onchange="showOrHideJobScheduleFeatures();">
-								<option value="1">@ViewTexts.Day</option>
-								<option value="2">@ViewTexts.Week</option>
-								<option value="3" data-toggle="tooltip" title="ماه میلادی">@ViewTexts.Month</option>
-							</select>
+				<div class="form-group">
+					<label class="form-label">
+						<i class="fa fa-sync"></i> تکرار
+					</label>
+					<div class="repetition-control-group">
+						<span class="repetition-label">هر</span>
+						<input class="form-control modern-input repetition-input" id="scheduled-report-repetition" name="every" type="number" value="" min="1" placeholder="1"/>
+						<select class="form-control modern-select frequency-select" id="schedule-job-frequency" name="jobfrequency" onchange="showOrHideJobScheduleFeatures();">
+							<option value="1">@ViewTexts.Day</option>
+							<option value="2">@ViewTexts.Week</option>
+							<option value="3" data-toggle="tooltip" title="ماه میلادی">@ViewTexts.Month</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group week-days">
+					<label class="form-label">
+						<i class="fa fa-calendar-week"></i> روزهای هفته
+					</label>
+					<div class="week-days-container">
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays1" value="1" class="week-day-checkbox">
+							<label for="onWeekDays1" class="week-day-label">شنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays2" value="2" class="week-day-checkbox">
+							<label for="onWeekDays2" class="week-day-label">یکشنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays4" value="4" class="week-day-checkbox">
+							<label for="onWeekDays4" class="week-day-label">دوشنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays8" value="8" class="week-day-checkbox">
+							<label for="onWeekDays8" class="week-day-label">سه‌شنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays16" value="16" class="week-day-checkbox">
+							<label for="onWeekDays16" class="week-day-label">چهارشنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays32" value="32" class="week-day-checkbox">
+							<label for="onWeekDays32" class="week-day-label">پنجشنبه</label>
+						</div>
+						<div class="week-day-item">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays64" value="64" class="week-day-checkbox">
+							<label for="onWeekDays64" class="week-day-label">جمعه</label>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="form-group week-days">
-				<label class="form-label">روزهای هفته</label>
-				<div class="week-days-container">
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays1" value="1" class="week-day-checkbox">
-						<label for="onWeekDays1" class="week-day-label">شنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays2" value="2" class="week-day-checkbox">
-						<label for="onWeekDays2" class="week-day-label">یکشنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays4" value="4" class="week-day-checkbox">
-						<label for="onWeekDays4" class="week-day-label">دوشنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays8" value="8" class="week-day-checkbox">
-						<label for="onWeekDays8" class="week-day-label">سه‌شنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays16" value="16" class="week-day-checkbox">
-						<label for="onWeekDays16" class="week-day-label">چهارشنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays32" value="32" class="week-day-checkbox">
-						<label for="onWeekDays32" class="week-day-label">پنجشنبه</label>
-					</div>
-					<div class="week-day-item">
-						<input type="checkbox" name="onWeekDays" id="onWeekDays64" value="64" class="week-day-checkbox">
-						<label for="onWeekDays64" class="week-day-label">جمعه</label>
-					</div>
-				</div>
-			</div>
-			<div class="form-group month-frequency">
-				<label class="form-label">تنظیمات ماهانه</label>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="custom-control custom-radio mb-2">
-							<input class="custom-control-input day-of-month" type="radio" name="monthFrequency" id="monthFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
-							<label class="custom-control-label" for="monthFreq1">روز ماه</label>
+				
+				<div class="form-group month-frequency">
+					<label class="form-label">
+						<i class="fa fa-calendar-alt"></i> تنظیمات ماهانه
+					</label>
+					<div class="month-frequency-grid">
+						<div class="month-frequency-option">
+							<div class="custom-control custom-radio">
+								<input class="custom-control-input day-of-month" type="radio" name="monthFrequency" id="monthFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
+								<label class="custom-control-label" for="monthFreq1">روز ماه</label>
+							</div>
+							<input class="form-control modern-input day-of-month-input" id="scheduled-report-dayOfMonth" name="dayOfMonth" type="number" value="" disabled placeholder="روز ماه (1-31)"/>
 						</div>
-						<input class="form-control modern-input day-of-month-input" id="scheduled-report-dayOfMonth" name="dayOfMonth" type="number" value="" disabled placeholder="روز ماه (1-31)"/>
-					</div>
-					<div class="col-md-6">
-						<div class="custom-control custom-radio mb-2">
-							<input class="custom-control-input mf" type="radio" name="monthFrequency" id="monthFreq2" value="2" onclick="showOrHideJobScheduleFeatures();"/>
-							<label class="custom-control-label" for="monthFreq2">در هفته مشخص</label>
-						</div>
-						<div class="d-flex gap-2">
-							<select class="form-control modern-select week-counter-select" id="week-counter" name="monthlyFrequency" disabled>
-								<option value="1">اولین</option>
-								<option value="2">دومین</option>
-								<option value="3">سومین</option>
-								<option value="4">چهارمین</option>
-								<option value="5">آخرین</option>
-							</select>
-							<select class="form-control modern-select weekday-select" name="WeekDays" disabled>
-								<option value="1">شنبه</option>
-								<option value="2">یکشنبه</option>
-								<option value="3">دوشنبه</option>
-								<option value="4">سه شنبه</option>
-								<option value="5">چهارشنبه</option>
-								<option value="6">پنجشنبه</option>
-								<option value="7">جمعه</option>
-								<option value="8">روز کاری</option>
-								<option value="9">آخر هفته</option>
-							</select>
+						<div class="month-frequency-option">
+							<div class="custom-control custom-radio">
+								<input class="custom-control-input mf" type="radio" name="monthFrequency" id="monthFreq2" value="2" onclick="showOrHideJobScheduleFeatures();"/>
+								<label class="custom-control-label" for="monthFreq2">در هفته مشخص</label>
+							</div>
+							<div class="week-select-group">
+								<select class="form-control modern-select week-counter-select" id="week-counter" name="monthlyFrequency" disabled>
+									<option value="1">اولین</option>
+									<option value="2">دومین</option>
+									<option value="3">سومین</option>
+									<option value="4">چهارمین</option>
+									<option value="5">آخرین</option>
+								</select>
+								<select class="form-control modern-select weekday-select" name="WeekDays" disabled>
+									<option value="1">شنبه</option>
+									<option value="2">یکشنبه</option>
+									<option value="3">دوشنبه</option>
+									<option value="4">سه شنبه</option>
+									<option value="5">چهارشنبه</option>
+									<option value="6">پنجشنبه</option>
+									<option value="7">جمعه</option>
+									<option value="8">روز کاری</option>
+									<option value="9">آخر هفته</option>
+								</select>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</fieldset>
+			</fieldset>
+		</div>
 	</div>
 	
 	@* Daily Frequency Section *@
@@ -286,36 +283,45 @@
 		</div>
 		<div class="section-content">
 			<fieldset class="daily-frequency">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="custom-control custom-radio mb-3">
-						<input type="radio" class="custom-control-input specific-time" name="dailyFrequency" id="dailyFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
-						<label class="custom-control-label" for="dailyFreq1">در ساعت مشخص</label>
+				<div class="daily-frequency-options">
+					<div class="frequency-option-card">
+						<div class="custom-control custom-radio">
+							<input type="radio" class="custom-control-input specific-time" name="dailyFrequency" id="dailyFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
+							<label class="custom-control-label" for="dailyFreq1">
+								<i class="fa fa-clock"></i> در ساعت مشخص
+							</label>
+						</div>
+						<input class="form-control modern-input time-input" id="daily-frequency-hour" name="time" type="time" value=""/>
 					</div>
-					<input class="form-control modern-input time-input" id="daily-frequency-hour" name="time" type="time" value=""/>
-				</div>
-				<div class="col-md-6">
-					<div class="custom-control custom-radio mb-3">
-						<input type="radio" class="custom-control-input hourly-every" name="dailyFrequency" id="dailyFreq2" value="2" onclick="showOrHideJobScheduleFeatures();">
-						<label class="custom-control-label" for="dailyFreq2">هر چند ساعت</label>
+					<div class="frequency-option-card">
+						<div class="custom-control custom-radio">
+							<input type="radio" class="custom-control-input hourly-every" name="dailyFrequency" id="dailyFreq2" value="2" onclick="showOrHideJobScheduleFeatures();">
+							<label class="custom-control-label" for="dailyFreq2">
+								<i class="fa fa-sync"></i> هر چند ساعت
+							</label>
+						</div>
+						<div class="hourly-control-group">
+							<input class="form-control modern-input hourly-every-input" id="scheduled-report-hourlyEvery" type="number" value="" disabled placeholder="تعداد"/>
+							<span class="hour-label">@ViewTexts.Hour</span>
+						</div>
 					</div>
-					<div class="d-flex align-items-center gap-2">
-						<input class="form-control modern-input hourly-every-input" id="scheduled-report-hourlyEvery" type="number" value="" disabled placeholder="تعداد"/>
-						<span class="text-muted">@ViewTexts.Hour</span>
+				</div>
+				<div class="time-range-group">
+					<div class="form-group">
+						<label for="scheduled-report-starttime" class="form-label">
+							<i class="fa fa-play-circle"></i> ساعت شروع
+						</label>
+						<input class="form-control modern-input time-input" id="scheduled-report-starttime" name="startTime" type="time" value="" disabled/>
+					</div>
+					<div class="form-group">
+						<label for="scheduled-report-endtime" class="form-label">
+							<i class="fa fa-stop-circle"></i> ساعت پایان
+						</label>
+						<input class="form-control modern-input time-input" id="scheduled-report-endtime" name="endTime" type="time" value="" disabled/>
 					</div>
 				</div>
-			</div>
-			<div class="row mt-3">
-				<div class="col-md-6">
-					<label for="scheduled-report-starttime" class="form-label">ساعت شروع</label>
-					<input class="form-control modern-input time-input" id="scheduled-report-starttime" name="startTime" type="time" value="" disabled/>
-				</div>
-				<div class="col-md-6">
-					<label for="scheduled-report-endtime" class="form-label">ساعت پایان</label>
-					<input class="form-control modern-input time-input" id="scheduled-report-endtime" name="endTime" type="time" value="" disabled/>
-				</div>
-			</div>
-		</fieldset>
+			</fieldset>
+		</div>
 	</div>
 	
 	@* Duration Section *@
@@ -327,19 +333,19 @@
 		</div>
 		<div class="section-content">
 			<fieldset class="duration">
-				<div class="row">
-				<div class="col-md-6">
+				<div class="form-grid-2">
 					<div class="form-group">
-						<label for="scheduled-report-startdate" class="form-label">تاریخ شروع</label>
+						<label for="scheduled-report-startdate" class="form-label">
+							<i class="fa fa-calendar-plus"></i> تاریخ شروع
+						</label>
 						<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-startdate" name="startDate" type="text" value=""/>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
-						<label for="scheduled-report-enddate" class="form-label">تاریخ منقضی شدن</label>
+						<label for="scheduled-report-enddate" class="form-label">
+							<i class="fa fa-calendar-times"></i> تاریخ منقضی شدن
+						</label>
 						<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-enddate" name="endDate" type="text" value=""/>
 					</div>
-				</div>
 				</div>
 			</fieldset>
 		</div>
@@ -354,8 +360,7 @@
 		</div>
 		<div class="section-content">
 			<fieldset>
-			<div class="row">
-				<div class="col-md-6">
+				<div class="form-grid-2">
 					<div class="form-group">
 						<label for="output-type" class="form-label">
 							<i class="fa fa-file-export"></i> نوع خروجی گزارش
@@ -368,8 +373,6 @@
 							<option value="3">پیوست سابقه</option>
 						</select>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
 						<label for="file-type" class="form-label">
 							<i class="fa fa-file"></i> فرمت گزارش
@@ -382,23 +385,23 @@
 						</select>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
+				
+				<div class="form-grid-2">
 					<div class="form-group">
-						<label for="action-name" class="form-label">عنوان در خروجی</label>
+						<label for="action-name" class="form-label">
+							<i class="fa fa-heading"></i> عنوان در خروجی
+						</label>
 						<input class="form-control modern-input" id="action-name" name="actionName" type="text" value="" placeholder="عنوان گزارش"/>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
-						<label for="max-record" class="form-label">حداکثر تعداد رکورد</label>
+						<label for="max-record" class="form-label">
+							<i class="fa fa-list-ol"></i> حداکثر تعداد رکورد
+						</label>
 						<input class="form-control modern-input max-record-input" id="max-record" name="maxRecord" min="0" max="100000" type="number" value="" placeholder="تعداد رکورد"/>
 					</div>
 				</div>
-			</div>
-			<div class="row user-group-div">
-				<div class="col-md-6">
+				
+				<div class="form-grid-2 user-group-div">
 					<div class="form-group">
 						<label for="scheduled-report-roles" class="form-label">
 							<i class="fa fa-user-tag"></i> نقش
@@ -420,8 +423,6 @@
 						</select>
 						<small class="form-text text-muted">می‌توانید چند نقش را انتخاب کنید (با نگه داشتن Ctrl)</small>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
 						<label for="scheduled-report-user" class="form-label">
 							<i class="fa fa-user"></i> ارسال به کاربر
@@ -429,28 +430,30 @@
 						<input class="form-control modern-input" id="scheduled-report-user" name="user" type="text" value="" placeholder="نام کاربری"/>
 					</div>
 				</div>
-			</div>
-			<div class="row output-type">
-				<div class="col-md-6">
+				
+				<div class="form-grid-2 output-type">
 					<div class="form-group">
-						<label for="destination-user-name" class="form-label">نام کاربری (دایرکتوری)</label>
+						<label for="destination-user-name" class="form-label">
+							<i class="fa fa-user-circle"></i> نام کاربری (دایرکتوری)
+						</label>
 						<input class="form-control modern-input" id="destination-user-name" type="text" value="" placeholder="نام کاربری"/>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
-						<label for="destination-password" class="form-label">رمز عبور (دایرکتوری)</label>
+						<label for="destination-password" class="form-label">
+							<i class="fa fa-lock"></i> رمز عبور (دایرکتوری)
+						</label>
 						<input class="form-control modern-input" id="destination-password" type="password" value="" placeholder="رمز عبور"/>
 					</div>
 				</div>
-			</div>
-			<div class="form-group output-type">
-				<label for="destination-path" class="form-label">
-					<i class="fa fa-folder"></i> مسیر خروجی
-				</label>
-				<input class="form-control modern-input" id="destination-path" type="text" value="" placeholder="\\TetaScheduledReport" dir="ltr"/>
-			</div>
-		</fieldset>
+				
+				<div class="form-group output-type">
+					<label for="destination-path" class="form-label">
+						<i class="fa fa-folder"></i> مسیر خروجی
+					</label>
+					<input class="form-control modern-input" id="destination-path" type="text" value="" placeholder="\\TetaScheduledReport" dir="ltr"/>
+				</div>
+			</fieldset>
+		</div>
 	</div>
 	</form>
 	</div>
@@ -488,7 +491,7 @@
 	</div>
 </div>
 
-<partial name="~/Views/Report/Settings/AddSubReportModal.cshtml"/>
+<partial name="~/Views/Report/Partials/_Modal.add-sub-report.cshtml"/>
 
 <style>
 	.label-right { text-align: right !important; }
@@ -529,40 +532,78 @@
 	}
 	
 	.modern-modal-footer {
-		border-top: 1px solid #e9ecef;
-		padding: 15px 25px;
-		background: #f8f9fa;
+		border-top: 1px solid #e2e8f0;
+		padding: 18px 25px;
+		background: #f8fafc;
+		display: flex;
+		justify-content: flex-end;
+		gap: 12px;
+	}
+	
+	.modern-modal-footer .btn {
+		min-width: 140px;
+		font-weight: 500;
+		padding: 10px 20px;
+		border-radius: 6px;
+		transition: all 0.2s ease;
+	}
+	
+	.modern-modal-footer .btn i {
+		margin-left: 6px;
 	}
 	
 	/* Form Sections */
 	.form-section {
-		margin-bottom: 25px;
+		margin-bottom: 20px;
 		background: #ffffff;
-		border: 1px solid #e9ecef;
-		border-radius: 8px;
+		border: 1px solid #e2e8f0;
+		border-radius: 10px;
 		overflow: hidden;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 	
 	.section-header {
-		background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-		padding: 12px 20px;
-		border-bottom: 1px solid #dee2e6;
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+		padding: 14px 20px;
+		border-bottom: 2px solid #e2e8f0;
 	}
 	
 	.section-title {
 		margin: 0;
 		font-size: 15px;
 		font-weight: 600;
-		color: #2d3748;
+		color: #1e293b;
+		display: flex;
+		align-items: center;
 	}
 	
 	.section-title i {
 		margin-left: 8px;
 		color: #1869AA;
+		font-size: 16px;
 	}
 	
 	.section-content {
 		padding: 20px;
+	}
+	
+	/* Form Grid Layouts */
+	.form-grid-2 {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.form-grid-3 {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.form-group {
+		margin-bottom: 0;
 	}
 	
 	/* Modern Form Controls */
@@ -582,30 +623,61 @@
 	}
 	
 	.form-label {
-		font-weight: 500;
-		color: #495057;
-		margin-bottom: 6px;
+		font-weight: 600;
+		color: #334155;
+		margin-bottom: 8px;
 		font-size: 13px;
+		display: flex;
+		align-items: center;
 	}
 	
 	.form-label i {
 		margin-left: 6px;
-		color: #6c757d;
+		color: #1869AA;
+		font-size: 14px;
+	}
+	
+	.form-group {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.form-group .form-label {
+		margin-bottom: 8px;
+	}
+	
+	/* Repetition Control Group */
+	.repetition-control-group {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+	
+	.repetition-label {
+		color: #64748b;
+		font-weight: 500;
+		font-size: 14px;
+		white-space: nowrap;
 	}
 	
 	/* Week Days */
 	.week-days-container {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		margin-top: 10px;
-		align-items: flex-start;
+		display: flex !important;
+		flex-wrap: wrap !important;
+		gap: 10px !important;
+		margin-top: 12px !important;
+		align-items: center !important;
+		justify-content: flex-start !important;
+		width: 100% !important;
 	}
 	
 	.week-day-item {
-		position: relative;
-		display: inline-block;
-		flex-shrink: 0;
+		position: relative !important;
+		display: flex !important;
+		flex-shrink: 0 !important;
+		align-items: center !important;
+		margin: 0 !important;
 	}
 	
 	.week-day-checkbox {
@@ -617,32 +689,122 @@
 	}
 	
 	.week-day-label {
-		display: block;
-		padding: 8px 16px;
-		border: 2px solid #dee2e6;
-		border-radius: 6px;
-		background: #ffffff;
-		color: #495057;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		font-size: 13px;
-		font-weight: 500;
-		user-select: none;
-		white-space: nowrap;
-		min-width: fit-content;
-		box-sizing: border-box;
+		display: inline-block !important;
+		padding: 10px 18px !important;
+		border: 2px solid #cbd5e0 !important;
+		border-radius: 8px !important;
+		background: #ffffff !important;
+		color: #475569 !important;
+		cursor: pointer !important;
+		transition: all 0.2s ease !important;
+		font-size: 13px !important;
+		font-weight: 500 !important;
+		user-select: none !important;
+		white-space: nowrap !important;
+		min-width: fit-content !important;
+		box-sizing: border-box !important;
+		margin: 0 !important;
+		line-height: 1.4 !important;
+		text-align: center !important;
 	}
 	
 	.week-day-checkbox:checked + .week-day-label {
-		background: #1869AA;
-		color: white;
-		border-color: #1869AA;
-		box-shadow: 0 2px 4px rgba(24, 105, 170, 0.2);
+		background: #1869AA !important;
+		color: white !important;
+		border-color: #1869AA !important;
+		box-shadow: 0 2px 6px rgba(24, 105, 170, 0.25) !important;
+		transform: translateY(-1px);
 	}
 	
 	.week-day-label:hover {
-		border-color: #1869AA;
-		background: rgba(24, 105, 170, 0.05);
+		border-color: #1869AA !important;
+		background: rgba(24, 105, 170, 0.08) !important;
+		transform: translateY(-1px);
+	}
+	
+	/* Month Frequency */
+	.month-frequency-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		margin-top: 12px;
+	}
+	
+	.month-frequency-option {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	
+	.week-select-group {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+	
+	/* Daily Frequency Options */
+	.daily-frequency-options {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.frequency-option-card {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 16px;
+		border: 2px solid #e2e8f0;
+		border-radius: 8px;
+		background: #f8fafc;
+		transition: all 0.2s ease;
+	}
+	
+	.frequency-option-card:hover {
+		border-color: #cbd5e0;
+		background: #ffffff;
+	}
+	
+	.frequency-option-card .custom-control-label {
+		font-weight: 500;
+		color: #1e293b;
+		cursor: pointer;
+	}
+	
+	.frequency-option-card .custom-control-label i {
+		margin-left: 6px;
+		color: #1869AA;
+	}
+	
+	.hourly-control-group {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	
+	.hour-label {
+		color: #64748b;
+		font-size: 14px;
+		font-weight: 500;
+		white-space: nowrap;
+	}
+	
+	.time-range-group {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		margin-top: 20px;
+		padding-top: 20px;
+		border-top: 1px solid #e2e8f0;
+	}
+	
+	/* Switch Container */
+	.switch-container {
+		display: flex;
+		align-items: center;
+		height: 38px;
+		padding-top: 0;
 	}
 	
 	/* Custom Switch */
@@ -657,8 +819,25 @@
 	}
 	
 	/* Custom Radio */
+	.custom-radio {
+		margin-bottom: 12px;
+		padding-right: 1.5rem;
+	}
+	
+	.custom-radio .custom-control-label {
+		cursor: pointer;
+		font-weight: 500;
+		color: #334155;
+		padding-right: 8px;
+	}
+	
 	.custom-radio .custom-control-label::before {
 		border-radius: 50%;
+		border: 2px solid #cbd5e0;
+		width: 1.1rem;
+		height: 1.1rem;
+		top: 0.15rem;
+		right: 0;
 	}
 	
 	.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
@@ -666,7 +845,26 @@
 		border-color: #1869AA;
 	}
 	
+	.custom-radio .custom-control-input:checked ~ .custom-control-label {
+		color: #1869AA;
+		font-weight: 600;
+	}
+	
+	.custom-radio .custom-control-label::after {
+		width: 0.5rem;
+		height: 0.5rem;
+		top: 0.35rem;
+		right: 0.3rem;
+		background-size: 50% 50%;
+	}
+	
 	/* Responsive */
+	@@media (max-width: 1200px) {
+		.form-grid-3 {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	
 	@@media (max-width: 768px) {
 		.modern-modal-body {
 			padding: 15px;
@@ -677,13 +875,39 @@
 			padding: 15px;
 		}
 		
+		.form-grid-2,
+		.form-grid-3 {
+			grid-template-columns: 1fr;
+			gap: 15px;
+		}
+		
+		.month-frequency-grid {
+			grid-template-columns: 1fr;
+		}
+		
+		.daily-frequency-options {
+			grid-template-columns: 1fr;
+		}
+		
+		.time-range-group {
+			grid-template-columns: 1fr;
+		}
+		
 		.week-days-container {
-			gap: 6px;
+			gap: 8px;
 		}
 		
 		.week-day-label {
-			padding: 6px 12px;
+			padding: 8px 14px;
 			font-size: 12px;
+		}
+		
+		.repetition-control-group {
+			flex-wrap: wrap;
+		}
+		
+		.week-select-group {
+			flex-direction: column;
 		}
 	}
 	

@@ -1,4 +1,6 @@
-﻿function submitColumnSettings(modalKey) {
+@* Column Settings Modal Functions - submitColumnSettings and related functions *@
+<script>
+function submitColumnSettings(modalKey) {
     var selectedColumns = [];
 
     if (!!$("#selectedDimensions-" + modalKey)) {
@@ -71,7 +73,6 @@
         error: function (e) {
             alert(window.tetaI18n.t('Error Occured'));
             console.error(e);
-//          Error(e);
         }
     });
 }
@@ -100,34 +101,19 @@ $(".sortable-report-dimensions")
     .sortable(
         {
             connectWith: ".sortable-report-dimensions",
-            delay: 150, //Needed to prevent accidental drag when trying to select
+            delay: 150,
             revert: 0,
             cursor: "grabbing",
             helper: function (e, item) {
-                //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
                 if (!item.hasClass('selected')) {
                     item.addClass('selected').siblings().removeClass('selected');
                 }
-
-                //////////////////////////////////////////////////////////////////////
-                //HERE'S HOW TO PASS THE SELECTED ITEMS TO THE `stop()` FUNCTION:
-
-                //Clone the selected items into an array
                 var elements = item.parent().children('.selected').clone();
-
-                //Add a property to `item` called 'multidrag` that contains the 
-                //  selected items, then remove the selected items from the source list
                 item.data('multidrag', elements).siblings('.selected').remove();
-
-                //Now the selected items exist in memory, attached to the `item`,
-                //  so we can access them later when we get to the `stop()` callback
-
-                //Create the helper
                 var helper = $('<li/>');
                 return helper.append(elements);
             },
             stop: function (e, ui) {
-                //Now we access those items that we stored in `item`s data!
                 var elements = ui.item.data('multidrag');
                 var modalKey = $(this).attr("modalKey");
                 elements.each(function (idx, element) {
@@ -150,24 +136,9 @@ $(".sortable-report-dimensions")
                         selectedLi.remove();
                     }
                 });
-
-                //`elements` now contains the originally selected items from the source list (the dragged items)!!
-
-                //Finally I insert the selected items after the `item`, then remove the `item`, since 
-                //  item is a duplicate of one of the selected items.
                 ui.item.after(elements).remove();
             }
         });
-
-//$(".columnsSettingsModal li")
-//    .on('click',
-//        function(e) {
-//            if (e.ctrlKey || e.metaKey) {
-//                $(this).toggleClass("selected");
-//            }
-//            $(".columnsSettingsModal li.selected").removeClass("selected");
-//            $(this).addClass("selected");
-//        });
 
 $(".sortable-report-columns")
     .on('click',
@@ -176,7 +147,6 @@ $(".sortable-report-columns")
             var modalKey = $(this).parent().attr("modalKey");
             if (e.ctrlKey || e.metaKey) {
                 $('#showEditFormulaId-' + modalKey).addClass('hidden');
-
                 $(this).toggleClass("selected");
             } else {
                 $(".columnsSettingsModal li.selected").removeClass("selected");
@@ -192,41 +162,21 @@ $(".sortable-report-columns")
         })
     .sortable({
         connectWith: ".sortable-report-columns",
-        delay: 150, //Needed to prevent accidental drag when trying to select
+        delay: 150,
         revert: 0,
         helper: function (e, item) {
-            //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
             if (!item.hasClass('selected')) {
                 item.addClass('selected').siblings().removeClass('selected');
             }
-
-            //////////////////////////////////////////////////////////////////////
-            //HERE'S HOW TO PASS THE SELECTED ITEMS TO THE `stop()` FUNCTION:
-
-            //Clone the selected items into an array
             var elements = item.parent().children('.selected').clone();
-
-            //Add a property to `item` called 'multidrag` that contains the 
-            //  selected items, then remove the selected items from the source list
             item.data('multidrag', elements).siblings('.selected').remove();
-
-            //Now the selected items exist in memory, attached to the `item`,
-            //  so we can access them later when we get to the `stop()` callback
-
-            //Create the helper
             var helper = $('<li/>');
             return helper.append(elements);
         },
         stop: function (e, ui) {
-            //Now we access those items that we stored in `item`s data!
             var elements = ui.item.data('multidrag');
-            //`elements` now contains the originally selected items from the source list (the dragged items)!!
-
-            //Finally I insert the selected items after the `item`, then remove the `item`, since 
-            //  item is a duplicate of one of the selected items.
             ui.item.after(elements).remove();
         }
-
     });
 
 function renameColumn(obj) {
@@ -236,7 +186,6 @@ function renameColumn(obj) {
     if (result !== null)
         $alias.text(result);
 }
-
 
 var formulaColumnId = '';
 var isEdit = false;
@@ -248,7 +197,6 @@ function showEditFormulaModal(modalKey) {
     $('#addFormulaModal-' + modalKey).modal('show');
     $('#newFormulaName-' + modalKey).val(newFormulaName);
     $('#newFormula-' + modalKey).val(newFormulaBody);
-
     $('#addFormulaModal-label-' + modalKey).text(window.tetaI18n.t('EditFormula'));
 }
 
@@ -317,3 +265,5 @@ function toggleTooltip(el) {
 function toggleMatrixType(el) {
     $(el).toggleClass('matrixTypeVertical').toggleClass('matrixTypeHorizontal');
 }
+</script>
+

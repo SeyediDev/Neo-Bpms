@@ -22,40 +22,44 @@
 						<input class="form-control" id="filter-name" name="filterName" type="text" value=""/>
 					</div>
 					<div class="form-group">
-						<div class="custom-control custom-checkbox custom-control-inline">
-							<input class="custom-control-input" type="checkbox" name="isDefault" id="filterIsDefault" value="1">
-							<label class="custom-control-label" for="filterIsDefault">
-								@ViewTexts.Default
-							</label>
-						</div>
-						@if (Model.hasConfig)
-						{
-							<div class="custom-control custom-checkbox custom-control-inline">
-								<input class="custom-control-input" type="checkbox" name="isForThisConfig" id="filterIsForThisConfig" value="">
-								<label for="filterIsForThisConfig" class="custom-control-label">
-									@ViewTexts.JustForThisConfig
+						<div class="d-flex align-items-center flex-wrap" style="gap: 20px;">
+							<div class="custom-control custom-checkbox">
+								<input class="custom-control-input" type="checkbox" name="isDefault" id="filterIsDefault" value="1">
+								<label class="custom-control-label" for="filterIsDefault">
+									@ViewTexts.Default
 								</label>
 							</div>
-						}
+							@if (Model.hasConfig)
+							{
+								<div class="custom-control custom-checkbox">
+									<input class="custom-control-input" type="checkbox" name="isForThisConfig" id="filterIsForThisConfig" value="">
+									<label for="filterIsForThisConfig" class="custom-control-label">
+										@ViewTexts.JustForThisConfig
+									</label>
+								</div>
+							}
+						</div>
 					</div>
 
 					@if (Model.canPublishConfigs)
 					{
 						<div class="form-group">
-							<div class="col-form-label">
+							<label class="col-form-label d-block mb-2">
 								@ViewTexts.AccessLevel
-							</div>
-							<div class="custom-control custom-radio custom-control-inline">
-								<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicFalse" value="false">
-								<label class="custom-control-label" for="filterIsPublicFalse">
-									@ViewTexts.Personal
-								</label>
-							</div>
-							<div class="custom-control custom-radio custom-control-inline">
-								<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicTrue" value="true">
-								<label class="custom-control-label" for="filterIsPublicTrue">
-									@ViewTexts.Public
-								</label>
+							</label>
+							<div class="d-flex align-items-center" style="gap: 20px;">
+								<div class="custom-control custom-radio">
+									<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicFalse" value="false">
+									<label class="custom-control-label" for="filterIsPublicFalse">
+										@ViewTexts.Personal
+									</label>
+								</div>
+								<div class="custom-control custom-radio">
+									<input class="custom-control-input" type="radio" name="IsPublic" id="filterIsPublicTrue" value="true">
+									<label class="custom-control-label" for="filterIsPublicTrue">
+										@ViewTexts.Public
+									</label>
+								</div>
 							</div>
 						</div>
 					}
@@ -69,4 +73,101 @@
 			</div>
 		</div>
 	</div>
+	
+	<style>
+		/* Fix radio buttons and checkboxes layout in filter config modal */
+		#filters-modal .form-group {
+			margin-bottom: 1.5rem !important;
+		}
+		
+		#filters-modal .custom-control {
+			display: flex !important;
+			align-items: center !important;
+			margin-bottom: 0 !important;
+			padding-left: 1.5rem !important;
+			min-height: 1.5rem !important;
+		}
+		
+		#filters-modal .custom-control-input {
+			position: absolute !important;
+			left: 0 !important;
+			z-index: 1 !important;
+			width: 1rem !important;
+			height: 1rem !important;
+			opacity: 0 !important;
+		}
+		
+		#filters-modal .custom-control-label {
+			position: relative !important;
+			margin-bottom: 0 !important;
+			padding-left: 0.5rem !important;
+			cursor: pointer !important;
+		}
+		
+		#filters-modal .custom-control-label::before {
+			position: absolute !important;
+			top: 0.25rem !important;
+			left: -1.5rem !important;
+			display: block !important;
+			width: 1rem !important;
+			height: 1rem !important;
+			pointer-events: none !important;
+			content: "" !important;
+			background-color: #fff !important;
+			border: #adb5bd solid 1px !important;
+		}
+		
+		#filters-modal .custom-radio .custom-control-label::before {
+			border-radius: 50% !important;
+		}
+		
+		#filters-modal .custom-checkbox .custom-control-label::before {
+			border-radius: 0.25rem !important;
+		}
+		
+		#filters-modal .custom-control-label::after {
+			position: absolute !important;
+			top: 0.25rem !important;
+			left: -1.5rem !important;
+			display: block !important;
+			width: 1rem !important;
+			height: 1rem !important;
+			content: "" !important;
+			background: no-repeat 50% / 50% 50% !important;
+		}
+		
+		#filters-modal .custom-control-input:checked ~ .custom-control-label::before {
+			color: #fff !important;
+			border-color: #007bff !important;
+			background-color: #007bff !important;
+		}
+		
+		#filters-modal .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+		}
+		
+		#filters-modal .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e") !important;
+		}
+		
+		#filters-modal .d-flex {
+			display: flex !important;
+		}
+		
+		#filters-modal .align-items-center {
+			align-items: center !important;
+		}
+		
+		#filters-modal .flex-wrap {
+			flex-wrap: wrap !important;
+		}
+		
+		#filters-modal .d-block {
+			display: block !important;
+		}
+		
+		#filters-modal .mb-2 {
+			margin-bottom: 0.5rem !important;
+		}
+	</style>
 }

@@ -21,7 +21,6 @@
     <PackageReference Include="Ardalis.GuardClauses" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-    <PackageReference Include="BuildBundlerMinifier2022" />
     <PackageReference Include="Captcha" />
     <PackageReference Include="EPPlus" />
     <PackageReference Include="MediatR" />

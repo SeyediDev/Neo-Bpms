@@ -1,6 +1,6 @@
-﻿function submitColorsSettings(modalKey) {
-        // Debug: Check if modalObjects exists
-    
+@* Colors Settings Modal Functions - submitColorsSettings *@
+<script>
+function submitColorsSettings(modalKey) {
     // Try both window.top and window
     var modalObj = (window.top.modalObjects && window.top.modalObjects[modalKey]) || 
                    (window.modalObjects && window.modalObjects[modalKey]);
@@ -10,7 +10,7 @@
         return;
     }
     
-	var ajaxParams = {
+    var ajaxParams = {
         NamespaceId: modalObj.NamespaceId,
         EntityId: modalObj.EntityId,
         ReportId: modalObj.ReportId,
@@ -21,8 +21,6 @@
         warning: $("#_color_warning-" + modalKey).val(),
         active: $("#_color_active-" + modalKey).val()
     };
-    
-        // Ajax params prepared
     
     var obj = JSON.stringify(ajaxParams);
     $.ajax({
@@ -36,12 +34,12 @@
         data: obj,
         headers: window.AddAntiForgeryToken(),
         success: function (res) {
-                // Colors settings applied successfully
             location.reload();
         },
         error: function (e) {
-            // Error applying colors settings
             alert(window.tetaI18n.t('Error Occured') + e.responseText);
         }
     });
 }
+</script>
+

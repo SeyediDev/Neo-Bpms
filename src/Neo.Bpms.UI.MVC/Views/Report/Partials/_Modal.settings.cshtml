@@ -2,7 +2,6 @@
 @using System.Linq
 @using Neo.Bpms.Domain.Entities.Cmmn
 @using Neo.Bpms.Domain.Entities.Cmmn.UI
-;
 @using Neo.Bpms.Domain.Model.Project
 @using Neo.Bpms.Domain.Model.UI
 @using Neo.Bpms.Domain.Models.Cmmn
@@ -187,12 +186,17 @@
 						</div>
 						<script>
 							(function() {
-								var container = $('#chartAdvancedOptions-@modalKey');
-								var hiddenInput = $('#chartAdvancedOptionsValue-@modalKey');
+								// Wait for jQuery to be available
+								if (typeof jQuery === 'undefined') {
+									setTimeout(arguments.callee, 100);
+									return;
+								}
+								var container = jQuery('#chartAdvancedOptions-@modalKey');
+								var hiddenInput = jQuery('#chartAdvancedOptionsValue-@modalKey');
 								function syncChartOptions() {
 									var values = [];
 									container.find('.chart-option:checked').each(function() {
-										values.push($(this).data('option'));
+										values.push(jQuery(this).data('option'));
 									});
 									hiddenInput.val(values.join(','));
 								}
@@ -200,6 +204,39 @@
 								syncChartOptions();
 							})();
 						</script>
+					}
+					
+					@* Design Settings Section - Quick Links to Other Settings *@
+					@if (structure.ReportViewType == ReportViewType.Chart || structure.ReportViewType == ReportViewType.GroupByList || structure.ReportViewType == ReportViewType.List)
+					{
+						<div class="row mt-4">
+							<div class="col-sm-12">
+								<h4>تنظیمات اضافی</h4>
+								<div class="list-group">
+									<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#columnsSettingsModal-@modalKey">
+										<div class="d-flex w-100 justify-content-between">
+											<h6 class="mb-1">تنظیمات ستون‌ها</h6>
+											<small>مدیریت نمایش ستون‌ها</small>
+										</div>
+									</a>
+									<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#ordersSettingsModal-@modalKey">
+										<div class="d-flex w-100 justify-content-between">
+											<h6 class="mb-1">تنظیمات ترتیب</h6>
+											<small>مدیریت مرتب‌سازی داده‌ها</small>
+										</div>
+									</a>
+									@if (structure.ReportViewType.In(ReportViewType.List, ReportViewType.GroupByList))
+									{
+										<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#colorsSettingsModal-@modalKey">
+											<div class="d-flex w-100 justify-content-between">
+												<h6 class="mb-1">تنظیمات رنگ</h6>
+												<small>مدیریت رنگ‌بندی سطرهای گزارش</small>
+											</div>
+										</a>
+									}
+								</div>
+							</div>
+						</div>
 					}
 				</div>
 				<div class="modal-footer">
@@ -220,10 +257,10 @@
 	{
 		foreach (var subReport in row.SubReports)
 		{
-			@Html.Partial("~/Views/Report/Settings/_ReportSettingsModal.cshtml", subReport)
+			@Html.Partial("~/Views/Report/Partials/_Modal.settings.cshtml", subReport)
 		}
 	}
 }
 
 
-<script src="~/Scripts/common-assets-includes/features/report/report-reportSettings.js?v01"></script>
+@* Report Settings Form Handler is now in _Scripts.report-settings.cshtml *@

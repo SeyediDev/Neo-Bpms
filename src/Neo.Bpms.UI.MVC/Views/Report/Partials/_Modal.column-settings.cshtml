@@ -276,7 +276,7 @@
 	{
 		foreach (var subReport in row.SubReports)
 		{
-			@Html.Partial("~/Views/Report/Settings/_columnSettingsModal.cshtml", subReport)
+			@Html.Partial("~/Views/Report/Partials/_Modal.column-settings.cshtml", subReport)
 		}
 	}
 }

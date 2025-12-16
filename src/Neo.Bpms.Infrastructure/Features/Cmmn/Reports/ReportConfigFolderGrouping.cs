@@ -42,35 +42,35 @@ public class ReportConfigFolderGrouping(
             }).ToList();
 
         result?.AddRange(configs?.Where(cf => cf.Parent == null )
-                             .OrderBy(f => f.ViewType + f.IsPublic.ToString() + string.Join(",", f.Roles ?? []) + f.Name)
-                             .Select(c =>
-                             {
-                                 ConfiguredFolder folder = configuredFolders?.FirstOrDefault(ff => ff.Id == c.FolderId);
-                                 // Convert ViewType to tree type: List -> ReportList
-                                 // For Chart type, use Chart.{GetChartType(ChartType)} format for icon switching in _Scripts.report-modals.cshtml
-                                 string treeType = c.ViewType == ReportViewType.List 
-                                     ? "ReportList" 
-                                     : c.ViewType == ReportViewType.Chart 
-                                         ? $"Chart.{c.ChartType}" 
-                                         : c.ViewType.ToString();
-                                 return new ConfigTreeItem
-                                 {
-                                     id = c.ConfigId,
-                                     parent = folder?.Id.ToString() ?? "#",
-                                     text = c.Name,
-                                     type = treeType,
-                                     data = new
-                                     {
-                                         hasSchedules = c.ScheduledReports?.Any() ?? false,
-                                         configId = c.ConfigId,
-                                         isPublic = c.IsPublic,
-                                         isMeta = c.IsMeta,
-                                         isDefault = c.IsDefault,
-                                         isActive = c.ConfigId == configId,
-                                         chartType = c.ViewType == ReportViewType.Chart ? c.ChartType.ToString() : null
-                                     }
-                                 };
-                             }) ?? []);
+            .OrderBy(f => f.ViewType + f.IsPublic.ToString() + string.Join(",", f.Roles ?? []) + f.Name)
+            .Select(c =>
+            {
+                ConfiguredFolder folder = configuredFolders?.FirstOrDefault(ff => ff.Id == c.FolderId);
+                // Convert ViewType to tree type: List -> ReportList
+                // For Chart type, use Chart.{GetChartType(ChartType)} format for icon switching in _Scripts.report-modals.cshtml
+                string treeType = c.ViewType == ReportViewType.List 
+                    ? "ReportList" 
+                    : c.ViewType == ReportViewType.Chart 
+                        ? $"Chart.{c.ChartType}" 
+                        : c.ViewType.ToString();
+                return new ConfigTreeItem
+                {
+                    id = c.ConfigId,
+                    parent = folder?.Id.ToString() ?? "#",
+                    text = c.Name,
+                    type = treeType,
+                    data = new
+                    {
+                        hasSchedules = c.ScheduledReports?.Any() ?? false,
+                        configId = c.ConfigId,
+                        isPublic = c.IsPublic,
+                        isMeta = c.IsMeta,
+                        isDefault = c.IsDefault,
+                        isActive = c.ConfigId == configId,
+                        chartType = c.ViewType == ReportViewType.Chart ? c.ChartType.ToString() : null
+                    }
+                };
+            }) ?? []);
 
         return result;
     }

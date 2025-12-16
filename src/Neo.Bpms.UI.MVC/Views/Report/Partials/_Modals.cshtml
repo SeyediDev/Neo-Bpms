@@ -6,85 +6,65 @@
     var canScheduleReports = ViewBag.CanScheduleReports ?? false;
 }
 
-@* Report Designs Modal *@
-@if (canDesign)
-{
-    <div id="report-designs-modal" class="report-modal">
-        <div class="report-modal-content">
-            <div class="report-modal-header">
-                <h5>@ViewTexts.ReportDesigns</h5>
-                <button type="button" class="report-modal-close" onclick="toggleReportDesignsModal(event)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="report-modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    @if (canDesign)
-                    {
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-sm btn-outline-success" id="btn-add-config-modal" onclick="if(typeof showAddConfigModalFallback === 'function') { showAddConfigModalFallback(); } else { console.error('showAddConfigModalFallback not available'); }" title="@ViewTexts.AddReportConfig">
-                                <i class="fa fa-plus"></i> @ViewTexts.AddReportConfig
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="ConfigsTreeManager.newFolder()" title="@ViewTexts.AddFolder">
-                                <i class="fa fa-folder-plus"></i> @ViewTexts.AddFolder
-                            </button>
-                        </div>
-                    }
-                </div>
-                <div class="search-box">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-search"></i></span>
-                        </div>
-                        <input type="text" class="form-control" id="configs-search-input-modal" placeholder="@ViewTexts.Search" />
-                    </div>
-                </div>
-                <div id="configs-tree-modal" class="report-tree-container"></div>
-            </div>
-        </div>
-    </div>
-}
+@* ============================================
+   Main Feature Modals
+   ============================================ *@
 
-@* Scheduling Modal *@
+@* Report Designs Modal - Tree view for managing report configurations *@
+@* Note: canDesign check is also inside _Modal.designs.cshtml for standalone usage *@
+<partial name="Partials/_Modal.designs" model="Model" />
+
+@* Scheduling Modal - Tree view for managing scheduled reports *@
+@* Note: canScheduleReports check is also inside _Modal.scheduling.cshtml for standalone usage *@
 @if (canScheduleReports)
 {
-    <div id="scheduling-modal" class="report-modal">
-        <div class="report-modal-content">
-            <div class="report-modal-header">
-                <h5>@ViewTexts.ReportScheduling</h5>
-                <button type="button" class="report-modal-close" onclick="toggleSchedulingModal(event)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="report-modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <button type="button" class="btn btn-sm btn-outline-success" onclick="ScheduledReport.showModal()" title="@ViewTexts.AddSchedule">
-                        <i class="fa fa-plus"></i> @ViewTexts.AddSchedule
-                    </button>
-                </div>
-                <div id="scheduled-reports-tree-modal" class="report-tree-container"></div>
-            </div>
-        </div>
-    </div>
+    <partial name="Partials/_Modal.scheduling" model="Model" />
 }
 
-@* Other Modals and Tooltips *@
-<partial name="~/Views/Report/DrillDown/MyDrillDownMenu.cshtml" />
+@* ============================================
+   Configuration Modals
+   ============================================ *@
 
+@* Report Settings Modal - Configure report settings (name, access, etc.) *@
 @if (canDesign)
 {
-    <partial name="~/Views/Report/Settings/_ReportSettingsModal.cshtml" model="Model" />
+    <partial name="Partials/_modal.settings" model="Model" />
 }
 
-<partial name="~/Views/Report/Settings/_SleepingModals.cshtml" model="Model" />
-<partial name="~/Views/Report/Helpers/_FilterTooltip.cshtml" model="Model" />
-<partial name="~/Views/Report/Settings/_DesignSettings.cshtml" />
-<partial name="~/Views/Report/Helpers/_ReportInfo.cshtml" />
-<partial name="~/Views/Report/Settings/_RefreshSettings.cshtml" />
+@* Sleeping Modals - Config config modal, folder modal, scheduled report modal *@
+<partial name="Partials/_Modal.sleeping" model="Model" />
 
+@* Add Sub Report Modal - Add sub-report to main report *@
+<partial name="Partials/_Modal.add-sub-report" />
+
+@* ============================================
+   Column and Display Modals
+   ============================================ *@
+
+@* Column Settings Modal - Configure column settings *@
+<partial name="Partials/_Modal.column-settings" model="Model" />
+
+@* Order By Modal - Configure sorting order *@
+<partial name="Partials/_Modal.order-by" model="Model" />
+
+@* Colors Modal - Configure conditional formatting colors *@
+<partial name="Partials/_Modal.colors" model="Model" />
+
+@* ============================================
+   UI Helper Modals and Tooltips
+   ============================================ *@
+
+@* Drill Down Menu - Context menu for drill-down functionality *@
+<partial name="Partials/_Modal.drill-down" />
+
+@* Filter Tooltip - Tooltip for filter configuration *@
+<partial name="Partials/_Modal.filter-tooltip" model="Model" />
+
+@* Design Settings - Design settings panel *@
+<partial name="Partials/_Modal.design-settings" model="Model" />
+
+@* Report Info - Report information tooltip *@
+<partial name="Partials/_Modal.report-info" />
+
+@* Refresh Settings - Refresh settings panel *@
+<partial name="Partials/_Modal.refresh-settings" />

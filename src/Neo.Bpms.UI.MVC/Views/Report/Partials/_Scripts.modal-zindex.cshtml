@@ -80,8 +80,6 @@ function initializeModalZIndexManagement() {
         
         // Store in stack
         window.modalStack.push({ modal: modal, zIndex: newZIndex });
-        
-        console.log('Modal opening, z-index set to:', newZIndex, 'for modal:', modal.id);
     });
     
     $(document).on('shown.bs.modal', '.modal', function(event) {
@@ -90,22 +88,46 @@ function initializeModalZIndexManagement() {
             return;
         }
         
+        // CRITICAL FIX: Ensure modal is a direct child of body for all modals
+        const $modal = $(modal);
+        if ($modal.parent().is('body') === false) {
+            console.log('Moving modal to body:', modal.id, 'was nested inside:', $modal.parent().attr('class'));
+            $modal.appendTo('body');
+        }
+        
         // Find the backdrop that was just created (should be the last one)
         const backdrops = document.querySelectorAll('.modal-backdrop');
         const backdrop = backdrops[backdrops.length - 1];
         
         if (backdrop && modal) {
             // Get z-index from modal
-            const modalZIndex = parseInt(window.getComputedStyle(modal).zIndex) || BASE_Z_INDEX;
+            let modalZIndex = parseInt(window.getComputedStyle(modal).zIndex) || BASE_Z_INDEX;
+            
+            // CRITICAL FIX: Ensure modal z-index is higher than backdrop
+            // If backdrop z-index is higher, increase modal z-index
+            const backdropZIndex = parseInt(window.getComputedStyle(backdrop).zIndex) || 0;
+            if (backdropZIndex >= modalZIndex) {
+                modalZIndex = backdropZIndex + 10;
+                modal.style.zIndex = modalZIndex.toString();
+            }
+            
             backdrop.style.zIndex = (modalZIndex - 1).toString();
+            
+            // Ensure modal is visible
+            const computedStyle = window.getComputedStyle(modal);
+            if (computedStyle.display === 'none') {
+                modal.style.setProperty('display', 'block', 'important');
+            }
+            if (!modal.classList.contains('show')) {
+                modal.classList.add('show');
+            }
             
             // Update stack
             const stackItem = window.modalStack.find(item => item.modal === modal);
             if (stackItem) {
                 stackItem.backdrop = backdrop;
+                stackItem.zIndex = modalZIndex;
             }
-            
-            console.log('Modal shown, backdrop z-index set to:', modalZIndex - 1);
         }
     });
     

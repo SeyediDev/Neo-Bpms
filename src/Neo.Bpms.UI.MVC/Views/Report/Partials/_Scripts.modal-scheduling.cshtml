@@ -1,0 +1,47 @@
+@* modal-scheduling.js - Scheduling Modal Functions *@
+<script>
+/**
+ * modal-scheduling.js
+ * Scheduling Modal Functions
+ */
+
+// Toggle Scheduling Modal - Make it globally accessible
+window.toggleSchedulingModal = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    const modal = document.getElementById('scheduling-modal');
+    if (!modal) {
+        console.warn('Scheduling modal not found');
+        return;
+    }
+    
+    const isShowing = modal.classList.contains('show');
+    
+    if (!isShowing) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Initialize tree if not already initialized
+        var $scheduledTree = $('#scheduled-reports-tree-modal');
+        if ($scheduledTree.length && !$scheduledTree.data('initialized')) {
+            if (typeof window.scheduledReportsTree !== 'undefined') {
+                $scheduledTree.jstree({
+                    'core': {
+                        'data': window.scheduledReportsTree,
+                        "check_callback": true
+                    },
+                    "plugins": ["types", "wholerow", "state"]
+                });
+                $scheduledTree.data('initialized', true);
+            }
+        }
+    } else {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+};
+</script>
+

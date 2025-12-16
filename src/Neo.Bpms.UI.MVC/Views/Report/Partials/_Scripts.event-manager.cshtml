@@ -1,0 +1,529 @@
+@* report-event-manager.js - Centralized Event Manager with Event Delegation *@
+<script>
+/**
+ * report-event-manager.js
+ * Centralized Event Manager for Report Pages
+ * Uses Event Delegation with data-action attributes for reliable event handling
+ */
+
+(function() {
+    'use strict';
+    
+    // Event Manager Singleton
+    const ReportEventManager = {
+        initialized: false,
+        handlers: {},
+        
+        /**
+         * Initialize the event manager
+         */
+        init: function() {
+            if (this.initialized) {
+                console.warn('ReportEventManager already initialized');
+                return;
+            }
+            
+            // Use event delegation on document body (bubble phase, not capture)
+            document.body.addEventListener('click', this.handleClick.bind(this), false);
+            document.body.addEventListener('keydown', this.handleKeydown.bind(this), false);
+            
+            this.initialized = true;
+        },
+        
+        /**
+         * Register a handler for a specific action
+         */
+        register: function(action, handler) {
+            if (typeof handler !== 'function') {
+                console.error('Handler must be a function for action:', action);
+                return;
+            }
+            this.handlers[action] = handler;
+        },
+        
+        /**
+         * Unregister a handler
+         */
+        unregister: function(action) {
+            delete this.handlers[action];
+        },
+        
+        /**
+         * Handle click events using event delegation
+         */
+        handleClick: function(event) {
+            // Debug: Check if clicking on filter button
+            const clickedElement = event.target;
+            const isFilterButton = clickedElement.closest && clickedElement.closest('[data-action="toggle-filter-tooltip"]');
+            
+            if (isFilterButton) {
+                console.log('[EventManager] 🔍 Filter button area clicked', {
+                    clickedTag: clickedElement.tagName,
+                    clickedClasses: clickedElement.className,
+                    closestElement: clickedElement.closest('[data-action]')?.tagName,
+                    closestAction: clickedElement.closest('[data-action]')?.getAttribute('data-action')
+                });
+            }
+            
+            // Find the closest element with data-action attribute
+            // Check both the clicked element and its parents
+            let target = event.target.closest('[data-action]');
+            
+            // If not found, check if the clicked element itself has data-action
+            if (!target && event.target.hasAttribute && event.target.hasAttribute('data-action')) {
+                target = event.target;
+            }
+            
+            // Special handling for SVG elements (SVG, use, etc.) - traverse up the DOM tree
+            if (!target && (event.target.tagName === 'svg' || event.target.tagName === 'use' || event.target.tagName === 'path' || event.target.tagName === 'circle')) {
+                let parent = event.target.parentElement;
+                let depth = 0;
+                while (parent && parent !== document.body && depth < 10) {
+                    if (parent.hasAttribute && parent.hasAttribute('data-action')) {
+                        target = parent;
+                        if (isFilterButton) {
+                            console.log('[EventManager] ✅ Found target via parent traversal:', {
+                                targetTag: target.tagName,
+                                targetAction: target.getAttribute('data-action'),
+                                depth: depth
+                            });
+                        }
+                        break;
+                    }
+                    parent = parent.parentElement;
+                    depth++;
+                }
+            }
+            
+            // Also check for specific IDs like design-menu
+            if (!target && event.target.closest) {
+                const designMenu = event.target.closest('#design-menu');
+                if (designMenu && designMenu.hasAttribute('data-action')) {
+                    target = designMenu;
+                }
+            }
+            
+            if (!target) {
+                if (isFilterButton) {
+                    console.warn('[EventManager] ⚠️ Filter button clicked but target not found!');
+                }
+                return; // Not our element, let it bubble normally
+            }
+            
+            const action = target.getAttribute('data-action');
+            if (!action) {
+                if (isFilterButton) {
+                    console.warn('[EventManager] ⚠️ Filter button found but no action attribute!');
+                }
+                return;
+            }
+            
+            if (isFilterButton) {
+                console.log('[EventManager] 🎯 Filter button action found:', action);
+            }
+            
+            // Prevent default and stop propagation for our actions
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Get handler
+            const handler = this.handlers[action];
+            if (!handler) {
+                console.warn('[EventManager] ⚠️ No handler registered for action:', action);
+                console.warn('[EventManager] Available handlers:', Object.keys(this.handlers).sort());
+                if (isFilterButton) {
+                    console.error('[EventManager] ❌ Filter button handler not found!');
+                }
+                return;
+            }
+            
+            // Call handler with event and target element
+            try {
+                if (isFilterButton) {
+                    console.log('[EventManager] ✅ Calling filter button handler');
+                }
+                handler(event, target);
+            } catch (error) {
+                console.error('[EventManager] ❌ Error executing handler for action:', action, error);
+            }
+        },
+        
+        /**
+         * Handle keyboard events (Escape key for closing modals)
+         */
+        handleKeydown: function(event) {
+            if (event.key === 'Escape') {
+                // Close modals
+                const openModals = document.querySelectorAll('.report-modal.show, .modal.show');
+                openModals.forEach(function(modal) {
+                    const modalId = modal.id;
+                    if (modalId === 'report-designs-modal' && typeof window.toggleReportDesignsModal === 'function') {
+                        window.toggleReportDesignsModal(null);
+                    } else if (modalId === 'scheduling-modal' && typeof window.toggleSchedulingModal === 'function') {
+                        window.toggleSchedulingModal(null);
+                    } else if (typeof window.closeModal === 'function') {
+                        window.closeModal(modalId);
+                    }
+                });
+            }
+        }
+    };
+    
+    // Make it globally accessible
+    window.ReportEventManager = ReportEventManager;
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            ReportEventManager.init();
+            // Delay handler registration to ensure all functions are loaded
+            setTimeout(registerHandlers, 0);
+        });
+    } else {
+        ReportEventManager.init();
+        // Delay handler registration to ensure all functions are loaded
+        setTimeout(registerHandlers, 0);
+    }
+    
+    // Register all handlers - called after all functions are defined
+    var handlerRegistrationAttempts = 0;
+    var maxHandlerRegistrationAttempts = 10;
+    
+    function registerHandlers() {
+        handlerRegistrationAttempts++;
+        
+        // Double-check that critical functions exist
+        var criticalFunctionsMissing = [];
+        if (typeof window.toggleDesignSettings === 'undefined') {
+            criticalFunctionsMissing.push('toggleDesignSettings');
+        }
+        if (typeof window.toggleFilterTooltip === 'undefined') {
+            criticalFunctionsMissing.push('toggleFilterTooltip');
+        }
+        
+        if (criticalFunctionsMissing.length > 0 && handlerRegistrationAttempts < maxHandlerRegistrationAttempts) {
+            console.warn('Critical functions not found, retrying... (' + handlerRegistrationAttempts + '/' + maxHandlerRegistrationAttempts + '):', criticalFunctionsMissing);
+            setTimeout(registerHandlers, 50);
+            return;
+        }
+        
+        if (handlerRegistrationAttempts >= maxHandlerRegistrationAttempts && criticalFunctionsMissing.length > 0) {
+            console.error('[EventManager] ❌ Failed to register handlers after', maxHandlerRegistrationAttempts, 'attempts. Missing:', criticalFunctionsMissing);
+        } else if (criticalFunctionsMissing.length === 0) {
+            console.log('[EventManager] ✅ All critical functions available, registering handlers...');
+        }
+        
+        ReportEventManager.register('toggle-report-info', function(event, target) {
+            if (typeof window.toggleReportInfo === 'function') {
+                window.toggleReportInfo(event);
+            } else {
+                console.error('toggleReportInfo function not found');
+            }
+        });
+        
+        ReportEventManager.register('toggle-refresh-settings', function(event, target) {
+            if (typeof window.toggleRefreshSettings === 'function') {
+                window.toggleRefreshSettings(event);
+            } else {
+                console.error('toggleRefreshSettings function not found');
+            }
+        });
+        
+        ReportEventManager.register('toggle-filter-tooltip', function(event, target) {
+            if (typeof window.toggleFilterTooltip === 'function') {
+                try {
+                    window.toggleFilterTooltip(event, target);
+                } catch (error) {
+                    console.error('[EventManager] ❌ Error calling toggleFilterTooltip:', error);
+                }
+            } else {
+                console.error('[EventManager] ❌ toggleFilterTooltip function not found!');
+            }
+        });
+        
+        ReportEventManager.register('toggle-design-settings', function(event, target) {
+            console.log('Event Manager: toggle-design-settings clicked', typeof window.toggleDesignSettings, 'target:', target);
+            if (typeof window.toggleDesignSettings === 'function') {
+                try {
+                    window.toggleDesignSettings(event);
+                } catch (error) {
+                    console.error('Error calling toggleDesignSettings:', error);
+                }
+            } else {
+                console.error('toggleDesignSettings function not found');
+            }
+        });
+        
+        ReportEventManager.register('toggle-report-designs-modal', function(event, target) {
+            if (typeof window.toggleReportDesignsModal === 'function') {
+                window.toggleReportDesignsModal(event);
+            } else {
+                console.error('toggleReportDesignsModal function not found');
+            }
+        });
+        
+        ReportEventManager.register('toggle-report-settings', function(event, target) {
+            try {
+                var targetElement = event ? event.target.closest('a') : target;
+                var modalTarget = targetElement ? targetElement.getAttribute('data-target') : null;
+                
+                if (modalTarget) {
+                    // Use jQuery if available, otherwise use vanilla JS
+                    if (typeof $ !== 'undefined' && $.fn.modal) {
+                        var $modal = $(modalTarget);
+                        if ($modal.length > 0) {
+                            $modal.modal('show');
+                        } else {
+                            console.error('Report settings modal not found:', modalTarget);
+                        }
+                    } else {
+                        // Fallback to vanilla JS Bootstrap modal
+                        var modalElement = document.querySelector(modalTarget);
+                        if (modalElement) {
+                            // Use Bootstrap 4 modal API
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                var modal = new bootstrap.Modal(modalElement);
+                                modal.show();
+                            } else if (modalElement.classList) {
+                                modalElement.classList.add('show');
+                                modalElement.style.display = 'block';
+                                document.body.classList.add('modal-open');
+                                // Create backdrop if needed
+                                var backdrop = document.createElement('div');
+                                backdrop.className = 'modal-backdrop fade show';
+                                document.body.appendChild(backdrop);
+                            }
+                        } else {
+                            console.error('Report settings modal not found:', modalTarget);
+                        }
+                    }
+                } else {
+                    console.error('No data-target specified for report settings');
+                }
+            } catch (error) {
+                console.error('Error opening report settings modal:', error);
+            }
+        });
+        
+        ReportEventManager.register('toggle-scheduling-modal', function(event, target) {
+            if (typeof window.toggleSchedulingModal === 'function') {
+                window.toggleSchedulingModal(event);
+            } else {
+                console.error('toggleSchedulingModal function not found');
+            }
+        });
+        
+        ReportEventManager.register('reload-page', function(event, target) {
+            location.reload();
+        });
+        
+        ReportEventManager.register('open-modal-from-design-settings', function(event, target) {
+            try {
+                const targetModal = target ? target.getAttribute('data-target') : null;
+                
+                if (targetModal) {
+                    // Close the current modal first
+                    const $currentModal = $('#designSettingsModal');
+                    if ($currentModal.length > 0 && $currentModal.hasClass('show')) {
+                        $currentModal.modal('hide');
+                    }
+                    
+                    // Wait for the current modal to close, then open the next modal
+                    setTimeout(function() {
+                        // Try to find modal in both current window and top window
+                        let $nextModal = $(targetModal);
+                        
+                        if ($nextModal.length === 0 && window.top && window.top.$) {
+                            $nextModal = window.top.$(targetModal);
+                        }
+                        
+                        // Also try document.getElementById as fallback
+                        if ($nextModal.length === 0) {
+                            const modalId = targetModal.replace('#', '');
+                            const modalElement = document.getElementById(modalId);
+                            if (modalElement) {
+                                $nextModal = $(modalElement);
+                            }
+                        }
+                        
+                        // Try in top window by ID
+                        if ($nextModal.length === 0 && window.top) {
+                            const modalId = targetModal.replace('#', '');
+                            const modalElement = window.top.document.getElementById(modalId);
+                            if (modalElement) {
+                                $nextModal = window.top.$(modalElement);
+                            }
+                        }
+                        
+                        if ($nextModal.length > 0) {
+                            // Ensure modal is visible and has correct z-index
+                            const modalElement = $nextModal[0];
+                            if (modalElement) {
+                                // Ensure modal is a direct child of body (CRITICAL: Bootstrap modals must be direct children of body)
+                                if (modalElement.parentElement && modalElement.parentElement.tagName !== 'BODY') {
+                                    document.body.appendChild(modalElement);
+                                }
+                                
+                                // Ensure modal has correct initial state
+                                if (!modalElement.classList.contains('modal')) {
+                                    modalElement.classList.add('modal');
+                                }
+                                if (!modalElement.classList.contains('fade')) {
+                                    modalElement.classList.add('fade');
+                                }
+                            }
+                            
+                            // Show modal using Bootstrap
+                            try {
+                                $nextModal.modal('show');
+                                
+                                // After showing, ensure it's visible
+                                setTimeout(function() {
+                                    const isShown = $nextModal.hasClass('show');
+                                    const display = window.getComputedStyle(modalElement).display;
+                                    
+                                    if (!isShown || display === 'none') {
+                                        // Force show
+                                        $nextModal.addClass('show').css({
+                                            'display': 'block !important',
+                                            'z-index': '10090'
+                                        });
+                                        $('body').addClass('modal-open');
+                                        
+                                        // Create backdrop if needed
+                                        if ($('.modal-backdrop').length === 0) {
+                                            $('<div class="modal-backdrop fade show"></div>').appendTo('body').css('z-index', '10089');
+                                        }
+                                    }
+                                }, 200);
+                            } catch (error) {
+                                console.error('Error showing modal:', error);
+                                // Fallback: force show
+                                $nextModal.addClass('show').css({
+                                    'display': 'block',
+                                    'z-index': '10090'
+                                });
+                                $('body').addClass('modal-open');
+                            }
+                        } else {
+                            console.error('Modal not found:', targetModal);
+                        }
+                    }, 300);
+                } else {
+                    console.error('No data-target specified for open-modal-from-design-settings');
+                }
+            } catch (error) {
+                console.error('Error opening modal from design settings:', error);
+            }
+        });
+        
+        ReportEventManager.register('open-subreport-modal', function(event, target) {
+            try {
+                const subreportType = target ? target.getAttribute('data-subreport-type') : null;
+                const namespaceId = target ? target.getAttribute('data-namespace') : null;
+                const entityId = target ? target.getAttribute('data-entity') : null;
+                const reportId = target ? target.getAttribute('data-report') : null;
+                const configId = target ? target.getAttribute('data-config') : null;
+                
+                // Check if SubReportManager is available
+                if (typeof SubReportManager === 'undefined') {
+                    console.error('SubReportManager not available');
+                    alert('SubReportManager در دسترس نیست. لطفاً صفحه را رفرش کنید.');
+                    return;
+                }
+                
+                // Close the current modal first
+                const $currentModal = $('#designSettingsModal');
+                if ($currentModal.length > 0 && $currentModal.hasClass('show')) {
+                    $currentModal.modal('hide');
+                }
+                
+                // Wait for the current modal to close, then open SubReportModal and call the appropriate function
+                setTimeout(function() {
+                    const $subReportModal = $('#SubReportModal');
+                    if ($subReportModal.length > 0) {
+                        // Open the modal first
+                        $subReportModal.modal('show');
+                        
+                        // Then call the appropriate SubReportManager function
+                        if (subreportType === 'inline' && SubReportManager.addInline) {
+                            SubReportManager.addInline(namespaceId, entityId, reportId, configId);
+                        } else if (subreportType === 'linked' && SubReportManager.addLinked) {
+                            SubReportManager.addLinked(namespaceId, entityId, reportId, configId);
+                        } else {
+                            console.error('Invalid subreport type or function not available:', subreportType);
+                        }
+                    } else {
+                        console.error('SubReportModal not found');
+                    }
+                }, 300);
+            } catch (error) {
+                console.error('Error opening subreport modal:', error);
+            }
+        });
+        
+        // Handlers registered successfully
+    }
+    
+    // Close tooltips when clicking outside (using event delegation)
+    document.addEventListener('click', function(e) {
+        // Only handle if not clicking on an action button
+        if (e.target.closest('[data-action]')) {
+            return; // Let the action handler deal with it
+        }
+        
+        // Hide report info tooltip
+        if (!e.target.closest('#reportInfoPanel')) {
+            const panel = document.getElementById('reportInfoPanel');
+            const toggle = document.querySelector('[data-action="toggle-report-info"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Hide refresh settings tooltip
+        if (!e.target.closest('#refreshSettingsPanel')) {
+            const panel = document.getElementById('refreshSettingsPanel');
+            const toggle = document.querySelector('[data-action="toggle-refresh-settings"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Hide design settings modal (if clicking outside)
+        if (!e.target.closest('#designSettingsModal') && !e.target.closest('[data-action="toggle-design-settings"]')) {
+            const modal = $('#designSettingsModal');
+            if (modal.length > 0 && modal.hasClass('show')) {
+                // Bootstrap modal handles outside clicks automatically, but we can add custom logic here if needed
+            }
+        }
+        
+        // Hide filter tooltip
+        if (!e.target.closest('#filterTooltipPanel')) {
+            const panel = document.getElementById('filterTooltipPanel');
+            const toggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
+            if (panel && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            }
+        }
+        
+        // Close dropdowns when clicking outside
+        if (!e.target.closest('.dropdown')) {
+            const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
+            openDropdowns.forEach(function(dropdown) {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+})();
+</script>
+

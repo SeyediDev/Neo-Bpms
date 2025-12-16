@@ -1,0 +1,253 @@
+@* modal-add-config.js - Add Config Modal Functions *@
+<script>
+/**
+ * modal-add-config.js
+ * Add Config Modal Functions
+ */
+
+// Open config frame
+$(document).ready(function() {
+    $("#openConfigFrame").click(function() {
+        $("#reportConfigModal .modal-body").html(
+            "<iframe src='" +
+            window.top.rootUrl +
+            "Report/AddNewConfig?" +
+            window.PageAddressManager.getQueryParameters()
+            +
+            "' style='width:100%; height:100%;' frameborder='0' allowtransparency='true'></iframe>");
+        $('#reportConfigModal').modal('show');
+    });
+    
+    // Flag to prevent multiple simultaneous modal openings
+    var isOpeningAddConfigModal = false;
+    
+    // Direct implementation of showAddConfigModal to avoid dependency on ConfigsTreeManager timing
+    var showAddConfigModalDirect = function() {
+        // Prevent multiple simultaneous calls
+        if (isOpeningAddConfigModal) {
+            console.log('showAddConfigModalDirect already in progress, ignoring duplicate call');
+            return;
+        }
+        
+        console.log('showAddConfigModalDirect called');
+        
+        // Always use top window for modal operations since report-designs-modal might be in iframe
+        var targetWindow = (window.top && window.top !== window) ? window.top : window;
+        var target$ = (window.top && window.top !== window && window.top.$) ? window.top.$ : $;
+        
+        // Try to find modal in top window first
+        var $modal = target$('#reportConfigModal');
+        
+        if ($modal.length === 0) {
+            console.warn('reportConfigModal not found in top window, trying current window');
+            // Try to find in current window
+            $modal = $('#reportConfigModal');
+            if ($modal.length === 0) {
+                console.error('reportConfigModal not found in any window');
+                alert('Modal not found. Please refresh the page.');
+                return;
+            }
+            target$ = $;
+            targetWindow = window;
+        }
+        
+        // Check if modal is already shown
+        if ($modal.hasClass('show') || $modal.is(':visible')) {
+            console.log('Modal is already shown, focusing it instead');
+            // Just ensure it's on top
+            $modal.css('z-index', '10050');
+            return;
+        }
+        
+        console.log('Modal found:', $modal.length > 0, 'in window:', targetWindow === window.top ? 'top' : 'current');
+        
+        // Set flag to prevent duplicate calls
+        isOpeningAddConfigModal = true;
+        
+        // Get rootUrl and PageAddressManager from appropriate scope
+        var rootUrl = '';
+        if (window.top && window.top.rootUrl) {
+            rootUrl = window.top.rootUrl;
+        } else if (targetWindow.rootUrl) {
+            rootUrl = targetWindow.rootUrl;
+        } else if (window.rootUrl) {
+            rootUrl = window.rootUrl;
+        }
+        
+        var queryParams = '';
+        if (window.top && window.top.PageAddressManager && window.top.PageAddressManager.getQueryParameters) {
+            queryParams = window.top.PageAddressManager.getQueryParameters();
+        } else if (targetWindow.PageAddressManager && targetWindow.PageAddressManager.getQueryParameters) {
+            queryParams = targetWindow.PageAddressManager.getQueryParameters();
+        } else if (window.PageAddressManager && window.PageAddressManager.getQueryParameters) {
+            queryParams = window.PageAddressManager.getQueryParameters();
+        }
+        
+        console.log('Opening modal with URL:', rootUrl + 'Report/AddNewConfig?' + queryParams);
+        
+        // Set iframe content
+        $modal.find('.modal-body').html(
+            "<iframe src='" +
+            rootUrl +
+            "Report/AddNewConfig?" +
+            queryParams +
+            "' style='width:100%; height:100%;' frameborder='0' allowtransparency='true'></iframe>");
+        
+        // Ensure modal has high z-index - higher than report-designs-modal (10000)
+        // Set z-index before showing to ensure it's applied immediately
+        $modal.css('z-index', '10050');
+        
+        // Show modal using Bootstrap
+        try {
+            if (typeof $modal.modal === 'function') {
+                $modal.modal('show');
+                // After modal is shown, ensure z-index is correct and backdrop is above report-designs-modal
+                setTimeout(function() {
+                    $modal.css('z-index', '10050');
+                    // Update backdrop z-index - should be above report-designs-modal (10000) but below modal (10050)
+                    var $backdrops = target$('.modal-backdrop');
+                    if ($backdrops.length > 0) {
+                        $backdrops.last().css('z-index', '10049');
+                    }
+                    console.log('Modal shown with z-index:', $modal.css('z-index'));
+                    // Reset flag after modal is shown
+                    isOpeningAddConfigModal = false;
+                }, 100);
+                
+                // Also reset flag when modal is hidden
+                $modal.on('hidden.bs.modal', function() {
+                    isOpeningAddConfigModal = false;
+                });
+            } else {
+                // Fallback if Bootstrap modal not available
+                $modal.addClass('show').css({
+                    'display': 'block',
+                    'z-index': '10050'
+                });
+                target$(targetWindow.document.body).addClass('modal-open');
+                // Create backdrop if needed
+                var $backdrop = target$('.modal-backdrop').last();
+                if ($backdrop.length === 0) {
+                    $backdrop = target$('<div class="modal-backdrop fade show"></div>').appendTo(targetWindow.document.body);
+                }
+                $backdrop.css('z-index', '10049');
+                console.log('Modal shown (fallback) with z-index:', $modal.css('z-index'));
+                // Reset flag
+                isOpeningAddConfigModal = false;
+            }
+        } catch (error) {
+            console.error('Error showing modal:', error);
+            alert('Error opening modal: ' + error.message);
+            // Reset flag on error
+            isOpeningAddConfigModal = false;
+        }
+    };
+    
+    // Handle Add Config button click in report-designs-modal
+    // Use event delegation to handle dynamically added buttons
+    $(document).on('click', '#btn-add-config-modal', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Prevent multiple clicks
+        if (isOpeningAddConfigModal) {
+            console.log('Modal is already opening, ignoring click');
+            return;
+        }
+        
+        console.log('btn-add-config-modal clicked');
+        
+        // Try to get ConfigsTreeManager from appropriate scope first
+        var manager = null;
+        var managerSource = '';
+        
+        // Check window.top first (most likely location)
+        if (window.top && window.top.ConfigsTreeManager) {
+            if (typeof window.top.ConfigsTreeManager.showAddConfigModal === 'function') {
+                manager = window.top.ConfigsTreeManager;
+                managerSource = 'window.top';
+            }
+        }
+        
+        // Check current window
+        if (!manager && window.ConfigsTreeManager) {
+            if (typeof window.ConfigsTreeManager.showAddConfigModal === 'function') {
+                manager = window.ConfigsTreeManager;
+                managerSource = 'window';
+            }
+        }
+        
+        // Check global scope
+        if (!manager && typeof ConfigsTreeManager !== 'undefined') {
+            if (typeof ConfigsTreeManager.showAddConfigModal === 'function') {
+                manager = ConfigsTreeManager;
+                managerSource = 'global';
+            }
+        }
+        
+        if (manager) {
+            console.log('Calling showAddConfigModal from', managerSource);
+            try {
+                // Set flag before calling
+                isOpeningAddConfigModal = true;
+                manager.showAddConfigModal();
+                // Reset flag after a delay (manager should handle modal events)
+                setTimeout(function() {
+                    isOpeningAddConfigModal = false;
+                }, 500);
+            } catch (error) {
+                console.error('Error calling showAddConfigModal:', error);
+                // Reset flag on error
+                isOpeningAddConfigModal = false;
+                // Fallback to direct implementation
+                showAddConfigModalDirect();
+            }
+        } else {
+            console.log('ConfigsTreeManager not found, using direct implementation');
+            // Use direct implementation as fallback
+            showAddConfigModalDirect();
+        }
+    });
+    
+    // Also handle the old onclick attribute if it still exists (for backward compatibility)
+    $(document).on('click', '[onclick*="showAddConfigModal"]', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Old onclick handler detected, redirecting to new handler');
+        $('#btn-add-config-modal').trigger('click');
+    });
+    
+    // Wait for ConfigsTreeManager to be available, then remove any onclick attributes
+    var checkConfigsTreeManager = setInterval(function() {
+        var manager = null;
+        if (window.top && window.top.ConfigsTreeManager && typeof window.top.ConfigsTreeManager.showAddConfigModal === 'function') {
+            manager = window.top.ConfigsTreeManager;
+        } else if (window.ConfigsTreeManager && typeof window.ConfigsTreeManager.showAddConfigModal === 'function') {
+            manager = window.ConfigsTreeManager;
+        }
+        
+        if (manager) {
+            clearInterval(checkConfigsTreeManager);
+            // Remove onclick attribute from button if it exists
+            var $btn = $('#btn-add-config-modal');
+            if ($btn.length > 0 && $btn.attr('onclick')) {
+                console.log('Removing onclick attribute from btn-add-config-modal');
+                $btn.removeAttr('onclick');
+            }
+        }
+    }, 100);
+    
+    // Stop checking after 5 seconds
+    setTimeout(function() {
+        clearInterval(checkConfigsTreeManager);
+    }, 5000);
+    
+    // Global fallback function for onclick attribute
+    window.showAddConfigModalFallback = function() {
+        console.log('showAddConfigModalFallback called from onclick');
+        // Use direct implementation instead of relying on ConfigsTreeManager
+        showAddConfigModalDirect();
+    };
+});
+</script>
+

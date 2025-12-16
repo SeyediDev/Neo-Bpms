@@ -85,7 +85,16 @@ var ConfigConfig = function () {
 			data: configObject,
 			headers: AddAntiForgeryToken(),
 			success: function (res) {
-				$('#configs-tree').jstree('rename_node', res, configObject.Name);
+				// Update both trees if they exist
+				var $tree = $('#configs-tree-modal').length > 0 ? $('#configs-tree-modal') : $('#configs-tree');
+				if ($tree.length > 0) {
+					$tree.jstree('rename_node', res, configObject.Name);
+				}
+				// Also update the other tree if it exists
+				var $otherTree = $('#configs-tree-modal').length > 0 ? $('#configs-tree') : $('#configs-tree-modal');
+				if ($otherTree.length > 0) {
+					$otherTree.jstree('rename_node', res, configObject.Name);
+				}
 				$('#config-config-modal').modal('hide');
 			},
 			error: function () {
@@ -155,14 +164,34 @@ var ConfigsTreeManager = function () {
 			'icon': "fa fa-times",
 			'label': window.tetaI18n.t('Remove'),
 			'action': function () {
-				if (node.type === "default")
-					FolderManager.deleteFolder(node.id, function () {
-						$('#configs-tree').jstree('delete_node', node.id);
-					});
-				else
-					deleteConfigId(node.id, function () {
-						$('#configs-tree').jstree('delete_node', node.id);
-					});
+				// Find the correct tree instance (could be configs-tree or configs-tree-modal)
+				var $tree = $('#configs-tree-modal').length > 0 ? $('#configs-tree-modal') : $('#configs-tree');
+				
+				if (node.type === "default") {
+					// Delete folder
+					if (typeof FolderManager !== 'undefined' && FolderManager.deleteFolder) {
+						FolderManager.deleteFolder(node.id, function () {
+							$tree.jstree('delete_node', node.id);
+						});
+					} else {
+						console.error('FolderManager.deleteFolder not available');
+						alert('FolderManager not available. Please refresh the page.');
+					}
+				} else {
+					// Delete config
+					if (typeof deleteConfigId === 'function') {
+						deleteConfigId(node.id, function () {
+							$tree.jstree('delete_node', node.id);
+						});
+					} else if (typeof window.deleteConfigId === 'function') {
+						window.deleteConfigId(node.id, function () {
+							$tree.jstree('delete_node', node.id);
+						});
+					} else {
+						console.error('deleteConfigId not available');
+						alert('deleteConfigId not available. Please refresh the page.');
+					}
+				}
 			}
 		};
 	};
@@ -173,7 +202,20 @@ var ConfigsTreeManager = function () {
 				'icon': "fa fa-copy",
 				'label': window.tetaI18n.t('Copy'),
 				'action': function() {
-					ConfigConfig.clone(node.id, goToConfig);
+					// Try to get ConfigConfig from different scopes
+					var configConfig = null;
+					if (typeof ConfigConfig !== 'undefined' && ConfigConfig.clone) {
+						configConfig = ConfigConfig;
+					} else if (typeof window.ConfigConfig !== 'undefined' && window.ConfigConfig.clone) {
+						configConfig = window.ConfigConfig;
+					}
+					
+					if (configConfig) {
+						configConfig.clone(node.id, goToConfig);
+					} else {
+						console.error('ConfigConfig.clone not available');
+						alert('ConfigConfig not available. Please refresh the page.');
+					}
 				}
 			};
 		}
@@ -186,18 +228,38 @@ var ConfigsTreeManager = function () {
 			'icon': "fa fa-cogs",
 			'label': window.tetaI18n.t('Settings'),
 			'action': function() {
-				if (node.type === "default")
-					FolderManager.showModal(true,
-						node.parent,
-						{
-							"Id": node.id,
-							"Name": node.text,
-							"IsForConfig": node.data.isForConfig, //todo
-							"IsPublic": node.data.isPublic,
-							"ParentFolderId": node.data.parentFolderId
-						});
-				else
-					ConfigConfig.showModal(node.id);
+				if (node.type === "default") {
+					// Edit folder
+					if (typeof FolderManager !== 'undefined' && FolderManager.showModal) {
+						FolderManager.showModal(true,
+							node.parent,
+							{
+								"Id": node.id,
+								"Name": node.text,
+								"IsForConfig": node.data.isForConfig,
+								"IsPublic": node.data.isPublic,
+								"ParentFolderId": node.data.parentFolderId
+							});
+					} else {
+						console.error('FolderManager.showModal not available');
+						alert('FolderManager not available. Please refresh the page.');
+					}
+				} else {
+					// Edit config
+					var configConfig = null;
+					if (typeof ConfigConfig !== 'undefined' && ConfigConfig.showModal) {
+						configConfig = ConfigConfig;
+					} else if (typeof window.ConfigConfig !== 'undefined' && window.ConfigConfig.showModal) {
+						configConfig = window.ConfigConfig;
+					}
+					
+					if (configConfig) {
+						configConfig.showModal(node.id);
+					} else {
+						console.error('ConfigConfig.showModal not available');
+						alert('ConfigConfig not available. Please refresh the page.');
+					}
+				}
 			}
 		};
 	};
@@ -445,24 +507,45 @@ var ConfigsTreeManager = function () {
 	};
 
 	var createFolderNode = function (nodeId, parentNodeId, text, isUpdate) {
+		// Find both tree instances (could be configs-tree or configs-tree-modal)
+		var $tree = $('#configs-tree');
+		var $treeModal = $('#configs-tree-modal');
+		
 		if (isUpdate) {
-			$('#configs-tree').jstree('rename_node', nodeId, text);
+			// Update existing node in both trees
+			if ($tree.length > 0) {
+				$tree.jstree('rename_node', nodeId, text);
+			}
+			if ($treeModal.length > 0) {
+				$treeModal.jstree('rename_node', nodeId, text);
+			}
 			//todo data should also change
-		}
-		else
-			$('#configs-tree')
-				.jstree('create_node',
+		} else {
+			// Create new node in both trees
+			var newNodeData = {
+				"id": nodeId,
+				"text": text,
+				"type": "default",
+				"data": {
+					"isPublic": false,
+					"parentFolderId": parentNodeId ? parentNodeId : null,
+					"isForConfig": true
+				}
+			};
+			
+			if ($tree.length > 0) {
+				$tree.jstree('create_node',
 					parentNodeId ? parentNodeId.toString() : '#',
-					{
-						"id": nodeId,
-						"text": text,
-						//				    "type": "default",
-						"data": {
-							"isPublic": /*parentNode ? parentNode.data.isPublic :*/ false,
-							"parentFolderId": parentNodeId ? parentNodeId : null
-						}
-					},
+					newNodeData,
 					"first");
+			}
+			if ($treeModal.length > 0) {
+				$treeModal.jstree('create_node',
+					parentNodeId ? parentNodeId.toString() : '#',
+					newNodeData,
+					"first");
+			}
+		}
 	};
 
 	$(instantiateTree);

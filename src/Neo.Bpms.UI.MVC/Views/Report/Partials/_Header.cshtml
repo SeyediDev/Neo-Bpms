@@ -27,6 +27,8 @@
                  <circle cx="8" cy="10.5" r="0.5" fill="currentColor"/>
              </svg>
          </a>
+         
+         <!-- آیکن تنظیمات زمان رفرش -->
          <a title="@ViewTexts.RefreshTime" href="#" class="top-bar-anchor-icon text-success icons-tables refresh-settings-toggle @(refreshTime > 0 ? "active" : "")" data-action="toggle-refresh-settings">
              <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <path d="M8 1.5a6.5 6.5 0 1 0 0 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -37,54 +39,75 @@
                  <span class="refresh-time-badge">@refreshTime</span>
              }
          </a>
+         
+         <!-- آیکن رفرش صفحه -->
          <a title="@ViewTexts.Refresh" href="#" class="top-bar-anchor-icon text-primary icons-tables" data-action="reload-page">
              <svg style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-blue"></use>
              </svg>
          </a>
+         
+         <!-- آیکن خروجی Excel -->
          <partial name="~/Views/Report/Export/ExportExcelIcon.cshtml" model="item.structure" />
+         
+         <!-- آیکن چاپ -->
          <a title="@ViewTexts.Print" href="~/@("Report/PrintPreview?EntityId=" + item.structure.EntityId + "&NamespaceId=" + item.structure.NamespaceId + "&ReportId=" + item.structure.Form_ReportId + "&ConfigId=" + item.structure.ConfigId + "&ParentReportIds=" + item.structure.ParentReportIds)" class="top-bar-anchor-icon text-primary icons-tables" target="_blank">
              <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                  <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#print-blue" />
              </svg>
          </a>
+         
+         <!-- آیکن خروجی CSV -->
          <partial name="~/Views/Report/Export/ExportCSVIcon.cshtml" model="item.structure" />
 
-    @if (item.canDesign)
-    {
-        <partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel { report = Model, forInlineSubReport = false }" />
-    }
+         <!-- آیکن‌های ابزار طراحی -->
+         @if (item.canDesign)
+         {
+             <partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel { report = Model, forInlineSubReport = false }" />
+         } 
 
-    @if (item.structure.Fields != null && item.structure.Fields.Count > 0)
-    {
-        <a title="@ViewTexts.Filter" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-filter-tooltip">
-            <svg title="@ViewTexts.Filter" style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
-                <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
-            </svg>
-        </a>
-    }
+         <!-- آیکن فیلتر -->
+         @if (item.structure.Fields != null && item.structure.Fields.Count > 0)
+         {
+             <a title="@ViewTexts.Filter" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-filter-tooltip">
+                 <svg title="@ViewTexts.Filter" style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
+                     <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-blue" />
+                 </svg>
+             </a>
+         }
 
-    @* Report Designs Icon *@
-    @if (item.canDesign)
-    {
-        <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-report-designs-modal">
-            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9" fill="none"/>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="none"/>
-            </svg>
-        </a>
-    }
-    
-    @* Scheduling Icon - Rightmost icon (must be last) *@
-    @if (item.canScheduleReports)
-    {
-        <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" data-action="toggle-scheduling-modal">
-            <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" fill="none"/>
-                <polyline points="12 6 12 12 16 14" fill="none"/>
-            </svg>
-        </a>
-    }
+         <!-- آیکن تنظیمات گزارش -->
+         @* @if (item.canDesign)
+         {
+             <a title="@ViewTexts.Settings" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-report-settings" data-target="#reportSettingsModal-@item.structure.ConfigId">
+                 <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                     <circle cx="8" cy="8" r="2.5" fill="none"/>
+                     <path d="M8 1v2M8 13v2M15 8h-2M3 8H1M13.364 2.636l-1.414 1.414M4.05 11.95l-1.414 1.414M13.364 13.364l-1.414-1.414M4.05 4.05L2.636 2.636" stroke-linecap="round"/>
+                 </svg>
+             </a>
+         } *@
+         
+         <!-- آیکن طراحی گزارشات -->
+         @if (item.canDesign)
+         {
+             <a title="@ViewTexts.ReportDesigns" href="#" class="top-bar-anchor-icon text-success icons-tables" data-action="toggle-report-designs-modal">
+                 <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M12 20h9" fill="none"/>
+                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="none"/>
+                 </svg>
+             </a>
+         }
+         
+         <!-- آیکن زمان‌بندی گزارشات -->
+         @if (item.canScheduleReports)
+         {
+             <a title="@ViewTexts.ReportScheduling" href="#" class="top-bar-anchor-icon text-success icons-tables scheduling-icon-rightmost" data-action="toggle-scheduling-modal">
+                 <svg style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <circle cx="12" cy="12" r="10" fill="none"/>
+                     <polyline points="12 6 12 12 16 14" fill="none"/>
+                 </svg>
+             </a>
+         }
 
     </text>;
 

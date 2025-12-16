@@ -12,7 +12,8 @@
 	}
 	<div class="dropdown inline-dropdown
 		  @(Model.forInlineSubReport ? "inline-sub-design hidden" : "")">
-		<a title="@ViewTexts.Settings" href="#" id="design-menu" data-action="toggle-design-settings"
+		<a title="@ViewTexts.Settings" href="#" id="design-menu" 
+           data-toggle="modal" data-target="#designSettingsModal"
            class="top-bar-anchor-icon text-success icons-tables">
              <svg   style="width: 16px;height: 16px;vertical-align: middle;" viewBox="0 0 16 16">
                 <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#setting-blue" />

@@ -82,11 +82,9 @@
                 </div>
             </div>
             
+            @* Column Settings, Order By, and Colors modals are now in _Modals.cshtml *@
             @if (canDesign)
             {
-                <partial name="~/Views/Report/Settings/_columnSettingsModal.cshtml" model="Model" />
-                <partial name="~/Views/Report/Settings/_OrderByModal.cshtml" model="Model" />
-                <partial name="~/Views/Report/Settings/_ColorsModal.cshtml" model="Model" />
                 <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
             }
             

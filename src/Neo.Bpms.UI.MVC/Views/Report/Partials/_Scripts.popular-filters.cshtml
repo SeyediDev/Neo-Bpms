@@ -1,0 +1,192 @@
+@* report-popular-filters.js - Popular Filters Tree Initialization *@
+<script>
+/**
+ * report-popular-filters.js
+ * Popular Filters Tree Initialization
+ */
+
+// Initialize popular filters tree - Make globally accessible
+window.initializePopularFiltersTree = function() {
+    var $popularFiltersTree = $('#popular-filters-tree');
+    if ($popularFiltersTree.length) {
+        // Destroy existing tree if initialized
+        if ($popularFiltersTree.data('initialized')) {
+            $popularFiltersTree.jstree('destroy');
+            $popularFiltersTree.data('initialized', false);
+        }
+        
+        if (typeof window.filtersTree !== 'undefined') {
+            $popularFiltersTree.jstree({
+                'core': {
+                    'data': window.filtersTree,
+                    "check_callback": true
+                },
+                "contextmenu": {
+                    "select_node": false,
+                    'items': function(node) {
+                        if (typeof FilterTreeManager !== 'undefined' && FilterTreeManager.getContextMenu) {
+                            return FilterTreeManager.getContextMenu(node);
+                        }
+                        return {};
+                    }
+                },
+                "types": {
+                    "default": {
+                        "icon": (window.top && window.top.rootUrl ? window.top.rootUrl : '') + "Content/common-assets-includes/icons/folder.svg",
+                        "valid_children": ["default", "filter"]
+                    },
+                    "filter": {
+                        "icon": "fa fa-filter",
+                        "valid_children": []
+                    }
+                },
+                "conditionalselect": function (node, event) {
+                    if (node.type === 'default')
+                        return true;
+                    if (typeof FilterConfig !== 'undefined' && FilterConfig.navigateTo) {
+                        FilterConfig.navigateTo(node.data.filterId);
+                    }
+                    return false;
+                },
+                "plugins": ["dnd", "contextmenu", "types", "conditionalselect", "wholerow", "search", "state"]
+            });
+            
+            // Refresh tree after folder/filter operations
+            $popularFiltersTree.on('refresh.jstree', function() {
+                console.log('[PopularFilters] Tree refreshed');
+            });
+            
+            // Listen for tree model updates
+            if (typeof FilterTreeManager !== 'undefined') {
+                // Override createFilterNode to refresh tree
+                var originalCreateFilterNode = FilterTreeManager.createFilterNode;
+                if (originalCreateFilterNode) {
+                    FilterTreeManager.createFilterNode = function(filterId, name, isCurrent) {
+                        var result = originalCreateFilterNode.apply(this, arguments);
+                        // Refresh popular filters tree after a delay
+                        setTimeout(function() {
+                            if (typeof window.refreshFiltersTree === 'function') {
+                                window.refreshFiltersTree();
+                            } else {
+                                window.initializePopularFiltersTree();
+                            }
+                        }, 500);
+                        return result;
+                    };
+                }
+                
+                // Override newFolder to refresh tree after folder is added
+                var originalNewFolder = FilterTreeManager.newFolder;
+                if (originalNewFolder) {
+                    FilterTreeManager.newFolder = function(parentId) {
+                        // Call original function
+                        originalNewFolder.apply(this, arguments);
+                        
+                        // Listen for folder modal close to refresh tree
+                        $(document).off('hidden.bs.modal', '#new-folder-modal').on('hidden.bs.modal', '#new-folder-modal', function() {
+                            console.log('[PopularFilters] Folder modal closed, refreshing tree...');
+                            setTimeout(function() {
+                                if (typeof window.refreshFiltersTree === 'function') {
+                                    window.refreshFiltersTree();
+                                } else {
+                                    window.initializePopularFiltersTree();
+                                }
+                            }, 300);
+                        });
+                    };
+                }
+            }
+            
+            // Also listen for folder modal close events
+            $(document).off('hidden.bs.modal', '#new-folder-modal').on('hidden.bs.modal', '#new-folder-modal', function() {
+                console.log('[PopularFilters] Folder modal closed (direct listener), refreshing tree...');
+                setTimeout(function() {
+                    if (typeof window.refreshFiltersTree === 'function') {
+                        window.refreshFiltersTree();
+                    } else {
+                        window.initializePopularFiltersTree();
+                    }
+                }, 300);
+            });
+            
+            $('#popular-filters-search-input').off('keyup').on('keyup', function() {
+                $popularFiltersTree.jstree('search', $(this).val());
+            });
+            
+            $popularFiltersTree.data('initialized', true);
+        }
+    }
+};
+
+// Refresh filters tree - Make globally accessible
+window.refreshFiltersTree = function() {
+    console.log('[PopularFilters] Refreshing filters tree...');
+    
+    // Try to reload filters tree data from server
+    if (typeof window.loadFiltersTree === 'function') {
+        window.loadFiltersTree().then(function() {
+            window.initializePopularFiltersTree();
+        }).catch(function(error) {
+            console.error('[PopularFilters] Error loading filters tree:', error);
+            // Fallback: reinitialize with current data
+            window.initializePopularFiltersTree();
+        });
+    } else {
+        // Try to get fresh data from the main filters tree
+        var $mainTree = $('#filters-tree');
+        if ($mainTree.length && $mainTree.jstree) {
+            try {
+                var treeData = $mainTree.jstree(true).get_json('#', { flat: false });
+                if (treeData && treeData.length > 0) {
+                    window.filtersTree = treeData;
+                    console.log('[PopularFilters] Updated filtersTree from main tree');
+                }
+            } catch (e) {
+                console.error('[PopularFilters] Error getting tree data:', e);
+            }
+        }
+        
+        // Reinitialize with current data
+        window.initializePopularFiltersTree();
+    }
+};
+
+// Initialize multi-select when tooltip is shown - Make globally accessible
+// Since report-modern-multi-select.cshtml loads before this script, initializeReportModernMultiSelect should be available
+window.initializeMultiSelectInTooltip = function() {
+    // Wait a bit for DOM to be ready
+    setTimeout(function() {
+        // Ensure all filter inputs are associated with the form
+        const filterForm = document.getElementById('filter-form');
+        if (filterForm) {
+            const filterInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+            filterInputs.forEach(function(input) {
+                input.setAttribute('form', 'filter-form');
+            });
+        }
+        
+        // Call initializeReportModernMultiSelect - it should be available since it loads before this script
+        if (typeof window.initializeReportModernMultiSelect === 'function') {
+            try {
+                window.initializeReportModernMultiSelect();
+            } catch (error) {
+                console.error('[PopularFilters] ❌ Error initializing multi-select:', error);
+            }
+        } else {
+            console.error('[PopularFilters] ❌ initializeReportModernMultiSelect not available! This should not happen.');
+            console.error('[PopularFilters] Script load order may be incorrect.');
+        }
+    }, 100);
+};
+
+// Verification: Ensure initializeReportModernMultiSelect is loaded
+// This script runs after report-modern-multi-select.cshtml, so the function should be available
+(function() {
+    if (typeof window.initializeReportModernMultiSelect !== 'function') {
+        console.error('[PopularFilters] ❌ initializeReportModernMultiSelect NOT FOUND!');
+        console.error('[PopularFilters] This will cause filter multi-select to fail.');
+        console.error('[PopularFilters] Check that _Scripts.report-modern-multi-select.cshtml is loaded before this script.');
+    }
+})();
+</script>
+

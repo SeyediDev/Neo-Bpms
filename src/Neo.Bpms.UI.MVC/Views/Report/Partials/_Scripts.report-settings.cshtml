@@ -1,0 +1,114 @@
+@* Report Settings Form Handler - Handles form submission for report settings modal *@
+<script>
+function addLevelInputs() {
+	var markup =
+		'<div class="row"><div class="col-sm-6"><fieldset>' +
+			'<input type="hidden" name="levels[' +
+			inputsCount +
+			'].MinType" value="Fixed">' +
+			'<div class="form-group"><label for="usr' +
+			inputsCount +
+			'1">' +
+			window.tetaI18n.t('ConstantMin') +
+			':</label><input type="number" step="any" class="form-control" id="usr' +
+			inputsCount +
+			'1" name="levels[' +
+			inputsCount +
+			'].MinFixedValue">' +
+			'</div></fieldset></div><div class="col-sm-6"><fieldset>' +
+			'<input type="hidden" name="levels[' +
+			inputsCount +
+			'].MaxType" value="Fixed">' +
+			'<div class="form-group"><label for="usr' +
+			inputsCount +
+			'2">' +
+			window.tetaI18n.t('ConstantMax') +
+			':</label><input type="number" step="any" class="form-control" id="usr' +
+			inputsCount +
+			'2" name="levels[' +
+			inputsCount +
+			'].MaxFixedValue"></div></fieldset></div><div class="col-md-12"><div class="form-group"><label for="clr' +
+			inputsCount +
+			'">' +
+			window.tetaI18n.t('Color') +
+			':</label><input type="color" class="form-control" id="clr' +
+			inputsCount +
+			'" name="levels[' +
+			inputsCount +
+			'].Color"></div></div></div>';
+
+	$('#range-levels').append(markup);
+	inputsCount++;
+}
+
+// Initialize form submission handler - works with multiple forms and ensures jQuery is available
+(function() {
+	function initializeReportSettingsForm() {
+		// Use jQuery if available, otherwise use vanilla JS
+		if (typeof jQuery !== 'undefined') {
+			var frm = jQuery('#report-settings-form');
+			if (frm.length > 0) {
+				// Remove existing handlers to prevent duplicates
+				frm.off('submit');
+				frm.on('submit', function(ev) {
+					ev.preventDefault();
+					
+					// Ensure chart advanced options are synced before submit
+					var chartOptionsContainer = jQuery('#chartAdvancedOptions-' + frm.find('input[name="ConfigId"]').val());
+					if (chartOptionsContainer.length > 0) {
+						var hiddenInput = jQuery('#chartAdvancedOptionsValue-' + frm.find('input[name="ConfigId"]').val());
+						if (hiddenInput.length > 0) {
+							var values = [];
+							chartOptionsContainer.find('.chart-option:checked').each(function() {
+								values.push(jQuery(this).data('option'));
+							});
+							hiddenInput.val(values.join(','));
+						}
+					}
+					
+					jQuery.ajax({
+						type: frm.attr('method'),
+						url: frm.attr('action'),
+						data: frm.serialize(),
+						headers: typeof AddAntiForgeryToken !== 'undefined' ? AddAntiForgeryToken() : {},
+						success: function(data) {
+							// Close modal
+							var modalId = 'reportSettingsModal-' + frm.find('input[name="ConfigId"]').val();
+							var modal = jQuery('#' + modalId);
+							if (modal.length > 0 && typeof modal.modal === 'function') {
+								modal.modal('hide');
+							}
+							// Reload page after a short delay to allow modal to close
+							setTimeout(function() {
+								location.reload();
+							}, 300);
+						},
+						error: function(xhr, status, error) {
+							console.error('Error saving report settings:', error);
+							alert('خطا در ذخیره تنظیمات: ' + (xhr.responseJSON?.message || error));
+						}
+					});
+				});
+			}
+		} else {
+			// Retry if jQuery is not yet available
+			setTimeout(initializeReportSettingsForm, 100);
+		}
+	}
+	
+	// Initialize when DOM is ready
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initializeReportSettingsForm);
+	} else {
+		initializeReportSettingsForm();
+	}
+	
+	// Also initialize when modal is shown (for dynamically loaded modals)
+	if (typeof jQuery !== 'undefined') {
+		jQuery(document).on('shown.bs.modal', '.reportSettingsModal', function() {
+			initializeReportSettingsForm();
+		});
+	}
+})();
+</script>
+

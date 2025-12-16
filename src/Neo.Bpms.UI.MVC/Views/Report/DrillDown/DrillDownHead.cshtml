@@ -50,10 +50,10 @@
 
     if (Model.canDesign)
     {
-        <partial name="~/Views/Report/Settings/AddSubReportModal.cshtml"/>
-        <partial name="~/Views/Report/Settings/_columnSettingsModal.cshtml" model="Model.reportInfo"/>
-        <partial name="~/Views/Report/Settings/_OrderByModal.cshtml" model="Model.reportInfo"/>
-        <partial name="~/Views/Report/Settings/_ColorsModal.cshtml" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Partials/_Modal.add-sub-report.cshtml"/>
+        <partial name="~/Views/Report/Partials/_Modal.column-settings.cshtml" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Partials/_Modal.order-by.cshtml" model="Model.reportInfo"/>
+        <partial name="~/Views/Report/Partials/_Modal.colors.cshtml" model="Model.reportInfo"/>
         <script src="@CommonBundles.ReportDesignJsBundle" asp-append-version="true"></script>
     }
 }

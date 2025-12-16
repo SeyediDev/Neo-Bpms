@@ -91,10 +91,21 @@
         z-index: 10070 !important;
     }
     
+    /* Ensure designSettingsModal has high z-index - higher than new-folder-modal backdrop */
+    #designSettingsModal.modal.show {
+        z-index: 10080 !important;
+    }
+    
     /* Ensure backdrop for new-folder-modal is above report-designs-modal */
     /* When new-folder-modal is shown, its backdrop should be above report-designs-modal backdrop */
     body.modal-open .modal-backdrop:last-of-type {
         z-index: 10069 !important;
+    }
+    
+    /* Ensure designSettingsModal backdrop is below modal but above other backdrops */
+    #designSettingsModal.modal.show ~ .modal-backdrop,
+    body.modal-open .modal-backdrop:has(+ #designSettingsModal.modal.show) {
+        z-index: 10079 !important;
     }
     
     /* Specific backdrop for new-folder-modal - ensure it's above report-designs-modal */

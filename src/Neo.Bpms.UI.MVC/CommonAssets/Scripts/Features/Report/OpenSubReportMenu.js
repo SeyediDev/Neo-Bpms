@@ -1,4 +1,16 @@
 ﻿function clearOutDrillDowns() {
+	// Check if jQuery is available
+	if (typeof $ === 'undefined' || typeof jQuery === 'undefined') {
+		// Fallback to vanilla JavaScript
+		var menus = document.querySelectorAll("#myDrillDownMenu");
+		menus.forEach(function(menu) {
+			if (menu && menu.style) {
+				menu.style.display = 'none';
+			}
+		});
+		return;
+	}
+	
 	$("#myDrillDownMenu")
 		.each(function(index, el) {
 			$(el).slideUp();

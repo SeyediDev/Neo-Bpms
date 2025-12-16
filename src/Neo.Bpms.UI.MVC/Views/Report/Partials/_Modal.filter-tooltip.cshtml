@@ -1,0 +1,301 @@
+﻿@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Neo.Bpms.UI.MVC.PartialModels.Filter
+
+@inject IControlsRenderer controlsRenderer;
+
+@model ReportData
+
+@{
+    var structure = Model.Structure;
+    var options = new RendererOptions
+    {
+        IsFilter = true
+    };
+    ControlsRendererData controlsRendererData = new(structure, ViewBag.FilterValues, options, ViewBag.user, Url);
+}
+
+@if (structure.Fields != null && structure.Fields.Count > 0)
+{
+    <!-- Filter Tooltip Panel -->
+    <div id="filterTooltipPanel" class="filter-tooltip-panel">
+        <!-- Header with Close Button -->
+        <div class="filter-panel-header">
+            <h5 style="margin: 0; font-weight: 600; color: #2d3748;">@ViewTexts.Filter</h5>
+            <button type="button" class="filter-panel-close" onclick="window.toggleFilterTooltip()" title="@ViewTexts.Close" aria-label="@ViewTexts.Close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Main Content Area - Two Columns -->
+        <div class="filter-panel-content-wrapper">
+            <!-- Right Column - Popular Filters Section (RTL: Right side) -->
+            <div class="popular-filters-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 style="margin: 0; font-weight: 600; color: #2d3748;">@ViewTexts.UsefulFilters</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="FilterTreeManager.newFolder()" title="@ViewTexts.AddFolder">
+                        <i class="fa fa-folder-plus"></i> @ViewTexts.AddFolder
+                    </button>
+                </div>
+                <div class="search-box mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="popular-filters-search-input" placeholder="@ViewTexts.Search" />
+                    </div>
+                </div>
+                <div id="popular-filters-tree" class="report-tree-container"></div>
+            </div>
+            
+            <!-- Left Column - Main Filter Controls -->
+            <div class="filter-main-content">
+                <div class="modern-filter-content">
+                    @{
+                        var htmlInputStr = controlsRenderer.Render(controlsRendererData);
+                    }
+                    @htmlInputStr
+                </div>
+                
+                <div class="modern-filter-buttons">
+                    <partial name="Common/FilterEraseButton" />
+                    @if (ViewBag.ScheduledId != null && ViewBag.ScheduledId > 0)
+                    {
+                        <button type="button" onclick="ScheduledReport.saveFilterValues(@(ViewBag.ScheduledId ?? 0));" class="btn btn-outline-warning">
+                            <span>@ViewTexts.SaveScheduleFilter @(ViewBag.ScheduledName ?? "")</span>
+                        </button>
+                    }
+                    <partial name="Filter/FilterSaveButtons" model="new FilterSaveButtonsModel{filterId = ViewBag.FilterId, filterName = ViewBag.FilterName}" />
+                    <partial name="Filter/ApplyButton" />
+                    <input type="submit" id="submitBtn" value="" style="display:none; position:absolute; left:-9999px;" aria-hidden="true" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* ===== Filter Tooltip Panel ===== */
+        .filter-tooltip-panel {
+          position: fixed !important;
+          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+          border: 2px solid #e2e8f0 !important;
+          border-radius: 12px !important;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+          padding: 20px !important;
+          z-index: 1050 !important;
+          min-width: 1800px !important;
+          max-width: 98vw !important;
+          /* width set dynamically by JavaScript to avoid conflicts with position: fixed */
+          backdrop-filter: blur(10px) !important;
+          flex-direction: column !important;
+          gap: 16px !important;
+          /* Use visibility and opacity instead of display for better control */
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transition: opacity 0.3s ease-out, visibility 0.3s ease-out !important;
+        }
+        
+        .filter-panel-header {
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          margin-bottom: 16px !important;
+          padding-bottom: 12px !important;
+          border-bottom: 2px solid #e2e8f0 !important;
+        }
+        
+        .filter-panel-close {
+          background: transparent !important;
+          border: none !important;
+          font-size: 20px !important;
+          color: #64748b !important;
+          cursor: pointer !important;
+          padding: 4px 8px !important;
+          border-radius: 4px !important;
+          transition: all 0.2s ease !important;
+          line-height: 1 !important;
+        }
+        
+        .filter-panel-close:hover {
+          background: #f1f5f9 !important;
+          color: #1e293b !important;
+        }
+
+        .filter-tooltip-panel.show {
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          display: flex !important;
+        }
+
+        .filter-tooltip-panel .modern-form {
+          display: block !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        .filter-tooltip-panel .modern-filter-wrapper {
+          margin-bottom: 16px !important;
+        }
+
+        .filter-tooltip-panel .modern-filter-buttons {
+          display: flex !important;
+          gap: 8px !important;
+          justify-content: flex-end !important;
+          margin-top: 16px !important;
+          padding-top: 16px !important;
+          border-top: 1px solid #e2e8f0 !important;
+        }
+
+        .filter-tooltip-panel .btn {
+          padding: 8px 16px !important;
+          font-size: 14px !important;
+          border-radius: 6px !important;
+          transition: all 0.2s ease !important;
+          font-weight: 500 !important;
+        }
+
+        .filter-tooltip-panel .btn:hover {
+          transform: translateY(-1px) !important;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .filter-tooltip-panel .btn-primary,
+        .filter-tooltip-panel #submit-filter {
+          background-color: #3b82f6 !important;
+          border-color: #3b82f6 !important;
+          color: #ffffff !important;
+          font-weight: 600 !important;
+        }
+        
+        .filter-tooltip-panel .btn-primary:hover,
+        .filter-tooltip-panel #submit-filter:hover {
+          background-color: #2563eb !important;
+          border-color: #2563eb !important;
+          color: #ffffff !important;
+        }
+        
+        .filter-tooltip-panel .btn-primary span,
+        .filter-tooltip-panel #submit-filter span {
+          color: #ffffff !important;
+          font-weight: 600 !important;
+          display: inline-block !important;
+        }
+        
+        .filter-tooltip-panel .btn-primary svg,
+        .filter-tooltip-panel #submit-filter svg {
+          fill: #ffffff !important;
+          stroke: #ffffff !important;
+        }
+        
+        /* Ensure submit-filter button text is visible */
+        .filter-tooltip-panel #submit-filter {
+          color: #ffffff !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter * {
+          color: #ffffff !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter span {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        
+        .filter-tooltip-panel .btn-outline-warning {
+          color: #f59e0b !important;
+          border-color: #f59e0b !important;
+          background-color: transparent !important;
+        }
+        
+        .filter-tooltip-panel .btn-outline-warning:hover {
+          background-color: #f59e0b !important;
+          color: #ffffff !important;
+        }
+        
+        /* Ensure all text in buttons is visible */
+        .filter-tooltip-panel .btn * {
+          color: inherit !important;
+        }
+        
+        .filter-tooltip-panel .btn-primary *,
+        .filter-tooltip-panel #submit-filter * {
+          color: #ffffff !important;
+        }
+        
+        /* Ensure Ladda button spinner is visible */
+        .filter-tooltip-panel .ladda-button .ladda-spinner > div {
+          background-color: #ffffff !important;
+        }
+        
+        /* Ensure button text is always visible */
+        .filter-tooltip-panel button span {
+          display: inline-block !important;
+          color: inherit !important;
+        }
+        
+        /* Ensure dropdowns and comboboxes appear above the panel */
+        .filter-tooltip-panel .dropdown-menu,
+        .filter-tooltip-panel .select2-dropdown,
+        .filter-tooltip-panel .bootstrap-select .dropdown-menu,
+        .filter-tooltip-panel [class*="dropdown"] {
+          z-index: 1051 !important;
+        }
+        
+        /* Ensure modern multi-select dropdowns appear correctly */
+        .filter-tooltip-panel .modern-multi-select-dropdown {
+          z-index: 1051 !important;
+        }
+        
+        /* Two Column Layout - RTL: Popular filters on right */
+        .filter-panel-content-wrapper {
+          display: flex !important;
+          gap: 24px !important;
+          align-items: stretch !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
+        
+        .filter-main-content {
+          flex: 1 1 75% !important;
+          min-width: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+        }
+        
+        .popular-filters-section {
+          flex: 0 0 25% !important;
+          min-width: 300px !important;
+          max-width: 400px !important;
+          padding: 16px !important;
+          background: #f8fafc !important;
+          border-radius: 8px !important;
+          border: 1px solid #e2e8f0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          height: 100% !important;
+        }
+        
+        .popular-filters-section .report-tree-container {
+          flex: 1 1 auto !important;
+          min-height: 0 !important;
+          overflow-y: auto !important;
+          max-height: calc(100vh - 250px) !important;
+        }
+        
+        .modern-filter-content {
+          width: 100% !important;
+          flex: 1 1 auto !important;
+          overflow-y: auto !important;
+          max-height: calc(100vh - 250px) !important;
+        }
+        
+        .filter-panel-content-wrapper {
+          max-height: calc(100vh - 120px) !important;
+          overflow: hidden !important;
+        }
+    </style>
+
+    @* JavaScript functions are now in Report.js *@
+}

@@ -1,0 +1,75 @@
+@* modal-column-settings.js - Column Settings Modal Functions *@
+<script>
+/**
+ * modal-column-settings.js
+ * Column Settings Modal Functions
+ */
+
+// Open column settings modal with proper z-index management
+window.openColumnSettingsModal = function(modalKey) {
+    const modalId = 'columnsSettingsModal-' + modalKey;
+    const modal = document.getElementById(modalId);
+        
+    if (modal) {
+        // Use Bootstrap modal if available
+        if (typeof $ !== 'undefined' && $.fn.modal) {
+            $(modal).modal('show');
+        } else {
+            // Fallback to manual opening
+            modal.style.display = 'block';
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+            
+            // Get highest z-index and set new one
+            const highestZIndex = typeof window.getHighestModalZIndex === 'function' 
+                ? window.getHighestModalZIndex() 
+                : 1050;
+            const newZIndex = highestZIndex + 10;
+            modal.style.zIndex = newZIndex.toString();
+            
+            // Create backdrop with proper z-index
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'modal-backdrop-' + modalKey;
+            backdrop.style.zIndex = (newZIndex - 1).toString();
+            document.body.appendChild(backdrop);
+            
+            document.body.classList.add('modal-open');
+        }
+            
+        console.log('Column settings modal opened:', modalId);
+    } else {
+        console.error('Modal not found:', modalId);
+    }
+};
+    
+// Close modal function with proper cleanup
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        // Use Bootstrap modal if available
+        if (typeof $ !== 'undefined' && $.fn.modal) {
+            $(modal).modal('hide');
+        } else {
+            // Fallback to manual closing
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            
+            // Remove backdrop
+            const backdropId = 'modal-backdrop-' + modalId.replace('columnsSettingsModal-', '');
+            const backdrop = document.getElementById(backdropId);
+            if (backdrop) {
+                backdrop.remove();
+            }
+            
+            // Check if there are other open modals
+            const remainingModals = document.querySelectorAll('.modal.show');
+            if (remainingModals.length === 0) {
+                document.body.classList.remove('modal-open');
+            }
+        }
+    }
+};
+</script>
+
