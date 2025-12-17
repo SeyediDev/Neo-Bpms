@@ -28,6 +28,43 @@
         gap: 8px !important;
         transition: opacity 0.3s ease-out, visibility 0.3s ease-out !important;
     }
+    
+    /* Close button styles */
+    .report-info-close {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        z-index: 10;
+        padding: 0;
+        line-height: 1;
+    }
+    
+    .report-info-close:hover {
+        background-color: #f3f4f6;
+        color: #374151;
+        transform: scale(1.1);
+    }
+    
+    .report-info-close:active {
+        transform: scale(0.95);
+    }
+    
+    .report-info-close:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
 
     .report-info-panel.show {
         visibility: visible !important;
@@ -97,6 +134,9 @@
 }
 <!-- پنل اطلاعات گزارش (مخفی) -->
 <div class="report-info-panel" id="reportInfoPanel">
+    <button type="button" class="report-info-close" aria-label="بستن" id="closeReportInfo">
+        <span aria-hidden="true">&times;</span>
+    </button>
     <div class="report-info-item">
         <span class="report-info-icon">📅</span>
         <span class="report-info-label">@ViewTexts.ReportingDate:</span>
@@ -181,3 +221,35 @@
         }
     }
 </div>
+
+<script>
+    // Close button handler for report info panel
+    (function() {
+        const closeBtn = document.getElementById('closeReportInfo');
+        const panel = document.getElementById('reportInfoPanel');
+        
+        if (closeBtn && panel) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close panel using the toggle function
+                if (typeof window.toggleReportInfo === 'function') {
+                    window.toggleReportInfo(null);
+                } else {
+                    // Fallback: directly hide panel
+                    panel.classList.remove('show');
+                    panel.style.setProperty('visibility', 'hidden', 'important');
+                    panel.style.setProperty('opacity', '0', 'important');
+                    panel.style.setProperty('pointer-events', 'none', 'important');
+                    
+                    // Remove active class from toggle button
+                    const toggle = document.querySelector('[data-action="toggle-report-info"]');
+                    if (toggle) {
+                        toggle.classList.remove('active');
+                    }
+                }
+            });
+        }
+    })();
+</script>

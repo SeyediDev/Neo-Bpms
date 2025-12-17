@@ -115,11 +115,19 @@ window.toggleRefreshSettings = function(event) {
             panel.style.setProperty('position', 'fixed', 'important');
             panel.style.setProperty('top', (toggleRect.bottom + 8) + 'px', 'important');
             panel.style.setProperty('right', (window.innerWidth - toggleRect.right) + 'px', 'important');
-            panel.style.setProperty('z-index', '10000', 'important');
+            panel.style.setProperty('z-index', '99999', 'important');
             panel.style.setProperty('display', 'flex', 'important');
             panel.style.setProperty('visibility', 'visible', 'important');
             panel.style.setProperty('opacity', '1', 'important');
             panel.style.setProperty('pointer-events', 'auto', 'important');
+            panel.style.setProperty('overflow', 'visible', 'important');
+            panel.style.setProperty('isolation', 'isolate', 'important');
+            
+            // Ensure dropdown menu has high z-index
+            const dropdownMenu = panel.querySelector('.refresh-time-dropdown-menu');
+            if (dropdownMenu) {
+                dropdownMenu.style.setProperty('z-index', '100002', 'important');
+            }
             
             panel.classList.add('show');
             toggle.classList.add('active');

@@ -666,6 +666,16 @@ body {
   margin-bottom: 32px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--gray-200);
+  /* Ensure 100% width with proper margin calculation */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Prevent overflow from affecting layout */
+  min-width: 0;
+  /* Ensure content is always visible */
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
 }
 
 .modern-title-content {
@@ -673,10 +683,16 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  /* Ensure proper flex behavior */
+  min-width: 0;
+  width: 100%;
 }
 
 .modern-title-text {
   flex: 1;
+  /* Allow text to shrink and truncate if needed */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .modern-title {
@@ -685,12 +701,22 @@ body {
   color: var(--gray-800);
   margin: 0;
   line-height: 1.4;
+  /* Allow text to truncate if too long */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .modern-title-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: nowrap;
+  /* Prevent actions from shrinking - keep icons always visible */
+  flex-shrink: 0;
+  /* Ensure icons stay on the right */
+  margin-right: 0;
+  margin-left: auto;
 }
 
 .modern-settings-btn {
@@ -958,6 +984,11 @@ body {
   overflow: hidden;
   color: white;
   max-width: none;
+  /* Ensure 100% width */
+  width: 100%;
+  box-sizing: border-box;
+  /* Prevent overflow from affecting layout */
+  min-width: 0;
 }
 
 .modern-title-box::after {
@@ -989,10 +1020,16 @@ body {
   align-items: center;
   position: relative;
   z-index: 1;
+  /* Ensure proper flex behavior */
+  min-width: 0;
+  width: 100%;
 }
 
 .modern-title-text {
   flex: 1;
+  /* Allow text to shrink and truncate if needed */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .modern-title {
@@ -1002,11 +1039,21 @@ body {
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Allow text to truncate if too long */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .modern-title-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: nowrap;
+  /* Prevent actions from shrinking - keep icons always visible */
+  flex-shrink: 0;
+  /* Ensure icons stay on the right */
+  margin-right: 0;
+  margin-left: auto;
 }
 
 .modern-settings-btn {
@@ -2822,13 +2869,14 @@ body {
   }
   
   .modern-title-box {
-    margin: -10px -10px 15px -10px;
-    padding: 20px;
-    border-radius: 0 0 20px 20px;
+    margin: 10px;
+    padding: 16px;
+    width: calc(100% - 20px);
+    border-radius: 16px;
   }
   
   .modern-title-box.index-page {
-    border-radius: 0 0 30px 30px;
+    border-radius: 16px;
   }
   
   .modern-title-box.index-page::after {
@@ -2838,13 +2886,46 @@ body {
   }
   
   .modern-title {
-    font-size: 24px;
+    font-size: 1.25rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
   }
   
   .modern-title-content {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    text-align: right;
+  }
+  
+  .modern-title-text {
+    min-width: 0;
+    flex: 1 1 auto;
+    order: 1;
+  }
+  
+  .modern-title-actions {
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    order: 2;
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  
+  .modern-settings-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 16px;
+    height: 16px;
   }
   
   #main-part {
@@ -3226,6 +3307,33 @@ body {
 
 /* ===== Responsive Design ===== */
 @media (max-width: 1200px) {
+  /* Medium screens - adjust layout */
+  .modern-title-box {
+    padding: 20px 24px;
+  }
+  
+  .modern-title {
+    font-size: 1.5rem;
+  }
+  
+  .modern-title-content {
+    gap: 12px;
+  }
+  
+  .modern-title-actions {
+    gap: 8px;
+  }
+  
+  .modern-settings-btn {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
   .modern-filter-wrapper,
   .modern-table-wrapper {
     margin-right: 30px;
@@ -3234,10 +3342,85 @@ body {
 }
 
 @media (max-width: 992px) {
+  /* Tablet - more compact */
+  .modern-title-box {
+    padding: 16px 20px;
+  }
+  
+  .modern-title {
+    font-size: 1.35rem;
+  }
+  
+  .modern-title-text {
+    min-width: 150px;
+  }
+  
+  .modern-title-actions {
+    gap: 6px;
+  }
+  
+  .modern-settings-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  
   .modern-filter-wrapper,
   .modern-table-wrapper {
     margin-right: 20px;
     width: calc(100% - 20px);
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile - vertical layout */
+  .modern-title-box {
+    margin: 8px;
+    padding: 12px 16px;
+    width: calc(100% - 16px);
+  }
+  
+  .modern-title {
+    font-size: 1.1rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .modern-title-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .modern-title-text {
+    width: 100%;
+    order: 1;
+  }
+  
+  .modern-title-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    order: 2;
+    margin-top: 12px;
+  }
+  
+  .modern-settings-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  
+  .modern-title-subtitle {
+    font-size: 0.9rem;
+    white-space: normal;
+    word-wrap: break-word;
   }
 }
 

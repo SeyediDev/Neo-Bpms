@@ -84,10 +84,12 @@
           z-index: 1050 !important;
           min-width: 1800px !important;
           max-width: 98vw !important;
+          max-height: 90vh !important;
           /* width set dynamically by JavaScript to avoid conflicts with position: fixed */
           backdrop-filter: blur(10px) !important;
+          display: flex !important;
           flex-direction: column !important;
-          gap: 16px !important;
+          gap: 0 !important;
           /* Font settings - Ensure proper font rendering */
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
           font-size: 14px !important;
@@ -98,6 +100,7 @@
           opacity: 0 !important;
           pointer-events: none !important;
           transition: opacity 0.3s ease-out, visibility 0.3s ease-out !important;
+          overflow: hidden !important;
         }
         
         .filter-panel-header {
@@ -107,6 +110,7 @@
           margin-bottom: 16px !important;
           padding-bottom: 12px !important;
           border-bottom: 2px solid #e2e8f0 !important;
+          flex-shrink: 0 !important;
         }
         
         .filter-panel-close {
@@ -160,32 +164,111 @@
           color: #2d3748 !important;
         }
         
-        /* Reduce combo box sizes */
+        /* ============================================
+           COMBO BOX SIZES - UNIFIED HEIGHT
+           ============================================ */
+        
+        /* Standard select and form controls */
         .filter-tooltip-panel select,
         .filter-tooltip-panel .form-control,
-        .filter-tooltip-panel .cBox {
+        .filter-tooltip-panel .cBox,
+        .filter-tooltip-panel input[type="text"],
+        .filter-tooltip-panel input[type="number"],
+        .filter-tooltip-panel input[type="date"],
+        .filter-tooltip-panel input[type="time"] {
           min-height: 38px !important;
           height: 38px !important;
           padding: 8px 12px !important;
           font-size: 13px !important;
+          line-height: 1.5 !important;
+          box-sizing: border-box !important;
         }
         
-        /* Reduce Select2 combo sizes */
+        /* Select2 combo sizes */
+        .filter-tooltip-panel .select2-container {
+          min-height: 38px !important;
+          height: auto !important;
+        }
+        
         .filter-tooltip-panel .select2-container .select2-selection--single {
           height: 38px !important;
+          min-height: 38px !important;
+          border-radius: 6px !important;
         }
         
         .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__rendered {
           line-height: 38px !important;
           padding: 0 12px !important;
           font-size: 13px !important;
+          height: 38px !important;
         }
         
         .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow {
           height: 38px !important;
+          top: 0 !important;
+          right: 8px !important;
         }
         
-        /* Ensure combos and dropdowns are properly styled */
+        .filter-tooltip-panel .select2-container .select2-selection--multiple {
+          min-height: 38px !important;
+          padding: 2px 8px !important;
+        }
+        
+        .filter-tooltip-panel .select2-container .select2-selection--multiple .select2-selection__choice {
+          margin-top: 4px !important;
+          margin-bottom: 4px !important;
+          padding: 2px 8px !important;
+          font-size: 12px !important;
+        }
+        
+        /* Bootstrap Select */
+        .filter-tooltip-panel .bootstrap-select {
+          min-height: 38px !important;
+        }
+        
+        .filter-tooltip-panel .bootstrap-select .dropdown-toggle {
+          height: 38px !important;
+          min-height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+        
+        .filter-tooltip-panel .bootstrap-select .dropdown-toggle .filter-option {
+          line-height: 1.5 !important;
+          padding: 0 !important;
+        }
+        
+        /* Modern Multi-Select */
+        .filter-tooltip-panel .modern-multi-select-container {
+          min-height: 38px !important;
+          height: auto !important;
+        }
+        
+        .filter-tooltip-panel .modern-multi-select-control {
+          min-height: 38px !important;
+          height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+        
+        .filter-tooltip-panel .modern-multi-select-input {
+          min-height: 38px !important;
+          height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+        
+        .filter-tooltip-panel .modern-multi-select-control .modern-multi-select-selected-item {
+          padding: 4px 8px !important;
+          margin: 2px 4px 2px 0 !important;
+          font-size: 12px !important;
+          line-height: 1.4 !important;
+        }
+        
+        /* Ensure all combos have consistent styling */
         .filter-tooltip-panel .select2-container,
         .filter-tooltip-panel .bootstrap-select,
         .filter-tooltip-panel .modern-multi-select-container {
@@ -208,9 +291,15 @@
           display: flex !important;
           gap: 8px !important;
           justify-content: flex-end !important;
-          margin-top: 16px !important;
-          padding-top: 16px !important;
+          margin-top: auto !important;
+          padding: 16px 0 0 0 !important;
           border-top: 1px solid #e2e8f0 !important;
+          flex-shrink: 0 !important;
+          flex-grow: 0 !important;
+          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+          position: relative !important;
+          z-index: 10 !important;
+          width: 100% !important;
         }
 
         .filter-tooltip-panel .btn {
@@ -254,13 +343,28 @@
           stroke: #ffffff !important;
         }
         
-        /* Ensure submit-filter button text is visible - Reduced font size */
+        /* Premium Apply Filter Button - Matching other buttons */
         .filter-tooltip-panel #submit-filter {
           color: #ffffff !important;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-          font-size: 12px !important;
+          font-size: 14px !important;
           font-weight: 600 !important;
-          padding: 6px 14px !important;
+          padding: 8px 16px !important;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+          border: none !important;
+          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter:hover {
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+          transform: translateY(-1px) !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter:active {
+          transform: translateY(0) !important;
+          box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
         }
         
         .filter-tooltip-panel #submit-filter * {
@@ -272,13 +376,15 @@
           opacity: 1 !important;
           visibility: visible !important;
           font-family: inherit !important;
-          font-size: 12px !important;
-          font-weight: inherit !important;
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          margin-left: 6px !important;
         }
         
         .filter-tooltip-panel #submit-filter svg {
-          width: 14px !important;
-          height: 14px !important;
+          width: 16px !important;
+          height: 16px !important;
+          vertical-align: middle !important;
         }
         
         /* Prevent Ladda button from auto-loading */
@@ -342,6 +448,10 @@
           gap: 24px !important;
           align-items: stretch !important;
           width: 100% !important;
+          flex: 1 1 auto !important;
+          min-height: 0 !important;
+          max-height: 100% !important;
+          overflow: hidden !important;
           height: 100% !important;
         }
         
@@ -350,6 +460,11 @@
           min-width: 0 !important;
           display: flex !important;
           flex-direction: column !important;
+          min-height: 0 !important;
+          max-height: 100% !important;
+          height: 100% !important;
+          overflow: hidden !important;
+          position: relative !important;
         }
         
         .popular-filters-section {
@@ -362,46 +477,61 @@
           border: 1px solid #e2e8f0 !important;
           display: flex !important;
           flex-direction: column !important;
-          height: 100% !important;
+          min-height: 0 !important;
+          max-height: 100% !important;
+          overflow: hidden !important;
         }
         
         .popular-filters-section .report-tree-container {
           flex: 1 1 auto !important;
           min-height: 0 !important;
           overflow-y: auto !important;
-          max-height: calc(100vh - 250px) !important;
+          overflow-x: hidden !important;
         }
         
         .modern-filter-content {
           width: 100% !important;
           flex: 1 1 auto !important;
+          min-height: 0 !important;
           overflow-y: auto !important;
           overflow-x: auto !important;
-          max-height: calc(100vh - 250px) !important;
+          padding-bottom: 8px !important;
+          padding-right: 4px !important;
         }
         
         .filter-panel-content-wrapper {
-          max-height: calc(100vh - 120px) !important;
-          overflow: hidden !important;
+          max-height: none !important;
+          height: 100% !important;
         }
         
-        /* Reduce horizontal scrollbar size */
-        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar {
-          height: 6px !important;
+        /* Premium Scrollbar Design */
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar,
+        .filter-tooltip-panel .popular-filters-section .report-tree-container::-webkit-scrollbar {
+          width: 10px !important;
+          height: 10px !important;
         }
         
-        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-track {
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-track,
+        .filter-tooltip-panel .popular-filters-section .report-tree-container::-webkit-scrollbar-track {
           background: #f1f5f9 !important;
-          border-radius: 3px !important;
+          border-radius: 5px !important;
         }
         
-        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb {
-          background: #cbd5e1 !important;
-          border-radius: 3px !important;
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb,
+        .filter-tooltip-panel .popular-filters-section .report-tree-container::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%) !important;
+          border-radius: 5px !important;
+          border: 2px solid #f1f5f9 !important;
         }
         
-        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8 !important;
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb:hover,
+        .filter-tooltip-panel .popular-filters-section .report-tree-container::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%) !important;
+        }
+        
+        /* Horizontal scrollbar */
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar:horizontal {
+          height: 6px !important;
         }
         
         /* Reduce filter type icon size to match back icon (20px) */

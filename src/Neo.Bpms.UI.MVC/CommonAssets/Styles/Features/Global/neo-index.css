@@ -60,6 +60,9 @@
   /* WIDE: Remove max-width constraint */
   width: 100%;
   max-width: none;
+  /* Prevent horizontal scroll on main container - let table container handle it */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modern-body {
@@ -68,6 +71,8 @@
   max-width: none;
   margin: 0;
   padding: 0;
+  /* Prevent horizontal scroll - let child containers handle it */
+  overflow-x: hidden;
 }
 
 .modern-container {
@@ -79,6 +84,8 @@
   box-shadow: none;
   overflow: visible;
   border: none;
+  /* Prevent horizontal scroll - let table container handle it */
+  overflow-x: hidden;
 }
 
 /* ===== Title Box Enhancement ===== */
@@ -90,7 +97,18 @@
   box-shadow: var(--index-shadow-md);
   border: 1px solid var(--index-border-light);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  /* Ensure 100% width with proper margin calculation */
+  width: calc(100% - var(--index-spacing-lg) * 2);
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Prevent overflow from affecting layout */
+  min-width: 0;
+  /* Ensure content is always visible */
+  display: block;
+  /* Prevent horizontal scroll - header should always fit */
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .modern-title-box::before {
@@ -110,10 +128,22 @@
   gap: var(--index-spacing-lg);
   position: relative;
   z-index: 1;
+  /* Ensure proper flex behavior */
+  min-width: 0;
+  width: 100%;
+  /* Allow wrapping on small screens */
+  flex-wrap: wrap;
 }
 
 .modern-title-text {
   flex: 1;
+  /* Allow text to shrink but maintain minimum width */
+  min-width: 200px;
+  max-width: 100%;
+  overflow: hidden;
+  /* Ensure text is always visible */
+  display: flex;
+  flex-direction: column;
 }
 
 .modern-title {
@@ -124,6 +154,13 @@
   line-height: 1.3;
   letter-spacing: -0.025em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Allow text to wrap on very small screens, truncate on medium */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Ensure title is always visible */
+  display: block;
+  width: 100%;
 }
 
 .modern-title-subtitle {
@@ -131,13 +168,26 @@
   color: var(--index-text-secondary);
   margin: var(--index-spacing-xs) 0 0 0;
   font-weight: 500;
+  /* Allow subtitle to truncate if too long */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .modern-title-actions {
   display: flex;
   align-items: center;
   gap: var(--index-spacing-md);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  /* Prevent actions from shrinking - keep icons always visible */
+  flex-shrink: 0;
+  /* Ensure icons stay on the right */
+  margin-right: 0;
+  margin-left: auto;
+  /* Ensure actions container doesn't overflow */
+  min-width: fit-content;
+  max-width: 100%;
 }
 
 .modern-settings-btn {
@@ -175,17 +225,41 @@
 /* ===== Table Container - WIDE LAYOUT ===== */
 .modern-table-container {
   /* WIDE: Full width table container */
-  width: 100%;
+  width: calc(100% - var(--index-spacing-lg) * 2);
+  max-width: 100%;
   padding: var(--index-spacing-xl);
   background: var(--index-bg-card);
   border-radius: var(--index-radius-xl);
   margin: var(--index-spacing-lg);
   box-shadow: var(--index-shadow-sm);
   border: 1px solid var(--index-border-light);
-  /* بهبود برای ستون‌های زیاد - اسکرول بهتر */
+  /* Enable horizontal scroll when table has many columns */
   overflow-x: auto;
   overflow-y: visible;
   position: relative;
+  /* Smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--index-primary-light) var(--index-border-light);
+}
+
+/* Custom scrollbar styling for webkit browsers */
+.modern-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.modern-table-container::-webkit-scrollbar-track {
+  background: var(--index-bg-primary);
+  border-radius: 4px;
+}
+
+.modern-table-container::-webkit-scrollbar-thumb {
+  background: var(--index-primary);
+  border-radius: 4px;
+}
+
+.modern-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--index-primary-hover);
 }
 
 /* بهبود نمایش جدول برای ستون‌های زیاد */
@@ -195,13 +269,15 @@
   /* اجازه wrap شدن متن */
   word-wrap: break-word;
   overflow-wrap: break-word;
+  /* Ensure table can expand beyond container width for horizontal scroll */
+  min-width: 100%;
+  width: auto;
 }
 
-/* محدود کردن عرض ستون‌ها */
+/* محدود کردن عرض ستون‌ها - اما اجازه گسترش برای اسکرول افقی */
 .modern-table-container th,
 .modern-table-container td {
-  /* حداکثر عرض ستون */
-  max-width: 200px;
+  /* حداقل عرض ستون - اما اجازه گسترش */
   min-width: 80px;
   /* اجازه wrap شدن متن */
   white-space: normal;
@@ -209,25 +285,28 @@
   overflow-wrap: break-word;
   /* متن را در چند خط نمایش بده */
   line-height: 1.5;
+  /* اجازه گسترش ستون‌ها برای محتوای بیشتر - حذف max-width */
+  max-width: none;
 }
 
-/* برای ستون‌های مهم، عرض بیشتری بده */
+/* برای ستون‌های مهم، حداقل عرض بیشتری بده */
 .modern-table-container th:first-child,
 .modern-table-container td:first-child,
 .modern-table-container th:last-child,
 .modern-table-container td:last-child {
-  max-width: 250px;
   min-width: 100px;
 }
 
 /* ===== Table Styling ===== */
 .modern-table-container table {
-  width: 100%;
+  /* Allow table to expand beyond container width for horizontal scroll */
+  width: auto;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 14px;
   background: white;
   border-radius: var(--index-radius-lg);
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--index-shadow-sm);
 }
 
@@ -429,6 +508,64 @@
   }
 }
 
+@media (max-width: 1200px) {
+  /* Medium screens - adjust layout */
+  .modern-title-box {
+    padding: var(--index-spacing-lg) var(--index-spacing-xl);
+  }
+  
+  .modern-title {
+    font-size: 1.5rem;
+  }
+  
+  .modern-title-content {
+    gap: var(--index-spacing-md);
+  }
+  
+  .modern-title-actions {
+    gap: var(--index-spacing-sm);
+  }
+  
+  .modern-settings-btn {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet - more compact */
+  .modern-title-box {
+    padding: var(--index-spacing-md) var(--index-spacing-lg);
+  }
+  
+  .modern-title {
+    font-size: 1.35rem;
+  }
+  
+  .modern-title-text {
+    min-width: 150px;
+  }
+  
+  .modern-title-actions {
+    gap: var(--index-spacing-xs);
+  }
+  
+  .modern-settings-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
 @media (max-width: 768px) {
   /* Tablet and mobile - standard responsive */
   .modern-main-container {
@@ -441,23 +578,61 @@
   
   .modern-title-box {
     margin: var(--index-spacing-sm);
-    padding: var(--index-spacing-lg);
+    padding: var(--index-spacing-md);
+    width: calc(100% - var(--index-spacing-sm) * 2);
   }
   
   .modern-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    /* Allow text to wrap on very small screens */
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
   }
   
   .modern-title-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--index-spacing-md);
+    /* Stack vertically on small screens if needed */
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--index-spacing-sm);
+    flex-wrap: wrap;
+  }
+  
+  .modern-title-text {
+    min-width: 0;
+    flex: 1 1 auto;
+    order: 1;
+  }
+  
+  .modern-title-actions {
+    /* Ensure icons stay visible and wrap if needed */
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    order: 2;
+    margin-left: 0;
+    margin-top: var(--index-spacing-xs);
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .modern-settings-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .modern-settings-btn svg {
+    width: 16px;
+    height: 16px;
   }
   
   .modern-table-container {
     margin: var(--index-spacing-sm);
     padding: var(--index-spacing-lg);
+    /* Ensure horizontal scroll is enabled */
     overflow-x: auto;
+    overflow-y: visible;
+    width: calc(100% - var(--index-spacing-sm) * 2);
   }
   
   .modern-filter-container {
@@ -467,6 +642,62 @@
   
   .modern-table-container table {
     min-width: 600px; /* Ensure table doesn't get too cramped */
+    width: auto; /* Allow table to expand for horizontal scroll */
+  }
+  
+  /* Ensure horizontal scroll works on mobile */
+  .modern-table-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile - vertical layout */
+  .modern-title-box {
+    margin: var(--index-spacing-xs);
+    padding: var(--index-spacing-md) var(--index-spacing-sm);
+    width: calc(100% - var(--index-spacing-xs) * 2);
+  }
+  
+  .modern-title {
+    font-size: 1.1rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .modern-title-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--index-spacing-sm);
+  }
+  
+  .modern-title-text {
+    width: 100%;
+    order: 1;
+  }
+  
+  .modern-title-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--index-spacing-xs);
+    order: 2;
+    margin-top: var(--index-spacing-sm);
+  }
+  
+  .modern-settings-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  
+  .modern-title-subtitle {
+    font-size: 0.9rem;
+    white-space: normal;
+    word-wrap: break-word;
   }
 }
 

@@ -86,7 +86,7 @@ $(document).ready(function() {
                 panel.classList.remove('show');
             }
             
-            // Update icon and badge
+            // Update icon and badge with countdown
             updateRefreshIcon(interval);
             
             // Submit form to save refresh time to server
@@ -122,10 +122,22 @@ $(document).ready(function() {
         }, 3000);
     }
     
+    // ============================================
+    // BEAUTIFUL COUNTDOWN TIMER
+    // ============================================
+    let countdownInterval = null;
+    let currentCountdown = 0;
+    
     // Update refresh icon and badge based on interval
     function updateRefreshIcon(interval) {
         const toggle = document.querySelector('.refresh-settings-toggle');
         if (!toggle) return;
+        
+        // Clear existing countdown
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
         
         let badge = toggle.querySelector('.refresh-time-badge');
         
@@ -139,7 +151,14 @@ $(document).ready(function() {
                 badge.className = 'refresh-time-badge';
                 toggle.appendChild(badge);
             }
-            badge.textContent = interval;
+            
+            // Initialize countdown
+            currentCountdown = interval;
+            badge.textContent = currentCountdown;
+            updateBadgeState(badge, currentCountdown);
+            
+            // Start countdown timer
+            startCountdown(badge, interval);
             
             console.log('Refresh icon activated with interval:', interval);
         } else {
@@ -155,11 +174,100 @@ $(document).ready(function() {
         }
     }
     
-    // Initialize icon state on page load
-    if (refreshIntervalSelect) {
-        const initialInterval = parseInt(refreshIntervalSelect.value);
-        updateRefreshIcon(initialInterval);
+    // Start countdown timer
+    function startCountdown(badge, totalSeconds) {
+        // Clear any existing countdown
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+        
+        currentCountdown = totalSeconds;
+        
+        // Update badge immediately
+        badge.textContent = currentCountdown;
+        updateBadgeState(badge, currentCountdown);
+        
+        countdownInterval = setInterval(function() {
+            currentCountdown--;
+            
+            if (currentCountdown <= 0) {
+                // Countdown finished - reload page
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                
+                // Add final animation
+                badge.classList.add('countdown-critical');
+                badge.textContent = '0';
+                
+                // Reload page after a brief moment
+                setTimeout(function() {
+                    window.location.reload();
+                }, 300);
+                
+                return;
+            }
+            
+            // Update badge text with animation
+            badge.textContent = currentCountdown;
+            updateBadgeState(badge, currentCountdown);
+            
+            // Add update animation
+            badge.classList.remove('countdown-update');
+            // Force reflow to restart animation
+            void badge.offsetWidth;
+            badge.classList.add('countdown-update');
+            
+            // Remove update animation after it completes
+            setTimeout(function() {
+                badge.classList.remove('countdown-update');
+            }, 400);
+            
+        }, 1000); // Update every second
     }
+    
+    // Update badge state based on remaining time
+    function updateBadgeState(badge, seconds) {
+        // Remove all state classes
+        badge.classList.remove('countdown-warning', 'countdown-critical');
+        
+        if (seconds <= 3) {
+            // Critical state - less than 3 seconds
+            badge.classList.add('countdown-critical');
+        } else if (seconds <= 5) {
+            // Warning state - less than 5 seconds
+            badge.classList.add('countdown-warning');
+        }
+    }
+    
+    // Initialize icon state on page load
+    $(document).ready(function() {
+        const toggle = document.querySelector('.refresh-settings-toggle');
+        if (toggle && refreshIntervalSelect) {
+            const interval = parseInt(refreshIntervalSelect.value);
+            
+            if (interval > 0) {
+                // Check if badge already exists (from server-side rendering)
+                let badge = toggle.querySelector('.refresh-time-badge');
+                
+                if (badge) {
+                    // Badge exists - start countdown from current value
+                    const currentValue = parseInt(badge.textContent.trim()) || interval;
+                    startCountdown(badge, currentValue);
+                } else {
+                    // Badge doesn't exist - create it and start countdown
+                    updateRefreshIcon(interval);
+                }
+            } else {
+                // No refresh interval - make sure badge is removed
+                const badge = toggle.querySelector('.refresh-time-badge');
+                if (badge) {
+                    badge.remove();
+                }
+                toggle.classList.remove('active');
+            }
+        }
+    });
 });
 </script>
 

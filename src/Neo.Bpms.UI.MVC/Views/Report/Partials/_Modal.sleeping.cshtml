@@ -101,180 +101,283 @@
 {
 	<div class="modal fade keep-side-navi" id="scheduled-report-modal" tabindex="-1" role="dialog" aria-labelledby="scheduled-report-modal-label">
 	<div class="modal-dialog modal-xl" role="document">
-	<div class="modal-content modern-modal">
-	<div class="modal-header modern-modal-header">
-		<div class="d-flex align-items-center">
-			<svg style="width:24px;height:24px;margin-left:12px;color:#1869AA;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"/>
-				<polyline points="12 6 12 12 16 14"/>
-			</svg>
-			<h4 class="modal-title mb-0">@ViewTexts.ScheduleSettings: @Model.Structure.Name</h4>
+	<div class="modal-content schedule-modal-container">
+	<div class="modal-header schedule-modal-header">
+		<div class="header-content">
+			<div class="header-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="10"/>
+					<polyline points="12 6 12 12 16 14"/>
+				</svg>
+			</div>
+			<div class="header-text">
+				<h4 class="modal-title">@ViewTexts.ScheduleSettings</h4>
+				<p class="modal-subtitle">@Model.Structure.Name</p>
+			</div>
 		</div>
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
+		<button type="button" class="close-btn" data-dismiss="modal" aria-label="Close">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<line x1="18" y1="6" x2="6" y2="18"></line>
+				<line x1="6" y1="6" x2="18" y2="18"></line>
+			</svg>
 		</button>
 	</div>
-	<div class="modal-body modern-modal-body">
+	<div class="modal-body schedule-modal-body">
 	<form id="schedule-form">
 	<input type="hidden" id="schedule-id" value=""/>
+	<input type="hidden" id="schedule-type" value=""/>
+	<input type="hidden" id="schedule-job-frequency" value=""/>
 	
 	@* Basic Information Section *@
-	<div class="form-section">
+	<div class="schedule-section">
 		<div class="section-header">
-			<h5 class="section-title">
-				<i class="fa fa-info-circle"></i> اطلاعات پایه
-			</h5>
+			<div class="section-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="10"/>
+					<line x1="12" y1="12" x2="12" y2="16"/>
+					<line x1="12" y1="8" x2="12.01" y2="8"/>
+				</svg>
+			</div>
+			<h5 class="section-title">اطلاعات پایه</h5>
 		</div>
-		<div class="section-content">
-			<div class="form-grid-3">
-				<div class="form-group">
-					<label for="scheduled-report-name" class="form-label">
-						<i class="fa fa-tag"></i> @ViewTexts.Name
+		<div class="section-body">
+			<div class="form-row">
+				<div class="form-field">
+					<label for="scheduled-report-name" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+								<line x1="7" y1="7" x2="7.01" y2="7"/>
+							</svg>
+						</span>
+						@ViewTexts.Name
 					</label>
-					<input class="form-control modern-input" id="scheduled-report-name" name="name" type="text" value="" placeholder="نام زمانبندی"/>
+					<input class="field-input" id="scheduled-report-name" name="name" type="text" value="" placeholder="نام زمانبندی"/>
 				</div>
-				<div class="form-group">
-					<label class="form-label">
-						<i class="fa fa-calendar-alt"></i> @ViewTexts.ScheduleType
+			</div>
+			
+			<div class="form-row">
+				<div class="form-field">
+					<label class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+								<line x1="16" y1="2" x2="16" y2="6"/>
+								<line x1="8" y1="2" x2="8" y2="6"/>
+								<line x1="3" y1="10" x2="21" y2="10"/>
+							</svg>
+						</span>
+						@ViewTexts.ScheduleType
 					</label>
-					<div class="schedule-type-radio-group">
-						<div class="custom-control custom-radio">
-							<input type="radio" class="custom-control-input schedule-type-radio" name="scheduleType" id="scheduleType1" value="1" onchange="showOrHideJobScheduleFeatures();">
-							<label class="custom-control-label" for="scheduleType1">
-								<i class="fa fa-calendar-day"></i> @ViewTexts.Once
+					<div class="radio-group schedule-type-group">
+						<label class="radio-option">
+							<input type="radio" name="scheduleType" id="scheduleType1" value="1" onchange="showOrHideJobScheduleFeatures();">
+							<span class="radio-custom"></span>
+							<span class="radio-label">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+									<line x1="16" y1="2" x2="16" y2="6"/>
+									<line x1="8" y1="2" x2="8" y2="6"/>
+									<line x1="3" y1="10" x2="21" y2="10"/>
+								</svg>
+								@ViewTexts.Once
+							</span>
+						</label>
+						<label class="radio-option">
+							<input type="radio" name="scheduleType" id="scheduleType2" value="2" onchange="showOrHideJobScheduleFeatures();">
+							<span class="radio-custom"></span>
+							<span class="radio-label">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<polyline points="23 4 23 10 17 10"/>
+									<polyline points="1 20 1 14 7 14"/>
+									<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+								</svg>
+								@ViewTexts.Repetetive
+							</span>
+						</label>
+					</div>
+				</div>
+				
+				<div class="form-field">
+					<label class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+							</svg>
+						</span>
+						وضعیت
+					</label>
+					<label class="switch-field">
+						<input type="checkbox" name="isDisable" id="schedule-is-disabled" value="0">
+						<span class="switch-slider"></span>
+						<span class="switch-label">@ViewTexts.Disabled</span>
+					</label>
+				</div>
+			</div>
+			
+			<div class="form-row scheduled-report-DateTime">
+				<div class="form-field">
+					<label for="scheduled-report-date" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+								<line x1="16" y1="2" x2="16" y2="6"/>
+								<line x1="8" y1="2" x2="8" y2="6"/>
+								<line x1="3" y1="10" x2="21" y2="10"/>
+							</svg>
+						</span>
+						@ViewTexts.Day
+					</label>
+					<input class="field-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-date" name="date" type="text" value=""/>
+				</div>
+				<div class="form-field">
+					<label for="scheduled-report-time" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="10"/>
+								<polyline points="12 6 12 12 16 14"/>
+							</svg>
+						</span>
+						@ViewTexts.Hour
+					</label>
+					<input class="field-input time-input" id="scheduled-report-time" name="time" type="time" value=""/>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@* Repeat Period Section *@
+	<div class="schedule-section job-frequency">
+		<div class="section-header">
+			<div class="section-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<polyline points="23 4 23 10 17 10"/>
+					<polyline points="1 20 1 14 7 14"/>
+					<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+				</svg>
+			</div>
+			<h5 class="section-title">@ViewTexts.RepeatPeriod</h5>
+		</div>
+		<div class="section-body">
+			<div class="form-row">
+				<div class="form-field">
+					<label class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<polyline points="23 4 23 10 17 10"/>
+								<polyline points="1 20 1 14 7 14"/>
+								<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+							</svg>
+						</span>
+						تکرار
+					</label>
+					<div class="repetition-wrapper">
+						<span class="repetition-text">هر</span>
+						<input class="field-input repetition-input" id="scheduled-report-repetition" name="every" type="number" value="" min="1" placeholder="1"/>
+						<div class="radio-group frequency-group">
+							<label class="radio-option">
+								<input type="radio" name="jobfrequency" id="frequency1" value="1" onchange="showOrHideJobScheduleFeatures();">
+								<span class="radio-custom"></span>
+								<span class="radio-label">@ViewTexts.Day</span>
 							</label>
-						</div>
-						<div class="custom-control custom-radio">
-							<input type="radio" class="custom-control-input schedule-type-radio" name="scheduleType" id="scheduleType2" value="2" onchange="showOrHideJobScheduleFeatures();">
-							<label class="custom-control-label" for="scheduleType2">
-								<i class="fa fa-redo"></i> @ViewTexts.Repetetive
+							<label class="radio-option">
+								<input type="radio" name="jobfrequency" id="frequency2" value="2" onchange="showOrHideJobScheduleFeatures();">
+								<span class="radio-custom"></span>
+								<span class="radio-label">@ViewTexts.Week</span>
+							</label>
+							<label class="radio-option">
+								<input type="radio" name="jobfrequency" id="frequency3" value="3" onchange="showOrHideJobScheduleFeatures();">
+								<span class="radio-custom"></span>
+								<span class="radio-label">@ViewTexts.Month</span>
 							</label>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="form-label">
-						<i class="fa fa-toggle-off"></i> وضعیت
+			</div>
+			
+			<div class="form-row week-days">
+				<div class="form-field">
+					<label class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+								<line x1="16" y1="2" x2="16" y2="6"/>
+								<line x1="8" y1="2" x2="8" y2="6"/>
+								<line x1="3" y1="10" x2="21" y2="10"/>
+							</svg>
+						</span>
+						روزهای هفته
 					</label>
-					<div class="custom-control custom-switch switch-container">
-						<input type="checkbox" class="custom-control-input" name="isDisable" id="schedule-is-disabled" value="0">
-						<label class="custom-control-label" for="schedule-is-disabled">
-							@ViewTexts.Disabled
+					<div class="weekdays-grid">
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays1" value="1" class="weekday-checkbox">
+							<span class="weekday-label">شنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays2" value="2" class="weekday-checkbox">
+							<span class="weekday-label">یکشنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays4" value="4" class="weekday-checkbox">
+							<span class="weekday-label">دوشنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays8" value="8" class="weekday-checkbox">
+							<span class="weekday-label">سه‌شنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays16" value="16" class="weekday-checkbox">
+							<span class="weekday-label">چهارشنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays32" value="32" class="weekday-checkbox">
+							<span class="weekday-label">پنجشنبه</span>
+						</label>
+						<label class="weekday-option">
+							<input type="checkbox" name="onWeekDays" id="onWeekDays64" value="64" class="weekday-checkbox">
+							<span class="weekday-label">جمعه</span>
 						</label>
 					</div>
 				</div>
 			</div>
-			<div class="form-grid-2 scheduled-report-DateTime">
-				<div class="form-group">
-					<label for="scheduled-report-date" class="form-label">
-						<i class="fa fa-calendar"></i> @ViewTexts.Day
+			
+			<div class="form-row month-frequency">
+				<div class="form-field">
+					<label class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+								<line x1="16" y1="2" x2="16" y2="6"/>
+								<line x1="8" y1="2" x2="8" y2="6"/>
+								<line x1="3" y1="10" x2="21" y2="10"/>
+							</svg>
+						</span>
+						تنظیمات ماهانه
 					</label>
-					<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-date" name="date" type="text" value=""/>
-				</div>
-				<div class="form-group">
-					<label for="scheduled-report-time" class="form-label">
-						<i class="fa fa-clock"></i> @ViewTexts.Hour
-					</label>
-					<input class="form-control modern-input time-input" id="scheduled-report-time" name="time" type="time" value=""/>
-				</div>
-			</div>
-		</div>
-	</div>
-	@* Repeat Period Section *@
-	<div class="form-section">
-		<div class="section-header">
-			<h5 class="section-title">
-				<i class="fa fa-redo"></i> @ViewTexts.RepeatPeriod
-			</h5>
-		</div>
-		<div class="section-content">
-			<fieldset class="job-frequency">
-				<div class="form-group">
-					<label class="form-label">
-						<i class="fa fa-sync"></i> تکرار
-					</label>
-					<div class="repetition-control-group">
-						<span class="repetition-label">هر</span>
-						<input class="form-control modern-input repetition-input" id="scheduled-report-repetition" name="every" type="number" value="" min="1" placeholder="1"/>
-						<div class="frequency-radio-group">
-							<div class="custom-control custom-radio">
-								<input type="radio" class="custom-control-input frequency-radio" name="jobfrequency" id="frequency1" value="1" onchange="showOrHideJobScheduleFeatures();">
-								<label class="custom-control-label" for="frequency1">@ViewTexts.Day</label>
-							</div>
-							<div class="custom-control custom-radio">
-								<input type="radio" class="custom-control-input frequency-radio" name="jobfrequency" id="frequency2" value="2" onchange="showOrHideJobScheduleFeatures();">
-								<label class="custom-control-label" for="frequency2">@ViewTexts.Week</label>
-							</div>
-							<div class="custom-control custom-radio">
-								<input type="radio" class="custom-control-input frequency-radio" name="jobfrequency" id="frequency3" value="3" onchange="showOrHideJobScheduleFeatures();">
-								<label class="custom-control-label" for="frequency3">@ViewTexts.Month</label>
-							</div>
+					<div class="month-frequency-wrapper">
+						<div class="month-option">
+							<label class="radio-option">
+								<input class="day-of-month" type="radio" name="monthFrequency" id="monthFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
+								<span class="radio-custom"></span>
+								<span class="radio-label">روز ماه</span>
+							</label>
+							<input class="field-input day-of-month-input" id="scheduled-report-dayOfMonth" name="dayOfMonth" type="number" value="" disabled placeholder="روز ماه (1-31)"/>
 						</div>
-					</div>
-				</div>
-				
-				<div class="form-group week-days">
-					<label class="form-label">
-						<i class="fa fa-calendar-week"></i> روزهای هفته
-					</label>
-					<div class="week-days-container">
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays1" value="1" class="week-day-checkbox">
-							<label for="onWeekDays1" class="week-day-label">شنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays2" value="2" class="week-day-checkbox">
-							<label for="onWeekDays2" class="week-day-label">یکشنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays4" value="4" class="week-day-checkbox">
-							<label for="onWeekDays4" class="week-day-label">دوشنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays8" value="8" class="week-day-checkbox">
-							<label for="onWeekDays8" class="week-day-label">سه‌شنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays16" value="16" class="week-day-checkbox">
-							<label for="onWeekDays16" class="week-day-label">چهارشنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays32" value="32" class="week-day-checkbox">
-							<label for="onWeekDays32" class="week-day-label">پنجشنبه</label>
-						</div>
-						<div class="week-day-item">
-							<input type="checkbox" name="onWeekDays" id="onWeekDays64" value="64" class="week-day-checkbox">
-							<label for="onWeekDays64" class="week-day-label">جمعه</label>
-						</div>
-					</div>
-				</div>
-				
-				<div class="form-group month-frequency">
-					<label class="form-label">
-						<i class="fa fa-calendar-alt"></i> تنظیمات ماهانه
-					</label>
-					<div class="month-frequency-grid">
-						<div class="month-frequency-option">
-							<div class="custom-control custom-radio">
-								<input class="custom-control-input day-of-month" type="radio" name="monthFrequency" id="monthFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
-								<label class="custom-control-label" for="monthFreq1">روز ماه</label>
-							</div>
-							<input class="form-control modern-input day-of-month-input" id="scheduled-report-dayOfMonth" name="dayOfMonth" type="number" value="" disabled placeholder="روز ماه (1-31)"/>
-						</div>
-						<div class="month-frequency-option">
-							<div class="custom-control custom-radio">
-								<input class="custom-control-input mf" type="radio" name="monthFrequency" id="monthFreq2" value="2" onclick="showOrHideJobScheduleFeatures();"/>
-								<label class="custom-control-label" for="monthFreq2">در هفته مشخص</label>
-							</div>
-							<div class="week-select-group">
-								<select class="form-control modern-select week-counter-select" id="week-counter" name="monthlyFrequency" disabled>
+						<div class="month-option">
+							<label class="radio-option">
+								<input class="mf" type="radio" name="monthFrequency" id="monthFreq2" value="2" onclick="showOrHideJobScheduleFeatures();"/>
+								<span class="radio-custom"></span>
+								<span class="radio-label">در هفته مشخص</span>
+							</label>
+							<div class="week-select-wrapper">
+								<select class="field-select week-counter-select" id="week-counter" name="monthlyFrequency" disabled>
 									<option value="1">اولین</option>
 									<option value="2">دومین</option>
 									<option value="3">سومین</option>
 									<option value="4">چهارمین</option>
 									<option value="5">آخرین</option>
 								</select>
-								<select class="form-control modern-select weekday-select" name="WeekDays" disabled>
+								<select class="field-select weekday-select" name="WeekDays" disabled>
 									<option value="1">شنبه</option>
 									<option value="2">یکشنبه</option>
 									<option value="3">دوشنبه</option>
@@ -289,202 +392,327 @@
 						</div>
 					</div>
 				</div>
-			</fieldset>
+			</div>
 		</div>
 	</div>
 	
 	@* Daily Frequency Section *@
-	<div class="form-section">
+	<div class="schedule-section daily-frequency">
 		<div class="section-header">
-			<h5 class="section-title">
-				<i class="fa fa-clock"></i> زمان گزارش گیری در روز
-			</h5>
+			<div class="section-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="10"/>
+					<polyline points="12 6 12 12 16 14"/>
+				</svg>
+			</div>
+			<h5 class="section-title">زمان گزارش گیری در روز</h5>
 		</div>
-		<div class="section-content">
-			<fieldset class="daily-frequency">
-				<div class="daily-frequency-options">
-					<div class="frequency-option-card">
-						<div class="custom-control custom-radio">
-							<input type="radio" class="custom-control-input specific-time" name="dailyFrequency" id="dailyFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
-							<label class="custom-control-label" for="dailyFreq1">
-								<i class="fa fa-clock"></i> در ساعت مشخص
-							</label>
-						</div>
-						<input class="form-control modern-input time-input" id="daily-frequency-hour" name="time" type="time" value=""/>
-					</div>
-					<div class="frequency-option-card">
-						<div class="custom-control custom-radio">
-							<input type="radio" class="custom-control-input hourly-every" name="dailyFrequency" id="dailyFreq2" value="2" onclick="showOrHideJobScheduleFeatures();">
-							<label class="custom-control-label" for="dailyFreq2">
-								<i class="fa fa-sync"></i> هر چند ساعت
-							</label>
-						</div>
-						<div class="hourly-control-group">
-							<input class="form-control modern-input hourly-every-input" id="scheduled-report-hourlyEvery" type="number" value="" disabled placeholder="تعداد"/>
-							<span class="hour-label">@ViewTexts.Hour</span>
-						</div>
+		<div class="section-body">
+			<div class="daily-frequency-wrapper">
+				<div class="frequency-card">
+					<label class="radio-option">
+						<input type="radio" class="specific-time" name="dailyFrequency" id="dailyFreq1" value="1" onclick="showOrHideJobScheduleFeatures();">
+						<span class="radio-custom"></span>
+						<span class="radio-label">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="10"/>
+								<polyline points="12 6 12 12 16 14"/>
+							</svg>
+							در ساعت مشخص
+						</span>
+					</label>
+					<input class="field-input time-input" id="daily-frequency-hour" name="time" type="time" value=""/>
+				</div>
+				<div class="frequency-card">
+					<label class="radio-option">
+						<input type="radio" class="hourly-every" name="dailyFrequency" id="dailyFreq2" value="2" onclick="showOrHideJobScheduleFeatures();">
+						<span class="radio-custom"></span>
+						<span class="radio-label">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<polyline points="23 4 23 10 17 10"/>
+								<polyline points="1 20 1 14 7 14"/>
+								<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+							</svg>
+							هر چند ساعت
+						</span>
+					</label>
+					<div class="hourly-wrapper">
+						<input class="field-input hourly-every-input" id="scheduled-report-hourlyEvery" type="number" value="" disabled placeholder="تعداد"/>
+						<span class="hourly-label">@ViewTexts.Hour</span>
 					</div>
 				</div>
-				<div class="time-range-group">
-					<div class="form-group">
-						<label for="scheduled-report-starttime" class="form-label">
-							<i class="fa fa-play-circle"></i> ساعت شروع
-						</label>
-						<input class="form-control modern-input time-input" id="scheduled-report-starttime" name="startTime" type="time" value="" disabled/>
-					</div>
-					<div class="form-group">
-						<label for="scheduled-report-endtime" class="form-label">
-							<i class="fa fa-stop-circle"></i> ساعت پایان
-						</label>
-						<input class="form-control modern-input time-input" id="scheduled-report-endtime" name="endTime" type="time" value="" disabled/>
-					</div>
+			</div>
+			<div class="time-range-wrapper">
+				<div class="form-field">
+					<label for="scheduled-report-starttime" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<polygon points="5 3 19 12 5 21 5 3"/>
+							</svg>
+						</span>
+						ساعت شروع
+					</label>
+					<input class="field-input time-input" id="scheduled-report-starttime" name="startTime" type="time" value="" disabled/>
 				</div>
-			</fieldset>
+				<div class="form-field">
+					<label for="scheduled-report-endtime" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="6" y="4" width="4" height="16"/>
+								<rect x="14" y="4" width="4" height="16"/>
+							</svg>
+						</span>
+						ساعت پایان
+					</label>
+					<input class="field-input time-input" id="scheduled-report-endtime" name="endTime" type="time" value="" disabled/>
+				</div>
+			</div>
 		</div>
 	</div>
 	
 	@* Duration Section *@
-	<div class="form-section">
+	<div class="schedule-section duration">
 		<div class="section-header">
-			<h5 class="section-title">
-				<i class="fa fa-calendar-check"></i> طول دوره گزارش گیری
-			</h5>
+			<div class="section-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+					<line x1="16" y1="2" x2="16" y2="6"/>
+					<line x1="8" y1="2" x2="8" y2="6"/>
+					<line x1="3" y1="10" x2="21" y2="10"/>
+					<path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+				</svg>
+			</div>
+			<h5 class="section-title">طول دوره گزارش گیری</h5>
 		</div>
-		<div class="section-content">
-			<fieldset class="duration">
-				<div class="form-grid-2">
-					<div class="form-group">
-						<label for="scheduled-report-startdate" class="form-label">
-							<i class="fa fa-calendar-plus"></i> تاریخ شروع
-						</label>
-						<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-startdate" name="startDate" type="text" value=""/>
-					</div>
-					<div class="form-group">
-						<label for="scheduled-report-enddate" class="form-label">
-							<i class="fa fa-calendar-times"></i> تاریخ منقضی شدن
-						</label>
-						<input class="form-control modern-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-enddate" name="endDate" type="text" value=""/>
-					</div>
+		<div class="section-body">
+			<div class="form-row">
+				<div class="form-field">
+					<label for="scheduled-report-startdate" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="10"/>
+								<polyline points="12 6 12 12 16 14"/>
+							</svg>
+						</span>
+						تاریخ شروع
+					</label>
+					<input class="field-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-startdate" name="startDate" type="text" value=""/>
 				</div>
-			</fieldset>
+				<div class="form-field">
+					<label for="scheduled-report-enddate" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="10"/>
+								<line x1="12" y1="8" x2="12" y2="12"/>
+								<line x1="16" y1="12" x2="12" y2="12"/>
+								<line x1="16" y1="16" x2="12" y2="16"/>
+							</svg>
+						</span>
+						تاریخ منقضی شدن
+					</label>
+					<input class="field-input dateField date-input @calendar" dont-convert="true" id="scheduled-report-enddate" name="endDate" type="text" value=""/>
+				</div>
+			</div>
 		</div>
 	</div>
 	
 	@* Output Settings Section *@
-	<div class="form-section">
+	<div class="schedule-section output-settings">
 		<div class="section-header">
-			<h5 class="section-title">
-				<i class="fa fa-paper-plane"></i> تعیین عملیات و خروجی
-			</h5>
+			<div class="section-icon">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+					<polyline points="17 8 12 3 7 8"/>
+					<line x1="12" y1="3" x2="12" y2="15"/>
+				</svg>
+			</div>
+			<h5 class="section-title">تعیین عملیات و خروجی</h5>
 		</div>
-		<div class="section-content">
-			<fieldset>
-				<div class="form-grid-2">
-					<div class="form-group">
-						<label for="output-type" class="form-label">
-							<i class="fa fa-file-export"></i> نوع خروجی گزارش
-						</label>
-						<select class="form-control modern-select" id="output-type" name="outputType" onchange="showOrHideJobScheduleFeatures();">
-							<option value="2">ایمیل</option>
-							<option value="4">پیامک</option>
-							<option value="5">اطلاع رسانی</option>
-							<option value="1">دایرکتوری فایل</option>
-							<option value="3">پیوست سابقه</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="file-type" class="form-label">
-							<i class="fa fa-file"></i> فرمت گزارش
-						</label>
-						<select class="form-control modern-select" id="file-type" name="fileType">
-							<option value="1">HTML</option>
-							<option value="2">Excel</option>
-							<option value="3">Text</option>
-							<option value="4">CSV</option>
-						</select>
-					</div>
-				</div>
-				
-				<div class="form-grid-2">
-					<div class="form-group">
-						<label for="action-name" class="form-label">
-							<i class="fa fa-heading"></i> عنوان در خروجی
-						</label>
-						<input class="form-control modern-input" id="action-name" name="actionName" type="text" value="" placeholder="عنوان گزارش"/>
-					</div>
-					<div class="form-group">
-						<label for="max-record" class="form-label">
-							<i class="fa fa-list-ol"></i> حداکثر تعداد رکورد
-						</label>
-						<input class="form-control modern-input max-record-input" id="max-record" name="maxRecord" min="0" max="100000" type="number" value="" placeholder="تعداد رکورد"/>
-					</div>
-				</div>
-				
-				<div class="form-grid-2 user-group-div">
-					<div class="form-group">
-						<label for="scheduled-report-roles" class="form-label">
-							<i class="fa fa-user-tag"></i> نقش
-						</label>
-						<select class="form-control modern-select" id="scheduled-report-roles" name="roles" multiple>
-							@if (availableRoles != null && availableRoles.Any())
-							{
-								@foreach (var role in availableRoles)
-								{
-									<option value="@role.Name">
-										@role.DisplayName
-									</option>
-								}
-							}
-							else
-							{
-								<option disabled>هیچ نقشی در این کانفیگ تعریف نشده است</option>
-							}
-						</select>
-						<small class="form-text text-muted">می‌توانید چند نقش را انتخاب کنید (با نگه داشتن Ctrl)</small>
-					</div>
-					<div class="form-group">
-						<label for="scheduled-report-user" class="form-label">
-							<i class="fa fa-user"></i> ارسال به کاربر
-						</label>
-						<input class="form-control modern-input" id="scheduled-report-user" name="user" type="text" value="" placeholder="نام کاربری"/>
-					</div>
-				</div>
-				
-				<div class="form-grid-2 output-type">
-					<div class="form-group">
-						<label for="destination-user-name" class="form-label">
-							<i class="fa fa-user-circle"></i> نام کاربری (دایرکتوری)
-						</label>
-						<input class="form-control modern-input" id="destination-user-name" type="text" value="" placeholder="نام کاربری"/>
-					</div>
-					<div class="form-group">
-						<label for="destination-password" class="form-label">
-							<i class="fa fa-lock"></i> رمز عبور (دایرکتوری)
-						</label>
-						<input class="form-control modern-input" id="destination-password" type="password" value="" placeholder="رمز عبور"/>
-					</div>
-				</div>
-				
-				<div class="form-group output-type">
-					<label for="destination-path" class="form-label">
-						<i class="fa fa-folder"></i> مسیر خروجی
+		<div class="section-body">
+			<div class="form-row">
+				<div class="form-field">
+					<label for="output-type" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+								<polyline points="7 10 12 15 17 10"/>
+								<line x1="12" y1="15" x2="12" y2="3"/>
+							</svg>
+						</span>
+						نوع خروجی گزارش
 					</label>
-					<input class="form-control modern-input" id="destination-path" type="text" value="" placeholder="\\TetaScheduledReport" dir="ltr"/>
+					<select class="field-select" id="output-type" name="outputType" onchange="showOrHideJobScheduleFeatures();">
+						<option value="2">ایمیل</option>
+						<option value="4">پیامک</option>
+						<option value="5">اطلاع رسانی</option>
+						<option value="1">دایرکتوری فایل</option>
+						<option value="3">پیوست سابقه</option>
+					</select>
 				</div>
-			</fieldset>
+				<div class="form-field">
+					<label for="file-type" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+								<polyline points="13 2 13 9 20 9"/>
+							</svg>
+						</span>
+						فرمت گزارش
+					</label>
+					<select class="field-select" id="file-type" name="fileType">
+						<option value="1">HTML</option>
+						<option value="2">Excel</option>
+						<option value="3">Text</option>
+						<option value="4">CSV</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-row">
+				<div class="form-field">
+					<label for="action-name" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+								<polyline points="14 2 14 8 20 8"/>
+								<line x1="16" y1="13" x2="8" y2="13"/>
+								<line x1="16" y1="17" x2="8" y2="17"/>
+								<polyline points="10 9 9 9 8 9"/>
+							</svg>
+						</span>
+						عنوان در خروجی
+					</label>
+					<input class="field-input" id="action-name" name="actionName" type="text" value="" placeholder="عنوان گزارش"/>
+				</div>
+				<div class="form-field">
+					<label for="max-record" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="8" y1="6" x2="21" y2="6"/>
+								<line x1="8" y1="12" x2="21" y2="12"/>
+								<line x1="8" y1="18" x2="21" y2="18"/>
+								<line x1="3" y1="6" x2="3.01" y2="6"/>
+								<line x1="3" y1="12" x2="3.01" y2="12"/>
+								<line x1="3" y1="18" x2="3.01" y2="18"/>
+							</svg>
+						</span>
+						حداکثر تعداد رکورد
+					</label>
+					<input class="field-input max-record-input" id="max-record" name="maxRecord" min="0" max="100000" type="number" value="" placeholder="تعداد رکورد"/>
+				</div>
+			</div>
+			
+			<div class="form-row user-group-div">
+				<div class="form-field">
+					<label for="scheduled-report-roles" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+								<circle cx="9" cy="7" r="4"/>
+								<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+								<path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+							</svg>
+						</span>
+						نقش
+					</label>
+					<select class="field-select roles-select" id="scheduled-report-roles" name="roles" multiple>
+						@if (availableRoles != null && availableRoles.Any())
+						{
+							@foreach (var role in availableRoles)
+							{
+								<option value="@role.Name">
+									@role.DisplayName
+								</option>
+							}
+						}
+						else
+						{
+							<option disabled>هیچ نقشی در این کانفیگ تعریف نشده است</option>
+						}
+					</select>
+					<small class="field-hint">می‌توانید چند نقش را انتخاب کنید (با نگه داشتن Ctrl)</small>
+				</div>
+				<div class="form-field">
+					<label for="scheduled-report-user" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+								<circle cx="12" cy="7" r="4"/>
+							</svg>
+						</span>
+						ارسال به کاربر
+					</label>
+					<input class="field-input" id="scheduled-report-user" name="user" type="text" value="" placeholder="نام کاربری"/>
+				</div>
+			</div>
+			
+			<div class="form-row output-type">
+				<div class="form-field">
+					<label for="destination-user-name" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+								<circle cx="12" cy="7" r="4"/>
+							</svg>
+						</span>
+						نام کاربری (دایرکتوری)
+					</label>
+					<input class="field-input" id="destination-user-name" type="text" value="" placeholder="نام کاربری"/>
+				</div>
+				<div class="form-field">
+					<label for="destination-password" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+								<path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+							</svg>
+						</span>
+						رمز عبور (دایرکتوری)
+					</label>
+					<input class="field-input" id="destination-password" type="password" value="" placeholder="رمز عبور"/>
+				</div>
+			</div>
+			
+			<div class="form-row output-type">
+				<div class="form-field">
+					<label for="destination-path" class="field-label">
+						<span class="label-icon">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+							</svg>
+						</span>
+						مسیر خروجی
+					</label>
+					<input class="field-input" id="destination-path" type="text" value="" placeholder="\\TetaScheduledReport" dir="ltr"/>
+				</div>
+			</div>
 		</div>
 	</div>
 	</form>
 	</div>
-	<div class="modal-footer modern-modal-footer">
-		<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-			<i class="fa fa-times"></i> انصراف
+	<div class="modal-footer schedule-modal-footer">
+		<button type="button" class="btn btn-cancel" data-dismiss="modal">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<line x1="18" y1="6" x2="6" y2="18"/>
+				<line x1="6" y1="6" x2="18" y2="18"/>
+			</svg>
+			انصراف
 		</button>
-		<button type="button" id="schedule-without-filter-submit" class="btn btn-outline-success" onclick="ScheduledReport.submitForm(false)">
-			<i class="fa fa-save"></i> ذخیره بدون تغییر فیلتر
+		<button type="button" id="schedule-without-filter-submit" class="btn btn-save-secondary" onclick="ScheduledReport.submitForm(false)">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+				<polyline points="17 21 17 13 7 13 7 21"/>
+				<polyline points="7 3 7 8 15 8"/>
+			</svg>
+			ذخیره بدون تغییر فیلتر
 		</button>
-		<button type="button" class="btn btn-primary" onclick="ScheduledReport.submitForm(true)">
-			<i class="fa fa-save"></i> ذخیره به همراه فیلتر
+		<button type="button" class="btn btn-save-primary" onclick="ScheduledReport.submitForm(true)">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+				<polyline points="17 21 17 13 7 13 7 21"/>
+				<polyline points="7 3 7 8 15 8"/>
+			</svg>
+			ذخیره به همراه فیلتر
 		</button>
 	</div>
 	</div>
@@ -515,764 +743,925 @@
 <style>
 	.label-right { text-align: right !important; }
 	
-	/* Modern Modal Styles */
-	.modern-modal {
-		border-radius: 12px;
+	/* ============================================
+	   MODERN SCHEDULE MODAL - COMPLETE REDESIGN
+	   ============================================ */
+	
+	.schedule-modal-container {
+		border-radius: 20px;
+		overflow: hidden;
+		box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+		border: none;
+		background: #ffffff;
+	}
+	
+	/* Header */
+	.schedule-modal-header {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+		color: white;
+		padding: 24px 32px;
+		border-bottom: none;
+		position: relative;
 		overflow: hidden;
 	}
 	
-	.modern-modal-header {
-		background: linear-gradient(135deg, #1869AA 0%, #1e88e5 100%);
+	.schedule-modal-header::before {
+		content: '';
+		position: absolute;
+		top: -50%;
+		right: -50%;
+		width: 200%;
+		height: 200%;
+		background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+		animation: pulse 8s ease-in-out infinite;
+	}
+	
+	@@keyframes pulse {
+		0%, 100% { transform: scale(1); opacity: 0.5; }
+		50% { transform: scale(1.1); opacity: 0.8; }
+	}
+	
+	.header-content {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		position: relative;
+		z-index: 1;
+	}
+	
+	.header-icon {
+		width: 48px;
+		height: 48px;
+		background: rgba(255,255,255,0.2);
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		backdrop-filter: blur(10px);
+	}
+	
+	.header-icon svg {
+		width: 24px;
+		height: 24px;
 		color: white;
-		border-bottom: none;
-		padding: 20px 25px;
 	}
 	
-	.modern-modal-header .modal-title {
+	.header-text {
+		flex: 1;
+	}
+	
+	.schedule-modal-header .modal-title {
+		margin: 0;
+		font-size: 22px;
+		font-weight: 700;
 		color: white;
-		font-weight: 600;
-		font-size: 18px;
+		letter-spacing: -0.5px;
 	}
 	
-	.modern-modal-header .close {
+	.modal-subtitle {
+		margin: 4px 0 0 0;
+		font-size: 14px;
+		color: rgba(255,255,255,0.9);
+		font-weight: 400;
+	}
+	
+	.close-btn {
+		position: relative;
+		z-index: 1;
+		width: 40px;
+		height: 40px;
+		border-radius: 10px;
+		background: rgba(255,255,255,0.1);
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		padding: 0;
+	}
+	
+	.close-btn svg {
+		width: 20px;
+		height: 20px;
 		color: white;
-		opacity: 0.9;
-		text-shadow: none;
+		stroke-width: 2.5;
 	}
 	
-	.modern-modal-header .close:hover {
-		opacity: 1;
+	.close-btn:hover {
+		background: rgba(255,255,255,0.2);
+		transform: rotate(90deg);
 	}
 	
-	.modern-modal-body {
-		padding: 25px;
+	/* Body */
+	.schedule-modal-body {
+		padding: 32px;
 		max-height: 75vh;
 		overflow-y: auto;
+		background: #f8fafc;
 	}
 	
-	.modern-modal-footer {
-		border-top: 1px solid #e2e8f0;
-		padding: 18px 25px;
+	.schedule-modal-body::-webkit-scrollbar {
+		width: 8px;
+	}
+	
+	.schedule-modal-body::-webkit-scrollbar-track {
+		background: #e2e8f0;
+		border-radius: 4px;
+	}
+	
+	.schedule-modal-body::-webkit-scrollbar-thumb {
+		background: #cbd5e1;
+		border-radius: 4px;
+	}
+	
+	.schedule-modal-body::-webkit-scrollbar-thumb:hover {
+		background: #94a3b8;
+	}
+	
+	/* Sections */
+	.schedule-section {
+		background: white;
+		border-radius: 16px;
+		margin-bottom: 24px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+		overflow: hidden;
+		transition: all 0.3s ease;
+		border: 1px solid #e2e8f0;
+	}
+	
+	.schedule-section:hover {
+		box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+		transform: translateY(-2px);
+	}
+	
+	.section-header {
+		background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+		padding: 20px 24px;
+		border-bottom: 2px solid #e2e8f0;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+	
+	.section-icon {
+		width: 40px;
+		height: 40px;
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+	
+	.section-icon svg {
+		width: 20px;
+		height: 20px;
+		color: white;
+		stroke-width: 2.5;
+	}
+	
+	.section-title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 700;
+		color: #1e293b;
+		letter-spacing: -0.3px;
+	}
+	
+	.section-body {
+		padding: 24px;
+	}
+	
+	/* Form Rows */
+	.form-row {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.form-row:last-child {
+		margin-bottom: 0;
+	}
+	
+	.form-field {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	
+	.field-label {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 600;
+		color: #475569;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+	
+	.label-icon {
+		width: 18px;
+		height: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #1869AA;
+		flex-shrink: 0;
+	}
+	
+	.label-icon svg {
+		width: 100%;
+		height: 100%;
+		stroke-width: 2;
+	}
+	
+	.field-input,
+	.field-select {
+		width: 100%;
+		padding: 12px 16px;
+		border: 2px solid #e2e8f0;
+		border-radius: 10px;
+		font-size: 14px;
+		color: #1e293b;
+		background: white;
+		transition: all 0.2s ease;
+		font-family: inherit;
+	}
+	
+	.field-input:focus,
+	.field-select:focus {
+		outline: none;
+		border-color: #1869AA;
+		box-shadow: 0 0 0 4px rgba(24, 105, 170, 0.1);
+	}
+	
+	.field-input::placeholder {
+		color: #94a3b8;
+	}
+	
+	.field-hint {
+		font-size: 11px;
+		color: #64748b;
+		margin-top: 4px;
+	}
+	
+	/* Radio Groups */
+	.radio-group {
+		display: flex;
+		gap: 12px;
+		flex-wrap: wrap;
+		margin-top: 8px;
+	}
+	
+	.radio-option {
+		position: relative;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+	}
+	
+	.radio-option input[type="radio"] {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+	
+	.radio-custom {
+		width: 20px;
+		height: 20px;
+		border: 2px solid #cbd5e1;
+		border-radius: 50%;
+		background: white;
+		position: relative;
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+		margin-left: 8px;
+	}
+	
+	.radio-option input[type="radio"]:checked + .radio-custom {
+		border-color: #1869AA;
+		background: #1869AA;
+	}
+	
+	.radio-option input[type="radio"]:checked + .radio-custom::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 8px;
+		height: 8px;
+		background: white;
+		border-radius: 50%;
+	}
+	
+	.radio-label {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 14px;
+		font-weight: 500;
+		color: #475569;
+		padding: 10px 16px;
+		border: 2px solid #e2e8f0;
+		border-radius: 10px;
+		background: white;
+		transition: all 0.2s ease;
+		flex: 1;
+		min-width: 120px;
+		justify-content: center;
+	}
+	
+	.radio-label svg {
+		width: 16px;
+		height: 16px;
+		color: #64748b;
+		stroke-width: 2;
+	}
+	
+	.radio-option input[type="radio"]:checked ~ .radio-label {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+		color: white;
+		border-color: #1869AA;
+		box-shadow: 0 4px 12px rgba(24, 105, 170, 0.2);
+	}
+	
+	.radio-option input[type="radio"]:checked ~ .radio-label svg {
+		color: white;
+	}
+	
+	.radio-option:hover .radio-label {
+		border-color: #1869AA;
 		background: #f8fafc;
+	}
+	
+	/* Schedule Type Group */
+	.schedule-type-group {
+		margin-top: 12px;
+	}
+	
+	.schedule-type-group .radio-label {
+		min-width: 150px;
+	}
+	
+	/* Frequency Group */
+	.frequency-group {
+		flex: 1;
+		margin-top: 0;
+	}
+	
+	.frequency-group .radio-label {
+		min-width: 90px;
+	}
+	
+	/* Repetition Wrapper */
+	.repetition-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-wrap: wrap;
+		padding: 16px;
+		background: #f8fafc;
+		border-radius: 12px;
+		border: 2px solid #e2e8f0;
+	}
+	
+	.repetition-text {
+		font-size: 14px;
+		font-weight: 600;
+		color: #475569;
+	}
+	
+	.repetition-input {
+		width: 80px;
+		text-align: center;
+		font-weight: 600;
+	}
+	
+	/* Weekdays */
+	.weekdays-grid {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 10px;
+		margin-top: 12px;
+	}
+	
+	.weekday-option {
+		position: relative;
+		cursor: pointer;
+	}
+	
+	.weekday-checkbox {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+	
+	.weekday-label {
+		display: block;
+		padding: 12px 8px;
+		border: 2px solid #e2e8f0;
+		border-radius: 10px;
+		background: white;
+		text-align: center;
+		font-size: 12px;
+		font-weight: 600;
+		color: #475569;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+	
+	.weekday-checkbox:checked + .weekday-label {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+		color: white;
+		border-color: #1869AA;
+		box-shadow: 0 4px 12px rgba(24, 105, 170, 0.2);
+		transform: translateY(-2px);
+	}
+	
+	.weekday-label:hover {
+		border-color: #1869AA;
+		background: #f8fafc;
+	}
+	
+	/* Month Frequency */
+	.month-frequency-wrapper {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px;
+		margin-top: 12px;
+	}
+	
+	.month-option {
+		padding: 16px;
+		background: #f8fafc;
+		border-radius: 12px;
+		border: 2px solid #e2e8f0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		transition: all 0.2s ease;
+	}
+	
+	.month-option:hover {
+		border-color: #cbd5e1;
+		background: white;
+	}
+	
+	.week-select-wrapper {
+		display: flex;
+		gap: 10px;
+		margin-top: 8px;
+	}
+	
+	.week-counter-select,
+	.weekday-select {
+		flex: 1;
+	}
+	
+	.day-of-month-input {
+		width: 100%;
+		margin-top: 8px;
+	}
+	
+	/* Daily Frequency */
+	.daily-frequency-wrapper {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px;
+		margin-bottom: 20px;
+	}
+	
+	.frequency-card {
+		padding: 20px;
+		border: 2px solid #e2e8f0;
+		border-radius: 12px;
+		background: white;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		transition: all 0.2s ease;
+	}
+	
+	.frequency-card:hover {
+		border-color: #1869AA;
+		box-shadow: 0 4px 12px rgba(24, 105, 170, 0.1);
+	}
+	
+	.frequency-card .radio-label {
+		min-width: auto;
+		width: 100%;
+	}
+	
+	.hourly-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px;
+		background: #f8fafc;
+		border-radius: 10px;
+		border: 2px solid #e2e8f0;
+	}
+	
+	.hourly-every-input {
+		width: 100px;
+		text-align: center;
+		font-weight: 600;
+	}
+	
+	.hourly-label {
+		font-size: 14px;
+		font-weight: 600;
+		color: #475569;
+		white-space: nowrap;
+	}
+	
+	.time-range-wrapper {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px;
+		padding: 20px;
+		background: #f8fafc;
+		border-radius: 12px;
+		border: 2px solid #e2e8f0;
+		margin-top: 20px;
+	}
+	
+	/* Switch */
+	.switch-field {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 16px;
+		background: #f8fafc;
+		border-radius: 10px;
+		border: 2px solid #e2e8f0;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+	
+	.switch-field:hover {
+		border-color: #cbd5e1;
+	}
+	
+	.switch-field input[type="checkbox"] {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+	
+	.switch-slider {
+		position: relative;
+		width: 48px;
+		height: 26px;
+		background: #cbd5e1;
+		border-radius: 13px;
+		transition: all 0.3s ease;
+		flex-shrink: 0;
+	}
+	
+	.switch-slider::after {
+		content: '';
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		background: white;
+		border-radius: 50%;
+		top: 3px;
+		right: 3px;
+		transition: all 0.3s ease;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+	}
+	
+	.switch-field input[type="checkbox"]:checked + .switch-slider {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+	}
+	
+	.switch-field input[type="checkbox"]:checked + .switch-slider::after {
+		transform: translateX(-22px);
+	}
+	
+	.switch-label {
+		font-size: 14px;
+		font-weight: 600;
+		color: #475569;
+	}
+	
+	/* Roles Select */
+	.roles-select[multiple] {
+		min-height: 120px;
+		padding: 8px;
+	}
+	
+	.roles-select[multiple] option {
+		padding: 10px 12px;
+		margin: 4px 0;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+	
+	.roles-select[multiple] option:hover {
+		background: rgba(24, 105, 170, 0.1);
+	}
+	
+	.roles-select[multiple] option:checked {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
+		color: white;
+		font-weight: 600;
+	}
+	
+	/* Footer */
+	.schedule-modal-footer {
+		padding: 20px 32px;
+		border-top: 2px solid #e2e8f0;
+		background: white;
 		display: flex;
 		justify-content: flex-end;
 		gap: 12px;
 	}
 	
-	.modern-modal-footer .btn {
-		min-width: 140px;
-		font-weight: 500;
-		padding: 10px 20px;
-		border-radius: 6px;
-		transition: all 0.2s ease;
-	}
-	
-	.modern-modal-footer .btn i {
-		margin-left: 6px;
-	}
-	
-	/* Form Sections - Improved Vertical Layout */
-	.form-section {
-		margin-bottom: 24px;
-		background: #ffffff;
-		border: 1px solid #e2e8f0;
-		border-radius: 12px;
-		overflow: hidden;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-		transition: all 0.2s ease;
-	}
-	
-	.form-section:hover {
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		border-color: #cbd5e0;
-	}
-	
-	.section-header {
-		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-		padding: 16px 20px;
-		border-bottom: 2px solid #e2e8f0;
-	}
-	
-	.section-title {
-		margin: 0;
-		font-size: 15px;
-		font-weight: 600;
-		color: #1e293b;
+	.schedule-modal-footer .btn {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-	}
-	
-	.section-title i {
-		color: #1869AA;
-		font-size: 16px;
-		flex-shrink: 0;
-	}
-	
-	.section-content {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-	}
-	
-	/* Form Grid Layouts */
-	.form-grid-2 {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-		margin-bottom: 20px;
-	}
-	
-	.form-grid-3 {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 20px;
-		margin-bottom: 20px;
-	}
-	
-	.form-group {
-		margin-bottom: 0;
-	}
-	
-	/* Modern Form Controls */
-	.modern-input,
-	.modern-select {
-		border: 1px solid #ced4da;
-		border-radius: 6px;
-		padding: 8px 12px;
-		transition: all 0.2s ease;
-	}
-	
-	.modern-input:focus,
-	.modern-select:focus {
-		border-color: #1869AA;
-		box-shadow: 0 0 0 3px rgba(24, 105, 170, 0.1);
-		outline: none;
-	}
-	
-	.form-label {
+		padding: 12px 24px;
+		border-radius: 10px;
+		font-size: 14px;
 		font-weight: 600;
-		color: #334155;
-		margin-bottom: 8px;
-		font-size: 13px;
-		display: flex;
-		align-items: center;
-	}
-	
-	.form-label i {
-		margin-left: 6px;
-		color: #1869AA;
-		font-size: 14px;
-	}
-	
-	.form-group {
-		display: flex;
-		flex-direction: column;
-	}
-	
-	.form-group .form-label {
-		margin-bottom: 8px;
-	}
-	
-	/* Repetition Control Group */
-	.repetition-control-group {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		flex-wrap: wrap;
-	}
-	
-	.repetition-label {
-		color: #64748b;
-		font-weight: 500;
-		font-size: 14px;
-		white-space: nowrap;
-	}
-	
-	/* Week Days - Improved Layout - Prevent Overlap */
-	.week-days-container {
-		display: grid !important;
-		grid-template-columns: repeat(7, 1fr) !important;
-		gap: 8px !important;
-		margin-top: 12px !important;
-		width: 100% !important;
-		box-sizing: border-box !important;
-		padding: 0 !important;
-	}
-	
-	@@media (max-width: 1400px) {
-		.week-days-container {
-			grid-template-columns: repeat(4, 1fr) !important;
-		}
-	}
-	
-	@@media (max-width: 992px) {
-		.week-days-container {
-			grid-template-columns: repeat(3, 1fr) !important;
-		}
-	}
-	
-	@@media (max-width: 576px) {
-		.week-days-container {
-			grid-template-columns: repeat(2, 1fr) !important;
-		}
-	}
-	
-	.week-day-item {
-		position: relative !important;
-		display: flex !important;
-		flex-shrink: 0 !important;
-		align-items: center !important;
-		justify-content: center !important;
-		margin: 0 !important;
-		width: 100% !important;
-		min-width: 0 !important;
-	}
-	
-	.week-day-checkbox {
-		position: absolute;
-		opacity: 0;
-		width: 0;
-		height: 0;
-		pointer-events: none;
-	}
-	
-	.week-day-label {
-		display: inline-block !important;
-		padding: 10px 8px !important;
-		border: 2px solid #cbd5e0 !important;
-		border-radius: 8px !important;
-		background: #ffffff !important;
-		color: #475569 !important;
-		cursor: pointer !important;
-		transition: all 0.2s ease !important;
-		font-size: 12px !important;
-		font-weight: 500 !important;
-		user-select: none !important;
-		white-space: nowrap !important;
-		width: 100% !important;
-		box-sizing: border-box !important;
-		margin: 0 !important;
-		line-height: 1.4 !important;
-		text-align: center !important;
-		overflow: hidden !important;
-		text-overflow: ellipsis !important;
-	}
-	
-	.week-day-checkbox:checked + .week-day-label {
-		background: #1869AA !important;
-		color: white !important;
-		border-color: #1869AA !important;
-		box-shadow: 0 2px 6px rgba(24, 105, 170, 0.25) !important;
-		transform: translateY(-1px);
-	}
-	
-	.week-day-label:hover {
-		border-color: #1869AA !important;
-		background: rgba(24, 105, 170, 0.08) !important;
-		transform: translateY(-1px);
-	}
-	
-	/* Month Frequency */
-	.month-frequency-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-		margin-top: 12px;
-	}
-	
-	.month-frequency-option {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-	
-	.week-select-group {
-		display: flex;
-		gap: 10px;
-		flex-wrap: wrap;
-	}
-	
-	/* Daily Frequency Options */
-	.daily-frequency-options {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-		margin-bottom: 20px;
-	}
-	
-	.frequency-option-card {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		padding: 16px;
-		border: 2px solid #e2e8f0;
-		border-radius: 8px;
-		background: #f8fafc;
-		transition: all 0.2s ease;
-	}
-	
-	.frequency-option-card:hover {
-		border-color: #cbd5e0;
-		background: #ffffff;
-	}
-	
-	.frequency-option-card .custom-control-label {
-		font-weight: 500;
-		color: #1e293b;
+		border: none;
 		cursor: pointer;
-	}
-	
-	.frequency-option-card .custom-control-label i {
-		margin-left: 6px;
-		color: #1869AA;
-	}
-	
-	.hourly-control-group {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
-	
-	.hour-label {
-		color: #64748b;
-		font-size: 14px;
-		font-weight: 500;
-		white-space: nowrap;
-	}
-	
-	.time-range-group {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-		margin-top: 20px;
-		padding-top: 20px;
-		border-top: 1px solid #e2e8f0;
-	}
-	
-	/* Switch Container */
-	.switch-container {
-		display: flex;
-		align-items: center;
-		height: 38px;
-		padding-top: 0;
-	}
-	
-	/* Custom Switch */
-	.custom-switch .custom-control-label::before {
-		border-radius: 1rem;
-		background-color: #ced4da;
-	}
-	
-	.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
-		background-color: #1869AA;
-		border-color: #1869AA;
-	}
-	
-	/* Custom Radio */
-	.custom-radio {
-		margin-bottom: 12px;
-		padding-right: 1.5rem;
-	}
-	
-	.custom-radio .custom-control-label {
-		cursor: pointer;
-		font-weight: 500;
-		color: #334155;
-		padding-right: 8px;
-	}
-	
-	.custom-radio .custom-control-label::before {
-		border-radius: 50%;
-		border: 2px solid #cbd5e0;
-		width: 1.1rem;
-		height: 1.1rem;
-		top: 0.15rem;
-		right: 0;
-	}
-	
-	.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
-		background-color: #1869AA;
-		border-color: #1869AA;
-	}
-	
-	.custom-radio .custom-control-input:checked ~ .custom-control-label {
-		color: #1869AA;
-		font-weight: 600;
-	}
-	
-	.custom-radio .custom-control-label::after {
-		width: 0.5rem;
-		height: 0.5rem;
-		top: 0.35rem;
-		right: 0.3rem;
-		background-size: 50% 50%;
-	}
-	
-	/* Schedule Type Radio Group - Horizontal Layout */
-	.schedule-type-radio-group {
-		display: flex;
-		gap: 20px;
-		flex-wrap: wrap;
-		margin-top: 8px;
-	}
-	
-	.schedule-type-radio-group .custom-radio {
-		margin-bottom: 0;
-		padding-right: 0;
-		flex: 1;
-		min-width: 120px;
-	}
-	
-	.schedule-type-radio-group .custom-control-label {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		padding: 10px 16px;
-		border: 2px solid #e2e8f0;
-		border-radius: 8px;
-		background: #ffffff;
 		transition: all 0.2s ease;
-		text-align: center;
-		justify-content: center;
+		font-family: inherit;
 	}
 	
-	.schedule-type-radio-group .custom-control-input:checked ~ .custom-control-label {
-		background: #1869AA;
+	.schedule-modal-footer .btn svg {
+		width: 18px;
+		height: 18px;
+		stroke-width: 2.5;
+	}
+	
+	.btn-cancel {
+		background: #f1f5f9;
+		color: #475569;
+	}
+	
+	.btn-cancel:hover {
+		background: #e2e8f0;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+	
+	.btn-save-secondary {
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 		color: white;
-		border-color: #1869AA;
-		box-shadow: 0 2px 6px rgba(24, 105, 170, 0.25);
 	}
 	
-	.schedule-type-radio-group .custom-control-label:hover {
-		border-color: #1869AA;
-		background: rgba(24, 105, 170, 0.08);
+	.btn-save-secondary:hover {
+		background: linear-gradient(135deg, #059669 0%, #047857 100%);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 	}
 	
-	.schedule-type-radio-group .custom-control-label i {
-		margin-left: 0;
-		margin-right: 6px;
-	}
-	
-	/* Frequency Radio Group - Horizontal Layout */
-	.frequency-radio-group {
-		display: flex;
-		gap: 12px;
-		flex-wrap: wrap;
-		flex: 1;
-		min-width: 200px;
-	}
-	
-	.frequency-radio-group .custom-radio {
-		margin-bottom: 0;
-		padding-right: 0;
-		flex: 1;
-		min-width: 80px;
-	}
-	
-	.frequency-radio-group .custom-control-label {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 8px 12px;
-		border: 2px solid #e2e8f0;
-		border-radius: 6px;
-		background: #ffffff;
-		transition: all 0.2s ease;
-		text-align: center;
-	}
-	
-	.frequency-radio-group .custom-control-input:checked ~ .custom-control-label {
-		background: #1869AA;
+	.btn-save-primary {
+		background: linear-gradient(135deg, #1869AA 0%, #1e40af 100%);
 		color: white;
-		border-color: #1869AA;
-		box-shadow: 0 2px 6px rgba(24, 105, 170, 0.25);
 	}
 	
-	.frequency-radio-group .custom-control-label:hover {
-		border-color: #1869AA;
-		background: rgba(24, 105, 170, 0.08);
+	.btn-save-primary:hover {
+		background: linear-gradient(135deg, #155a94 0%, #1e3a8a 100%);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(24, 105, 170, 0.3);
+	}
+	
+	/* Input Sizes */
+	.time-input {
+		min-width: 160px;
+	}
+	
+	.date-input {
+		min-width: 180px;
+	}
+	
+	.max-record-input {
+		min-width: 150px;
 	}
 	
 	/* Responsive */
 	@@media (max-width: 1200px) {
-		.form-grid-3 {
+		.form-row {
+			grid-template-columns: 1fr;
+		}
+		
+		.weekdays-grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+		
+		.month-frequency-wrapper {
+			grid-template-columns: 1fr;
+		}
+		
+		.daily-frequency-wrapper {
+			grid-template-columns: 1fr;
+		}
+		
+		.time-range-wrapper {
+			grid-template-columns: 1fr;
+		}
+	}
+	
+	@@media (max-width: 768px) {
+		.schedule-modal-header {
+			padding: 20px 24px;
+		}
+		
+		.schedule-modal-body {
+			padding: 24px;
+		}
+		
+		.section-body {
+			padding: 20px;
+		}
+		
+		.weekdays-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+		
+		.schedule-modal-footer {
+			flex-direction: column;
+		}
+		
+		.schedule-modal-footer .btn {
+			width: 100%;
+		}
+		
+		.radio-group {
+			flex-direction: column;
+		}
+		
+		.radio-label {
+			min-width: auto;
+		}
+	}
+	
+	@@media (max-width: 576px) {
+		.weekdays-grid {
 			grid-template-columns: repeat(2, 1fr);
 		}
 		
-		.week-days-container {
-			grid-template-columns: repeat(4, 1fr) !important;
-		}
-	}
-	
-	@@media (max-width: 768px) {
-		.modern-modal-body {
-			padding: 15px;
-			max-height: 70vh;
-		}
-		
-		.section-content {
-			padding: 15px;
-			gap: 15px;
-		}
-		
-		.form-grid-2,
-		.form-grid-3 {
-			grid-template-columns: 1fr;
-			gap: 15px;
-		}
-		
-		.month-frequency-grid {
-			grid-template-columns: 1fr;
-		}
-		
-		.daily-frequency-options {
-			grid-template-columns: 1fr;
-		}
-		
-		.time-range-group {
-			grid-template-columns: 1fr;
-		}
-		
-		.week-days-container {
-			grid-template-columns: repeat(3, 1fr) !important;
-			gap: 6px !important;
-		}
-		
-		.week-day-label {
-			padding: 8px 4px !important;
-			font-size: 11px !important;
-		}
-		
-		.week-days-container {
-			gap: 8px;
-		}
-		
-		.week-day-label {
-			padding: 8px 14px;
-			font-size: 12px;
-		}
-		
-		.repetition-control-group {
-			flex-wrap: wrap;
-		}
-		
-		.week-select-group {
+		.repetition-wrapper {
 			flex-direction: column;
-		}
-	}
-	
-	/* Smooth Scrollbar */
-	.modern-modal-body::-webkit-scrollbar {
-		width: 8px;
-	}
-	
-	.modern-modal-body::-webkit-scrollbar-track {
-		background: #f1f1f1;
-		border-radius: 4px;
-	}
-	
-	.modern-modal-body::-webkit-scrollbar-thumb {
-		background: #cbd5e0;
-		border-radius: 4px;
-	}
-	
-	.modern-modal-body::-webkit-scrollbar-thumb:hover {
-		background: #a0aec0;
-	}
-	
-	/* Responsive Input Sizes Based on Content */
-	.repetition-input {
-		width: 70px;
-		min-width: 70px;
-		flex-shrink: 0;
-		text-align: center;
-	}
-	
-	.frequency-select {
-		min-width: 120px;
-		flex: 1;
-	}
-	
-	.day-of-month-input {
-		width: 120px;
-		max-width: 120px;
-	}
-	
-	.week-counter-select {
-		min-width: 110px;
-		flex-shrink: 0;
-	}
-	
-	.weekday-select {
-		min-width: 140px;
-		flex: 1;
-	}
-	
-	.hourly-every-input {
-		width: 90px;
-		min-width: 90px;
-		flex-shrink: 0;
-		text-align: center;
-	}
-	
-	.time-input {
-		width: 140px;
-		min-width: 140px;
-		flex-shrink: 0;
-	}
-	
-	.date-input {
-		min-width: 160px;
-		flex: 1;
-	}
-	
-	/* Schedule type select removed - now using radio buttons */
-	
-	.max-record-input {
-		width: 150px;
-		min-width: 150px;
-		flex-shrink: 0;
-	}
-	
-	/* Text inputs should be flexible */
-	#scheduled-report-name,
-	#action-name,
-	#scheduled-report-user,
-	#destination-user-name,
-	#destination-password,
-	#destination-path {
-		width: 100%;
-		min-width: 200px;
-	}
-	
-	/* Select boxes should be flexible */
-	#output-type,
-	#file-type,
-	#scheduled-report-roles {
-		width: 100%;
-		min-width: 180px;
-	}
-	
-	/* Multiple select styling */
-	#scheduled-report-roles[multiple] {
-		min-height: 120px;
-		padding: 8px;
-	}
-	
-	#scheduled-report-roles[multiple] option {
-		padding: 6px 8px;
-		margin: 2px 0;
-		border-radius: 4px;
-	}
-	
-	#scheduled-report-roles[multiple] option:checked {
-		background-color: #1869AA;
-		color: white;
-	}
-	
-	/* Responsive adjustments */
-	@@media (max-width: 768px) {
-		.repetition-input {
-			width: 60px;
-			min-width: 60px;
+			align-items: stretch;
 		}
 		
-		.frequency-select {
-			min-width: 100px;
-		}
-		
-		.day-of-month-input {
+		.frequency-group {
 			width: 100%;
-			max-width: 100%;
-		}
-		
-		.week-counter-select,
-		.weekday-select {
-			width: 100%;
-			min-width: 100%;
-		}
-		
-		.hourly-every-input {
-			width: 80px;
-			min-width: 80px;
-		}
-		
-		.time-input {
-			width: 100%;
-			min-width: 100%;
-		}
-		
-		.date-input {
-			width: 100%;
-		}
-		
-		.max-record-input {
-			width: 100%;
-			min-width: 100%;
-		}
-		
-		.schedule-type-radio-group {
-			flex-direction: column;
-			gap: 12px;
-		}
-		
-		.frequency-radio-group {
-			flex-direction: column;
-			gap: 8px;
 		}
 	}
 </style>
 
 <script>
-// Sync radio button values with form submission
+// Enhanced show/hide logic for schedule features
 $(document).ready(function() {
-	// Ensure showOrHideJobScheduleFeatures works with radio buttons
+	// Store original function if it exists
 	var originalShowOrHide = window.showOrHideJobScheduleFeatures;
-	if (typeof originalShowOrHide === 'function') {
-		// Wrap the function to handle radio buttons
-		window.showOrHideJobScheduleFeatures = function() {
-			// Get values from radio buttons instead of selects
-			var scheduleType = $('input[name="scheduleType"]:checked').val();
-			var jobFrequency = $('input[name="jobfrequency"]:checked').val();
-			
-			// Call original function
-			if (originalShowOrHide) {
-				originalShowOrHide();
-			}
-			
-			// Additional logic for radio buttons
-			if (scheduleType === '1') {
-				// Once - hide repeat period
-				$('.job-frequency').hide();
-			} else {
-				// Repetitive - show repeat period
-				$('.job-frequency').show();
-			}
-			
-			if (jobFrequency === '2') {
-				// Week - show week days
-				$('.week-days').show();
-				$('.month-frequency').hide();
-			} else if (jobFrequency === '3') {
-				// Month - show month frequency
-				$('.week-days').hide();
-				$('.month-frequency').show();
-			} else {
-				// Day - hide both
-				$('.week-days').hide();
-				$('.month-frequency').hide();
-			}
-		};
-	}
 	
-	// Sync radio button changes
+	// Enhanced show/hide function
+	window.showOrHideJobScheduleFeatures = function() {
+		// Get values from radio buttons
+		var scheduleType = $('input[name="scheduleType"]:checked').val();
+		var jobFrequency = $('input[name="jobfrequency"]:checked').val();
+		var dailyFrequency = $('input[name="dailyFrequency"]:checked').val();
+		var monthFrequency = $('input[name="monthFrequency"]:checked').val();
+		
+		// Call original function if it exists
+		if (typeof originalShowOrHide === 'function') {
+			originalShowOrHide();
+		}
+		
+		// Handle schedule type (Once vs Repetitive)
+		if (scheduleType === '1') {
+			// Once - hide repeat period section
+			$('.job-frequency').closest('.schedule-section').hide();
+		} else if (scheduleType === '2') {
+			// Repetitive - show repeat period section
+			$('.job-frequency').closest('.schedule-section').show();
+		}
+		
+		// Handle job frequency (Day/Week/Month)
+		if (jobFrequency === '2') {
+			// Week - show week days, hide month frequency
+			$('.week-days').show();
+			$('.month-frequency').hide();
+		} else if (jobFrequency === '3') {
+			// Month - show month frequency, hide week days
+			$('.week-days').hide();
+			$('.month-frequency').show();
+		} else {
+			// Day - hide both
+			$('.week-days').hide();
+			$('.month-frequency').hide();
+		}
+		
+		// Handle daily frequency
+		if (dailyFrequency === '1') {
+			// Specific time
+			$('#daily-frequency-hour').prop('disabled', false);
+			$('#scheduled-report-hourlyEvery').prop('disabled', true);
+			$('#scheduled-report-starttime').prop('disabled', true);
+			$('#scheduled-report-endtime').prop('disabled', true);
+		} else if (dailyFrequency === '2') {
+			// Hourly
+			$('#daily-frequency-hour').prop('disabled', true);
+			$('#scheduled-report-hourlyEvery').prop('disabled', false);
+			$('#scheduled-report-starttime').prop('disabled', false);
+			$('#scheduled-report-endtime').prop('disabled', false);
+		}
+		
+		// Handle month frequency
+		if (monthFrequency === '1') {
+			// Day of month
+			$('#scheduled-report-dayOfMonth').prop('disabled', false);
+			$('#week-counter').prop('disabled', true);
+			$('[name="WeekDays"]').prop('disabled', true);
+		} else if (monthFrequency === '2') {
+			// Specific week
+			$('#scheduled-report-dayOfMonth').prop('disabled', true);
+			$('#week-counter').prop('disabled', false);
+			$('[name="WeekDays"]').prop('disabled', false);
+		}
+		
+		// Handle output type visibility
+		var outputType = $('#output-type').val();
+		if (outputType === '1') {
+			// File directory - show directory fields
+			$('.output-type').show();
+		} else {
+			// Other types - hide directory fields
+			$('.output-type').hide();
+		}
+	};
+	
+	// Sync hidden inputs with radio buttons for compatibility
 	$('input[name="scheduleType"]').on('change', function() {
+		$('#schedule-type').val($(this).val());
 		showOrHideJobScheduleFeatures();
 	});
 	
 	$('input[name="jobfrequency"]').on('change', function() {
+		$('#schedule-job-frequency').val($(this).val());
+		showOrHideJobScheduleFeatures();
+	});
+	
+	// Sync radio buttons from hidden inputs (for form loading compatibility)
+	var syncFromHiddenInputs = function() {
+		var scheduleTypeVal = $('#schedule-type').val();
+		var jobFreqVal = $('#schedule-job-frequency').val();
+		
+		if (scheduleTypeVal) {
+			$('input[name="scheduleType"][value="' + scheduleTypeVal + '"]').prop('checked', true);
+		}
+		if (jobFreqVal) {
+			$('input[name="jobfrequency"][value="' + jobFreqVal + '"]').prop('checked', true);
+		}
+	};
+	
+	// Patch the existing fillTheForm function if it exists
+	if (typeof ScheduledReport !== 'undefined' && ScheduledReport.fillTheForm) {
+		var originalFillTheForm = ScheduledReport.fillTheForm;
+		ScheduledReport.fillTheForm = function(data, isNew) {
+			originalFillTheForm.call(this, data, isNew);
+			setTimeout(function() {
+				syncFromHiddenInputs();
+				showOrHideJobScheduleFeatures();
+			}, 100);
+		};
+	}
+	
+	// Sync on modal show
+	$('#scheduled-report-modal').on('shown.bs.modal', function() {
+		setTimeout(function() {
+			syncFromHiddenInputs();
+			showOrHideJobScheduleFeatures();
+		}, 200);
+	});
+	
+	$('input[name="dailyFrequency"]').on('change', function() {
+		showOrHideJobScheduleFeatures();
+	});
+	
+	$('input[name="monthFrequency"]').on('change', function() {
+		showOrHideJobScheduleFeatures();
+	});
+	
+	$('#output-type').on('change', function() {
 		showOrHideJobScheduleFeatures();
 	});
 	
@@ -1280,5 +1669,11 @@ $(document).ready(function() {
 	$('#scheduled-report-modal').on('shown.bs.modal', function() {
 		showOrHideJobScheduleFeatures();
 	});
+	
+	// Initialize on page load if modal is already visible
+	if ($('#scheduled-report-modal').hasClass('show')) {
+		showOrHideJobScheduleFeatures();
+	}
 });
+</script>
 </script>

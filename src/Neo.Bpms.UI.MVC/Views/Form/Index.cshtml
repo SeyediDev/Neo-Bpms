@@ -46,6 +46,19 @@
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/sbvr/sbvr-styles.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/combo/combo-clear.css" asp-append-version="true" />
 
+<style>
+    .modern-settings-btn.refresh-icon svg,
+    .modern-settings-btn.refresh-icon svg use {
+        fill: white !important;
+        stroke: white !important;
+        color: white !important;
+    }
+    .modern-settings-btn.refresh-icon svg * {
+        fill: white !important;
+        stroke: white !important;
+    }
+</style>
+
 @if (canDesign)
 {
     <link href="@CommonBundles.FormIndexDesignCssBundle" asp-append-version="true" rel="stylesheet" />
@@ -143,7 +156,7 @@ new
                         </a>
                     }
                     
-                    <a title="@ViewTexts.Refresh" href="#" class="modern-settings-btn modern-refresh-btn" onclick="location.reload();">
+                    <a title="@ViewTexts.Refresh" href="#" class="modern-settings-btn refresh-icon" onclick="location.reload();">
                         <svg style="width:16px;height:16px;vertical-align: middle;" viewBox="0 0 16 16">
                             <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#refresh-blue"></use>
                         </svg>
