@@ -88,6 +88,11 @@
           backdrop-filter: blur(10px) !important;
           flex-direction: column !important;
           gap: 16px !important;
+          /* Font settings - Ensure proper font rendering */
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 14px !important;
+          line-height: 1.5 !important;
+          color: #2d3748 !important;
           /* Use visibility and opacity instead of display for better control */
           visibility: hidden !important;
           opacity: 0 !important;
@@ -132,10 +137,71 @@
           display: block !important;
           margin: 0 !important;
           padding: 0 !important;
+          font-family: inherit !important;
+          font-size: inherit !important;
         }
 
         .filter-tooltip-panel .modern-filter-wrapper {
           margin-bottom: 16px !important;
+          font-family: inherit !important;
+          font-size: inherit !important;
+        }
+        
+        /* Ensure all inputs, selects, and controls have proper font */
+        .filter-tooltip-panel input,
+        .filter-tooltip-panel select,
+        .filter-tooltip-panel textarea,
+        .filter-tooltip-panel .form-control,
+        .filter-tooltip-panel .modern-multi-select-control,
+        .filter-tooltip-panel .modern-multi-select-input {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 14px !important;
+          line-height: 1.5 !important;
+          color: #2d3748 !important;
+        }
+        
+        /* Reduce combo box sizes */
+        .filter-tooltip-panel select,
+        .filter-tooltip-panel .form-control,
+        .filter-tooltip-panel .cBox {
+          min-height: 38px !important;
+          height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+        }
+        
+        /* Reduce Select2 combo sizes */
+        .filter-tooltip-panel .select2-container .select2-selection--single {
+          height: 38px !important;
+        }
+        
+        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__rendered {
+          line-height: 38px !important;
+          padding: 0 12px !important;
+          font-size: 13px !important;
+        }
+        
+        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow {
+          height: 38px !important;
+        }
+        
+        /* Ensure combos and dropdowns are properly styled */
+        .filter-tooltip-panel .select2-container,
+        .filter-tooltip-panel .bootstrap-select,
+        .filter-tooltip-panel .modern-multi-select-container {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 13px !important;
+        }
+        
+        /* Ensure labels are properly styled */
+        .filter-tooltip-panel label,
+        .filter-tooltip-panel .form-label,
+        .filter-tooltip-panel .modern-filter-label {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 500 !important;
+          color: #2d3748 !important;
+          margin-bottom: 4px !important;
         }
 
         .filter-tooltip-panel .modern-filter-buttons {
@@ -188,9 +254,13 @@
           stroke: #ffffff !important;
         }
         
-        /* Ensure submit-filter button text is visible */
+        /* Ensure submit-filter button text is visible - Reduced font size */
         .filter-tooltip-panel #submit-filter {
           color: #ffffff !important;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 12px !important;
+          font-weight: 600 !important;
+          padding: 6px 14px !important;
         }
         
         .filter-tooltip-panel #submit-filter * {
@@ -201,6 +271,24 @@
           color: #ffffff !important;
           opacity: 1 !important;
           visibility: visible !important;
+          font-family: inherit !important;
+          font-size: 12px !important;
+          font-weight: inherit !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter svg {
+          width: 14px !important;
+          height: 14px !important;
+        }
+        
+        /* Prevent Ladda button from auto-loading */
+        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) {
+          position: relative !important;
+        }
+        
+        /* Ensure Ladda spinner doesn't interfere when not loading */
+        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) .ladda-spinner {
+          display: none !important;
         }
         
         .filter-tooltip-panel .btn-outline-warning {
@@ -288,12 +376,54 @@
           width: 100% !important;
           flex: 1 1 auto !important;
           overflow-y: auto !important;
+          overflow-x: auto !important;
           max-height: calc(100vh - 250px) !important;
         }
         
         .filter-panel-content-wrapper {
           max-height: calc(100vh - 120px) !important;
           overflow: hidden !important;
+        }
+        
+        /* Reduce horizontal scrollbar size */
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar {
+          height: 6px !important;
+        }
+        
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-track {
+          background: #f1f5f9 !important;
+          border-radius: 3px !important;
+        }
+        
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb {
+          background: #cbd5e1 !important;
+          border-radius: 3px !important;
+        }
+        
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8 !important;
+        }
+        
+        /* Reduce filter type icon size to match back icon (20px) */
+        .filter-tooltip-panel .choice-form-link {
+          width: 20px !important;
+          height: 20px !important;
+        }
+        
+        .filter-tooltip-panel .choice-form-link svg {
+          width: 12px !important;
+          height: 12px !important;
+        }
+        
+        /* Reduce filter parameter icon size to match back icon */
+        .filter-tooltip-panel .filter-parameter-icon {
+          width: 20px !important;
+          height: 20px !important;
+        }
+        
+        .filter-tooltip-panel .filter-parameter-icon svg {
+          width: 12px !important;
+          height: 12px !important;
         }
     </style>
 

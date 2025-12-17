@@ -60,6 +60,15 @@
 	var overlayLineEnabled = @(overlayLine ? "true" : "false");
 	var markersEnabled = @(enableMarkers ? "true" : "false");
 	var dataLabelsEnabled = @(showDataLabels ? "true" : "false");
+	
+	// Check if data is empty
+	var hasData = chartCategories && chartCategories.length > 0 && renderedSeries && renderedSeries.length > 0 && 
+	              renderedSeries.some(function(series) { return series.data && series.data.length > 0; });
+	
+	if (!hasData) {
+		console.warn('Chart data is empty. Categories:', chartCategories, 'Series:', renderedSeries);
+		console.warn('Report rows count:', @(reportInfo.Rows?.Count() ?? 0));
+	}
 
 	function mergeSeriesOptions(series, extraOptions) {
 		if (typeof Highcharts !== 'undefined' && Highcharts.merge) {
@@ -295,6 +304,29 @@
 	}
 
 	(function() {
+		// Check if data is empty before rendering chart
+		var hasData = chartCategories && chartCategories.length > 0 && renderedSeries && renderedSeries.length > 0 && 
+		              renderedSeries.some(function(series) { return series.data && series.data.length > 0; });
+		
+		if (!hasData) {
+			console.warn('Chart data is empty. Categories:', chartCategories, 'Series:', renderedSeries);
+			console.warn('Report rows count:', @(reportInfo.Rows?.Count() ?? 0));
+			
+			// Show message in chart container
+			var container = document.getElementById("container_@(idx)");
+			if (container) {
+				container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; padding: 40px; text-align: center; color: #64748b; font-family: Vazir, Yekan, Tahoma, Arial, sans-serif;">' +
+					'<svg style="width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.5;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+					'<path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>' +
+					'<path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>' +
+					'</svg>' +
+					'<h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #334155;">داده‌ای برای نمایش وجود ندارد</h3>' +
+					'<p style="font-size: 14px; color: #64748b; margin: 0;">لطفاً فیلترها را بررسی کنید یا گزارش را دوباره بارگذاری کنید.</p>' +
+					'</div>';
+				return;
+			}
+		}
+		
 		// Persian font family - Vazir or fallback to system fonts
 		var persianFont = "'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif";
 		

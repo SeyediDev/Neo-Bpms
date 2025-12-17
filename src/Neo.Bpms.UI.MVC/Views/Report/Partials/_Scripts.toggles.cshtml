@@ -21,27 +21,49 @@ window.toggleReportInfo = function(event) {
         allPanels.forEach(p => {
             if (p !== panel) {
                 p.classList.remove('show');
-                p.style.display = 'none';
+                p.style.setProperty('visibility', 'hidden', 'important');
+                p.style.setProperty('opacity', '0', 'important');
+                p.style.setProperty('pointer-events', 'none', 'important');
             }
         });
 
         // Toggle current panel
         if (!panel.classList.contains('show')) {
+            // CRITICAL: Always move panel to body to avoid parent hiding issues
+            const currentParent = panel.parentElement;
+            if (!document.body.contains(panel) || (currentParent && currentParent !== document.body)) {
+                // Store current styles before moving
+                const currentTop = panel.style.top;
+                const currentLeft = panel.style.left;
+                document.body.appendChild(panel);
+                // Restore styles after moving
+                if (currentTop) panel.style.top = currentTop;
+                if (currentLeft) panel.style.left = currentLeft;
+            }
+            
+            // Get button position
+            const toggleRect = toggle.getBoundingClientRect();
+            
+            // Position tooltip relative to toggle button
+            panel.style.setProperty('position', 'fixed', 'important');
+            panel.style.setProperty('top', (toggleRect.bottom + 8) + 'px', 'important');
+            panel.style.setProperty('right', (window.innerWidth - toggleRect.right) + 'px', 'important');
+            panel.style.setProperty('z-index', '10000', 'important');
+            panel.style.setProperty('display', 'flex', 'important');
+            panel.style.setProperty('visibility', 'visible', 'important');
+            panel.style.setProperty('opacity', '1', 'important');
+            panel.style.setProperty('pointer-events', 'auto', 'important');
+            
             panel.classList.add('show');
             toggle.classList.add('active');
             
-            // Remove inline display:none if exists
-            panel.style.display = '';
-            
-            // Position tooltip relative to toggle button
-            const toggleRect = toggle.getBoundingClientRect();
-            panel.style.position = 'fixed';
-            panel.style.top = (toggleRect.bottom + 8) + 'px';
-            panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
-            panel.style.zIndex = '10000';
+            // Force reflow to ensure visibility
+            void panel.offsetHeight;
         } else {
             panel.classList.remove('show');
-            panel.style.display = 'none';
+            panel.style.setProperty('visibility', 'hidden', 'important');
+            panel.style.setProperty('opacity', '0', 'important');
+            panel.style.setProperty('pointer-events', 'none', 'important');
             toggle.classList.remove('active');
         }
     } else {
@@ -68,27 +90,42 @@ window.toggleRefreshSettings = function(event) {
         allPanels.forEach(p => {
             if (p !== panel) {
                 p.classList.remove('show');
-                p.style.display = 'none';
+                p.style.setProperty('display', 'none', 'important');
             }
         });
 
         // Toggle current panel
         if (!panel.classList.contains('show')) {
-            panel.classList.add('show');
-            toggle.classList.add('active');
+            // CRITICAL: Always move panel to body to avoid parent hiding issues
+            const currentParent = panel.parentElement;
+            if (!document.body.contains(panel) || (currentParent && currentParent !== document.body)) {
+                // Store current styles before moving
+                const currentTop = panel.style.top;
+                const currentLeft = panel.style.left;
+                document.body.appendChild(panel);
+                // Restore styles after moving
+                if (currentTop) panel.style.top = currentTop;
+                if (currentLeft) panel.style.left = currentLeft;
+            }
             
-            // Remove inline display:none if exists
-            panel.style.display = '';
+            // Get button position
+            const toggleRect = toggle.getBoundingClientRect();
             
             // Position tooltip relative to toggle button
-            const toggleRect = toggle.getBoundingClientRect();
-            panel.style.position = 'fixed';
-            panel.style.top = (toggleRect.bottom + 8) + 'px';
-            panel.style.right = (window.innerWidth - toggleRect.right) + 'px';
-            panel.style.zIndex = '10000';
+            panel.style.setProperty('position', 'fixed', 'important');
+            panel.style.setProperty('top', (toggleRect.bottom + 8) + 'px', 'important');
+            panel.style.setProperty('right', (window.innerWidth - toggleRect.right) + 'px', 'important');
+            panel.style.setProperty('z-index', '10000', 'important');
+            panel.style.setProperty('display', 'flex', 'important');
+            panel.style.setProperty('visibility', 'visible', 'important');
+            panel.style.setProperty('opacity', '1', 'important');
+            panel.style.setProperty('pointer-events', 'auto', 'important');
+            
+            panel.classList.add('show');
+            toggle.classList.add('active');
         } else {
             panel.classList.remove('show');
-            panel.style.display = 'none';
+            panel.style.setProperty('display', 'none', 'important');
             toggle.classList.remove('active');
         }
     } else {
@@ -312,6 +349,20 @@ window.toggleFilterTooltip = function(event, targetElement) {
             setTimeout(function() {
                 if (typeof window.ensureFilterFormAssociation === 'function') {
                     window.ensureFilterFormAssociation();
+                }
+                
+                // Ensure submit button is not in loading state when panel opens
+                var $submitBtn = $('#submit-filter');
+                if ($submitBtn.length > 0 && $submitBtn.hasClass('ladda-loading')) {
+                    // Reset Ladda button if it's stuck in loading state
+                    if (typeof Ladda !== 'undefined' && Ladda.stopAll) {
+                        Ladda.stopAll();
+                    }
+                    $submitBtn.removeClass('ladda-loading');
+                    var $spinner = $submitBtn.find('.ladda-spinner');
+                    if ($spinner.length > 0) {
+                        $spinner.hide();
+                    }
                 }
             }, 200);
         }, 50);

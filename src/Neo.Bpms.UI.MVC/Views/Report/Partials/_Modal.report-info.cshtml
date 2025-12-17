@@ -20,12 +20,19 @@
         max-width: 320px !important;
         backdrop-filter: blur(10px) !important;
         animation: slideDown 0.3s ease-out !important;
-        display: none !important;
+        /* Use visibility and opacity instead of display for better control */
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
         flex-direction: column !important;
         gap: 8px !important;
+        transition: opacity 0.3s ease-out, visibility 0.3s ease-out !important;
     }
 
     .report-info-panel.show {
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
         display: flex !important;
     }
 

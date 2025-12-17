@@ -99,7 +99,17 @@
                 var persistentIsNull = @(ViewBag.PersistentIsNull == null || ViewBag.PersistentIsNull == true ? "true" : "false");
                 $(function () {
                     if (persistentIsNull) {
-                        $('#submit-filter').click();
+                        // Only auto-submit if filter panel is not visible (to prevent unwanted clicks)
+                        var $filterPanel = $('#filterTooltipPanel');
+                        if (!$filterPanel || !$filterPanel.hasClass('show')) {
+                            // Wait a bit to ensure page is fully loaded before submitting
+                            setTimeout(function() {
+                                var $submitBtn = $('#submit-filter');
+                                if ($submitBtn.length > 0 && !$submitBtn.hasClass('ladda-loading')) {
+                                    $submitBtn.click();
+                                }
+                            }, 100);
+                        }
                         var $emptyRequiredFields = $(':invalid:required');
                         if ($emptyRequiredFields.length !== 0) {
                             window.toast.warning(window.tetaI18n.t('PleaseSetRequiredFilters'));

@@ -80,6 +80,30 @@
         font-size: 15px;
     }
 
+    #refresh-time-select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: white;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    #refresh-time-select:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    #refresh-time-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
     .refresh-settings-buttons {
         display: flex;
         justify-content: center;
@@ -146,27 +170,78 @@
         <span class="refresh-settings-label">@ViewTexts.RefreshTimeInterval:</span>
     </div>
     <select id="refresh-time-select" name="__RefreshTime" >
-        <!option @(refreshTime == 0 ? "selected" : "") value="0">
-        @ViewTexts.Disabled
-        </!option>
-        <!option @(refreshTime == 10 ? "selected" : "") value="10">
-        10 @ViewTexts.Seconds
-        </!option>
-        <!option @(refreshTime == 30 ? "selected" : "") value="30">
-        30 @ViewTexts.Seconds
-        </!option>
-        <!option @(refreshTime == 60 ? "selected" : "") value="60">
-        1 @ViewTexts.Minutes
-        </!option>
-        <!option @(refreshTime == 120 ? "selected" : "") value="120">
-        2 @ViewTexts.Minutes
-        </!option>
-        <!option @(refreshTime == 300 ? "selected" : "") value="300">
-        5 @ViewTexts.Minutes
-        </!option>
-        <!option @(refreshTime == 600 ? "selected" : "") value="600">
-        10 @ViewTexts.Minutes
-        </!option>
+        @if (refreshTime == 0)
+        {
+            <option selected="selected" value="0">@ViewTexts.Disabled</option>
+        }
+        else
+        {
+            <option value="0">@ViewTexts.Disabled</option>
+        }
+        @if (refreshTime == 5)
+        {
+            <option selected="selected" value="5">5 @ViewTexts.Seconds</option>
+        }
+        else
+        {
+            <option value="5">5 @ViewTexts.Seconds</option>
+        }
+        @if (refreshTime == 10)
+        {
+            <option selected="selected" value="10">10 @ViewTexts.Seconds</option>
+        }
+        else
+        {
+            <option value="10">10 @ViewTexts.Seconds</option>
+        }
+        @if (refreshTime == 15)
+        {
+            <option selected="selected" value="15">15 @ViewTexts.Seconds</option>
+        }
+        else
+        {
+            <option value="15">15 @ViewTexts.Seconds</option>
+        }
+        @if (refreshTime == 30)
+        {
+            <option selected="selected" value="30">30 @ViewTexts.Seconds</option>
+        }
+        else
+        {
+            <option value="30">30 @ViewTexts.Seconds</option>
+        }
+        @if (refreshTime == 60)
+        {
+            <option selected="selected" value="60">1 @ViewTexts.Minutes</option>
+        }
+        else
+        {
+            <option value="60">1 @ViewTexts.Minutes</option>
+        }
+        @if (refreshTime == 120)
+        {
+            <option selected="selected" value="120">2 @ViewTexts.Minutes</option>
+        }
+        else
+        {
+            <option value="120">2 @ViewTexts.Minutes</option>
+        }
+        @if (refreshTime == 300)
+        {
+            <option selected="selected" value="300">5 @ViewTexts.Minutes</option>
+        }
+        else
+        {
+            <option value="300">5 @ViewTexts.Minutes</option>
+        }
+        @if (refreshTime == 600)
+        {
+            <option selected="selected" value="600">10 @ViewTexts.Minutes</option>
+        }
+        else
+        {
+            <option value="600">10 @ViewTexts.Minutes</option>
+        }
     </select>
     <div class="refresh-settings-buttons">
         <button id="applyRefreshSettings" class="refresh-settings-btn">اعمال</button>

@@ -9,6 +9,13 @@
 window.submitReportFilter = function() {
     console.log('Report: Submitting filter...');
     
+    // Prevent multiple submissions
+    const submitBtn = document.getElementById('submit-filter');
+    if (submitBtn && submitBtn.classList.contains('ladda-loading')) {
+        console.warn('Report: Filter submission already in progress, ignoring duplicate call');
+        return;
+    }
+    
     // Ensure all filter inputs are associated with the form
     if (typeof window.ensureFilterFormAssociation === 'function') {
         window.ensureFilterFormAssociation();
