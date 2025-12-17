@@ -97,6 +97,9 @@ public enum eControlTypeId
     [ControlGroup(ControlGroup.ContainerGroup, ControlGroup.ContainerItem, ControlGroup.Card)] // todo
     Card,
 
+    [ControlGroup(ControlGroup.ContainerGroup, ControlGroup.ContainerItem)]
+    Group,
+
     [ControlGroup(ControlGroup.ContainerGroup, ControlGroup.ContainerItem)] // todo
     GridColumn,
 

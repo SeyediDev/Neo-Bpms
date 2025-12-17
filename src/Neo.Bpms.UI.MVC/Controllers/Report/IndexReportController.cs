@@ -54,11 +54,7 @@ public partial class ReportController
         if (!string.IsNullOrEmpty(newPage) && newPage == "1")
             pageNo = 1;
         List<object> listIds = ParentReportIds != null ? [.. ParentReportIds.Split(',')] : null;
-        bool loadData = DrillDown>0 ||
-            ((listIds?.Any() ??
-             false) || po !=
-             null); //todo for teles ; // po != null/*|| config.viewType == eReportViewType.ReportList*/;
-        ReportData result = await reportDataRoutines.GetReportData(config, loadData, filters,
+        ReportData result = await reportDataRoutines.GetReportData(config, true, filters,
             pageNo, po?.SortFields, null, null, listIds,
             culture, false, user, ReportPerPageCount, false, cancellationToken);
         

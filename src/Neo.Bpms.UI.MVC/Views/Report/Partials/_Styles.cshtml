@@ -1,3 +1,37 @@
+@* CRITICAL: Fix unnecessary vertical scroll - Must be first to override other styles *@
+<style>
+	/* Override html min-height for report pages - CRITICAL FIX */
+	html.report-page {
+		min-height: auto !important;
+		height: auto !important;
+	}
+	
+	/* Override body min-height for report pages - CRITICAL FIX */
+	body.report-page {
+		min-height: auto !important;
+		height: auto !important;
+		overflow-x: hidden !important;
+	}
+	
+	/* Override #page-body min-height: 100vh that causes extra scroll - CRITICAL FIX */
+	body.report-page #page-body {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+</style>
+
+@* Add class immediately to prevent FOUC *@
+<script>
+	(function() {
+		if (document.getElementById('ReportContainer')) {
+			document.documentElement.classList.add('report-page');
+			document.body.classList.add('report-page');
+		}
+	})();
+</script>
+
 @* Modal Z-Index Management Styles *@
 <style>
     /* Ensure modals can have dynamic z-index */
@@ -518,4 +552,176 @@
 		}
 	}
 </style>
+
+@* Fix unnecessary vertical scroll on report pages *@
+<style>
+	/* Override html min-height for report pages - CRITICAL FIX */
+	html:has(#ReportContainer),
+	html.report-page {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Override body min-height for report pages - CRITICAL FIX */
+	body:has(#ReportContainer),
+	body.report-page {
+		min-height: auto !important;
+		height: auto !important;
+		overflow-x: hidden !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Override #page-body min-height: 100vh that causes extra scroll - CRITICAL FIX */
+	body:has(#ReportContainer) #page-body,
+	body.report-page #page-body {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Remove any padding-bottom that might cause extra scroll */
+	body:has(#ReportContainer) .footer,
+	body.report-page .footer {
+		position: relative !important;
+		margin-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	/* Fix report container - remove any min-height that causes double scroll */
+	/* These styles are scoped to report pages only */
+	#ReportContainer,
+	#ReportContainer .row,
+	#ReportContainer .col-md-12,
+	#ReportContainer .col-sm-12 {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Ensure customDiv doesn't add unnecessary height */
+	#ReportContainer .customDiv {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Fix report body - remove any min-height */
+	#ReportBody,
+	#ReportContainer .reportBody {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Prevent main-customDiv from adding extra height if it exists */
+	#ReportContainer .main-customDiv {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Override any min-height: 100vh on containers within report pages */
+	#ReportContainer .row.no-margin-row,
+	#ReportContainer .no-margin-row {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	/* Remove padding/margin from form elements */
+	body.report-page form,
+	body.report-page #filter-form {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	/* Ensure no extra space after ReportContainer */
+	#ReportContainer:last-child,
+	#ReportContainer + * {
+		margin-top: 0 !important;
+		padding-top: 0 !important;
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	/* Remove any extra spacing at the bottom */
+	body:has(#ReportContainer) > *:last-child,
+	body.report-page > *:last-child {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+</style>
+
+@* Add class to body and html for browsers without :has() support + Fix scroll *@
+<script>
+	(function() {
+		if (document.getElementById('ReportContainer')) {
+			document.documentElement.classList.add('report-page');
+			document.body.classList.add('report-page');
+			
+			// Fix page-body if it exists
+			var pageBody = document.getElementById('page-body');
+			if (pageBody) {
+				pageBody.style.minHeight = 'auto';
+				pageBody.style.height = 'auto';
+				pageBody.style.paddingBottom = '0';
+				pageBody.style.marginBottom = '0';
+			}
+			
+			// Remove any extra padding/margin from body and html
+			document.documentElement.style.minHeight = 'auto';
+			document.documentElement.style.height = 'auto';
+			document.documentElement.style.paddingBottom = '0';
+			document.documentElement.style.marginBottom = '0';
+			
+			document.body.style.minHeight = 'auto';
+			document.body.style.height = 'auto';
+			document.body.style.paddingBottom = '0';
+			document.body.style.marginBottom = '0';
+			
+			// Fix ReportContainer
+			var reportContainer = document.getElementById('ReportContainer');
+			if (reportContainer) {
+				reportContainer.style.minHeight = 'auto';
+				reportContainer.style.height = 'auto';
+				reportContainer.style.paddingBottom = '0';
+				reportContainer.style.marginBottom = '0';
+			}
+			
+			// Fix customDiv
+			var customDiv = reportContainer ? reportContainer.querySelector('.customDiv') : null;
+			if (customDiv) {
+				customDiv.style.paddingBottom = '0';
+				customDiv.style.marginBottom = '0';
+			}
+			
+			// Remove padding/margin from last child elements after page loads
+			setTimeout(function() {
+				var lastChild = document.body.lastElementChild;
+				if (lastChild && lastChild.id !== 'ReportContainer') {
+					lastChild.style.marginBottom = '0';
+					lastChild.style.paddingBottom = '0';
+				}
+				
+				// Also check for footer
+				var footer = document.querySelector('.footer');
+				if (footer) {
+					footer.style.marginBottom = '0';
+					footer.style.paddingBottom = '0';
+					footer.style.height = 'auto';
+					footer.style.minHeight = 'auto';
+				}
+			}, 100);
+		}
+	})();
+</script>
 

@@ -165,48 +165,117 @@
         }
         
         /* ============================================
-           COMBO BOX SIZES - UNIFIED HEIGHT
+           COMBO BOX SIZES - CLEAN & SIMPLE - 38px
+           Override controls-modern.css (60px)
            ============================================ */
         
-        /* Standard select and form controls */
-        .filter-tooltip-panel select,
-        .filter-tooltip-panel .form-control,
-        .filter-tooltip-panel .cBox,
-        .filter-tooltip-panel input[type="text"],
-        .filter-tooltip-panel input[type="number"],
-        .filter-tooltip-panel input[type="date"],
-        .filter-tooltip-panel input[type="time"] {
+        /* CRITICAL: Override .modern-form .neo-control select (60px) from controls-modern.css line 840 */
+        /* Use maximum specificity to override controls-modern.css */
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select,
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select.cBox,
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select.form-control,
+        .filter-tooltip-panel .modern-form .neo-control select,
+        .filter-tooltip-panel .modern-form .neo-control select.cBox,
+        .filter-tooltip-panel .modern-form .neo-control select.form-control {
           min-height: 38px !important;
           height: 38px !important;
+          max-height: 38px !important;
           padding: 8px 12px !important;
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+          line-height: 1.5 !important;
+          font-size: 13px !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* Only target SELECT elements - don't break inputs */
+        .filter-tooltip-panel select:not([multiple]),
+        .filter-tooltip-panel select.cBox:not([multiple]),
+        .filter-tooltip-panel select.form-control:not([multiple]),
+        .filter-tooltip-panel .modern-form select:not([multiple]),
+        .filter-tooltip-panel .modern-form select.cBox:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content select.cBox:not([multiple]) {
+          min-height: 38px !important;
+          height: 38px !important;
+          max-height: 38px !important;
+          padding: 8px 12px !important;
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
           font-size: 13px !important;
           line-height: 1.5 !important;
           box-sizing: border-box !important;
         }
         
-        /* Select2 combo sizes */
-        .filter-tooltip-panel .select2-container {
+        /* Only .cBox that are selects */
+        .filter-tooltip-panel .cBox:not([multiple]) {
+          min-height: 38px !important;
+          height: 38px !important;
+          max-height: 38px !important;
+          padding: 8px 12px !important;
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+        }
+        
+        /* Select2 combo sizes - FORCE ALL - Override controls-modern.css line 850 */
+        .filter-tooltip-panel .select2-container,
+        .filter-tooltip-panel .select2-container--default,
+        .filter-tooltip-panel .select2-container--classic,
+        .filter-tooltip-panel .modern-form .select2-container,
+        .filter-tooltip-panel .modern-form .select2-container--default {
           min-height: 38px !important;
           height: auto !important;
         }
         
-        .filter-tooltip-panel .select2-container .select2-selection--single {
+        /* CRITICAL: Override .modern-form .select2-container .select2-selection--single (60px) from controls-modern.css line 850 */
+        /* Use maximum specificity to override controls-modern.css */
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single,
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single,
+        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single,
+        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single,
+        .filter-tooltip-panel .select2-container .select2-selection--single,
+        .filter-tooltip-panel .select2-container--default .select2-selection--single,
+        .filter-tooltip-panel .select2-container--classic .select2-selection--single {
           height: 38px !important;
           min-height: 38px !important;
+          max-height: 38px !important;
           border-radius: 6px !important;
+          display: flex !important;
+          align-items: center !important;
+          padding: 0 !important;
         }
         
-        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__rendered {
+        /* Override controls-modern.css line 856-864 */
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__rendered,
+        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__rendered,
+        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single .select2-selection__rendered,
+        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__rendered,
+        .filter-tooltip-panel .select2-container--default .select2-selection--single .select2-selection__rendered {
           line-height: 38px !important;
           padding: 0 12px !important;
           font-size: 13px !important;
           height: 38px !important;
+          min-height: 38px !important;
+          display: flex !important;
+          align-items: center !important;
         }
         
-        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow {
+        /* Override controls-modern.css line 866-871 */
+        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__arrow,
+        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__arrow,
+        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single .select2-selection__arrow,
+        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow,
+        .filter-tooltip-panel .select2-container--default .select2-selection--single .select2-selection__arrow {
           height: 38px !important;
+          min-height: 38px !important;
           top: 0 !important;
           right: 8px !important;
+          left: auto !important;
+        }
+        
+        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow b {
+          top: 50% !important;
+          transform: translateY(-50%) !important;
         }
         
         .filter-tooltip-panel .select2-container .select2-selection--multiple {
@@ -276,6 +345,71 @@
           font-size: 13px !important;
         }
         
+        /* NUCLEAR OPTION - Force ALL selects to be 38px - MAXIMUM SPECIFICITY */
+        .filter-tooltip-panel select:not([multiple]):not([size]),
+        .filter-tooltip-panel select.form-control:not([multiple]),
+        .filter-tooltip-panel select.cBox:not([multiple]),
+        .filter-tooltip-panel .form-control select,
+        .filter-tooltip-panel .cBox select,
+        .filter-tooltip-panel .modern-form select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-wrapper select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-wrapper .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-form .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content .cBox:not([multiple]) {
+          min-height: 38px !important;
+          height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* Force all form controls inside filter panel - DEEP SELECTORS */
+        .filter-tooltip-panel .modern-form * select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-wrapper * select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-wrapper * .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-form * .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content * select:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content * .form-control:not([multiple]),
+        .filter-tooltip-panel .modern-filter-content * .cBox:not([multiple]) {
+          min-height: 38px !important;
+          height: 38px !important;
+          padding: 8px 12px !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+        
+        /* Override any inline styles or other CSS - ATTRIBUTE SELECTORS */
+        .filter-tooltip-panel select[style*="height"]:not([multiple]),
+        .filter-tooltip-panel select[style*="min-height"]:not([multiple]),
+        .filter-tooltip-panel .form-control[style*="height"]:not([multiple]),
+        .filter-tooltip-panel .form-control[style*="min-height"]:not([multiple]) {
+          min-height: 38px !important;
+          height: 38px !important;
+        }
+        
+        /* Force Select2 containers to proper size */
+        .filter-tooltip-panel .select2-container.select2-container--default,
+        .filter-tooltip-panel .select2-container.select2-container--classic,
+        .filter-tooltip-panel .select2-container.select2-container--bootstrap {
+          min-height: 38px !important;
+        }
+        
+        .filter-tooltip-panel .select2-container.select2-container--default .select2-selection--single,
+        .filter-tooltip-panel .select2-container.select2-container--classic .select2-selection--single {
+          height: 38px !important;
+          min-height: 38px !important;
+          max-height: 38px !important;
+        }
+        
+        .filter-tooltip-panel .select2-container.select2-container--default .select2-selection--single .select2-selection__rendered {
+          line-height: 38px !important;
+          height: 38px !important;
+          min-height: 38px !important;
+        }
+        
         /* Ensure labels are properly styled */
         .filter-tooltip-panel label,
         .filter-tooltip-panel .form-label,
@@ -302,12 +436,14 @@
           width: 100% !important;
         }
 
+        /* General button styles */
         .filter-tooltip-panel .btn {
           padding: 8px 16px !important;
           font-size: 14px !important;
           border-radius: 6px !important;
           transition: all 0.2s ease !important;
           font-weight: 500 !important;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         }
 
         .filter-tooltip-panel .btn:hover {
@@ -315,86 +451,138 @@
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
         }
         
-        .filter-tooltip-panel .btn-primary,
-        .filter-tooltip-panel #submit-filter {
+        /* Apply Filter Button - Clean and Complete Styling */
+        .filter-tooltip-panel #submit-filter,
+        .filter-tooltip-panel #submit-filter.btn,
+        .filter-tooltip-panel #submit-filter.btn-primary,
+        .filter-tooltip-panel #submit-filter.ladda-button,
+        .filter-tooltip-panel #submit-filter.save-button {
+          /* Base button styles */
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          padding: 8px 16px !important;
+          margin: 0 !important;
+          
+          /* Typography */
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          line-height: 1.5 !important;
+          color: #ffffff !important;
+          text-align: center !important;
+          
+          /* Visual styling */
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+          background-color: #3b82f6 !important;
+          border: none !important;
+          border-color: #3b82f6 !important;
+          border-radius: 6px !important;
+          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+          
+          /* Layout */
+          min-height: auto !important;
+          height: auto !important;
+          width: auto !important;
+          max-width: none !important;
+          vertical-align: middle !important;
+          
+          /* Behavior */
+          cursor: pointer !important;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          position: relative !important;
+          overflow: visible !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter:hover,
+        .filter-tooltip-panel #submit-filter.btn:hover,
+        .filter-tooltip-panel #submit-filter.btn-primary:hover,
+        .filter-tooltip-panel #submit-filter.ladda-button:hover {
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+          background-color: #2563eb !important;
+          border-color: #2563eb !important;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+          transform: translateY(-1px) !important;
+          color: #ffffff !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter:active,
+        .filter-tooltip-panel #submit-filter.btn:active,
+        .filter-tooltip-panel #submit-filter.btn-primary:active,
+        .filter-tooltip-panel #submit-filter.ladda-button:active {
+          transform: translateY(0) !important;
+          box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+        }
+        
+        /* Button text (span) */
+        .filter-tooltip-panel #submit-filter span,
+        .filter-tooltip-panel #submit-filter.btn span,
+        .filter-tooltip-panel #submit-filter.btn-primary span,
+        .filter-tooltip-panel #submit-filter.ladda-button span {
+          display: inline-block !important;
+          color: #ffffff !important;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          line-height: 1.5 !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          white-space: nowrap !important;
+        }
+        
+        /* Button SVG icon */
+        .filter-tooltip-panel #submit-filter svg,
+        .filter-tooltip-panel #submit-filter.btn svg,
+        .filter-tooltip-panel #submit-filter.btn-primary svg,
+        .filter-tooltip-panel #submit-filter.ladda-button svg {
+          width: 18px !important;
+          height: 18px !important;
+          display: inline-block !important;
+          vertical-align: middle !important;
+          fill: #ffffff !important;
+          stroke: #ffffff !important;
+          color: #ffffff !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          flex-shrink: 0 !important;
+        }
+        
+        /* Override all child elements */
+        .filter-tooltip-panel #submit-filter *,
+        .filter-tooltip-panel #submit-filter.btn *,
+        .filter-tooltip-panel #submit-filter.btn-primary *,
+        .filter-tooltip-panel #submit-filter.ladda-button * {
+          color: #ffffff !important;
+        }
+        
+        /* Ladda button specific fixes */
+        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) {
+          position: relative !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) .ladda-spinner {
+          display: none !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter.ladda-button .ladda-spinner > div {
+          background-color: #ffffff !important;
+        }
+        
+        /* Other primary buttons */
+        .filter-tooltip-panel .btn-primary:not(#submit-filter) {
           background-color: #3b82f6 !important;
           border-color: #3b82f6 !important;
           color: #ffffff !important;
           font-weight: 600 !important;
         }
         
-        .filter-tooltip-panel .btn-primary:hover,
-        .filter-tooltip-panel #submit-filter:hover {
+        .filter-tooltip-panel .btn-primary:not(#submit-filter):hover {
           background-color: #2563eb !important;
           border-color: #2563eb !important;
           color: #ffffff !important;
-        }
-        
-        .filter-tooltip-panel .btn-primary span,
-        .filter-tooltip-panel #submit-filter span {
-          color: #ffffff !important;
-          font-weight: 600 !important;
-          display: inline-block !important;
-        }
-        
-        .filter-tooltip-panel .btn-primary svg,
-        .filter-tooltip-panel #submit-filter svg {
-          fill: #ffffff !important;
-          stroke: #ffffff !important;
-        }
-        
-        /* Premium Apply Filter Button - Matching other buttons */
-        .filter-tooltip-panel #submit-filter {
-          color: #ffffff !important;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-          font-size: 14px !important;
-          font-weight: 600 !important;
-          padding: 8px 16px !important;
-          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-          border: none !important;
-          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter:hover {
-          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-          transform: translateY(-1px) !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter:active {
-          transform: translateY(0) !important;
-          box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter * {
-          color: #ffffff !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter span {
-          color: #ffffff !important;
-          opacity: 1 !important;
-          visibility: visible !important;
-          font-family: inherit !important;
-          font-size: 14px !important;
-          font-weight: 600 !important;
-          margin-left: 6px !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter svg {
-          width: 16px !important;
-          height: 16px !important;
-          vertical-align: middle !important;
-        }
-        
-        /* Prevent Ladda button from auto-loading */
-        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) {
-          position: relative !important;
-        }
-        
-        /* Ensure Ladda spinner doesn't interfere when not loading */
-        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) .ladda-spinner {
-          display: none !important;
         }
         
         .filter-tooltip-panel .btn-outline-warning {
@@ -409,22 +597,16 @@
         }
         
         /* Ensure all text in buttons is visible */
-        .filter-tooltip-panel .btn * {
+        .filter-tooltip-panel .btn:not(#submit-filter) * {
           color: inherit !important;
         }
         
-        .filter-tooltip-panel .btn-primary *,
-        .filter-tooltip-panel #submit-filter * {
+        .filter-tooltip-panel .btn-primary:not(#submit-filter) * {
           color: #ffffff !important;
         }
         
-        /* Ensure Ladda button spinner is visible */
-        .filter-tooltip-panel .ladda-button .ladda-spinner > div {
-          background-color: #ffffff !important;
-        }
-        
         /* Ensure button text is always visible */
-        .filter-tooltip-panel button span {
+        .filter-tooltip-panel button:not(#submit-filter) span {
           display: inline-block !important;
           color: inherit !important;
         }
@@ -558,4 +740,159 @@
     </style>
 
     @* JavaScript functions are now in Report.js *@
+    
+    <script>
+    // Combo box size enforcement - override controls-modern.css (60px -> 38px)
+    window.enforceComboBoxSizes = function() {
+        const panel = document.getElementById('filterTooltipPanel');
+        if (!panel) return;
+        
+        // CRITICAL: Fix .neo-control select (controls-modern.css line 840 sets 60px)
+        const neoControlSelects = panel.querySelectorAll('.neo-control select:not([multiple])');
+        neoControlSelects.forEach(function(select) {
+            select.style.setProperty('min-height', '38px', 'important');
+            select.style.setProperty('height', '38px', 'important');
+            select.style.setProperty('max-height', '38px', 'important');
+            select.style.setProperty('padding', '8px 12px', 'important');
+            select.style.setProperty('padding-top', '8px', 'important');
+            select.style.setProperty('padding-bottom', '8px', 'important');
+            select.style.setProperty('line-height', '1.5', 'important');
+            select.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Fix all SELECT elements, not inputs
+        const selects = panel.querySelectorAll('select:not([multiple]):not([size])');
+        selects.forEach(function(select) {
+            select.style.setProperty('min-height', '38px', 'important');
+            select.style.setProperty('height', '38px', 'important');
+            select.style.setProperty('max-height', '38px', 'important');
+            select.style.setProperty('padding', '8px 12px', 'important');
+            select.style.setProperty('padding-top', '8px', 'important');
+            select.style.setProperty('padding-bottom', '8px', 'important');
+            select.style.setProperty('line-height', '1.5', 'important');
+            select.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // CRITICAL: Fix Select2 (controls-modern.css line 850 sets 60px)
+        const select2Containers = panel.querySelectorAll('.select2-container');
+        select2Containers.forEach(function(container) {
+            container.style.setProperty('min-height', '38px', 'important');
+            container.style.setProperty('height', 'auto', 'important');
+        });
+        
+        const select2Selections = panel.querySelectorAll('.select2-container .select2-selection--single');
+        select2Selections.forEach(function(selection) {
+            selection.style.setProperty('height', '38px', 'important');
+            selection.style.setProperty('min-height', '38px', 'important');
+            selection.style.setProperty('max-height', '38px', 'important');
+            selection.style.setProperty('display', 'flex', 'important');
+            selection.style.setProperty('align-items', 'center', 'important');
+            selection.style.setProperty('padding', '0', 'important');
+            
+            const rendered = selection.querySelector('.select2-selection__rendered');
+            if (rendered) {
+                rendered.style.setProperty('line-height', '38px', 'important');
+                rendered.style.setProperty('height', '38px', 'important');
+                rendered.style.setProperty('min-height', '38px', 'important');
+                rendered.style.setProperty('padding', '0 12px', 'important');
+                rendered.style.setProperty('display', 'flex', 'important');
+                rendered.style.setProperty('align-items', 'center', 'important');
+            }
+            
+            const arrow = selection.querySelector('.select2-selection__arrow');
+            if (arrow) {
+                arrow.style.setProperty('height', '38px', 'important');
+                arrow.style.setProperty('min-height', '38px', 'important');
+                arrow.style.setProperty('top', '0', 'important');
+                arrow.style.setProperty('right', '8px', 'important');
+                arrow.style.setProperty('left', 'auto', 'important');
+            }
+        });
+        
+        // Fix Apply Filter button - Comprehensive enforcement
+        const submitFilterBtn = panel.querySelector('#submit-filter');
+        if (submitFilterBtn) {
+            // Button base styles
+            submitFilterBtn.style.setProperty('display', 'inline-flex', 'important');
+            submitFilterBtn.style.setProperty('align-items', 'center', 'important');
+            submitFilterBtn.style.setProperty('justify-content', 'center', 'important');
+            submitFilterBtn.style.setProperty('gap', '6px', 'important');
+            submitFilterBtn.style.setProperty('padding', '8px 16px', 'important');
+            submitFilterBtn.style.setProperty('font-size', '14px', 'important');
+            submitFilterBtn.style.setProperty('font-weight', '600', 'important');
+            submitFilterBtn.style.setProperty('font-family', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 'important');
+            submitFilterBtn.style.setProperty('color', '#ffffff', 'important');
+            submitFilterBtn.style.setProperty('background', 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', 'important');
+            submitFilterBtn.style.setProperty('border', 'none', 'important');
+            submitFilterBtn.style.setProperty('border-radius', '6px', 'important');
+            submitFilterBtn.style.setProperty('min-height', 'auto', 'important');
+            submitFilterBtn.style.setProperty('height', 'auto', 'important');
+            submitFilterBtn.style.setProperty('line-height', '1.5', 'important');
+            submitFilterBtn.style.setProperty('box-shadow', '0 2px 4px rgba(59, 130, 246, 0.2)', 'important');
+            
+            // Button span (text)
+            const btnSpan = submitFilterBtn.querySelector('span');
+            if (btnSpan) {
+                btnSpan.style.setProperty('display', 'inline-block', 'important');
+                btnSpan.style.setProperty('font-size', '14px', 'important');
+                btnSpan.style.setProperty('font-weight', '600', 'important');
+                btnSpan.style.setProperty('font-family', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 'important');
+                btnSpan.style.setProperty('color', '#ffffff', 'important');
+                btnSpan.style.setProperty('line-height', '1.5', 'important');
+                btnSpan.style.setProperty('opacity', '1', 'important');
+                btnSpan.style.setProperty('visibility', 'visible', 'important');
+                btnSpan.style.setProperty('white-space', 'nowrap', 'important');
+            }
+            
+            // Button SVG icon
+            const btnSvg = submitFilterBtn.querySelector('svg');
+            if (btnSvg) {
+                btnSvg.style.setProperty('width', '18px', 'important');
+                btnSvg.style.setProperty('height', '18px', 'important');
+                btnSvg.style.setProperty('display', 'inline-block', 'important');
+                btnSvg.style.setProperty('vertical-align', 'middle', 'important');
+                btnSvg.style.setProperty('fill', '#ffffff', 'important');
+                btnSvg.style.setProperty('stroke', '#ffffff', 'important');
+                btnSvg.style.setProperty('color', '#ffffff', 'important');
+                btnSvg.style.setProperty('flex-shrink', '0', 'important');
+            }
+        }
+    }
+    
+        // Run when panel is shown - Aggressive enforcement
+        $(document).ready(function() {
+            const panel = document.getElementById('filterTooltipPanel');
+            if (panel) {
+                // Watch for panel visibility changes
+                const observer = new MutationObserver(function(mutations) {
+                    if (panel.classList.contains('show')) {
+                        // Run multiple times with delays to catch all dynamic content
+                        [50, 150, 300, 500, 800].forEach(function(delay) {
+                            setTimeout(function() { 
+                                if (window.enforceComboBoxSizes) {
+                                    window.enforceComboBoxSizes(); 
+                                }
+                            }, delay);
+                        });
+                    }
+                });
+                
+                observer.observe(panel, {
+                    attributes: true,
+                    attributeFilter: ['class'],
+                    childList: true,
+                    subtree: true
+                });
+                
+                // Also watch for Select2 initialization
+                $(document).on('select2:open select2:select select2:unselect', function() {
+                    setTimeout(function() {
+                        if (window.enforceComboBoxSizes) {
+                            window.enforceComboBoxSizes();
+                        }
+                    }, 50);
+                });
+            }
+        });
+    </script>
 }

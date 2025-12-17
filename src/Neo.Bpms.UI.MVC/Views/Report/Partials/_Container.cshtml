@@ -115,8 +115,123 @@
                             window.toast.warning(window.tetaI18n.t('PleaseSetRequiredFilters'));
                         }
                     }
+                    
+                    // CRITICAL: Fix scroll issues after page is fully loaded
+                    function fixAllScrollIssues() {
+                        // Force remove min-height from html and body
+                        $('html, body').css({
+                            'min-height': 'auto',
+                            'height': 'auto',
+                            'padding-bottom': '0',
+                            'margin-bottom': '0'
+                        });
+                        
+                        // Fix page-body
+                        $('#page-body').css({
+                            'min-height': 'auto',
+                            'height': 'auto',
+                            'padding-bottom': '0',
+                            'margin-bottom': '0'
+                        });
+                        
+                        // Fix ReportContainer and all its children
+                        $('#ReportContainer, #ReportContainer *').css({
+                            'min-height': 'auto',
+                            'padding-bottom': '0',
+                            'margin-bottom': '0'
+                        });
+                        
+                        // Remove any computed min-height that uses vh or %
+                        $('#ReportContainer *').each(function() {
+                            var $el = $(this);
+                            var computedStyle = window.getComputedStyle(this);
+                            if (computedStyle.minHeight && (computedStyle.minHeight.indexOf('vh') !== -1 || computedStyle.minHeight.indexOf('%') !== -1)) {
+                                $el.css('min-height', 'auto');
+                            }
+                            if (computedStyle.height && (computedStyle.height.indexOf('vh') !== -1 || computedStyle.height.indexOf('%') !== -1)) {
+                                var height = this.scrollHeight;
+                                if (height > 0) {
+                                    $el.css('height', height + 'px');
+                                } else {
+                                    $el.css('height', 'auto');
+                                }
+                            }
+                        });
+                        
+                        // Calculate actual content height
+                        var contentHeight = Math.max(
+                            document.body.scrollHeight,
+                            document.body.offsetHeight,
+                            document.documentElement.clientHeight,
+                            document.documentElement.scrollHeight,
+                            document.documentElement.offsetHeight
+                        );
+                        
+                        var viewportHeight = window.innerHeight;
+                        
+                        // If content is smaller than viewport, set exact height
+                        if (contentHeight <= viewportHeight) {
+                            $('html, body').css('height', contentHeight + 'px');
+                        } else {
+                            $('html, body').css('height', 'auto');
+                        }
+                    }
+                    
+                    // Run immediately
+                    fixAllScrollIssues();
+                    
+                    // Run after a delay to catch any late-loading styles
+                    setTimeout(fixAllScrollIssues, 100);
+                    setTimeout(fixAllScrollIssues, 500);
+                    setTimeout(fixAllScrollIssues, 1000);
+                    
+                    // Run on window resize
+                    $(window).on('resize', fixAllScrollIssues);
                 });
             </script>
+            
+            @* CRITICAL: Final CSS override to fix scroll - Must be at the end *@
+            <style>
+                html.report-page {
+                    min-height: auto !important;
+                    height: auto !important;
+                    padding-bottom: 0 !important;
+                    margin-bottom: 0 !important;
+                }
+                
+                body.report-page {
+                    min-height: auto !important;
+                    height: auto !important;
+                    padding-bottom: 0 !important;
+                    margin-bottom: 0 !important;
+                    overflow-x: hidden !important;
+                }
+                
+                body.report-page #page-body {
+                    min-height: auto !important;
+                    height: auto !important;
+                    padding-bottom: 0 !important;
+                    margin-bottom: 0 !important;
+                }
+                
+                body.report-page #ReportContainer,
+                body.report-page #ReportContainer * {
+                    min-height: auto !important;
+                    padding-bottom: 0 !important;
+                    margin-bottom: 0 !important;
+                }
+                
+                body.report-page form,
+                body.report-page #filter-form {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                
+                body.report-page > *:last-child {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+            </style>
         </div>
     }
 }

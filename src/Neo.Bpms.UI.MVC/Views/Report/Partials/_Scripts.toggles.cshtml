@@ -285,6 +285,15 @@ window.toggleFilterTooltip = function(event, targetElement) {
         void panel.offsetWidth;
         void panel.scrollHeight;
         
+        // Enforce combo box sizes after panel is shown - Multiple times to catch all dynamic content
+        if (typeof window.enforceComboBoxSizes === 'function') {
+            [50, 150, 300, 500, 800].forEach(function(delay) {
+                setTimeout(function() {
+                    window.enforceComboBoxSizes();
+                }, delay);
+            });
+        }
+        
         console.log('[FilterTooltip] Panel styles applied, checking visibility...');
         
         // Verify visibility after a short delay
@@ -292,6 +301,15 @@ window.toggleFilterTooltip = function(event, targetElement) {
             const rect = panel.getBoundingClientRect();
             const computedStyle = window.getComputedStyle(panel);
             const parentStyle = panel.parentElement ? window.getComputedStyle(panel.parentElement) : null;
+            
+            // Enforce combo box sizes again after visibility check - Multiple times
+            if (typeof window.enforceComboBoxSizes === 'function') {
+                [100, 250, 400, 600].forEach(function(delay) {
+                    setTimeout(function() {
+                        window.enforceComboBoxSizes();
+                    }, delay);
+                });
+            }
             
             console.log('[FilterTooltip] Panel visibility check:', {
                 display: computedStyle.display,

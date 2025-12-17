@@ -36,6 +36,125 @@
     var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
 }
 
+@* CRITICAL: Fix scroll issue - Must be before any CSS includes *@
+<style>
+	html.report-page, body.report-page {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	body.report-page #page-body {
+		min-height: auto !important;
+		height: auto !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	body.report-page #ReportContainer {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+</style>
+<script>
+	(function() {
+		// Add class immediately
+		document.documentElement.classList.add('report-page');
+		document.body.classList.add('report-page');
+		
+		// Function to fix scroll issues
+		function fixScrollIssues() {
+			// Fix html and body
+			document.documentElement.style.minHeight = 'auto';
+			document.documentElement.style.height = 'auto';
+			document.documentElement.style.paddingBottom = '0';
+			document.documentElement.style.marginBottom = '0';
+			
+			document.body.style.minHeight = 'auto';
+			document.body.style.height = 'auto';
+			document.body.style.paddingBottom = '0';
+			document.body.style.marginBottom = '0';
+			
+			// Fix page-body if exists
+			var pageBody = document.getElementById('page-body');
+			if (pageBody) {
+				pageBody.style.minHeight = 'auto';
+				pageBody.style.height = 'auto';
+				pageBody.style.paddingBottom = '0';
+				pageBody.style.marginBottom = '0';
+			}
+			
+			// Fix ReportContainer
+			var reportContainer = document.getElementById('ReportContainer');
+			if (reportContainer) {
+				reportContainer.style.minHeight = 'auto';
+				reportContainer.style.height = 'auto';
+				reportContainer.style.paddingBottom = '0';
+				reportContainer.style.marginBottom = '0';
+				
+				// Fix all children
+				var allChildren = reportContainer.querySelectorAll('*');
+				allChildren.forEach(function(el) {
+					var computedStyle = window.getComputedStyle(el);
+					if (computedStyle.minHeight && (computedStyle.minHeight.includes('vh') || computedStyle.minHeight.includes('100%'))) {
+						el.style.minHeight = 'auto';
+					}
+					if (computedStyle.height && (computedStyle.height.includes('vh') || computedStyle.height.includes('100%'))) {
+						el.style.height = 'auto';
+					}
+				});
+			}
+			
+			// Remove extra spacing from last elements
+			var lastChild = document.body.lastElementChild;
+			if (lastChild) {
+				lastChild.style.marginBottom = '0';
+				lastChild.style.paddingBottom = '0';
+			}
+			
+			// Fix footer if exists
+			var footer = document.querySelector('.footer');
+			if (footer) {
+				footer.style.marginBottom = '0';
+				footer.style.paddingBottom = '0';
+				footer.style.height = 'auto';
+				footer.style.minHeight = 'auto';
+			}
+			
+			// Calculate actual content height and set body height accordingly
+			var contentHeight = Math.max(
+				document.body.scrollHeight,
+				document.body.offsetHeight,
+				document.documentElement.clientHeight,
+				document.documentElement.scrollHeight,
+				document.documentElement.offsetHeight
+			);
+			
+			var viewportHeight = window.innerHeight;
+			if (contentHeight < viewportHeight) {
+				document.body.style.height = contentHeight + 'px';
+				document.documentElement.style.height = contentHeight + 'px';
+			}
+		}
+		
+		// Run immediately
+		fixScrollIssues();
+		
+		// Run after DOM is ready
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', fixScrollIssues);
+		}
+		
+		// Run after page is fully loaded
+		window.addEventListener('load', function() {
+			setTimeout(fixScrollIssues, 100);
+			setTimeout(fixScrollIssues, 500);
+		});
+		
+		// Run on resize
+		window.addEventListener('resize', fixScrollIssues);
+	})();
+</script>
+
 @* CSS Includes *@
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/modern/controls-modern.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/Content/common-assets-includes/features/modern/modern-multi-select.css" asp-append-version="true" />

@@ -290,6 +290,33 @@
         width: 0 !important;
         height: 0 !important;
         pointer-events: none !important;
+        clip: rect(0, 0, 0, 0) !important;
+        clip-path: inset(50%) !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        left: -9999px !important;
+        top: -9999px !important;
+    }
+    
+    /* Hide any duplicate selects */
+    select[name="__RefreshTime"]:not(#refresh-time-select) {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        pointer-events: none !important;
+        clip: rect(0, 0, 0, 0) !important;
+        clip-path: inset(50%) !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        left: -9999px !important;
+        top: -9999px !important;
     }
 
     .refresh-settings-buttons {
@@ -403,7 +430,7 @@
                 <span>@ViewTexts.Disabled</span>
             }
         </button>
-        <div class="refresh-time-dropdown-menu" id="refreshTimeDropdownMenu">
+         <div class="refresh-time-dropdown-menu" id="refreshTimeDropdownMenu">
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 0 ? "active" : "")" data-value="0">@ViewTexts.Disabled</button>
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 5 ? "active" : "")" data-value="5">5 @ViewTexts.Seconds</button>
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 10 ? "active" : "")" data-value="10">10 @ViewTexts.Seconds</button>
@@ -413,10 +440,11 @@
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 120 ? "active" : "")" data-value="120">2 @ViewTexts.Minutes</button>
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 300 ? "active" : "")" data-value="300">5 @ViewTexts.Minutes</button>
             <button type="button" class="refresh-time-dropdown-item @(refreshTime == 600 ? "active" : "")" data-value="600">10 @ViewTexts.Minutes</button>
-        </div>
+        </div> 
     </div>
+	<div style="display: none !important; visibility: hidden !important;">
     <!-- Hidden native select for form submission - completely hidden -->
-    <select id="refresh-time-select" name="__RefreshTime" style="display: none !important; visibility: hidden !important; position: absolute !important; opacity: 0 !important; width: 0 !important; height: 0 !important; pointer-events: none !important;">
+    <select id="refresh-time-select" name="__RefreshTime" style="display: none !important; visibility: hidden !important;">
         @if (refreshTime == 0)
         {
             <option selected="selected" value="0">@ViewTexts.Disabled</option>
@@ -490,6 +518,7 @@
             <option value="600">10 @ViewTexts.Minutes</option>
         }
     </select>
+	</div>
     <div class="refresh-settings-buttons">
         <button id="applyRefreshSettings" class="refresh-settings-btn">اعمال</button>
     </div>
@@ -508,7 +537,31 @@
             hiddenSelect.style.setProperty('width', '0', 'important');
             hiddenSelect.style.setProperty('height', '0', 'important');
             hiddenSelect.style.setProperty('pointer-events', 'none', 'important');
+            hiddenSelect.style.setProperty('clip', 'rect(0, 0, 0, 0)', 'important');
+            hiddenSelect.style.setProperty('clip-path', 'inset(50%)', 'important');
+            hiddenSelect.style.setProperty('overflow', 'hidden', 'important');
+            hiddenSelect.style.setProperty('left', '-9999px', 'important');
+            hiddenSelect.style.setProperty('top', '-9999px', 'important');
         }
+        
+        // Hide any duplicate selects with same name
+        const allRefreshSelects = document.querySelectorAll('select[name="__RefreshTime"]');
+        allRefreshSelects.forEach(function(select) {
+            if (select.id !== 'refresh-time-select') {
+                select.style.setProperty('display', 'none', 'important');
+                select.style.setProperty('visibility', 'hidden', 'important');
+                select.style.setProperty('position', 'absolute', 'important');
+                select.style.setProperty('opacity', '0', 'important');
+                select.style.setProperty('width', '0', 'important');
+                select.style.setProperty('height', '0', 'important');
+                select.style.setProperty('pointer-events', 'none', 'important');
+                select.style.setProperty('clip', 'rect(0, 0, 0, 0)', 'important');
+                select.style.setProperty('clip-path', 'inset(50%)', 'important');
+                select.style.setProperty('overflow', 'hidden', 'important');
+                select.style.setProperty('left', '-9999px', 'important');
+                select.style.setProperty('top', '-9999px', 'important');
+            }
+        });
         
         const dropdownToggle = document.getElementById('refreshTimeDropdown');
         const dropdownMenu = document.getElementById('refreshTimeDropdownMenu');
@@ -672,5 +725,65 @@
                 }
             });
         }
+    })();
+    
+    // Ensure all refresh time selects are hidden on page load
+    (function() {
+        function hideAllRefreshSelects() {
+            const allRefreshSelects = document.querySelectorAll('select[name="__RefreshTime"]');
+            allRefreshSelects.forEach(function(select) {
+                select.style.setProperty('display', 'none', 'important');
+                select.style.setProperty('visibility', 'hidden', 'important');
+                select.style.setProperty('position', 'absolute', 'important');
+                select.style.setProperty('opacity', '0', 'important');
+                select.style.setProperty('width', '0', 'important');
+                select.style.setProperty('height', '0', 'important');
+                select.style.setProperty('pointer-events', 'none', 'important');
+                select.style.setProperty('clip', 'rect(0, 0, 0, 0)', 'important');
+                select.style.setProperty('clip-path', 'inset(50%)', 'important');
+                select.style.setProperty('overflow', 'hidden', 'important');
+                select.style.setProperty('left', '-9999px', 'important');
+                select.style.setProperty('top', '-9999px', 'important');
+                select.setAttribute('aria-hidden', 'true');
+                select.setAttribute('tabindex', '-1');
+            });
+        }
+        
+        // Run on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideAllRefreshSelects);
+        } else {
+            hideAllRefreshSelects();
+        }
+        
+        // Also run after a short delay to catch dynamically added selects
+        setTimeout(hideAllRefreshSelects, 100);
+        setTimeout(hideAllRefreshSelects, 500);
+        
+        // Watch for new selects being added
+        const observer = new MutationObserver(function(mutations) {
+            let shouldHide = false;
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length > 0) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1) {
+                            if (node.tagName === 'SELECT' && node.name === '__RefreshTime') {
+                                shouldHide = true;
+                            } else if (node.querySelectorAll && node.querySelectorAll('select[name="__RefreshTime"]').length > 0) {
+                                shouldHide = true;
+                            }
+                        }
+                    });
+                }
+            });
+            if (shouldHide) {
+                hideAllRefreshSelects();
+            }
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     })();
 </script>

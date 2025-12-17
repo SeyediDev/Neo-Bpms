@@ -169,12 +169,28 @@ window.initializeMultiSelectInTooltip = function() {
         if (typeof window.initializeReportModernMultiSelect === 'function') {
             try {
                 window.initializeReportModernMultiSelect();
+                
+                // Enforce combo box sizes after multi-select initialization
+                if (typeof window.enforceComboBoxSizes === 'function') {
+                    setTimeout(function() {
+                        window.enforceComboBoxSizes();
+                    }, 200);
+                }
             } catch (error) {
                 console.error('[PopularFilters] ❌ Error initializing multi-select:', error);
             }
         } else {
             console.error('[PopularFilters] ❌ initializeReportModernMultiSelect not available! This should not happen.');
             console.error('[PopularFilters] Script load order may be incorrect.');
+        }
+        
+        // Enforce combo box sizes multiple times to catch all dynamic content
+        if (typeof window.enforceComboBoxSizes === 'function') {
+            [150, 300, 500, 800].forEach(function(delay) {
+                setTimeout(function() {
+                    window.enforceComboBoxSizes();
+                }, delay);
+            });
         }
     }, 100);
 };

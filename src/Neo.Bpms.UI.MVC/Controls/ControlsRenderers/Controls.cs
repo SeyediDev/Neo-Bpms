@@ -1,4 +1,5 @@
 ﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+using Neo.Bpms.UI.MVC.Controls.HtmlControls;
 
 namespace Neo.Bpms.UI.MVC.Controls.ControlsRenderers;
 
@@ -53,6 +54,8 @@ public partial class ControlsRenderer
                     .RenderFieldSet();
             case eControlTypeId.Card:
                 return new Card(formLogicHelper, fieldInfo, data, this, _sbvrRenderer).Render();
+            case eControlTypeId.Group:
+                return new Group(formLogicHelper, fieldInfo, data, this, _sbvrRenderer).Render();
             case eControlTypeId.BusinessDefinedControl:
                 {
                     string controlId = fieldInfo.PropertyValue(eControlPropertyId.BusinessControlId)
