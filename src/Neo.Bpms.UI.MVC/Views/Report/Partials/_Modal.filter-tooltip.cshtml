@@ -227,40 +227,134 @@
           display: block !important;
           width: 100% !important;
           position: relative !important;
-          margin: 0 !important;
+          margin: 0 0 12px 0 !important; /* Add bottom margin to push next control down */
           padding: 0 !important;
+          clear: both !important; /* Ensure it's in document flow */
         }
         
         #filterTooltipPanel .modern-multi-select-input {
           min-height: 38px !important;
-          height: 38px !important;
-          max-height: 38px !important;
+          height: 38px !important; /* Fixed height for single line */
+          max-height: 38px !important; /* Fixed height - no growth */
           padding: 8px 12px !important;
           font-size: 13px !important;
           line-height: 1.5 !important;
           box-sizing: border-box !important;
           display: flex !important;
-          align-items: center !important;
-          justify-content: space-between !important;
+          align-items: flex-start !important; /* Align to top */
+          justify-content: flex-start !important; /* Change from space-between to flex-start */
+          flex-wrap: nowrap !important; /* Single line - no wrap */
+          overflow: hidden !important; /* Prevent overflow - chips must stay inside */
           border: 1px solid #e2e8f0 !important;
           border-radius: 6px !important;
           background: white !important;
           cursor: pointer !important;
+          width: 100% !important; /* Ensure full width */
+          position: relative !important;
         }
         
         #filterTooltipPanel .modern-multi-select-items {
-          flex: 1 !important;
+          flex: 1 1 0% !important; /* Allow flex grow and shrink, start from 0% */
+          min-width: 0 !important; /* Allow flexbox to shrink below content size */
+          max-width: calc(100% - 100px) !important; /* Leave space for badge + arrow */
           display: flex !important;
-          flex-wrap: wrap !important;
+          flex-wrap: nowrap !important; /* Single line - no wrap */
           gap: 4px !important;
+          align-items: flex-start !important; /* Align to top */
+          overflow: hidden !important; /* CRITICAL: Prevent overflow - chips must stay inside */
+          width: auto !important; /* Auto width */
+          box-sizing: border-box !important;
+          order: 1 !important; /* Ensure items come before badge and arrow */
+        }
+        
+        /* Overflow badge styling */
+        #filterTooltipPanel .modern-multi-select-overflow-badge {
+          display: none !important; /* Hidden by default */
           align-items: center !important;
+          background: #e0f2fe !important;
+          color: #0369a1 !important;
+          padding: 4px 8px !important;
+          border-radius: 4px !important;
+          font-size: 13px !important;
+          margin: 0 4px 0 0 !important;
+          gap: 4px !important;
+          flex-shrink: 0 !important;
+          white-space: nowrap !important;
+          cursor: pointer !important;
+          border: 1px solid #bae6fd !important;
+          order: 2 !important; /* Between items and arrow */
+          transition: background 0.2s ease !important;
+        }
+        
+        /* Show badge when it has content - use attribute selector */
+        #filterTooltipPanel .modern-multi-select-overflow-badge[data-visible="true"] {
+          display: flex !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-overflow-badge:hover {
+          background: #bae6fd !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-overflow-badge.active {
+          background: #7dd3fc !important;
+          border-color: #0369a1 !important;
+        }
+        
+        /* Overflow popover styling */
+        #filterTooltipPanel .modern-multi-select-overflow-popover {
+          display: none !important; /* Hidden by default */
+          position: absolute !important;
+          background: white !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          padding: 12px !important;
+          z-index: 1052 !important; /* Above dropdown */
+          min-width: 200px !important;
+          max-width: 300px !important;
+          max-height: 300px !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item {
+          display: flex !important;
+          width: 100% !important;
+          margin-bottom: 4px !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item:last-child {
+          margin-bottom: 0 !important;
         }
         
         #filterTooltipPanel .modern-multi-select-arrow {
           flex-shrink: 0 !important;
-          margin-right: 8px !important;
+          margin-right: 0 !important;
+          margin-left: auto !important; /* Push to right */
+          margin-top: 0 !important; /* Align to top */
           color: #64748b !important;
           font-size: 12px !important;
+          align-self: flex-start !important; /* Align to top left */
+          order: 999 !important; /* Ensure arrow is last */
+          line-height: 1 !important;
+        }
+        
+        /* Ensure chips stay within container and wrap properly */
+        #filterTooltipPanel .modern-multi-select-item {
+          display: inline-flex !important;
+          align-items: center !important;
+          flex-shrink: 0 !important;
+          white-space: nowrap !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          box-sizing: border-box !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-item > span:first-child {
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          white-space: nowrap !important;
+          max-width: 200px !important; /* Limit chip text width */
         }
         
         /* Hide Select2 if it gets initialized (shouldn't happen) */
@@ -320,124 +414,41 @@
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
         }
         
-        /* Apply Filter Button - Clean and Complete Styling */
+        /* Apply Filter Button - Only adjust font-weight to match other buttons */
         .filter-tooltip-panel #submit-filter,
         .filter-tooltip-panel #submit-filter.btn,
         .filter-tooltip-panel #submit-filter.btn-primary,
         .filter-tooltip-panel #submit-filter.ladda-button,
         .filter-tooltip-panel #submit-filter.save-button {
-          /* Base button styles */
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 6px !important;
-          padding: 8px 16px !important;
-          margin: 0 !important;
-          
-          /* Typography */
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-          font-size: 14px !important;
-          font-weight: 600 !important;
-          line-height: 1.5 !important;
-          color: #ffffff !important;
-          text-align: center !important;
-          
-          /* Visual styling */
-          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-          background-color: #3b82f6 !important;
-          border: none !important;
-          border-color: #3b82f6 !important;
-          border-radius: 6px !important;
-          box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
-          
-          /* Layout */
-          min-height: auto !important;
-          height: auto !important;
-          width: auto !important;
-          max-width: none !important;
-          vertical-align: middle !important;
-          
-          /* Behavior */
-          cursor: pointer !important;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-          position: relative !important;
-          overflow: visible !important;
+          font-weight: 500 !important;
         }
         
-        .filter-tooltip-panel #submit-filter:hover,
-        .filter-tooltip-panel #submit-filter.btn:hover,
-        .filter-tooltip-panel #submit-filter.btn-primary:hover,
-        .filter-tooltip-panel #submit-filter.ladda-button:hover {
-          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-          background-color: #2563eb !important;
-          border-color: #2563eb !important;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-          transform: translateY(-1px) !important;
-          color: #ffffff !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter:active,
-        .filter-tooltip-panel #submit-filter.btn:active,
-        .filter-tooltip-panel #submit-filter.btn-primary:active,
-        .filter-tooltip-panel #submit-filter.ladda-button:active {
-          transform: translateY(0) !important;
-          box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
-        }
-        
-        /* Button text (span) */
         .filter-tooltip-panel #submit-filter span,
         .filter-tooltip-panel #submit-filter.btn span,
         .filter-tooltip-panel #submit-filter.btn-primary span,
         .filter-tooltip-panel #submit-filter.ladda-button span {
-          display: inline-block !important;
-          color: #ffffff !important;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-          font-size: 14px !important;
-          font-weight: 600 !important;
-          line-height: 1.5 !important;
-          opacity: 1 !important;
-          visibility: visible !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          white-space: nowrap !important;
+          font-weight: 500 !important;
         }
         
-        /* Button SVG icon */
-        .filter-tooltip-panel #submit-filter svg,
-        .filter-tooltip-panel #submit-filter.btn svg,
-        .filter-tooltip-panel #submit-filter.btn-primary svg,
-        .filter-tooltip-panel #submit-filter.ladda-button svg {
-          width: 18px !important;
-          height: 18px !important;
-          display: inline-block !important;
-          vertical-align: middle !important;
-          fill: #ffffff !important;
-          stroke: #ffffff !important;
-          color: #ffffff !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          flex-shrink: 0 !important;
-        }
-        
-        /* Override all child elements */
-        .filter-tooltip-panel #submit-filter *,
-        .filter-tooltip-panel #submit-filter.btn *,
-        .filter-tooltip-panel #submit-filter.btn-primary *,
-        .filter-tooltip-panel #submit-filter.ladda-button * {
-          color: #ffffff !important;
-        }
-        
-        /* Ladda button specific fixes */
-        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) {
-          position: relative !important;
-        }
-        
-        .filter-tooltip-panel #submit-filter.ladda-button:not(.ladda-loading) .ladda-spinner {
+        /* Hide ladda spinner - show button content instead */
+        .filter-tooltip-panel #submit-filter.ladda-button .ladda-spinner {
           display: none !important;
         }
         
-        .filter-tooltip-panel #submit-filter.ladda-button .ladda-spinner > div {
-          background-color: #ffffff !important;
+        .filter-tooltip-panel #submit-filter.ladda-button.ladda-loading .ladda-spinner {
+          display: none !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter.ladda-button.ladda-loading span {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter.ladda-button.ladda-loading svg {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
         
         /* Other primary buttons */
@@ -445,7 +456,7 @@
           background-color: #3b82f6 !important;
           border-color: #3b82f6 !important;
           color: #ffffff !important;
-          font-weight: 600 !important;
+          font-weight: 500 !important;
         }
         
         .filter-tooltip-panel .btn-primary:not(#submit-filter):hover {
@@ -520,9 +531,12 @@
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
           margin-top: 4px !important;
           max-height: 300px !important;
-          overflow-y: auto !important;
+          overflow: visible !important; /* Remove scroll from outer container - only options container should scroll */
+          overflow-y: visible !important;
+          overflow-x: hidden !important;
           height: auto !important;
           min-height: 100px !important;
+          pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
         /* Ensure search input and options are visible inside open dropdown */
@@ -536,6 +550,7 @@
           border: none !important;
           border-bottom: 1px solid #e2e8f0 !important;
           outline: none !important;
+          pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
         #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-options,
@@ -546,14 +561,17 @@
           max-height: 250px !important;
           overflow-y: auto !important;
           padding: 0 !important;
+          pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
-        /* Ensure options are visible */
+        /* Ensure options are visible and clickable */
         #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-option,
         #filterTooltipPanel .modern-multi-select.open .modern-multi-select-option {
           display: flex !important;
           visibility: visible !important;
           opacity: 1 !important;
+          pointer-events: auto !important; /* CRITICAL: Allow clicks */
+          cursor: pointer !important;
         }
         
         /* Ensure Modern Multi-Select control has proper positioning context */
@@ -921,6 +939,24 @@
           flex-shrink: 0 !important;
           line-height: 1 !important;
           direction: ltr !important; /* Keep icons LTR */
+          z-index: 1050 !important; /* Match filter panel z-index (same as filter panel) */
+          position: relative !important;
+        }
+        
+        /* Override inline z-index from backend (2150) */
+        .filter-tooltip-panel .filter-parameter-tooltip[style*="z-index"] {
+          z-index: 1050 !important; /* Override backend z-index: 2150 */
+        }
+        
+        /* Filter parameter dropdown tooltip - should be just above filter panel */
+        .filter-tooltip-panel .filter-parameter-dropdown {
+          z-index: 1052 !important; /* Just above filter panel (1050) and icons (1050) */
+        }
+        
+        /* Choice form link should also have same z-index */
+        .filter-tooltip-panel .choice-form-link {
+          z-index: 1050 !important; /* Match filter panel z-index */
+          position: relative !important;
         }
         
         /* Choice form link (list icon) - should be inline with filter parameter icon */
@@ -958,6 +994,7 @@
           vertical-align: middle !important;
           flex-shrink: 0 !important;
           line-height: 1 !important;
+          margin-top: 3px !important; /* Move icon 3px down */
         }
         
         .filter-tooltip-panel .filter-parameter-icon svg {

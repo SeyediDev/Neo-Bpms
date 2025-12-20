@@ -109,7 +109,7 @@
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
         z-index: 10000;
-        max-width: 500px;
+        max-width: 900px; /* Increased to accommodate 3 columns */
         max-height: 80vh;
         overflow: hidden;
         direction: rtl;
@@ -117,6 +117,20 @@
         animation: detailsCardSlideIn 0.2s ease-out;
         display: flex;
         flex-direction: column;
+    }
+    
+    /* Responsive: reduce to 2 columns on medium screens */
+    @@media (max-width: 1200px) {
+        .details-card-view {
+            max-width: 700px;
+        }
+    }
+    
+    /* Responsive: single column on small screens */
+    @@media (max-width: 768px) {
+        .details-card-view {
+            max-width: 90%;
+        }
     }
     
     @@keyframes detailsCardSlideIn {
@@ -172,18 +186,38 @@
         padding: 20px;
         overflow-y: auto;
         max-height: calc(80vh - 60px);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+    
+    /* Responsive: 2 columns on medium screens */
+    @@media (max-width: 1200px) {
+        .details-card-body {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    /* Responsive: 1 column on small screens */
+    @@media (max-width: 768px) {
+        .details-card-body {
+            grid-template-columns: 1fr;
+        }
     }
     
     .details-card-field {
         display: flex;
         flex-direction: column;
         gap: 6px;
-        padding: 12px 0;
+        padding: 12px;
         border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
     }
     
     .details-card-field:last-child {
-        border-bottom: none;
+        border-bottom: 1px solid #e5e7eb;
     }
     
     .details-card-field-label {
@@ -240,6 +274,42 @@
     
     .details-card-body::-webkit-scrollbar-thumb:hover {
         background: #a0aec0;
+    }
+    
+    /* Highlight row when details card is open - Stronger visibility */
+    .details-row-highlighted {
+        background-color: #bae6fd !important;
+        box-shadow: 
+            0 0 0 3px #1869AA inset !important,
+            0 0 20px rgba(24, 105, 170, 0.5) !important,
+            0 4px 12px rgba(24, 105, 170, 0.3) !important;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 10000 !important; /* Above backdrop (9999) */
+        transform: scale(1.01); /* Slight scale to make it stand out */
+    }
+    
+    .details-row-highlighted::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(24, 105, 170, 0.1) 0%, rgba(24, 105, 170, 0.05) 100%);
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    .details-row-highlighted td {
+        background-color: rgba(186, 230, 253, 0.3) !important;
+        font-weight: 500 !important;
+    }
+    
+    .details-row-highlighted td:first-child {
+        background-color: rgba(24, 105, 170, 0.2) !important;
+        font-weight: 600 !important;
+        color: #1869AA !important;
     }
     
     /* Reduce font size of filter controls by 25% */
@@ -824,6 +894,28 @@ new
                                 {
                                     <td style="text-align: center; direction: rtl;" class="details-column-cell">
                                         @{
+                                            // Get first column value for display in card header
+                                            string firstColumnValue = "";
+                                            if (visibleColumns.Count > 0)
+                                            {
+                                                var firstColumn = visibleColumns[0];
+                                                object firstColumnValueObj;
+                                                rowData.GetField(firstColumn.ColumnName, out firstColumnValueObj);
+                                                var firstColumnVal = TableHelper.CreateCellElement(firstColumnValueObj, firstColumn, true, calendar);
+                                                // Get text value (strip HTML tags for display in header)
+                                                if (firstColumnVal != null)
+                                                {
+                                                    var firstColumnHtml = firstColumnVal.ToString();
+                                                    // Remove HTML tags for clean text display
+                                                    firstColumnValue = System.Text.RegularExpressions.Regex.Replace(firstColumnHtml, "<.*?>", "").Trim();
+                                                    // Limit length to avoid very long headers
+                                                    if (firstColumnValue.Length > 50)
+                                                    {
+                                                        firstColumnValue = firstColumnValue.Substring(0, 47) + "...";
+                                                    }
+                                                }
+                                            }
+                                            
                                             // Build JSON data for hidden columns
                                             var hiddenColumnsData = new List<object>();
                                             foreach (var hiddenCol in hiddenColumns)
@@ -850,6 +942,9 @@ new
                                         }
                                         <span class="details-icon" 
                                               data-hidden-columns-base64="@hiddenColumnsJsonBase64"
+                                              data-row-number="@rowNumber"
+                                              data-row-ids="@rowIds"
+                                              data-first-column-value="@System.Web.HttpUtility.HtmlAttributeEncode(firstColumnValue)"
                                               style="cursor: pointer; display: inline-block; width: 20px; height: 20px; background: #1869AA; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-weight: bold; font-size: 12px;">
                                             i
                                         </span>
@@ -1525,9 +1620,16 @@ new
     
     var openCard = null;
     var backdrop = null;
+    var highlightedRow = null;
     
     // Close card function
     function closeDetailsCard() {
+        // Remove highlight from row
+        if (highlightedRow) {
+            highlightedRow.classList.remove('details-row-highlighted');
+            highlightedRow = null;
+        }
+        
         if (openCard) {
             if (openCard.parentNode) {
                 openCard.parentNode.removeChild(openCard);
@@ -1561,10 +1663,53 @@ new
         openCard = document.createElement('div');
         openCard.className = 'details-card-view';
         
-        // Card header
+        // Get row number, row IDs, and first column value from icon
+        var rowNumber = icon.getAttribute('data-row-number') || '';
+        var rowIds = icon.getAttribute('data-row-ids') || '';
+        var firstColumnValue = icon.getAttribute('data-first-column-value') || '';
+        
+        // Find and highlight the corresponding row
+        if (rowIds) {
+            // Use jQuery if available, otherwise use vanilla JS
+            var rowElement = null;
+            if (typeof $ !== 'undefined' && $.fn) {
+                var $row = $('tr.selectable-table-row[data-ids="' + rowIds + '"]');
+                if ($row.length > 0) {
+                    rowElement = $row[0];
+                }
+            } else {
+                rowElement = document.querySelector('tr.selectable-table-row[data-ids="' + rowIds + '"]');
+            }
+            
+            if (rowElement) {
+                // Remove previous highlight
+                if (highlightedRow) {
+                    highlightedRow.classList.remove('details-row-highlighted');
+                }
+                // Add highlight to current row
+                highlightedRow = rowElement;
+                highlightedRow.classList.add('details-row-highlighted');
+                
+                // Scroll to row if needed
+                var rowTop = highlightedRow.getBoundingClientRect().top;
+                var viewportHeight = window.innerHeight;
+                if (rowTop < 0 || rowTop > viewportHeight) {
+                    highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+        
+        // Card header - Build title with row number and first column value
         var header = document.createElement('div');
         header.className = 'details-card-header';
-        header.innerHTML = '<h4>جزئیات</h4>';
+        var headerTitle = 'جزئیات';
+        if (rowNumber) {
+            headerTitle += ' - سطر ' + rowNumber;
+        }
+        if (firstColumnValue) {
+            headerTitle += ' (' + firstColumnValue + ')';
+        }
+        header.innerHTML = '<h4>' + headerTitle + '</h4>';
         
         var closeBtn = document.createElement('button');
         closeBtn.className = 'details-card-close';

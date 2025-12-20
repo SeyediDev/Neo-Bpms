@@ -33,30 +33,133 @@
 <script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
 
 <style>
-    /* Reduce font size of form controls and text by 25% */
-    .modern-form-wrapper,
-    .modern-form-content {
-        font-size: 0.75em !important;
-    }
-    
-    /* Apply font size reduction to all elements inside form wrapper */
-    .modern-form-wrapper *,
-    .modern-form-content * {
-        font-size: inherit !important;
-    }
-    
-    /* Ensure inputs, selects, textareas and their content are smaller */
+    /* Font size: 0.75em * 1.1 = 0.825em (10% larger than before) */
+    /* Control size: 90% (10% smaller) using transform scale */
     .modern-form-wrapper input,
     .modern-form-wrapper select,
     .modern-form-wrapper textarea,
-    .modern-form-wrapper input::placeholder,
-    .modern-form-wrapper textarea::placeholder,
+    .modern-form-wrapper label,
     .modern-form-content input,
     .modern-form-content select,
     .modern-form-content textarea,
+    .modern-form-content label,
+    #mainPartOfTheForm input,
+    #mainPartOfTheForm select,
+    #mainPartOfTheForm textarea,
+    #mainPartOfTheForm label,
+    .form-control,
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .form-group label {
+        font-size: 0.825em !important;
+    }
+    
+    /* Reduce control height and padding by 10% (not width to avoid layout issues) */
+    .modern-form-wrapper input[type="text"],
+    .modern-form-wrapper input[type="number"],
+    .modern-form-wrapper input[type="email"],
+    .modern-form-wrapper input[type="date"],
+    .modern-form-wrapper input[type="time"],
+    .modern-form-wrapper input[type="datetime-local"],
+    .modern-form-wrapper input[type="password"],
+    .modern-form-wrapper select,
+    .modern-form-wrapper textarea,
+    .modern-form-content input[type="text"],
+    .modern-form-content input[type="number"],
+    .modern-form-content input[type="email"],
+    .modern-form-content input[type="date"],
+    .modern-form-content input[type="time"],
+    .modern-form-content input[type="datetime-local"],
+    .modern-form-content input[type="password"],
+    .modern-form-content select,
+    .modern-form-content textarea,
+    #mainPartOfTheForm input[type="text"],
+    #mainPartOfTheForm input[type="number"],
+    #mainPartOfTheForm input[type="email"],
+    #mainPartOfTheForm input[type="date"],
+    #mainPartOfTheForm input[type="time"],
+    #mainPartOfTheForm input[type="datetime-local"],
+    #mainPartOfTheForm input[type="password"],
+    #mainPartOfTheForm select,
+    #mainPartOfTheForm textarea,
+    .form-control {
+        padding-top: calc(var(--input-padding-top, 0.5em) * 0.9) !important;
+        padding-bottom: calc(var(--input-padding-bottom, 0.5em) * 0.9) !important;
+        padding-left: calc(var(--input-padding-left, 0.75em) * 0.9) !important;
+        padding-right: calc(var(--input-padding-right, 0.75em) * 0.9) !important;
+        line-height: calc(var(--input-line-height, 1.5) * 0.9) !important;
+    }
+    
+    /* Reduce placeholder text size */
+    .modern-form-wrapper input::placeholder,
+    .modern-form-wrapper textarea::placeholder,
     .modern-form-content input::placeholder,
-    .modern-form-content textarea::placeholder {
-        font-size: 1em !important;
+    .modern-form-content textarea::placeholder,
+    #mainPartOfTheForm input::placeholder,
+    #mainPartOfTheForm textarea::placeholder,
+    .form-control::placeholder {
+        font-size: 0.825em !important;
+    }
+    
+    /* Combo box font size */
+    .modern-form-wrapper .combo,
+    .modern-form-content .combo,
+    #mainPartOfTheForm .combo,
+    .modern-form-wrapper .k-combobox,
+    .modern-form-content .k-combobox,
+    #mainPartOfTheForm .k-combobox,
+    .modern-form-wrapper .k-dropdown,
+    .modern-form-content .k-dropdown,
+    #mainPartOfTheForm .k-dropdown,
+    .modern-form-wrapper .k-select,
+    .modern-form-content .k-select,
+    #mainPartOfTheForm .k-select {
+        font-size: 0.825em !important;
+    }
+    
+    .modern-form-wrapper .combo input,
+    .modern-form-content .combo input,
+    #mainPartOfTheForm .combo input,
+    .modern-form-wrapper .k-combobox input,
+    .modern-form-content .k-combobox input,
+    #mainPartOfTheForm .k-combobox input,
+    .modern-form-wrapper .k-dropdown input,
+    .modern-form-content .k-dropdown input,
+    #mainPartOfTheForm .k-dropdown input {
+        font-size: 0.825em !important;
+    }
+    
+    /* Combo box options and dropdown items */
+    .modern-form-wrapper .combo option,
+    .modern-form-content .combo option,
+    #mainPartOfTheForm .combo option,
+    .modern-form-wrapper select option,
+    .modern-form-content select option,
+    #mainPartOfTheForm select option {
+        font-size: 0.825em !important;
+    }
+    
+    /* Combo box dropdown panel - reduce font size */
+    .modern-form-wrapper .combo .dropdown-menu,
+    .modern-form-content .combo .dropdown-menu,
+    #mainPartOfTheForm .combo .dropdown-menu,
+    .modern-form-wrapper .k-combobox .k-list-container,
+    .modern-form-content .k-combobox .k-list-container,
+    #mainPartOfTheForm .k-combobox .k-list-container {
+        font-size: 0.825em !important;
+    }
+    
+    /* Combo box dropdown items */
+    .modern-form-wrapper .combo .dropdown-menu .dropdown-item,
+    .modern-form-content .combo .dropdown-menu .dropdown-item,
+    #mainPartOfTheForm .combo .dropdown-menu .dropdown-item,
+    .modern-form-wrapper .k-combobox .k-list-item,
+    .modern-form-content .k-combobox .k-list-item,
+    #mainPartOfTheForm .k-combobox .k-list-item {
+        font-size: 0.825em !important;
+        padding-top: calc(0.5em * 0.9) !important;
+        padding-bottom: calc(0.5em * 0.9) !important;
     }
 </style>
 <script>

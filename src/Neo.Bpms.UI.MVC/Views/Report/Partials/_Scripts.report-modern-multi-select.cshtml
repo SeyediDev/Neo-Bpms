@@ -206,18 +206,20 @@
             // If not remote and no options, show empty state
             
             // Create Modern Multi-Select control wrapper
-            const $wrapper = $('<div class="modern-multi-select-control" style="position: relative;"></div>');
-            const $input = $('<div class="modern-multi-select-input" style="min-height: 38px; height: 38px; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; cursor: pointer; display: flex; align-items: center; justify-content: space-between;"></div>');
-            const $itemsContainer = $('<div class="modern-multi-select-items" style="display: flex; flex-wrap: wrap; gap: 4px; flex: 1;"></div>');
-            const $arrow = $('<div class="modern-multi-select-arrow" style="flex-shrink: 0; margin-right: 8px; color: #64748b;">▼</div>');
-            const $dropdown = $('<div class="modern-multi-select-dropdown" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); margin-top: 4px; max-height: 300px; overflow-y: auto; z-index: 1051; display: none;"></div>');
+            const $wrapper = $('<div class="modern-multi-select-control" style="position: relative; margin-bottom: 12px; clear: both;"></div>');
+            const $input = $('<div class="modern-multi-select-input" style="min-height: 38px; height: 38px; max-height: 38px; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; cursor: pointer; display: flex; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; overflow: hidden; width: 100%; box-sizing: border-box; position: relative;"></div>');
+            const $itemsContainer = $('<div class="modern-multi-select-items" style="display: flex; flex-wrap: nowrap; gap: 4px; flex: 1 1 0%; min-width: 0; max-width: calc(100% - 100px); align-items: flex-start; overflow: hidden; width: auto; box-sizing: border-box; order: 1;"></div>');
+            const $overflowBadge = $('<div class="modern-multi-select-overflow-badge" style="display: none !important; align-items: center; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 13px; margin: 0 4px 0 0; gap: 4px; flex-shrink: 0; white-space: nowrap; cursor: pointer; border: 1px solid #bae6fd; order: 2;"></div>');
+            const $overflowPopover = $('<div class="modern-multi-select-overflow-popover" style="display: none; position: absolute; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); padding: 12px; z-index: 1052; min-width: 200px; max-width: 300px; max-height: 300px; overflow-y: auto;"></div>');
+            const $arrow = $('<div class="modern-multi-select-arrow" style="flex-shrink: 0; margin-left: auto; margin-top: 0; color: #64748b; align-self: flex-start; order: 999;">▼</div>');
+            const $dropdown = $('<div class="modern-multi-select-dropdown" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); margin-top: 4px; max-height: 300px; overflow: visible; z-index: 1051; display: none;"></div>');
             const $searchInput = $('<input type="text" class="modern-multi-select-search" placeholder="جستجو..." style="width: 100%; padding: 8px 12px; border: none; border-bottom: 1px solid #e2e8f0; outline: none;" />');
             const $options = $('<div class="modern-multi-select-options" style="max-height: 250px; overflow-y: auto;"></div>');
             
             // Build structure
-            $input.append($itemsContainer).append($arrow);
+            $input.append($itemsContainer).append($overflowBadge).append($arrow);
             $dropdown.append($searchInput).append($options);
-            $wrapper.append($input).append($dropdown);
+            $wrapper.append($input).append($dropdown).append($overflowPopover);
             
             // Store select's parent and position
             const $parent = $select.parent();
@@ -433,7 +435,9 @@
                                 $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
                                 $dropdown[0].style.setProperty('margin-top', '4px', 'important');
                                 $dropdown[0].style.setProperty('max-height', '300px', 'important');
-                                $dropdown[0].style.setProperty('overflow-y', 'auto', 'important');
+                                $dropdown[0].style.setProperty('overflow', 'visible', 'important');
+                                $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
+                                $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                                 $dropdown[0].style.setProperty('height', 'auto', 'important');
                                 $dropdown[0].style.setProperty('min-height', '100px', 'important');
                                 
@@ -443,17 +447,25 @@
                                 $searchInput[0].style.setProperty('opacity', '1', 'important');
                                 $searchInput[0].style.setProperty('width', '100%', 'important');
                                 
-                                // Ensure options container is visible
+                                // Ensure options container is visible and clickable
                                 $options[0].style.setProperty('display', 'block', 'important');
                                 $options[0].style.setProperty('visibility', 'visible', 'important');
                                 $options[0].style.setProperty('opacity', '1', 'important');
                                 $options[0].style.setProperty('max-height', '250px', 'important');
                                 $options[0].style.setProperty('overflow-y', 'auto', 'important');
+                                $options[0].style.setProperty('pointer-events', 'auto', 'important');
+                                
+                                // Ensure all options are clickable
+                                $options.find('.modern-multi-select-option').each(function() {
+                                    this.style.setProperty('pointer-events', 'auto', 'important');
+                                    this.style.setProperty('cursor', 'pointer', 'important');
+                                });
                                 
                                 console.log('[ModernMultiSelect] Dropdown forced visible. Children count:', $options.children().length);
                                 console.log('[ModernMultiSelect] Search input visible:', $searchInput.is(':visible'), 'Display:', $searchInput.css('display'));
                                 console.log('[ModernMultiSelect] Options container visible:', $options.is(':visible'), 'Display:', $options.css('display'));
                                 console.log('[ModernMultiSelect] Options children visible:', $options.find('.modern-multi-select-option').length, 'options found');
+                                console.log('[ModernMultiSelect] Options pointer-events:', $options.find('.modern-multi-select-option').first().css('pointer-events'));
                             }
                         } else if (dataArray && dataArray.length === 0) {
                             // Empty result is valid
@@ -493,12 +505,66 @@
                         return; // Skip invalid options
                     }
                     
-                    const isSelected = selectedValues.includes(option.value);
-                    const $option = $('<div class="modern-multi-select-option" data-value="' + (option.value || '') + '" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;"></div>');
+                    // Compare values as strings to handle type mismatches (string vs number)
+                    const isSelected = selectedValues.some(function(v) { 
+                        return String(v) === String(option.value) || v == option.value; 
+                    });
+                    const $option = $('<div class="modern-multi-select-option" data-value="' + (option.value || '') + '" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; border-bottom: 1px solid #f1f5f9; transition: background 0.2s; pointer-events: auto; user-select: none;"></div>');
                     
                     if (isSelected) {
                         $option.css('background', '#f0f9ff');
                     }
+                    
+                    // Add click handler directly to option
+                    $option.on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        
+                        const value = $(this).data('value');
+                        const optionText = option.text || '';
+                        console.log('[ModernMultiSelect] Option clicked (direct handler):', value, 'Text:', optionText, 'Type:', typeof value, 'for:', fieldName, 'Current selected:', selectedValues);
+                        
+                        // Ensure this option is in allOptions (in case it was selected before data load)
+                        if (value !== '' && value !== null && value !== undefined) {
+                            const existsInAllOptions = allOptions.some(function(opt) {
+                                return String(opt.value) === String(value) || opt.value == value;
+                            });
+                            if (!existsInAllOptions && optionText) {
+                                allOptions.push({
+                                    value: String(value),
+                                    text: String(optionText)
+                                });
+                                console.log('[ModernMultiSelect] Added option to allOptions:', { value, text: optionText });
+                            }
+                        }
+                        
+                        if (value === '' || value === null || value === undefined) {
+                            selectedValues = [];
+                        } else {
+                            // Use loose equality to handle type mismatches
+                            const isAlreadySelected = selectedValues.some(function(v) { 
+                                return String(v) === String(value) || v == value; 
+                            });
+                            
+                            if (isAlreadySelected) {
+                                selectedValues = selectedValues.filter(function(v) { 
+                                    return String(v) !== String(value) && v != value && v !== ''; 
+                                });
+                            } else {
+                                selectedValues = selectedValues.filter(function(v) { return v !== ''; });
+                                selectedValues.push(value);
+                            }
+                        }
+                        
+                        console.log('[ModernMultiSelect] Updated selected values:', selectedValues, 'for:', fieldName);
+                        renderSelectedItems();
+                        renderOptions();
+                        updateSelect();
+                        updateInputHeight(); // Update height after selection
+                        
+                        return false;
+                    });
                     
                     $option.on('mouseenter', function() {
                         if (!isSelected) {
@@ -512,10 +578,13 @@
                     
                     $option.html('<span style="margin-left: 8px; width: 20px; text-align: center;">' + (isSelected ? '✓' : '') + '</span><span style="flex: 1;">' + (option.text || '') + '</span>');
                     
-                    // Ensure option is visible with inline styles
+                    // Ensure option is visible with inline styles and clickable
                     $option[0].style.setProperty('display', 'flex', 'important');
                     $option[0].style.setProperty('visibility', 'visible', 'important');
                     $option[0].style.setProperty('opacity', '1', 'important');
+                    $option[0].style.setProperty('pointer-events', 'auto', 'important');
+                    $option[0].style.setProperty('cursor', 'pointer', 'important');
+                    $option[0].style.setProperty('user-select', 'none', 'important');
                     
                     $options.append($option);
                     renderedCount++;
@@ -536,21 +605,226 @@
                 console.log('[ModernMultiSelect] First option computed display:', $options.children().first().length > 0 ? window.getComputedStyle($options.children().first()[0]).display : 'no options');
             }
             
-            // Render selected items
+            // Calculate how many chips can fit in the container
+            function calculateVisibleChipsCount() {
+                // Get container width
+                const containerWidth = $input.width() || $input[0].offsetWidth || 300;
+                const arrowWidth = 30; // Space for arrow
+                const badgeWidth = 90; // Space for overflow badge (estimate)
+                const padding = 24; // Left + right padding
+                
+                // First pass: try without badge
+                let availableWidth = containerWidth - arrowWidth - padding;
+                const testChips = $itemsContainer.find('.modern-multi-select-item');
+                
+                if (testChips.length > 0) {
+                    let totalWidth = 0;
+                    let count = 0;
+                    const maxTestCount = Math.min(20, testChips.length);
+                    
+                    // Try fitting chips without badge
+                    for (let i = 0; i < maxTestCount; i++) {
+                        const chipWidth = $(testChips[i]).outerWidth(true) || 120; // Include margin
+                        totalWidth += chipWidth;
+                        count++;
+                        
+                        if (totalWidth > availableWidth) {
+                            // Need badge, recalculate with badge space
+                            availableWidth = containerWidth - arrowWidth - badgeWidth - padding;
+                            totalWidth = 0;
+                            count = 0;
+                            
+                            // Recalculate with badge space
+                            for (let j = 0; j < maxTestCount; j++) {
+                                const chipWidth2 = $(testChips[j]).outerWidth(true) || 120;
+                                totalWidth += chipWidth2;
+                                count++;
+                                
+                                if (totalWidth > availableWidth) {
+                                    return Math.max(1, count - 1);
+                                }
+                            }
+                            
+                            return Math.min(selectedValues.length, count);
+                        }
+                    }
+                    
+                    // All chips fit without badge
+                    return Math.min(selectedValues.length, count);
+                }
+                
+                // Fallback: estimate based on average chip width
+                const avgChipWidth = 120;
+                const estimatedCount = Math.floor(availableWidth / avgChipWidth);
+                return Math.max(1, Math.min(selectedValues.length, estimatedCount));
+            }
+            
+            // Close overflow popover
+            function closeOverflowPopover() {
+                $overflowPopover.hide();
+                $overflowBadge.removeClass('active');
+            }
+            
+            // Open overflow popover
+            function openOverflowPopover() {
+                // Calculate position relative to badge
+                const badgeOffset = $overflowBadge.offset();
+                const wrapperOffset = $wrapper.offset();
+                const popoverWidth = 250; // Fixed width for popover
+                
+                // Position popover below badge, aligned to right
+                const topPosition = (badgeOffset.top - wrapperOffset.top + $overflowBadge.outerHeight() + 4);
+                const rightPosition = ($wrapper.outerWidth() - (badgeOffset.left - wrapperOffset.left + $overflowBadge.outerWidth()));
+                
+                $overflowPopover.css({
+                    'top': topPosition + 'px',
+                    'right': rightPosition + 'px',
+                    'left': 'auto'
+                });
+                
+                $overflowPopover.show();
+                $overflowBadge.addClass('active');
+            }
+            
+            // Update input height based on content (fixed at 38px for single line)
+            function updateInputHeight() {
+                // Fixed height for single line - no need to calculate
+                $input.css({
+                    'height': '38px',
+                    'min-height': '38px',
+                    'max-height': '38px'
+                });
+            }
+            
+            // Create a chip element
+            function createChipElement(value, option, isInPopover) {
+                const chipText = (option && option.text) ? option.text : value;
+                const $item = $('<div class="modern-multi-select-item' + (isInPopover ? ' popover-item' : '') + '" data-value="' + value + '" style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 13px; margin: 0; gap: 4px; flex-shrink: 0; white-space: nowrap; max-width: 100%;"></div>');
+                $item.html('<span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + chipText + '</span><span class="modern-multi-select-item-remove" style="cursor: pointer; font-weight: bold; color: #0369a1; font-size: 18px; line-height: 1; flex-shrink: 0;">×</span>');
+                return $item;
+            }
+            
+            // Render selected items with overflow handling
             function renderSelectedItems() {
+                console.log('[ModernMultiSelect] renderSelectedItems called for:', fieldName, 'Selected values:', selectedValues, 'All options count:', allOptions.length);
+                
+                if ($itemsContainer.length === 0) {
+                    console.error('[ModernMultiSelect] Items container not found!');
+                    return;
+                }
+                
+                // Clear containers
                 $itemsContainer.empty();
+                $overflowPopover.empty();
+                $overflowBadge.empty();
+                $overflowBadge.attr('data-visible', 'false');
+                closeOverflowPopover();
+                
                 if (selectedValues.length === 0) {
                     $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
-                } else {
-                    selectedValues.forEach(function(value) {
-                        const option = allOptions.find(function(opt) { return opt.value === value; });
-                        if (option) {
-                            const $item = $('<div class="modern-multi-select-item" data-value="' + value + '" style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 13px; margin: 2px;"></div>');
-                            $item.html('<span>' + option.text + '</span><span class="modern-multi-select-item-remove" style="margin-right: 4px; cursor: pointer; font-weight: bold; color: #0369a1;">×</span>');
-                            $itemsContainer.append($item);
-                        }
-                    });
+                    console.log('[ModernMultiSelect] No selected values, showing placeholder');
+                    updateInputHeight();
+                    return;
                 }
+                
+                // Prepare all chips data
+                const allChips = [];
+                selectedValues.forEach(function(value) {
+                    const valueStr = String(value);
+                    let option = allOptions.find(function(opt) { 
+                        return String(opt.value) === valueStr || opt.value == value || String(opt.value) == valueStr; 
+                    });
+                    
+                    // If option not found, try to get it from the select element's options
+                    if (!option) {
+                        const $selectOption = $select.find('option[value="' + value + '"]');
+                        if ($selectOption.length > 0) {
+                            option = {
+                                value: value,
+                                text: $selectOption.text() || value
+                            };
+                        }
+                    }
+                    
+                    allChips.push({ value: value, option: option });
+                });
+                
+                // First, render all chips temporarily to calculate visible count
+                allChips.forEach(function(chipData) {
+                    const $chip = createChipElement(chipData.value, chipData.option, false);
+                    $itemsContainer.append($chip);
+                });
+                
+                // Force a reflow to measure
+                $itemsContainer[0].offsetHeight;
+                
+                // Calculate how many chips can fit
+                const visibleCount = calculateVisibleChipsCount();
+                const overflowCount = selectedValues.length - visibleCount;
+                
+                console.log('[ModernMultiSelect] Total chips:', selectedValues.length, 'Visible:', visibleCount, 'Overflow:', overflowCount);
+                
+                // Clear and render only visible chips
+                $itemsContainer.empty();
+                
+                if (overflowCount > 0) {
+                    // Render visible chips
+                    for (let i = 0; i < visibleCount; i++) {
+                        const chipData = allChips[i];
+                        const $chip = createChipElement(chipData.value, chipData.option, false);
+                        $itemsContainer.append($chip);
+                    }
+                    
+                    // Render overflow badge
+                    $overflowBadge.html('<span>+' + overflowCount + ' بیشتر</span>');
+                    $overflowBadge.attr('data-visible', 'true');
+                    
+                    // Render overflow chips in popover
+                    for (let i = visibleCount; i < allChips.length; i++) {
+                        const chipData = allChips[i];
+                        const $chip = createChipElement(chipData.value, chipData.option, true);
+                        $overflowPopover.append($chip);
+                    }
+                } else {
+                    // Render all chips (no overflow)
+                    allChips.forEach(function(chipData) {
+                        const $chip = createChipElement(chipData.value, chipData.option, false);
+                        $itemsContainer.append($chip);
+                    });
+                    // Clear badge when no overflow
+                    $overflowBadge.empty();
+                }
+                
+                console.log('[ModernMultiSelect] renderSelectedItems completed. Visible chips:', $itemsContainer.children('.modern-multi-select-item').length, 'Overflow chips:', $overflowPopover.children('.modern-multi-select-item').length);
+                console.log('[ModernMultiSelect] Overflow badge visible:', $overflowBadge.attr('data-visible'), 'Badge content:', $overflowBadge.html());
+                
+                // Force visibility and ensure proper sizing - CRITICAL: chips must stay inside
+                $itemsContainer.css({
+                    'display': 'flex',
+                    'visibility': 'visible',
+                    'flex-wrap': 'nowrap', // Single line, no wrap
+                    'width': 'auto',
+                    'max-width': overflowCount > 0 ? 'calc(100% - 100px)' : 'calc(100% - 30px)', // Leave space for badge + arrow if overflow
+                    'min-width': '0',
+                    'overflow': 'hidden', // Prevent chips from overflowing
+                    'flex': '1 1 0%',
+                    'box-sizing': 'border-box',
+                    'align-items': 'flex-start'
+                });
+                
+                // Ensure input height is fixed at 38px (single line)
+                $input.css({
+                    'height': '38px',
+                    'min-height': '38px',
+                    'max-height': '38px',
+                    'overflow': 'hidden', // CRITICAL: Prevent chips from going outside
+                    'justify-content': 'flex-start', // Ensure proper alignment
+                    'align-items': 'flex-start', // Align to top
+                    'box-sizing': 'border-box'
+                });
+                
+                // Update height
+                updateInputHeight();
             }
             
             // Update select
@@ -592,7 +866,9 @@
                     $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
                     $dropdown[0].style.setProperty('margin-top', '4px', 'important');
                     $dropdown[0].style.setProperty('max-height', '300px', 'important');
-                    $dropdown[0].style.setProperty('overflow-y', 'auto', 'important');
+                    $dropdown[0].style.setProperty('overflow', 'visible', 'important');
+                    $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
+                    $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                     $dropdown[0].style.setProperty('height', 'auto', 'important');
                     $dropdown[0].style.setProperty('min-height', '100px', 'important');
                     
@@ -686,6 +962,13 @@
             
             // Event handlers - Use event delegation for dynamic content
             $input.on('click', function(e) {
+                // Don't toggle if clicking on remove button or item
+                if ($(e.target).closest('.modern-multi-select-item-remove').length > 0 ||
+                    $(e.target).closest('.modern-multi-select-item').length > 0) {
+                    console.log('[ModernMultiSelect] Click on item/remove button, ignoring input click');
+                    return false;
+                }
+                
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('[ModernMultiSelect] Input clicked for:', fieldName);
@@ -702,7 +985,15 @@
             // Prevent dropdown from closing when clicking inside
             $dropdown.on('click', function(e) {
                 e.stopPropagation();
+                // Allow clicks to propagate to options
+                if ($(e.target).closest('.modern-multi-select-option').length > 0) {
+                    return true; // Let option click handler work
+                }
             });
+            
+            // Ensure dropdown and options are clickable
+            $dropdown.css('pointer-events', 'auto');
+            $options.css('pointer-events', 'auto');
             
             $searchInput.on('input', function() {
                 const searchTerm = $(this).val();
@@ -717,10 +1008,14 @@
             });
             
             // Use event delegation for options (they're dynamically created)
-            $wrapper.on('click', '.modern-multi-select-option', function(e) {
+            // CRITICAL: Use direct event binding on options container, not wrapper
+            $options.on('click', '.modern-multi-select-option', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                const value = $(this).data('value');
+                e.stopImmediatePropagation();
+                
+                const $option = $(this);
+                const value = $option.data('value');
                 console.log('[ModernMultiSelect] Option clicked:', value, 'for:', fieldName, 'Current selected:', selectedValues);
                 
                 if (value === '' || value === null || value === undefined) {
@@ -739,37 +1034,193 @@
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
+                updateInputHeight(); // Update height after selection
+                
+                // Don't close dropdown on selection (allow multiple selections)
+                return false;
             });
             
-            // Remove item click
-            $wrapper.on('click', '.modern-multi-select-item-remove', function(e) {
+            // Also bind on wrapper as fallback
+            $wrapper.on('click', '.modern-multi-select-option', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                const value = $(this).closest('.modern-multi-select-item').data('value');
-                console.log('[ModernMultiSelect] Remove clicked for:', value, 'field:', fieldName);
-                selectedValues = selectedValues.filter(function(v) { return v !== value; });
+                e.stopImmediatePropagation();
+                
+                const $option = $(this);
+                const value = $option.data('value');
+                console.log('[ModernMultiSelect] Option clicked (wrapper handler):', value, 'Type:', typeof value, 'for:', fieldName, 'Current selected:', selectedValues);
+                
+                if (value === '' || value === null || value === undefined) {
+                    selectedValues = [];
+                } else {
+                    // Use loose equality to handle type mismatches
+                    const isAlreadySelected = selectedValues.some(function(v) { 
+                        return String(v) === String(value) || v == value; 
+                    });
+                    
+                    if (isAlreadySelected) {
+                        selectedValues = selectedValues.filter(function(v) { 
+                            return String(v) !== String(value) && v != value && v !== ''; 
+                        });
+                    } else {
+                        selectedValues = selectedValues.filter(function(v) { return v !== ''; });
+                        selectedValues.push(value);
+                    }
+                }
+                
+                console.log('[ModernMultiSelect] Updated selected values (wrapper):', selectedValues, 'for:', fieldName);
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
+                updateInputHeight(); // Update height after selection
+                
+                return false;
+            });
+            
+            // Remove item click - Use event delegation on items container for dynamically created items
+            // CRITICAL: Use namespace to prevent conflicts and ensure handler is not overridden
+            $itemsContainer.off('click.removeItem').on('click.removeItem', '.modern-multi-select-item-remove', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                const $removeButton = $(this);
+                const $item = $removeButton.closest('.modern-multi-select-item');
+                const value = $item.data('value');
+                
+                console.log('[ModernMultiSelect] Remove clicked (itemsContainer handler) for:', value, 'Type:', typeof value, 'field:', fieldName, 'Current selected:', selectedValues);
+                console.log('[ModernMultiSelect] Item element:', $item[0], 'Remove button:', $removeButton[0]);
+                
+                // Use same comparison logic as elsewhere (handle type mismatches)
+                const beforeCount = selectedValues.length;
+                selectedValues = selectedValues.filter(function(v) { 
+                    const shouldKeep = String(v) !== String(value) && v != value && v !== '';
+                    if (!shouldKeep) {
+                        console.log('[ModernMultiSelect] Removing value:', v, 'because it matches:', value);
+                    }
+                    return shouldKeep;
+                });
+                
+                console.log('[ModernMultiSelect] Before remove count:', beforeCount, 'After remove count:', selectedValues.length);
+                console.log('[ModernMultiSelect] After remove, selected values:', selectedValues, 'for:', fieldName);
+                
+                renderSelectedItems();
+                renderOptions();
+                updateSelect();
+                updateInputHeight(); // Update height after removal
+                
+                // Prevent dropdown from closing and prevent any other handlers
+                return false;
+            });
+            
+            // Also bind on wrapper as fallback (for items created before this handler)
+            // CRITICAL: Use namespace to prevent conflicts
+            $wrapper.off('click.removeItem').on('click.removeItem', '.modern-multi-select-item-remove', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                const $removeButton = $(this);
+                const $item = $removeButton.closest('.modern-multi-select-item');
+                const value = $item.data('value');
+                
+                console.log('[ModernMultiSelect] Remove clicked (wrapper handler) for:', value, 'field:', fieldName);
+                
+                selectedValues = selectedValues.filter(function(v) { 
+                    return String(v) !== String(value) && v != value && v !== ''; 
+                });
+                
+                renderSelectedItems();
+                renderOptions();
+                updateSelect();
+                updateInputHeight(); // Update height after removal
+                
+                return false;
+            });
+            
+            // Overflow badge click handler
+            $overflowBadge.on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                if ($overflowPopover.is(':visible')) {
+                    closeOverflowPopover();
+                } else {
+                    openOverflowPopover();
+                }
+                
+                return false;
+            });
+            
+            // Remove item from popover
+            $overflowPopover.off('click.removeItem').on('click.removeItem', '.modern-multi-select-item-remove', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                const $removeButton = $(this);
+                const $item = $removeButton.closest('.modern-multi-select-item');
+                const value = $item.data('value');
+                
+                console.log('[ModernMultiSelect] Remove clicked (popover handler) for:', value, 'field:', fieldName);
+                
+                selectedValues = selectedValues.filter(function(v) { 
+                    return String(v) !== String(value) && v != value && v !== ''; 
+                });
+                
+                renderSelectedItems();
+                renderOptions();
+                updateSelect();
+                updateInputHeight();
+                
+                // If no more overflow, close popover
+                if (selectedValues.length <= calculateVisibleChipsCount()) {
+                    closeOverflowPopover();
+                }
+                
+                return false;
+            });
+            
+            // Prevent input click from closing dropdown when clicking on items container or remove button
+            $itemsContainer.off('click.preventToggle').on('click.preventToggle', function(e) {
+                // If clicking on remove button or item, prevent toggle
+                if ($(e.target).closest('.modern-multi-select-item-remove').length > 0 ||
+                    $(e.target).closest('.modern-multi-select-item').length > 0) {
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+            
+            // Close popover when clicking outside
+            $(document).on('click.modernMultiSelectOverflow_' + fieldName, function(e) {
+                if (!$overflowPopover.is(e.target) && 
+                    $overflowPopover.has(e.target).length === 0 &&
+                    !$overflowBadge.is(e.target) &&
+                    $overflowBadge.has(e.target).length === 0) {
+                    closeOverflowPopover();
+                }
             });
             
             // Close on outside click - Use namespace to avoid conflicts
             $(document).on('click.modernMultiSelect_' + fieldName, function(e) {
                 if (!$wrapper.is(e.target) && $wrapper.has(e.target).length === 0) {
                     closeDropdown();
+                    closeOverflowPopover();
                 }
             });
             
             // Initialize
             renderSelectedItems();
+            updateInputHeight(); // Set initial height
             // Only render options if we have them (don't render empty state initially)
             if (allOptions.length > 1) {
                 renderOptions(); // Render options initially so they're ready when dropdown opens
             }
             
             // Force show wrapper and ensure it's visible with inline styles
-            $wrapper.attr('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; position: relative !important;');
-            $input.attr('style', 'display: flex !important; align-items: center !important; justify-content: space-between !important; min-height: 38px !important; height: 38px !important; padding: 8px 12px !important; border: 1px solid #e2e8f0 !important; border-radius: 6px !important; background: white !important; cursor: pointer !important;');
+            $wrapper.attr('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; position: relative !important; margin-bottom: 12px !important; clear: both !important;');
+            $input.attr('style', 'display: flex !important; align-items: flex-start !important; justify-content: flex-start !important; min-height: 38px !important; height: auto !important; max-height: none !important; padding: 8px 12px !important; border: 1px solid #e2e8f0 !important; border-radius: 6px !important; background: white !important; cursor: pointer !important; flex-wrap: wrap !important; overflow: hidden !important; width: 100% !important; box-sizing: border-box !important; position: relative !important;');
             
             // Ensure select is completely hidden
             $select.attr('style', 'display: none !important; position: absolute !important; left: -9999px !important; opacity: 0 !important; visibility: hidden !important; width: 0 !important; height: 0 !important;');
