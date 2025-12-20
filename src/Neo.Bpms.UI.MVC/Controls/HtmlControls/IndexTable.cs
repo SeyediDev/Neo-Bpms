@@ -76,7 +76,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             result.Append($"<th class=\"cColumn\" fieldname=\"{col.ColumnName}\" ")
                   .Append($"namespaceid=\"{structure.NamespaceId}\" ")
                   .Append($"entityid=\"{structure.EntityId}\" ")
-                  .Append($"eventtype=\"{eventString}\" {GetStyle(col, isEditable)}>")
+                  .Append($"eventtype=\"{eventString}\" {IndexTableHelpers.GetStyle(col, isEditable)}>")
                   .Append($"{alias}&nbsp;");
             if (isEditable && col.PropertyBoolean(eControlPropertyId.Required))
             {
@@ -112,7 +112,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             if (i < tableDataRows.Count)
             {
                 row = tableDataRows[i];
-                rowIds = FetchRowId(table, row);
+                rowIds = IndexTableHelpers.FetchRowId(table, row);
             }
             else
             { 
@@ -188,7 +188,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         {
             result.Append(
                 "<a " +
-                FormLinkClass("text-info") +
+IndexTableHelpers.FormLinkClass("text-info") +
                 $" href=\"{GetFormLink(subjectInfo.DetailAction, table, subjectInfo.DetailFormId, subjectInfo.Name, rowIds)}\">" +
                 $"<span class=\"text-info\" title=\"{ViewTexts.Details}\">" +
                 "<i class=\"fa fa-info\"></i>" +
@@ -199,7 +199,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         if (subjectInfo.HasEditForm)
         {
             result.Append("<a " +
-                      FormLinkClass("text-success") +
+IndexTableHelpers.FormLinkClass("text-success") +
                       $"href=\"{GetFormLink(subjectInfo.EditAction, table, subjectInfo.EditFormId, subjectInfo.Name, rowIds)}\">" +
                           $"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">" +
                                 "<i class=\"fa fa-pencil\"></i>" +
@@ -232,12 +232,12 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         result.Append("<td class=\"cColumn\">");
         if (table.HasDetailsForm)
         { 
-            result.Append($"<a {FormLinkClass("text-info")} href=\"{Url.Action(GetAction(table.DetailAction), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
+            result.Append($"<a {IndexTableHelpers.FormLinkClass("text-info")} href=\"{Url.Action(GetAction(table.DetailAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
                           $"<span class=\"text-info\" title=\"{ViewTexts.Details}\"><i class=\"fa fa-info\"></i></span></a>");
         }
         if (table.HasEditForm && !isInDetailsForm && !isEditable)
         {
-            result.Append($"<a {FormLinkClass("text-success")} href=\"{Url.Action(GetAction(table.EditAction), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
+            result.Append($"<a {IndexTableHelpers.FormLinkClass("text-success")} href=\"{Url.Action(GetAction(table.EditAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
                   .Append($"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">")
                   .Append("<i class=\"fa fa-pencil\"></i></span></a>");
         }
@@ -245,9 +245,9 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         if (table.HasDeleteForm && !isInDetailsForm)
         {
             if (isEditable)
-                result.Append($"<span {FormLinkClass("text-danger")} style=\"cursor: pointer;\" onclick=\"tableOp.setDelColStatus(this)\" title=\"{ViewTexts.Delete}\"><i class=\"fa text-danger fa-times\"></i></span>");
+                result.Append($"<span {IndexTableHelpers.FormLinkClass("text-danger")} style=\"cursor: pointer;\" onclick=\"tableOp.setDelColStatus(this)\" title=\"{ViewTexts.Delete}\"><i class=\"fa text-danger fa-times\"></i></span>");
             else
-                result.Append($"<a {FormLinkClass(("text-danger"))} href=\"{Url.Action(GetAction("Delete"), "Form", ControlsRendererData.Url, GetUrlObject(table, structure, recordId, rowIds, table.DeleteFormId))}\">")
+                result.Append($"<a {IndexTableHelpers.FormLinkClass(("text-danger"))} href=\"{Url.Action(GetAction("Delete"), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DeleteFormId))}\">")
                       .Append($"<span style=\"cursor: pointer;\" class=\"text-danger\" title=\"{ViewTexts.Delete}\">")
                       .Append("<i class=\"fa fa-times\"></i></span></a>");
         }
@@ -400,7 +400,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         result.Append("</td>");
     }
 
-    private ControlsRendererData controlsRendererData;
+    private ControlsRendererData _controlsRendererData;
 
     private void RenderCellControl(TableDefinition table, ColumnFieldDefinition col, NeoStringBuilder result,
         object cellValue, string colLogicEvent, CommonProperties commonProperties, string rowColId,
@@ -443,7 +443,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             case TVariableTypes.DayHourMinute:
             case TVariableTypes.DurHourMinute:
                 if (!string.IsNullOrEmpty(cellValue?.ToString()?.Trim()))
-                    cellValue = GetTimeSpanValue(cellValue);
+                    cellValue = IndexTableHelpers.GetTimeSpanValue(cellValue);
                 result.Append(
                         $"<input {commonProperties.ReadOnlyRelatedAttribute} {(commonProperties.IsRequired ? "required oninvalid =InvalidMsg(this);" : "")} ")
                     .Append("dir =\"ltr\" data-inputmask=\"'mask': '[99][:99][:99][:99][.999]', 'greedy' : false\" ")
@@ -485,7 +485,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                         $"<input {commonProperties.ReadOnlyRelatedAttribute} {(commonProperties.IsRequired ? "required oninvalid =InvalidMsg(this);" : "")} ")
                     .Append($" class=\"form-control {commonProperties.ShowHideRelatedClass} \" ")
                     .Append(
-                        $" dir=\"{commonProperties.Direction}\" type=\"{GetInputType(col)}\" step=\"any\" id=\"{rowColId}\"")
+                        $" dir=\"{commonProperties.Direction}\" type=\"{IndexTableHelpers.GetInputType(col)}\" step=\"any\" id=\"{rowColId}\"")
                     .Append($" name=\"{rowColName}\" ")
                     .Append($" full-column-name=\"{fullColumnName}\" ")
                     .Append($" value=\"{ControlsRendererData.Encoder.Encode(cellValue?.ToString() ?? "")}\" {colLogicEvent} />");
@@ -495,7 +495,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                 bool isEnumField = col.FieldType == TVariableTypes.StringListItem || 
                                  col.FieldType == TVariableTypes.StringListBitMask ||
                                  (table.CombosData.ContainsKey(col.ColumnName) && 
-                                 table.CombosData[col.ColumnName].Rows.Any());
+                                 table.CombosData[col.ColumnName].Rows.Count != 0);
                 
                 switch (col.ControlType)
                 {
@@ -509,7 +509,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                             result.Append(
                                     $"<input {commonProperties.ReadOnlyRelatedAttribute} {(commonProperties.IsRequired ? "required oninvalid =InvalidMsg(this);" : "")} ")
                                 .Append($" class=\"form-control {commonProperties.ShowHideRelatedClass} \" ")
-                                .Append($" dir=\"{commonProperties.Direction}\" type=\"{GetInputType(col)}\" id=\"{rowColId}\"")
+                                .Append($" dir=\"{commonProperties.Direction}\" type=\"{IndexTableHelpers.GetInputType(col)}\" id=\"{rowColId}\"")
                                 .Append($" name=\"{rowColName}\" ")
                                 .Append($" full-column-name=\"{fullColumnName}\" ")
                                 .Append($" value=\"{ControlsRendererData.Encoder.Encode(cellValue?.ToString() ?? "")}\" {colLogicEvent} />");
@@ -520,7 +520,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                         break;
                     default:
                         InitializeRenderer(table, record);
-                        _ = controlsRenderer.CreateControl(controlsRendererData, null, col);
+                        _ = controlsRenderer.CreateControl(_controlsRendererData, null, col);
                         break;
                 }
 
@@ -530,23 +530,12 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
 
     private void InitializeRenderer(TableDefinition table, ElasticObject record)
     {
-        controlsRendererData ??= new ControlsRendererData(formStructRoutines.GetCommonFormStructure(
+        _controlsRendererData ??= new ControlsRendererData(formStructRoutines.GetCommonFormStructure(
                 CultureHelper.GetCurrentNeutralCulture(), table.NamespaceId, table.EntityId,
                 table.FormId, Form.eFormType.Edit, table.FormSubjectId,
                 FormStructRoutines.GetForm(table.NamespaceId, table.EntityId, table.FormId,
                     Form.eFormType.Index, table.FormSubjectId), ControlsRendererData.User), record,
             new RendererOptions(), ControlsRendererData.User, ControlsRendererData.Url);
-    }
-
-    private static string GetInputType(ColumnFieldDefinition col)
-    {
-        return col.FieldType == TVariableTypes.Double ||
-               col.FieldType == TVariableTypes.Int ||
-               col.FieldType == TVariableTypes.Long ||
-               col.FieldType == TVariableTypes.Decimal ||
-               col.FieldType == TVariableTypes.Short
-            ? "number"
-            : "text";
     }
 
     private string TitleMessage(bool isInDetailsForm, TableDefinition table)
@@ -595,70 +584,4 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             "</svg>";
         return $"<a class=\"index-table-add-btn\" href=\"{createUrl}\" title=\"{title}\">{addIconSvg}</a>";
     }
-    
-    internal static string GetTimeSpanValue(object value)
-    {
-        TimeSpan timespan = new(Convert.ToInt64(value));
-        return timespan.ToTimeInputValue();
-    }
-    
-    private static string GetStyle(ColumnFieldDefinition col, bool isEditable)
-    {
-        return col.HasProperty(eControlPropertyId.WidthPercentage)
-            ? Style($"width: {col.Property(eControlPropertyId.WidthPercentage)}%;")
-            : !isEditable || col.ControlType == eControlTypeId.CheckBox
-                ? ""
-                : MinWidthStyle(col.ControlType == eControlTypeId.DatePicker ? 175 : 150);
-        string MinWidthStyle(int width)
-        {
-            return Style($"min-width: {width}px;");
-        }
-
-        string Style(string content)
-        {
-            return $"style=\"{content}\"";
-        }
-    }
-
-    private static string FetchRowId(TableDefinition table, ElasticObject row)
-    {
-        string rowIds = "";
-        foreach (string key in table.KeyFields)
-        {
-            row.GetField(key, out object rowId);
-            if (!string.IsNullOrEmpty(rowIds))
-                rowIds += ",";
-            //rowId can be null when  ConvertPostedElasticToRecord() is called
-            rowIds += rowId?.ToString();
-        }
-
-        return rowIds;
-    }
-
-    private static object GetUrlObject(TableDefinition table, CommonFormStructure structure,
-        string recordId, string rowIds, string formId)
-    {
-        var urlObject =
-            new
-            {
-                table.NamespaceId,
-                EntityId = table.PropertyValue(eControlPropertyId.FormEntityId) ?? table.EntityId,
-                table.FormSubjectId,
-                FormId = formId,
-                workItemFormId = structure.Form_ReportId,
-                pFormId = structure.Form_ReportId,
-                __parentNamespaceId = structure.NamespaceId,
-                __parentEntityId = structure.EntityId,
-                __parentFormSubjectId = structure.FormSubjectId,
-                __subTableAssociationFieldId = table.TableDef.TableAssociation?.Id,
-                __parentIds = recordId,
-                ids = rowIds,
-                bSubTable = true,
-                isReturnable = true
-            };
-        return urlObject;
-    }
-    
-    private static string FormLinkClass(string additionalClass) =>
-        $"class=\"icon-link form-link table-form-link {additionalClass}\"";
 }
