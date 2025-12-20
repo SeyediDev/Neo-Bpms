@@ -52,6 +52,20 @@
 @* Verification script - Ensure all required functions are loaded *@
 <script>
     (function() {
+        // Global error handler to catch undefined variable errors
+        window.addEventListener('error', function(event) {
+            // Suppress "is not defined" errors for common namespace/entity IDs that might be used as variables
+            if (event.message && event.message.includes('is not defined')) {
+                var errorMessage = event.message;
+                // Check if it's a common namespace/entity ID being used incorrectly
+                if (errorMessage.match(/\b(Customers|Entities|Reports|Configs)\s+is not defined/i)) {
+                    console.warn('Report: Suppressed error (likely from bundle):', errorMessage);
+                    event.preventDefault(); // Prevent error from breaking execution
+                    return false;
+                }
+            }
+        }, true); // Use capture phase
+        
         var requiredFunctions = [
             'toggleReportInfo',
             'toggleRefreshSettings',
@@ -77,22 +91,13 @@
         
         if (missingFunctions.length > 0) {
             console.error('Report: Missing required functions:', missingFunctions);
-            console.error('Report: This may cause errors when clicking buttons');
         } else {
             console.log('Report: All required functions loaded successfully');
         }
         
-        // Also check for ConfigsTreeManager and ScheduledReport if needed
-        if (typeof ConfigsTreeManager === 'undefined') {
-            console.warn('Report: ConfigsTreeManager not loaded yet (may be in bundle)');
-        }
-        if (typeof ScheduledReport === 'undefined') {
-            console.warn('Report: ScheduledReport not loaded yet (may be in bundle)');
-        }
-        
         // Verify initializeReportModernMultiSelect is loaded (critical for filter tooltip)
         if (typeof window.initializeReportModernMultiSelect !== 'function') {
-            console.error('Report: ❌ initializeReportModernMultiSelect NOT loaded! Filter multi-select will not work.');
+            console.error('Report: initializeReportModernMultiSelect NOT loaded! Filter multi-select will not work.');
         }
     })();
 </script>

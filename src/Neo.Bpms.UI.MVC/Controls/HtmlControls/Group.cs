@@ -14,11 +14,11 @@ public class Group(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
             .Where(l => l.IsAccessibleFor(ControlsRendererData.User))];
 
         result += $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}""
-                        class=""{ControlsRendererData.ControlsClassString} w-100 {CommonProperties.ShowHideRelatedClass}"">";
+                        class=""col-12 col-md-12 col-sm-12 col-lg-12 {ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass}"">";
         RenderDesignIcons(result);
         
         // Container with border and full width - items will be in a row next to each other
-        result += @"<div class=""border border-secondary rounded p-3 mb-3 w-100"">";
+        result += @"<div class=""border border-secondary rounded p-3 mb-3"">";
         
         // Optional label/header if LabelName property exists
         if (Field.HasProperty(eControlPropertyId.LabelName))

@@ -182,249 +182,68 @@
         }
         
         /* ============================================
-           COMBO BOX SIZES - CLEAN & SIMPLE - 38px
+           COMBO BOX SIZES - SIMPLE & CLEAN - 38px
            Override controls-modern.css (60px)
+           Only for native selects and Modern Multi-Select
+           Select2 is disabled in filter panel
            ============================================ */
         
-        /* CRITICAL: Override .modern-form .neo-control select (60px) from controls-modern.css line 840 */
-        /* Use maximum specificity to override controls-modern.css */
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select,
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select.cBox,
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .neo-control select.form-control,
-        .filter-tooltip-panel .modern-form .neo-control select,
-        .filter-tooltip-panel .modern-form .neo-control select.cBox,
-        .filter-tooltip-panel .modern-form .neo-control select.form-control {
+        /* CRITICAL: Override controls-modern.css line 840 - ALL possible selectors */
+        #filterTooltipPanel .modern-form .neo-control select,
+        #filterTooltipPanel .modern-form .neo-control select.form-control,
+        #filterTooltipPanel .modern-form .neo-control select.cBox,
+        #filterTooltipPanel .modern-form select,
+        #filterTooltipPanel .modern-form select.form-control,
+        #filterTooltipPanel .modern-form select.cBox,
+        #filterTooltipPanel .neo-control select,
+        #filterTooltipPanel .neo-control select.form-control,
+        #filterTooltipPanel .neo-control select.cBox,
+        #filterTooltipPanel select:not([multiple]):not([size]),
+        #filterTooltipPanel select.form-control:not([multiple]),
+        #filterTooltipPanel select.cBox:not([multiple]),
+        #filterTooltipPanel .form-control:not([multiple]),
+        #filterTooltipPanel .cBox:not([multiple]),
+        #filterTooltipPanel .modern-filter-wrapper select,
+        #filterTooltipPanel .modern-filter-wrapper .form-control,
+        #filterTooltipPanel .modern-filter-wrapper .cBox,
+        #filterTooltipPanel .modern-filter-content select,
+        #filterTooltipPanel .modern-filter-content .form-control,
+        #filterTooltipPanel .modern-filter-content .cBox {
           min-height: 38px !important;
           height: 38px !important;
           max-height: 38px !important;
           padding: 8px 12px !important;
-          padding-top: 8px !important;
-          padding-bottom: 8px !important;
           line-height: 1.5 !important;
           font-size: 13px !important;
           box-sizing: border-box !important;
+          vertical-align: middle !important;
         }
         
-        /* Only target SELECT elements - don't break inputs */
-        .filter-tooltip-panel select:not([multiple]),
-        .filter-tooltip-panel select.cBox:not([multiple]),
-        .filter-tooltip-panel select.form-control:not([multiple]),
-        .filter-tooltip-panel .modern-form select:not([multiple]),
-        .filter-tooltip-panel .modern-form select.cBox:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content select.cBox:not([multiple]) {
+        /* Modern Multi-Select - The only enhanced select we use */
+        #filterTooltipPanel .modern-multi-select-control,
+        #filterTooltipPanel .modern-multi-select-input {
           min-height: 38px !important;
           height: 38px !important;
           max-height: 38px !important;
-          padding: 8px 12px !important;
-          padding-top: 8px !important;
-          padding-bottom: 8px !important;
-          font-size: 13px !important;
-          line-height: 1.5 !important;
-          box-sizing: border-box !important;
-        }
-        
-        /* Only .cBox that are selects */
-        .filter-tooltip-panel .cBox:not([multiple]) {
-          min-height: 38px !important;
-          height: 38px !important;
-          max-height: 38px !important;
-          padding: 8px 12px !important;
-          padding-top: 8px !important;
-          padding-bottom: 8px !important;
-        }
-        
-        /* Select2 combo sizes - FORCE ALL - Override controls-modern.css line 850 */
-        .filter-tooltip-panel .select2-container,
-        .filter-tooltip-panel .select2-container--default,
-        .filter-tooltip-panel .select2-container--classic,
-        .filter-tooltip-panel .modern-form .select2-container,
-        .filter-tooltip-panel .modern-form .select2-container--default {
-          min-height: 38px !important;
-          height: auto !important;
-        }
-        
-        /* CRITICAL: Override .modern-form .select2-container .select2-selection--single (60px) from controls-modern.css line 850 */
-        /* Use maximum specificity to override controls-modern.css */
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single,
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single,
-        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single,
-        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single,
-        .filter-tooltip-panel .select2-container .select2-selection--single,
-        .filter-tooltip-panel .select2-container--default .select2-selection--single,
-        .filter-tooltip-panel .select2-container--classic .select2-selection--single {
-          height: 38px !important;
-          min-height: 38px !important;
-          max-height: 38px !important;
-          border-radius: 6px !important;
-          display: flex !important;
-          align-items: center !important;
-          padding: 0 !important;
-        }
-        
-        /* Override controls-modern.css line 856-864 */
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__rendered,
-        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__rendered,
-        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single .select2-selection__rendered,
-        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__rendered,
-        .filter-tooltip-panel .select2-container--default .select2-selection--single .select2-selection__rendered {
-          line-height: 38px !important;
-          padding: 0 12px !important;
-          font-size: 13px !important;
-          height: 38px !important;
-          min-height: 38px !important;
-          display: flex !important;
-          align-items: center !important;
-        }
-        
-        /* Override controls-modern.css line 866-871 */
-        .filter-tooltip-panel.filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__arrow,
-        .filter-tooltip-panel .modern-form .select2-container .select2-selection--single .select2-selection__arrow,
-        .filter-tooltip-panel .modern-form .select2-container--default .select2-selection--single .select2-selection__arrow,
-        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow,
-        .filter-tooltip-panel .select2-container--default .select2-selection--single .select2-selection__arrow {
-          height: 38px !important;
-          min-height: 38px !important;
-          top: 0 !important;
-          right: 8px !important;
-          left: auto !important;
-        }
-        
-        .filter-tooltip-panel .select2-container .select2-selection--single .select2-selection__arrow b {
-          top: 50% !important;
-          transform: translateY(-50%) !important;
-        }
-        
-        .filter-tooltip-panel .select2-container .select2-selection--multiple {
-          min-height: 38px !important;
-          padding: 2px 8px !important;
-        }
-        
-        .filter-tooltip-panel .select2-container .select2-selection--multiple .select2-selection__choice {
-          margin-top: 4px !important;
-          margin-bottom: 4px !important;
-          padding: 2px 8px !important;
-          font-size: 12px !important;
-        }
-        
-        /* Bootstrap Select */
-        .filter-tooltip-panel .bootstrap-select {
-          min-height: 38px !important;
-        }
-        
-        .filter-tooltip-panel .bootstrap-select .dropdown-toggle {
-          height: 38px !important;
-          min-height: 38px !important;
-          padding: 8px 12px !important;
-          font-size: 13px !important;
-          line-height: 1.5 !important;
-        }
-        
-        .filter-tooltip-panel .bootstrap-select .dropdown-toggle .filter-option {
-          line-height: 1.5 !important;
-          padding: 0 !important;
-        }
-        
-        /* Modern Multi-Select */
-        .filter-tooltip-panel .modern-multi-select-container {
-          min-height: 38px !important;
-          height: auto !important;
-        }
-        
-        .filter-tooltip-panel .modern-multi-select-control {
-          min-height: 38px !important;
-          height: 38px !important;
-          padding: 8px 12px !important;
-          font-size: 13px !important;
-          line-height: 1.5 !important;
-        }
-        
-        .filter-tooltip-panel .modern-multi-select-input {
-          min-height: 38px !important;
-          height: 38px !important;
-          padding: 8px 12px !important;
-          font-size: 13px !important;
-          line-height: 1.5 !important;
-        }
-        
-        .filter-tooltip-panel .modern-multi-select-control .modern-multi-select-selected-item {
-          padding: 4px 8px !important;
-          margin: 2px 4px 2px 0 !important;
-          font-size: 12px !important;
-          line-height: 1.4 !important;
-        }
-        
-        /* Ensure all combos have consistent styling */
-        .filter-tooltip-panel .select2-container,
-        .filter-tooltip-panel .bootstrap-select,
-        .filter-tooltip-panel .modern-multi-select-container {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-          font-size: 13px !important;
-        }
-        
-        /* NUCLEAR OPTION - Force ALL selects to be 38px - MAXIMUM SPECIFICITY */
-        .filter-tooltip-panel select:not([multiple]):not([size]),
-        .filter-tooltip-panel select.form-control:not([multiple]),
-        .filter-tooltip-panel select.cBox:not([multiple]),
-        .filter-tooltip-panel .form-control select,
-        .filter-tooltip-panel .cBox select,
-        .filter-tooltip-panel .modern-form select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-wrapper select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-wrapper .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-form .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content .cBox:not([multiple]) {
-          min-height: 38px !important;
-          height: 38px !important;
           padding: 8px 12px !important;
           font-size: 13px !important;
           line-height: 1.5 !important;
           box-sizing: border-box !important;
         }
         
-        /* Force all form controls inside filter panel - DEEP SELECTORS */
-        .filter-tooltip-panel .modern-form * select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-wrapper * select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-wrapper * .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-form * .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content * select:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content * .form-control:not([multiple]),
-        .filter-tooltip-panel .modern-filter-content * .cBox:not([multiple]) {
-          min-height: 38px !important;
-          height: 38px !important;
-          padding: 8px 12px !important;
-          font-size: 13px !important;
-          line-height: 1.5 !important;
+        /* Hide Select2 if it gets initialized (shouldn't happen) */
+        #filterTooltipPanel .select2-container {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
         }
         
-        /* Override any inline styles or other CSS - ATTRIBUTE SELECTORS */
-        .filter-tooltip-panel select[style*="height"]:not([multiple]),
-        .filter-tooltip-panel select[style*="min-height"]:not([multiple]),
-        .filter-tooltip-panel .form-control[style*="height"]:not([multiple]),
-        .filter-tooltip-panel .form-control[style*="min-height"]:not([multiple]) {
-          min-height: 38px !important;
-          height: 38px !important;
-        }
-        
-        /* Force Select2 containers to proper size */
-        .filter-tooltip-panel .select2-container.select2-container--default,
-        .filter-tooltip-panel .select2-container.select2-container--classic,
-        .filter-tooltip-panel .select2-container.select2-container--bootstrap {
-          min-height: 38px !important;
-        }
-        
-        .filter-tooltip-panel .select2-container.select2-container--default .select2-selection--single,
-        .filter-tooltip-panel .select2-container.select2-container--classic .select2-selection--single {
-          height: 38px !important;
-          min-height: 38px !important;
-          max-height: 38px !important;
-        }
-        
-        .filter-tooltip-panel .select2-container.select2-container--default .select2-selection--single .select2-selection__rendered {
-          line-height: 38px !important;
-          height: 38px !important;
-          min-height: 38px !important;
+        /* Show native select if Select2 was hiding it */
+        #filterTooltipPanel select.select2-hidden-accessible {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
         
         /* Ensure labels are properly styled */
@@ -944,89 +763,122 @@
     @* JavaScript functions are now in Report.js *@
     
     <script>
+    // Prevent Select2 initialization in filter panel - MUST be defined first
+    window.preventSelect2InFilterPanel = function() {
+        const panel = document.getElementById('filterTooltipPanel');
+        if (!panel) return;
+        
+        // Destroy any existing Select2 instances in the panel
+        try {
+            if (typeof $ !== 'undefined' && $.fn.select2) {
+                $(panel).find('select').each(function() {
+                    if ($(this).data('select2')) {
+                        $(this).select2('destroy');
+                    }
+                });
+            }
+        } catch (e) {
+            // Ignore errors if Select2 is not available
+        }
+        
+        // Hide any Select2 containers that might exist
+        const select2Containers = panel.querySelectorAll('.select2-container');
+        select2Containers.forEach(function(container) {
+            container.style.setProperty('display', 'none', 'important');
+        });
+        
+        // Show native selects that Select2 might have hidden
+        const hiddenSelects = panel.querySelectorAll('select.select2-hidden-accessible');
+        hiddenSelects.forEach(function(select) {
+            select.style.setProperty('display', 'block', 'important');
+            select.classList.remove('select2-hidden-accessible');
+        });
+        
+        // Prevent future Select2 initialization by intercepting jQuery select2 calls
+        if (typeof $ !== 'undefined' && $.fn.select2) {
+            const originalSelect2 = $.fn.select2;
+            $.fn.select2 = function(options) {
+                // Check if this select is inside the filter panel
+                const $this = $(this);
+                const isInFilterPanel = $this.closest('#filterTooltipPanel').length > 0;
+                
+                if (isInFilterPanel) {
+                    // Don't initialize Select2 in filter panel
+                    return $this;
+                }
+                
+                // Otherwise, use original Select2
+                return originalSelect2.apply(this, arguments);
+            };
+        }
+    };
+    
     // Popular Filters Auto Hide Toggle Function
     window.togglePopularFiltersAutoHide = function() {
-        console.log('[PopularFilters] togglePopularFiltersAutoHide called');
         const dockContainer = document.querySelector('.popular-filters-dock-container');
         const filterPanel = document.getElementById('filterTooltipPanel');
         const toggleBtn = document.getElementById('popular-filters-pin-btn');
         
         if (!dockContainer) {
-            console.error('[PopularFilters] Dock container not found!');
+            console.warn('[PopularFilters] Dock container not found!');
             return;
         }
         
         const isAutoHide = dockContainer.classList.contains('auto-hide');
-        console.log('[PopularFilters] Current state:', { isAutoHide });
         
         if (isAutoHide) {
             // Show panel
-            console.log('[PopularFilters] Showing panel...');
             dockContainer.classList.remove('auto-hide');
             if (filterPanel) {
                 filterPanel.classList.remove('popular-filters-hidden');
             }
             if (toggleBtn) {
                 toggleBtn.setAttribute('title', 'مخفی کردن فیلترهای پرکاربرد');
-                // Change icon to eye-slash
                 const icon = toggleBtn.querySelector('i');
                 if (icon) {
                     icon.className = 'fa fa-eye-slash';
                 }
             }
-            // Save state to localStorage
             if (typeof Storage !== 'undefined') {
                 localStorage.setItem('popularFiltersAutoHide', 'false');
             }
         } else {
             // Hide panel
-            console.log('[PopularFilters] Hiding panel...');
             dockContainer.classList.add('auto-hide');
             if (filterPanel) {
                 filterPanel.classList.add('popular-filters-hidden');
             }
             if (toggleBtn) {
                 toggleBtn.setAttribute('title', 'نمایش فیلترهای پرکاربرد');
-                // Change icon to eye
                 const icon = toggleBtn.querySelector('i');
                 if (icon) {
                     icon.className = 'fa fa-eye';
                 }
             }
-            // Save state to localStorage
             if (typeof Storage !== 'undefined') {
                 localStorage.setItem('popularFiltersAutoHide', 'true');
             }
         }
         
-        // Force reflow
         void dockContainer.offsetHeight;
-        console.log('[PopularFilters] State changed. New classes:', dockContainer.className);
     };
     
     // Initialize Popular Filters Auto Hide state from localStorage
     window.initializePopularFiltersAutoHide = function() {
-        console.log('[PopularFilters] initializePopularFiltersAutoHide called');
         const dockContainer = document.querySelector('.popular-filters-dock-container');
         const filterPanel = document.getElementById('filterTooltipPanel');
         const toggleBtn = document.getElementById('popular-filters-pin-btn');
         
         if (!dockContainer) {
-            console.warn('[PopularFilters] Dock container not found, will retry...');
-            // Retry after a short delay
             setTimeout(function() {
                 window.initializePopularFiltersAutoHide();
             }, 100);
             return;
         }
         
-        console.log('[PopularFilters] Dock container found');
-        
         // Check localStorage for saved state - Default to hidden (true)
         if (typeof Storage !== 'undefined') {
             const savedState = localStorage.getItem('popularFiltersAutoHide');
-            console.log('[PopularFilters] Saved state from localStorage:', savedState);
-            // Default to 'true' (hidden) if no saved state exists
             const shouldHide = savedState === null ? true : savedState === 'true';
             
             if (shouldHide) {
@@ -1036,13 +888,11 @@
                 }
                 if (toggleBtn) {
                     toggleBtn.setAttribute('title', 'نمایش فیلترهای پرکاربرد');
-                    // Change icon to eye
                     const icon = toggleBtn.querySelector('i');
                     if (icon) {
                         icon.className = 'fa fa-eye';
                     }
                 }
-                console.log('[PopularFilters] Applied auto-hide state (default: hidden)');
             } else {
                 dockContainer.classList.remove('auto-hide');
                 if (filterPanel) {
@@ -1050,16 +900,13 @@
                 }
                 if (toggleBtn) {
                     toggleBtn.setAttribute('title', 'مخفی کردن فیلترهای پرکاربرد');
-                    // Change icon to eye-slash
                     const icon = toggleBtn.querySelector('i');
                     if (icon) {
                         icon.className = 'fa fa-eye-slash';
                     }
                 }
-                console.log('[PopularFilters] Removed auto-hide state');
             }
         } else {
-            console.warn('[PopularFilters] localStorage not available, defaulting to hidden');
             // Default to hidden if localStorage not available
             dockContainer.classList.add('auto-hide');
             if (filterPanel) {
@@ -1067,7 +914,6 @@
             }
             if (toggleBtn) {
                 toggleBtn.setAttribute('title', 'نمایش فیلترهای پرکاربرد');
-                // Change icon to eye
                 const icon = toggleBtn.querySelector('i');
                 if (icon) {
                     icon.className = 'fa fa-eye';
@@ -1075,7 +921,6 @@
             }
         }
         
-        // Force reflow
         void dockContainer.offsetHeight;
     };
     
@@ -1132,7 +977,6 @@
             autoHideTab.style.setProperty('opacity', '1', 'important');
             autoHideTab.style.setProperty('visibility', 'visible', 'important');
             autoHideTab.style.setProperty('pointer-events', 'auto', 'important');
-            console.log('[PopularFilters] Auto-hide tab shown');
         } else if (autoHideTab) {
             autoHideTab.style.setProperty('opacity', '0', 'important');
             autoHideTab.style.setProperty('visibility', 'hidden', 'important');
@@ -1149,157 +993,133 @@
         }, 50);
     };
     
-    // Combo box size enforcement - override controls-modern.css (60px -> 38px)
+    // Combo box size enforcement - Comprehensive and aggressive
+    // Override controls-modern.css (60px -> 38px) for ALL selects
     window.enforceComboBoxSizes = function() {
         const panel = document.getElementById('filterTooltipPanel');
-        if (!panel) return;
+        if (!panel || !panel.classList.contains('show')) return;
         
-        // CRITICAL: Fix .neo-control select (controls-modern.css line 840 sets 60px)
-        const neoControlSelects = panel.querySelectorAll('.neo-control select:not([multiple])');
-        neoControlSelects.forEach(function(select) {
-            select.style.setProperty('min-height', '38px', 'important');
-            select.style.setProperty('height', '38px', 'important');
-            select.style.setProperty('max-height', '38px', 'important');
-            select.style.setProperty('padding', '8px 12px', 'important');
-            select.style.setProperty('padding-top', '8px', 'important');
-            select.style.setProperty('padding-bottom', '8px', 'important');
-            select.style.setProperty('line-height', '1.5', 'important');
-            select.style.setProperty('box-sizing', 'border-box', 'important');
+        // Ensure Select2 is disabled first
+        window.preventSelect2InFilterPanel();
+        
+        // Find ALL select elements (comprehensive selectors)
+        const allSelectors = [
+            'select:not([multiple]):not([size])',
+            '.neo-control select:not([multiple])',
+            '.modern-form select:not([multiple])',
+            '.modern-form .neo-control select:not([multiple])',
+            'select.form-control:not([multiple])',
+            'select.cBox:not([multiple])',
+            '.form-control:not([multiple])',
+            '.cBox:not([multiple])',
+            '.modern-filter-wrapper select',
+            '.modern-filter-content select'
+        ];
+        
+        const selects = new Set();
+        allSelectors.forEach(function(selector) {
+            const found = panel.querySelectorAll(selector);
+            found.forEach(function(sel) {
+                selects.add(sel);
+            });
         });
         
-        // Fix all SELECT elements, not inputs
-        const selects = panel.querySelectorAll('select:not([multiple]):not([size])');
+        // Fix all native SELECT elements
         selects.forEach(function(select) {
+            // Remove Select2 classes if present
+            if (select.classList.contains('select2-hidden-accessible')) {
+                select.style.setProperty('display', 'block', 'important');
+                select.style.setProperty('visibility', 'visible', 'important');
+                select.classList.remove('select2-hidden-accessible');
+            }
+            
+            // Force 38px height regardless of current height
             select.style.setProperty('min-height', '38px', 'important');
             select.style.setProperty('height', '38px', 'important');
             select.style.setProperty('max-height', '38px', 'important');
             select.style.setProperty('padding', '8px 12px', 'important');
-            select.style.setProperty('padding-top', '8px', 'important');
-            select.style.setProperty('padding-bottom', '8px', 'important');
             select.style.setProperty('line-height', '1.5', 'important');
             select.style.setProperty('box-sizing', 'border-box', 'important');
-        });
-        
-        // CRITICAL: Fix Select2 (controls-modern.css line 850 sets 60px)
-        const select2Containers = panel.querySelectorAll('.select2-container');
-        select2Containers.forEach(function(container) {
-            container.style.setProperty('min-height', '38px', 'important');
-            container.style.setProperty('height', 'auto', 'important');
-        });
-        
-        const select2Selections = panel.querySelectorAll('.select2-container .select2-selection--single');
-        select2Selections.forEach(function(selection) {
-            selection.style.setProperty('height', '38px', 'important');
-            selection.style.setProperty('min-height', '38px', 'important');
-            selection.style.setProperty('max-height', '38px', 'important');
-            selection.style.setProperty('display', 'flex', 'important');
-            selection.style.setProperty('align-items', 'center', 'important');
-            selection.style.setProperty('padding', '0', 'important');
+            select.style.setProperty('vertical-align', 'middle', 'important');
             
-            const rendered = selection.querySelector('.select2-selection__rendered');
-            if (rendered) {
-                rendered.style.setProperty('line-height', '38px', 'important');
-                rendered.style.setProperty('height', '38px', 'important');
-                rendered.style.setProperty('min-height', '38px', 'important');
-                rendered.style.setProperty('padding', '0 12px', 'important');
-                rendered.style.setProperty('display', 'flex', 'important');
-                rendered.style.setProperty('align-items', 'center', 'important');
-            }
-            
-            const arrow = selection.querySelector('.select2-selection__arrow');
-            if (arrow) {
-                arrow.style.setProperty('height', '38px', 'important');
-                arrow.style.setProperty('min-height', '38px', 'important');
-                arrow.style.setProperty('top', '0', 'important');
-                arrow.style.setProperty('right', '8px', 'important');
-                arrow.style.setProperty('left', 'auto', 'important');
+            // Also fix parent containers if they exist
+            const parent = select.parentElement;
+            if (parent && (parent.classList.contains('neo-control') || parent.classList.contains('modern-form'))) {
+                parent.style.setProperty('min-height', 'auto', 'important');
+                parent.style.setProperty('height', 'auto', 'important');
             }
         });
         
-        // Fix Apply Filter button - Comprehensive enforcement
-        const submitFilterBtn = panel.querySelector('#submit-filter');
-        if (submitFilterBtn) {
-            // Button base styles
-            submitFilterBtn.style.setProperty('display', 'inline-flex', 'important');
-            submitFilterBtn.style.setProperty('align-items', 'center', 'important');
-            submitFilterBtn.style.setProperty('justify-content', 'center', 'important');
-            submitFilterBtn.style.setProperty('gap', '6px', 'important');
-            submitFilterBtn.style.setProperty('padding', '8px 16px', 'important');
-            submitFilterBtn.style.setProperty('font-size', '14px', 'important');
-            submitFilterBtn.style.setProperty('font-weight', '600', 'important');
-            submitFilterBtn.style.setProperty('font-family', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 'important');
-            submitFilterBtn.style.setProperty('color', '#ffffff', 'important');
-            submitFilterBtn.style.setProperty('background', 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', 'important');
-            submitFilterBtn.style.setProperty('border', 'none', 'important');
-            submitFilterBtn.style.setProperty('border-radius', '6px', 'important');
-            submitFilterBtn.style.setProperty('min-height', 'auto', 'important');
-            submitFilterBtn.style.setProperty('height', 'auto', 'important');
-            submitFilterBtn.style.setProperty('line-height', '1.5', 'important');
-            submitFilterBtn.style.setProperty('box-shadow', '0 2px 4px rgba(59, 130, 246, 0.2)', 'important');
-            
-            // Button span (text)
-            const btnSpan = submitFilterBtn.querySelector('span');
-            if (btnSpan) {
-                btnSpan.style.setProperty('display', 'inline-block', 'important');
-                btnSpan.style.setProperty('font-size', '14px', 'important');
-                btnSpan.style.setProperty('font-weight', '600', 'important');
-                btnSpan.style.setProperty('font-family', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 'important');
-                btnSpan.style.setProperty('color', '#ffffff', 'important');
-                btnSpan.style.setProperty('line-height', '1.5', 'important');
-                btnSpan.style.setProperty('opacity', '1', 'important');
-                btnSpan.style.setProperty('visibility', 'visible', 'important');
-                btnSpan.style.setProperty('white-space', 'nowrap', 'important');
-            }
-            
-            // Button SVG icon
-            const btnSvg = submitFilterBtn.querySelector('svg');
-            if (btnSvg) {
-                btnSvg.style.setProperty('width', '18px', 'important');
-                btnSvg.style.setProperty('height', '18px', 'important');
-                btnSvg.style.setProperty('display', 'inline-block', 'important');
-                btnSvg.style.setProperty('vertical-align', 'middle', 'important');
-                btnSvg.style.setProperty('fill', '#ffffff', 'important');
-                btnSvg.style.setProperty('stroke', '#ffffff', 'important');
-                btnSvg.style.setProperty('color', '#ffffff', 'important');
-                btnSvg.style.setProperty('flex-shrink', '0', 'important');
-            }
-        }
+        // Fix Modern Multi-Select (the only enhanced select we use)
+        const modernMultiSelects = panel.querySelectorAll('.modern-multi-select-control, .modern-multi-select-input');
+        modernMultiSelects.forEach(function(mms) {
+            mms.style.setProperty('min-height', '38px', 'important');
+            mms.style.setProperty('height', '38px', 'important');
+            mms.style.setProperty('max-height', '38px', 'important');
+            mms.style.setProperty('padding', '8px 12px', 'important');
+            mms.style.setProperty('box-sizing', 'border-box', 'important');
+        });
     }
     
-        // Run when panel is shown - Aggressive enforcement
+        // Initialize when document is ready
         $(document).ready(function() {
             const panel = document.getElementById('filterTooltipPanel');
-            if (panel) {
-                // Watch for panel visibility changes
-                const observer = new MutationObserver(function(mutations) {
+            if (!panel) return;
+            
+            // Prevent Select2 initialization immediately
+            window.preventSelect2InFilterPanel();
+            
+            let enforcementTimeout = null;
+            let lastEnforcement = 0;
+            
+            // Throttled enforcement function (max once per 150ms)
+            function throttledEnforcement() {
+                const now = Date.now();
+                if (now - lastEnforcement < 150) return;
+                lastEnforcement = now;
+                
+                if (enforcementTimeout) {
+                    clearTimeout(enforcementTimeout);
+                }
+                
+                enforcementTimeout = setTimeout(function() {
                     if (panel.classList.contains('show')) {
-                        // Run multiple times with delays to catch all dynamic content
-                        [50, 150, 300, 500, 800].forEach(function(delay) {
-                            setTimeout(function() { 
-                                if (window.enforceComboBoxSizes) {
-                                    window.enforceComboBoxSizes(); 
-                                }
-                            }, delay);
-                        });
-                    }
-                });
-                
-                observer.observe(panel, {
-                    attributes: true,
-                    attributeFilter: ['class'],
-                    childList: true,
-                    subtree: true
-                });
-                
-                // Also watch for Select2 initialization
-                $(document).on('select2:open select2:select select2:unselect', function() {
-                    setTimeout(function() {
+                        window.preventSelect2InFilterPanel();
                         if (window.enforceComboBoxSizes) {
                             window.enforceComboBoxSizes();
                         }
-                    }, 50);
-                });
+                        // Run again after a short delay to catch any late-loading elements
+                        setTimeout(function() {
+                            if (panel.classList.contains('show') && window.enforceComboBoxSizes) {
+                                window.enforceComboBoxSizes();
+                            }
+                        }, 200);
+                    }
+                }, 50);
             }
+            
+            // Watch for panel visibility and DOM changes
+            const observer = new MutationObserver(function(mutations) {
+                if (!panel.classList.contains('show')) return;
+                
+                let shouldEnforce = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0 || mutation.type === 'attributes') {
+                        shouldEnforce = true;
+                    }
+                });
+                
+                if (shouldEnforce) {
+                    throttledEnforcement();
+                }
+            });
+            
+            observer.observe(panel, {
+                attributes: true,
+                attributeFilter: ['class'],
+                childList: true,
+                subtree: true
+            });
         });
     </script>
 }

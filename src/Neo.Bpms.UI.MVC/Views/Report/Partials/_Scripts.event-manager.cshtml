@@ -52,18 +52,9 @@
          * Handle click events using event delegation
          */
         handleClick: function(event) {
-            // Debug: Check if clicking on filter button
+            // Debug: Check if clicking on filter button (reduced logging)
             const clickedElement = event.target;
             const isFilterButton = clickedElement.closest && clickedElement.closest('[data-action="toggle-filter-tooltip"]');
-            
-            if (isFilterButton) {
-                console.log('[EventManager] 🔍 Filter button area clicked', {
-                    clickedTag: clickedElement.tagName,
-                    clickedClasses: clickedElement.className,
-                    closestElement: clickedElement.closest('[data-action]')?.tagName,
-                    closestAction: clickedElement.closest('[data-action]')?.getAttribute('data-action')
-                });
-            }
             
             // Find the closest element with data-action attribute
             // Check both the clicked element and its parents
@@ -81,13 +72,6 @@
                 while (parent && parent !== document.body && depth < 10) {
                     if (parent.hasAttribute && parent.hasAttribute('data-action')) {
                         target = parent;
-                        if (isFilterButton) {
-                            console.log('[EventManager] ✅ Found target via parent traversal:', {
-                                targetTag: target.tagName,
-                                targetAction: target.getAttribute('data-action'),
-                                depth: depth
-                            });
-                        }
                         break;
                     }
                     parent = parent.parentElement;
@@ -104,22 +88,12 @@
             }
             
             if (!target) {
-                if (isFilterButton) {
-                    console.warn('[EventManager] ⚠️ Filter button clicked but target not found!');
-                }
                 return; // Not our element, let it bubble normally
             }
             
             const action = target.getAttribute('data-action');
             if (!action) {
-                if (isFilterButton) {
-                    console.warn('[EventManager] ⚠️ Filter button found but no action attribute!');
-                }
                 return;
-            }
-            
-            if (isFilterButton) {
-                console.log('[EventManager] 🎯 Filter button action found:', action);
             }
             
             // Prevent default and stop propagation for our actions
@@ -129,22 +103,15 @@
             // Get handler
             const handler = this.handlers[action];
             if (!handler) {
-                console.warn('[EventManager] ⚠️ No handler registered for action:', action);
-                console.warn('[EventManager] Available handlers:', Object.keys(this.handlers).sort());
-                if (isFilterButton) {
-                    console.error('[EventManager] ❌ Filter button handler not found!');
-                }
+                console.warn('[EventManager] No handler registered for action:', action);
                 return;
             }
             
             // Call handler with event and target element
             try {
-                if (isFilterButton) {
-                    console.log('[EventManager] ✅ Calling filter button handler');
-                }
                 handler(event, target);
             } catch (error) {
-                console.error('[EventManager] ❌ Error executing handler for action:', action, error);
+                console.error('[EventManager] Error executing handler for action:', action, error);
             }
         },
         
