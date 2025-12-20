@@ -1,12 +1,8 @@
 ﻿namespace Neo.Bpms.UI.MVC.Controls.JsControls;
 
-public class Terminal : CabdoJsControl
+public class Terminal(InputFieldDefinition field, ControlsRendererData controlsRenderer) : CabdoJsControl(field,
+    controlsRenderer)
 {
-    public Terminal(InputFieldDefinition field, ControlsRendererData controlsRenderer) : base(field,
-        controlsRenderer)
-    {
-    }
-
     public override NeoStringBuilder Render()
     {
         string contentValue = ControlsRendererData.Record.GetString(Field.FieldName);

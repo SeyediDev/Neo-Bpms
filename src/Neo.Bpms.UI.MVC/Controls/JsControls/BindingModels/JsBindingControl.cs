@@ -2,20 +2,12 @@
 
 namespace Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
 
-public class JsBindingControl
+public class JsBindingControl(string type, string id)
 {
-    public JsBindingControl(string type, string id)
-    {
-        this.type = type;
-        this.id = id;
-        bindingInfo = [];
-        initialData = [];
-    }
-
-    public string type { get; set; }
-    public string id { get; set; }
-    public List<JsBindingInfo> bindingInfo { get; }
-    public Dictionary<string, List<string>> initialData { get; }
+    public string type { get; set; } = type;
+    public string id { get; set; } = id;
+    public List<JsBindingInfo> bindingInfo { get; } = [];
+    public Dictionary<string, List<string>> initialData { get; } = [];
 
     public void AddTableData(TableDefinition table, object tableData)
     {

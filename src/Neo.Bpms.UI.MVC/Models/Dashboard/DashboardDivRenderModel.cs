@@ -1,18 +1,11 @@
 namespace Neo.Bpms.UI.MVC.Models.Dashboard
 {
-    public class DashboardDivRenderModel
+    public class DashboardDivRenderModel(DashboardData dashboardData, ConfiguredDashboard.ConfigDiv divConfig, bool canDesign)
     {
-        public DashboardDivRenderModel(DashboardData dashboardData, ConfiguredDashboard.ConfigDiv divConfig, bool canDesign)
-        {
-            DashboardData = dashboardData ?? throw new ArgumentNullException(nameof(dashboardData));
-            DivConfig = divConfig ?? throw new ArgumentNullException(nameof(divConfig));
-            CanDesign = canDesign;
-        }
+        public DashboardData DashboardData { get; } = dashboardData ?? throw new ArgumentNullException(nameof(dashboardData));
 
-        public DashboardData DashboardData { get; }
+        public ConfiguredDashboard.ConfigDiv DivConfig { get; } = divConfig ?? throw new ArgumentNullException(nameof(divConfig));
 
-        public ConfiguredDashboard.ConfigDiv DivConfig { get; }
-
-        public bool CanDesign { get; }
+        public bool CanDesign { get; } = canDesign;
     }
 }

@@ -1,25 +1,16 @@
 namespace Neo.Bpms.UI.MVC.PartialModels.Report
 {
-    public class ChartScriptModel
+    public class ChartScriptModel(string idx, ReportData reportInfo, string calendar, string chartTitle, bool shouldShowTitle)
     {
-        public ChartScriptModel(string idx, ReportData reportInfo, string calendar, string chartTitle, bool shouldShowTitle)
-        {
-            Idx = idx;
-            ReportInfo = reportInfo;
-            Calendar = calendar;
-            ChartTitle = chartTitle;
-            ShouldShowTitle = shouldShowTitle;
-        }
+        public string Idx { get; } = idx;
 
-        public string Idx { get; }
+        public ReportData ReportInfo { get; } = reportInfo;
 
-        public ReportData ReportInfo { get; }
+        public string Calendar { get; } = calendar;
 
-        public string Calendar { get; }
+        public string ChartTitle { get; } = chartTitle;
 
-        public string ChartTitle { get; }
-
-        public bool ShouldShowTitle { get; }
+        public bool ShouldShowTitle { get; } = shouldShowTitle;
 
         public ReportStructure Structure => ReportInfo?.Structure;
     }

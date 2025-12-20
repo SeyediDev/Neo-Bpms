@@ -49,18 +49,10 @@ public class KeyGroupsViewModel
     public List<KeyFieldsViewModel> keys { get; set; }
 }
 
-public class KeyFieldsViewModel
+public class KeyFieldsViewModel(EntityField keyField)
 {
-    public KeyFieldsViewModel(EntityField keyField)
-    {
-        id = keyField.Id;
-        name = keyField.Name;
-        type = keyField.FieldType;
-        maxLength = keyField.MaxLen;
-    }
-
-    public string id { get; set; }
-    public string name { get; set; }
-    public TVariableTypes type { get; set; }
-    public long maxLength { get; set; }
+    public string id { get; set; } = keyField.Id;
+    public string name { get; set; } = keyField.Name;
+    public TVariableTypes type { get; set; } = keyField.FieldType;
+    public long maxLength { get; set; } = keyField.MaxLen;
 }

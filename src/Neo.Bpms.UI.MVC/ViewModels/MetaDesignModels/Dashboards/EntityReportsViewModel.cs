@@ -2,15 +2,9 @@
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.Dashboards;
 
-public class EntityReportsViewModel
+public class EntityReportsViewModel(UiEntity entity)
 {
-    public EntityReportsViewModel(UiEntity entity)
-    {
-        entityId = entity.Id;
-        entityName = entity.Name;
-        reports = entity.GetReports()?.Select(report => new ReportRecognizer(report)) ?? [];
-    }
-    public string entityId { get; set; }
-    public string entityName { get; set; }
-    public IEnumerable<ReportRecognizer> reports { get; set; }
+    public string entityId { get; set; } = entity.Id;
+    public string entityName { get; set; } = entity.Name;
+    public IEnumerable<ReportRecognizer> reports { get; set; } = entity.GetReports()?.Select(report => new ReportRecognizer(report)) ?? [];
 }

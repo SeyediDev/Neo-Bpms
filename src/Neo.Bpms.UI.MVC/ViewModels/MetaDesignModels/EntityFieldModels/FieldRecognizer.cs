@@ -1,18 +1,10 @@
 ﻿namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels.EntityFieldModels;
 
-public class FieldRecognizer
+public class FieldRecognizer(EntityField field)
 {
-    public FieldRecognizer(EntityField field)
-    {
-        id = field.Id;
-        name = field.Name;
-        type = field.FieldType;
-        associatedNamespaceId = field.AssociationEntity?.DestNamespaceId;
-        associatedEntityId = field.AssociationEntity?.DestEntityId;
-    }
-    public string id { get; set; }
-    public string name { get; set; }
-    public TVariableTypes type { get; set; }
-    public string associatedNamespaceId { get; set; }
-    public string associatedEntityId { get; set; }
+    public string id { get; set; } = field.Id;
+    public string name { get; set; } = field.Name;
+    public TVariableTypes type { get; set; } = field.FieldType;
+    public string associatedNamespaceId { get; set; } = field.AssociationEntity?.DestNamespaceId;
+    public string associatedEntityId { get; set; } = field.AssociationEntity?.DestEntityId;
 }

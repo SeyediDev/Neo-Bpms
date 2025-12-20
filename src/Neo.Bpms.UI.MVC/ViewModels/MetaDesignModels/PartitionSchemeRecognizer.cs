@@ -2,12 +2,7 @@
 
 namespace Neo.Bpms.UI.MVC.ViewModels.MetaDesignModels;
 
-class PartitionSchemeRecognizer
+class PartitionSchemeRecognizer(PartitionScheme e)
 {
-    private PartitionScheme e;
-
-    public PartitionSchemeRecognizer(PartitionScheme e)
-    {
-        this.e = e;
-    }
+    private PartitionScheme e = e;
 }

@@ -2,13 +2,10 @@
 
 namespace Neo.Bpms.UI.MVC.Controls.HtmlControls.Choices.Boolean;
 
-public class BooleanTitles
+public class BooleanTitles(InputFieldDefinition field)
 {
-    public InputFieldDefinition Field { get; set; }
-    public BooleanTitles(InputFieldDefinition field)
-    {
-        Field = field;
-    }
+    public InputFieldDefinition Field { get; set; } = field;
+
     public string TrueProperty => Field.PropertyValue(eControlPropertyId.TrueTitle);
 
     public string FalseProperty => Field.PropertyValue(eControlPropertyId.FalseTitle);

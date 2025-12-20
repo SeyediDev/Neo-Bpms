@@ -5,21 +5,13 @@ using Neo.Bpms.Infrastructure.Features.Bpms.Processes.Managers.Dto;
 
 namespace Neo.Bpms.UI.MVC.ViewModels.ProcessModels;
 
-public class WorkItemsViewModel
+public class WorkItemsViewModel(IList<WorkItemViewModel> workItems, WorkItemsFilter cartableFilter,
+    ElasticObject entityFilter, long recordsCount)
 {
-    public WorkItemsViewModel(IList<WorkItemViewModel> workItems, WorkItemsFilter cartableFilter,
-        ElasticObject entityFilter, long recordsCount)
-    {
-        WorkItems = workItems;
-        CartableFilter = cartableFilter;
-        EntityFilter = entityFilter;
-        RecordsCount = recordsCount;
-    }
-
-    public IList<WorkItemViewModel> WorkItems { get; }
-    public WorkItemsFilter CartableFilter { get; }
-    public ElasticObject EntityFilter { get; }
-    public long RecordsCount { get; }
+    public IList<WorkItemViewModel> WorkItems { get; } = workItems;
+    public WorkItemsFilter CartableFilter { get; } = cartableFilter;
+    public ElasticObject EntityFilter { get; } = entityFilter;
+    public long RecordsCount { get; } = recordsCount;
     //todo instead of this where clause check for microservices
     public IEnumerable<TaskAddressing> ServiceTasks =>
         WorkItems.Where(m => m.ActivityType == Activity.eActivityType.ServiceTask &&
@@ -35,14 +27,9 @@ public class WorkItemsViewModel
 
 }
 
-public class WorkItemHistoryViewModel
+public class WorkItemHistoryViewModel(WorkItemViewModel workItemViewModel)
 {
-    private readonly WorkItemViewModel _workItemViewModel;
-
-    public WorkItemHistoryViewModel(WorkItemViewModel workItemViewModel)
-    {
-        _workItemViewModel = workItemViewModel;
-    }
+    private readonly WorkItemViewModel _workItemViewModel = workItemViewModel;
 
     public string ActivityName => _workItemViewModel.ActivityName;
     public string ActualOwnerName => _workItemViewModel.ActualOwnerName;

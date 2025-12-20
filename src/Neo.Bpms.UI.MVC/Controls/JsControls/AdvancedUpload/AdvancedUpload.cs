@@ -3,13 +3,9 @@ using Neo.Bpms.UI.MVC.Controls.JsControls.BindingModels;
 
 namespace Neo.Bpms.UI.MVC.Controls.JsControls.AdvancedUpload;
 
-public class AdvancedUpload : CabdoJsControl
+public class AdvancedUpload(InputFieldDefinition field, ControlsRendererData controlsRenderer) : CabdoJsControl(field,
+    controlsRenderer)
 {
-    public AdvancedUpload(InputFieldDefinition field, ControlsRendererData controlsRenderer) : base(field,
-        controlsRenderer)
-    {
-    }
-
     public override NeoStringBuilder Render()
     {
         NeoStringBuilder result = new();
