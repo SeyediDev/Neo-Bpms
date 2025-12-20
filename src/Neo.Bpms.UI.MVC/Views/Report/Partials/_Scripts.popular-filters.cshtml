@@ -168,7 +168,22 @@ window.initializeMultiSelectInTooltip = function() {
         // Call initializeReportModernMultiSelect - it should be available since it loads before this script
         if (typeof window.initializeReportModernMultiSelect === 'function') {
             try {
+                console.log('[PopularFilters] Calling initializeReportModernMultiSelect...');
+                console.log('[PopularFilters] Panel visible:', $('#filterTooltipPanel').hasClass('show'));
+                console.log('[PopularFilters] Panel exists:', $('#filterTooltipPanel').length > 0);
+                
                 window.initializeReportModernMultiSelect();
+                console.log('[PopularFilters] initializeReportModernMultiSelect completed');
+                
+                // Retry after delays to catch dynamic content
+                [100, 300, 600].forEach(function(delay) {
+                    setTimeout(function() {
+                        if ($('#filterTooltipPanel').hasClass('show')) {
+                            console.log('[PopularFilters] Retrying initializeReportModernMultiSelect after', delay, 'ms');
+                            window.initializeReportModernMultiSelect();
+                        }
+                    }, delay);
+                });
                 
                 // Enforce combo box sizes after multi-select initialization
                 if (typeof window.enforceComboBoxSizes === 'function') {
@@ -178,6 +193,7 @@ window.initializeMultiSelectInTooltip = function() {
                 }
             } catch (error) {
                 console.error('[PopularFilters] ❌ Error initializing multi-select:', error);
+                console.error('[PopularFilters] Error stack:', error.stack);
             }
         } else {
             console.error('[PopularFilters] ❌ initializeReportModernMultiSelect not available! This should not happen.');

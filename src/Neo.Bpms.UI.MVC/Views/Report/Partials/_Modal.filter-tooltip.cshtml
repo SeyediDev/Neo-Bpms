@@ -455,8 +455,67 @@
           z-index: 1051 !important;
         }
         
-        /* Ensure modern multi-select dropdowns appear correctly */
-        .filter-tooltip-panel .modern-multi-select-dropdown {
+        /* CRITICAL: Hide Modern Multi-Select dropdown when closed - Prevent ugly box */
+        #filterTooltipPanel .modern-multi-select-control:not(.open) .modern-multi-select-dropdown,
+        #filterTooltipPanel .modern-multi-select:not(.open) .modern-multi-select-dropdown {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: none !important;
+        }
+        
+        /* Show dropdown only when parent is open - Position below input, not in front of icons */
+        #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-dropdown,
+        #filterTooltipPanel .modern-multi-select.open .modern-multi-select-dropdown {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          z-index: 1051 !important;
+          position: absolute !important;
+          top: 100% !important;
+          left: 0 !important;
+          right: 0 !important;
+          background: white !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          margin-top: 4px !important;
+          max-height: 300px !important;
+          overflow-y: auto !important;
+        }
+        
+        /* Ensure Modern Multi-Select control has proper positioning context */
+        #filterTooltipPanel .modern-multi-select-control,
+        #filterTooltipPanel .modern-multi-select {
+          position: relative !important;
+          width: 100% !important;
+        }
+        
+        /* Ensure Modern Multi-Select input is properly positioned */
+        #filterTooltipPanel .modern-multi-select-input {
+          position: relative !important;
+          z-index: 1 !important;
+        }
+        
+        /* Ensure dropdown appears below the input, not overlapping icons or labels */
+        #filterTooltipPanel .modern-filter-wrapper,
+        #filterTooltipPanel .modern-filter-content,
+        #filterTooltipPanel .neo-control {
+          position: relative !important;
+        }
+        
+        /* Prevent dropdown from appearing above other elements */
+        #filterTooltipPanel .modern-multi-select-dropdown {
+          position: absolute !important;
+          top: 100% !important;
+          left: 0 !important;
+          right: 0 !important;
           z-index: 1051 !important;
         }
         
@@ -1058,6 +1117,34 @@
             mms.style.setProperty('max-height', '38px', 'important');
             mms.style.setProperty('padding', '8px 12px', 'important');
             mms.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // CRITICAL: Hide Modern Multi-Select dropdowns when closed (prevent ugly box)
+        const modernMultiSelectControls = panel.querySelectorAll('.modern-multi-select-control, .modern-multi-select');
+        modernMultiSelectControls.forEach(function(control) {
+            const dropdown = control.querySelector('.modern-multi-select-dropdown');
+            if (dropdown) {
+                const isOpen = control.classList.contains('open');
+                if (!isOpen) {
+                    // Force hide when closed
+                    dropdown.style.setProperty('display', 'none', 'important');
+                    dropdown.style.setProperty('visibility', 'hidden', 'important');
+                    dropdown.style.setProperty('opacity', '0', 'important');
+                    dropdown.style.setProperty('pointer-events', 'none', 'important');
+                    dropdown.style.setProperty('height', '0', 'important');
+                    dropdown.style.setProperty('max-height', '0', 'important');
+                    dropdown.style.setProperty('overflow', 'hidden', 'important');
+                    dropdown.style.setProperty('margin', '0', 'important');
+                    dropdown.style.setProperty('padding', '0', 'important');
+                    dropdown.style.setProperty('border', 'none', 'important');
+                } else {
+                    // Show when open
+                    dropdown.style.setProperty('display', 'block', 'important');
+                    dropdown.style.setProperty('visibility', 'visible', 'important');
+                    dropdown.style.setProperty('opacity', '1', 'important');
+                    dropdown.style.setProperty('z-index', '1051', 'important');
+                }
+            }
         });
     }
     

@@ -57,6 +57,12 @@
         fill: white !important;
         stroke: white !important;
     }
+    
+    /* غیرفعال کردن ::before برای #tblRecords تا ستون اضافه نشود */
+    #tblRecords.modern-table tbody tr::before {
+        display: none !important;
+        content: none !important;
+    }
 </style>
 
 @if (canDesign)
@@ -460,7 +466,9 @@ new
                 <table id="tblRecords" class="modern-table @(showCheckBoxes ? "has-checkbox" : "")">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th style="text-align: center; min-width: 40px; direction: rtl; width: 20px;" class="cColumn">
+                            @ViewTexts.Row
+                        </th>
                             @if (showCheckBoxes)
                         {
                                 <partial name="IndexTables/RenderCheckboxesHeader" />
@@ -491,13 +499,15 @@ new
                         if (Model.Rows.Count == 0)
                         {
                                     <tr>
-                                        <td colspan="@(structure.ColumnInfos.Count + 2)">
+                                        <td colspan="@(1 + (showCheckBoxes ? 1 : 0) + structure.ColumnInfos.Count + structure.Subjects.Count + structure.Fields.Count(f => f.ControlType == eControlTypeId.SpecificLinkColumn && f.GetProperties() != null) + 1)">
                                             <span>@ViewTexts.IndexNoData</span>
                                         </td>
                                     </tr>
                         }
 
                         var rowIdx = 0;
+                        var currentPageNo = ViewBag.Page ?? 1;
+                        var rowNumber = (((currentPageNo - 1) * ViewBag.recordsPerPage) + 1);
                         foreach (var rowData in Model.Rows)
                         {
                             var rowIds = "";
@@ -512,6 +522,9 @@ new
                                 rowIds += rowId == null ? "" : rowId.ToString();
                             }
                                     <tr class="selectable-table-row" data-ids="@rowIds">
+                                        <td class="table-col-value" style="text-align: center; direction: rtl;">
+                                            @rowNumber
+                                        </td>
                                         @if (showCheckBoxes)
                                 {
                                             <td class="cColumn">
@@ -609,6 +622,7 @@ new
                                         </td>
                                     </tr>
                             rowIdx++;
+                            rowNumber++;
                         }
                         }
                     </tbody>

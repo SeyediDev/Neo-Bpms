@@ -45,97 +45,229 @@
             initializeCustomModernMultiSelect($control, $hiddenInput);
         });
         
-        // Fallback: Replace Select2 with Modern Multi-Select for filter fields
-        $('.modern-filter-wrapper select[multiple]').each(function() {
+        // Handle ALL select fields (both single and multiple) - Convert to multi-select
+        // Target all selects in filter panel, skip ones already converted
+        const allSelects = $('#filterTooltipPanel select:not(.modern-multi-select-control select):not(.modern-multi-select-options select)');
+        console.log('[ModernMultiSelect] Found', allSelects.length, 'selects to convert in filter panel');
+        
+        if (allSelects.length === 0) {
+            console.warn('[ModernMultiSelect] No selects found! Panel may not be visible yet or selector is wrong.');
+            console.warn('[ModernMultiSelect] Checking if panel exists:', $('#filterTooltipPanel').length > 0);
+            console.warn('[ModernMultiSelect] Panel visible:', $('#filterTooltipPanel').hasClass('show'));
+        }
+        
+        allSelects.each(function() {
             const $select = $(this);
-            const $container = $('<div class="modern-multi-select-container"></div>');
             
-            // Insert container after select
-            $select.after($container);
+            // Skip if already converted
+            if ($select.data('modern-multi-select-converted')) {
+                console.log('[ModernMultiSelect] Skipping already converted select:', $select.attr('name'));
+                return;
+            }
             
-            // Hide original select
-            $select.hide();
+            console.log('[ModernMultiSelect] Converting select:', $select.attr('name'), 'with', $select.find('option').length, 'options');
             
-            // Initialize Modern Multi-Select
-            $container.modernMultiSelect({
-                placeholder: 'انتخاب کنید...',
-                searchPlaceholder: 'جستجو...',
-                noResultsText: 'نتیجه‌ای یافت نشد',
-                allowSearch: true,
-                allowClear: true,
-                data: $select.find('option').map(function() {
-                    return {
-                        value: $(this).val(),
-                        text: $(this).text()
-                    };
-                }).get(),
-                ajax: null
+            // Mark as converted
+            $select.data('modern-multi-select-converted', true);
+            
+            // Get initial value
+            const initialValue = $select.val();
+            
+            // Get all options including empty/null option
+            const options = [];
+            
+            // Add empty/null option first
+            options.push({
+                value: '',
+                text: '--- انتخاب کنید ---'
             });
             
-        // Sync values with original select and ensure name[] posts arrays
-        $container.on('change', function(e) {
-            const values = e.detail.values || [];
+            // Add all existing options
+            $select.find('option').each(function() {
+                const $option = $(this);
+                const value = $option.val();
+                const text = $option.text();
+                
+                // Skip if already added (empty option)
+                if (value === '' || value === null) {
+                    return;
+                }
+                
+                options.push({
+                    value: value,
+                    text: text
+                });
+            });
+            
+            // Create Modern Multi-Select control wrapper
+            const $wrapper = $('<div class="modern-multi-select-control" style="position: relative;"></div>');
+            const $input = $('<div class="modern-multi-select-input" style="min-height: 38px; height: 38px; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; cursor: pointer; display: flex; align-items: center; justify-content: space-between;"></div>');
+            const $itemsContainer = $('<div class="modern-multi-select-items" style="display: flex; flex-wrap: wrap; gap: 4px; flex: 1;"></div>');
+            const $arrow = $('<div class="modern-multi-select-arrow" style="flex-shrink: 0; margin-right: 8px; color: #64748b;">▼</div>');
+            const $dropdown = $('<div class="modern-multi-select-dropdown" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); margin-top: 4px; max-height: 300px; overflow-y: auto; z-index: 1051; display: none;"></div>');
+            const $searchInput = $('<input type="text" class="modern-multi-select-search" placeholder="جستجو..." style="width: 100%; padding: 8px 12px; border: none; border-bottom: 1px solid #e2e8f0; outline: none;" />');
+            const $options = $('<div class="modern-multi-select-options" style="max-height: 250px; overflow-y: auto;"></div>');
+            
+            // Build structure
+            $input.append($itemsContainer).append($arrow);
+            $dropdown.append($searchInput).append($options);
+            $wrapper.append($input).append($dropdown);
+            
+            // Insert wrapper after select
+            $select.after($wrapper);
+            
+            // Hide original select but keep it for form submission
+            $select.css({
+                'position': 'absolute',
+                'left': '-9999px',
+                'opacity': '0',
+                'pointer-events': 'none'
+            });
+            
+            // Make select multiple for array binding
             $select.prop('multiple', true);
-            // Ensure name[] to bind as array on server
-            if (!$select.attr('name').endsWith('[]')) {
-                $select.attr('name', $select.attr('name') + '[]');
+            const originalName = $select.attr('name') || '';
+            if (!originalName.endsWith('[]')) {
+                $select.attr('name', originalName + '[]');
             }
-            // Ensure form association for filter inputs
             $select.attr('form', 'filter-form');
-            $select.val(values).trigger('change');
             
-            console.log('Report Modern Multi-Select: Updated select values:', values, 'for field:', $select.attr('name'));
-        });
+            // Initialize state
+            let isOpen = false;
+            let selectedValues = initialValue ? [initialValue] : [];
+            let allOptions = options;
             
-            // Set initial values
-            const initialValues = $select.val() || [];
-            $container.modernMultiSelect('setValue', initialValues);
+            // Render options
+            function renderOptions() {
+                $options.empty();
+                allOptions.forEach(function(option) {
+                    const isSelected = selectedValues.includes(option.value);
+                    const $option = $('<div class="modern-multi-select-option" data-value="' + option.value + '" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;"></div>');
+                    if (isSelected) {
+                        $option.css('background', '#f0f9ff');
+                    }
+                    $option.on('mouseenter', function() {
+                        $(this).css('background', '#f8fafc');
+                    }).on('mouseleave', function() {
+                        if (!selectedValues.includes(option.value)) {
+                            $(this).css('background', 'white');
+                        }
+                    });
+                    $option.html('<span style="margin-left: 8px;">' + (isSelected ? '✓' : '') + '</span><span>' + option.text + '</span>');
+                    $options.append($option);
+                });
+            }
+            
+            // Render selected items
+            function renderSelectedItems() {
+                $itemsContainer.empty();
+                if (selectedValues.length === 0) {
+                    $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
+                } else {
+                    selectedValues.forEach(function(value) {
+                        const option = allOptions.find(function(opt) { return opt.value === value; });
+                        if (option) {
+                            const $item = $('<div class="modern-multi-select-item" data-value="' + value + '" style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 13px; margin: 2px;"></div>');
+                            $item.html('<span>' + option.text + '</span><span class="modern-multi-select-item-remove" style="margin-right: 4px; cursor: pointer; font-weight: bold; color: #0369a1;">×</span>');
+                            $itemsContainer.append($item);
+                        }
+                    });
+                }
+            }
+            
+            // Update select
+            function updateSelect() {
+                $select.val(selectedValues).trigger('change');
+            }
+            
+            // Toggle dropdown
+            function toggleDropdown() {
+                isOpen = !isOpen;
+                $wrapper.toggleClass('open', isOpen);
+                if (isOpen) {
+                    $dropdown.css('display', 'block');
+                    renderOptions();
+                    $searchInput.focus();
+                } else {
+                    $dropdown.css('display', 'none');
+                }
+            }
+            
+            // Close dropdown
+            function closeDropdown() {
+                isOpen = false;
+                $wrapper.removeClass('open');
+                $dropdown.css('display', 'none');
+                $searchInput.val('');
+            }
+            
+            // Filter options
+            function filterOptions(searchTerm) {
+                const filtered = allOptions.filter(function(option) {
+                    return option.text.toLowerCase().includes(searchTerm.toLowerCase());
+                });
+                $options.empty();
+                filtered.forEach(function(option) {
+                    const isSelected = selectedValues.includes(option.value);
+                    const $option = $('<div class="modern-multi-select-option" data-value="' + option.value + '" style="padding: 10px 12px; cursor: pointer; display: flex; align-items: center; border-bottom: 1px solid #f1f5f9;"></div>');
+                    if (isSelected) {
+                        $option.css('background', '#f0f9ff');
+                    }
+                    $option.html('<span style="margin-left: 8px;">' + (isSelected ? '✓' : '') + '</span><span>' + option.text + '</span>');
+                    $options.append($option);
+                });
+            }
+            
+            // Event handlers
+            $input.on('click', function(e) {
+                e.stopPropagation();
+                toggleDropdown();
+            });
+            
+            $arrow.on('click', function(e) {
+                e.stopPropagation();
+                toggleDropdown();
+            });
+            
+            $searchInput.on('input', function() {
+                filterOptions($(this).val());
+            });
+            
+            $options.on('click', '.modern-multi-select-option', function(e) {
+                e.stopPropagation();
+                const value = $(this).data('value');
+                if (selectedValues.includes(value)) {
+                    selectedValues = selectedValues.filter(function(v) { return v !== value; });
+                } else {
+                    selectedValues.push(value);
+                }
+                renderSelectedItems();
+                renderOptions();
+                updateSelect();
+            });
+            
+            $itemsContainer.on('click', '.modern-multi-select-item-remove', function(e) {
+                e.stopPropagation();
+                const value = $(this).closest('.modern-multi-select-item').data('value');
+                selectedValues = selectedValues.filter(function(v) { return v !== value; });
+                renderSelectedItems();
+                renderOptions();
+                updateSelect();
+            });
+            
+            // Close on outside click
+            $(document).on('click', function(e) {
+                if (!$wrapper.is(e.target) && $wrapper.has(e.target).length === 0) {
+                    closeDropdown();
+                }
+            });
+            
+            // Initialize
+            renderSelectedItems();
+            console.log('[ModernMultiSelect] Successfully converted select:', $select.attr('name'));
         });
         
-        // Handle single select fields
-        $('.modern-filter-wrapper select:not([multiple])').each(function() {
-            const $select = $(this);
-            const $container = $('<div class="modern-multi-select-container"></div>');
-            
-            // Insert container after select
-            $select.after($container);
-            
-            // Hide original select
-            $select.hide();
-            
-            // Initialize Modern Multi-Select
-            $container.modernMultiSelect({
-                placeholder: 'انتخاب کنید...',
-                searchPlaceholder: 'جستجو...',
-                noResultsText: 'نتیجه‌ای یافت نشد',
-                allowSearch: true,
-                allowClear: true,
-                maxSelections: 1,
-                data: $select.find('option').map(function() {
-                    return {
-                        value: $(this).val(),
-                        text: $(this).text()
-                    };
-                }).get(),
-                ajax: null
-            });
-            
-            // Sync values with original select (single)
-            $container.on('change', function(e) {
-                const values = e.detail.values || [];
-                $select.prop('multiple', false);
-                // Ensure plain name without [] for single
-                $select.attr('name', ($select.attr('name') || '').replace(/\[\]$/, ''));
-                $select.attr('form', 'filter-form');
-                $select.val(values[0] || '').trigger('change');
-            });
-            
-            // Set initial values
-            const initialValue = $select.val();
-            if (initialValue) {
-                $container.modernMultiSelect('setValue', [initialValue]);
-            }
-        });
+        console.log('[ModernMultiSelect] Finished converting', allSelects.length, 'selects');
     }
     
     // Initialize custom modern multi-select control
