@@ -258,12 +258,9 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
     private string ResolveAction(string requestedAction)
     {
         string action = string.IsNullOrWhiteSpace(requestedAction) ? "Edit" : requestedAction;
-        if (!ControlsRendererData.Options.IsIframe)
-        {
-            return action;
-        }
-
-        return action is "Edit" or "Details" or "Delete" or "Create"
+        return !ControlsRendererData.Options.IsIframe
+            ? action
+            : action is "Edit" or "Details" or "Delete" or "Create"
             ? "IframeForm"
             : action;
     }
