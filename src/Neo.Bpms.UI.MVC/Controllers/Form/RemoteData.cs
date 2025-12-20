@@ -11,14 +11,20 @@ public partial class FormController
     public async Task<JsonResult> GetComboData(ComboDataBindingModel model)
     {
         if (model == null)
-            return Json(new ComboDataViewModel(new ComboData()));
+        {
+            return JsonErrorOfComboData("1000-401");
+        }
         List<LCField> lcs = model.LCs?.Select(lc => lc.ToLcField()).ToList();
         UiEntity formEntity = ProjectDefinition.Project.GetUiEntity(model.NamespaceId, model.EntityId);
+        if (formEntity == null)
+            return JsonErrorOfComboData("1000-402");
         AcquireComboSpecifics(model.NamespaceId, model.FormId, model.FieldId, formEntity, model.PageType,
             model.Qs, lcs, out FormField formField, out string displayFields,
             out Entity entity, out EntityField field, out Entity associationEntity, out IdentityUser user, out (string interfaceId, string operationId) operationAddress);
         if (associationEntity == null && operationAddress.operationId == null)
-            return Json(null);
+        {
+            return JsonErrorOfComboData("1000-403");
+        }
         if (formField.ControlTypeId == eControlTypeId.MultipleSelectableCombo)
         {
             model.IsMandatory = true;
@@ -53,6 +59,13 @@ public partial class FormController
             formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(),
             model.Count ?? 30, true, formField.GetProperties());
         return Json(new ComboDataViewModel(cb));
+    }
+
+    private JsonResult JsonErrorOfComboData(string errorCode)
+    {
+        var m = new ComboDataViewModel(new ComboData());
+        m.Rows.Add(new FormDataRow { Ids = "-100", DisplayValue = $"ایراد فنی {errorCode} در لود اطلاعات. لطفا با ادمین در" });
+        return Json(m);
     }
 
     private async Task<JsonResult> InterfaceOperationResult(

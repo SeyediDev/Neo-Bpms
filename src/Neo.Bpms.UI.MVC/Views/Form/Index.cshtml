@@ -63,6 +63,206 @@
         display: none !important;
         content: none !important;
     }
+    
+    /* Details Column Styles */
+    .details-column-header {
+        text-align: center !important;
+        font-weight: 600;
+        color: #1869AA;
+    }
+    
+    .details-column-cell {
+        text-align: center !important;
+        vertical-align: middle;
+    }
+    
+    .details-icon {
+        cursor: pointer;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: #1869AA;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        font-weight: bold;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    
+    .details-icon:hover {
+        background: #155a8a;
+        transform: scale(1.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .details-icon:active {
+        transform: scale(0.95);
+    }
+    
+    /* Details Card View Styles */
+    .details-card-view {
+        position: fixed;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+        z-index: 10000;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow: hidden;
+        direction: rtl;
+        text-align: right;
+        animation: detailsCardSlideIn 0.2s ease-out;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    @@keyframes detailsCardSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .details-card-header {
+        background: linear-gradient(135deg, #1869AA 0%, #155a8a 100%);
+        color: #ffffff;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .details-card-header h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .details-card-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: #ffffff;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-size: 18px;
+        line-height: 1;
+        padding: 0;
+    }
+    
+    .details-card-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+    
+    .details-card-body {
+        padding: 20px;
+        overflow-y: auto;
+        max-height: calc(80vh - 60px);
+    }
+    
+    .details-card-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .details-card-field:last-child {
+        border-bottom: none;
+    }
+    
+    .details-card-field-label {
+        font-size: 11px;
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .details-card-field-value {
+        font-size: 14px;
+        color: #1f2937;
+        font-weight: 400;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+    
+    .details-card-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        backdrop-filter: blur(2px);
+        animation: backdropFadeIn 0.2s ease-out;
+    }
+    
+    @@keyframes backdropFadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Scrollbar styling for card body */
+    .details-card-body::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .details-card-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    
+    .details-card-body::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 3px;
+    }
+    
+    .details-card-body::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+    }
+    
+    /* Reduce font size of filter controls by 25% */
+    .modern-filter-content {
+        font-size: 0.75em !important;
+    }
+    
+    .modern-filter-content input,
+    .modern-filter-content select,
+    .modern-filter-content textarea,
+    .modern-filter-content label,
+    .modern-filter-content .form-control,
+    .modern-filter-content .form-label,
+    .modern-filter-content .form-group,
+    .modern-filter-content .control-label,
+    .modern-filter-content .help-block,
+    .modern-filter-content button,
+    .modern-filter-content .btn,
+    .modern-filter-content span,
+    .modern-filter-content div,
+    .modern-filter-content p {
+        font-size: 1em !important;
+    }
 </style>
 
 @if (canDesign)
@@ -462,6 +662,14 @@ new
 
     async Task IndexTable(CommonFormStructure structure, string calendar, bool showCheckBoxes)
     {
+            // Column limit for displaying details column
+            var maxColumns = 10;
+            var totalColumns = structure.ColumnInfos.Count;
+            var shouldShowDetailsColumn = totalColumns > maxColumns;
+            var visibleColumnsCount = shouldShowDetailsColumn ? maxColumns - 1 : totalColumns;
+            var visibleColumns = shouldShowDetailsColumn ? structure.ColumnInfos.Take(visibleColumnsCount).ToList() : structure.ColumnInfos.ToList();
+            var hiddenColumns = shouldShowDetailsColumn ? structure.ColumnInfos.Skip(visibleColumnsCount).ToList() : new List<ColumnFieldDefinition>();
+            
             <div class="modern-table-wrapper">
                 <table id="tblRecords" class="modern-table @(showCheckBoxes ? "has-checkbox" : "")">
                     <thead>
@@ -473,7 +681,76 @@ new
                         {
                                 <partial name="IndexTables/RenderCheckboxesHeader" />
                         }
-                            <partial name="IndexTables/RenderColumnHeaders" model="structure" />
+                            @* Render visible columns only *@
+                            @foreach (var item in visibleColumns)
+                            {
+                                var shouldShowNumbers = visibleColumns.Count(ci => ci.IsSorted) > 1;
+                                <th class="cColumn" data-column-name="@item.ColumnName" @SummationAttributes(item)>
+                                    @if (structure.FormSortType == FormSortType.DoNotSort)
+                                    {
+                                        <span style="color: #0e71b9;">
+                                            @item.Alias
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <button class="modern-sort-button" 
+                                                data-refer="@item.ColumnName" type="button"
+                                                data-sort="@(item.IsSorted ? (item.Descending ? "DESC" : "ASC") : "noSort")"
+                                                onclick="SortingManager.changeSort(event, this)"
+                                                title="@(item.IsSorted ? (item.Descending ? ViewTexts.Descending : ViewTexts.Ascending) : "کلیک برای مرتب‌سازی")">
+                                            <span class="sort-button-content">
+                                                <span class="sort-button-text">@item.Alias</span>
+                                                <span class="sort-button-icons">
+                                                    @if (item.IsSorted)
+                                                    {
+                                                        if (item.Descending)
+                                                        {
+                                                            <svg class="sort-icon sort-icon-active sort-icon-desc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path d="M3 6h18"/>
+                                                                <path d="M7 12h10"/>
+                                                                <path d="M10 18h4"/>
+                                                            </svg>
+                                                            @if (shouldShowNumbers)
+                                                            {
+                                                                <span class="sort-order-badge">@item.SortOrder</span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <svg class="sort-icon sort-icon-active sort-icon-asc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path d="M3 6h18"/>
+                                                                <path d="M7 12h10"/>
+                                                                <path d="M10 18h4"/>
+                                                            </svg>
+                                                            @if (shouldShowNumbers)
+                                                            {
+                                                                <span class="sort-order-badge">@item.SortOrder</span>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <svg class="sort-icon sort-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M3 6h18"/>
+                                                            <path d="M7 12h10"/>
+                                                            <path d="M10 18h4"/>
+                                                        </svg>
+                                                    }
+                                                </span>
+                                            </span>
+                                        </button>
+                                    }
+                                </th>
+                            }
+                            
+                            @* Details Column Header *@
+                            @if (shouldShowDetailsColumn)
+                            {
+                                <th style="text-align: center; min-width: 60px; direction: rtl;" class="cColumn details-column-header">
+                                    جزئیات
+                                </th>
+                            }
                             @{
                             foreach (var sbj in structure.Subjects)
                             {
@@ -499,7 +776,7 @@ new
                         if (Model.Rows.Count == 0)
                         {
                                     <tr>
-                                        <td colspan="@(1 + (showCheckBoxes ? 1 : 0) + structure.ColumnInfos.Count + structure.Subjects.Count + structure.Fields.Count(f => f.ControlType == eControlTypeId.SpecificLinkColumn && f.GetProperties() != null) + 1)">
+                                        <td colspan="@(1 + (showCheckBoxes ? 1 : 0) + visibleColumnsCount + (shouldShowDetailsColumn ? 1 : 0) + structure.Subjects.Count + structure.Fields.Count(f => f.ControlType == eControlTypeId.SpecificLinkColumn && f.GetProperties() != null) + 1)">
                                             <span>@ViewTexts.IndexNoData</span>
                                         </td>
                                     </tr>
@@ -531,7 +808,53 @@ new
                                                 <input class="row-checkbox" data-ids="@rowIds" type="checkbox" id="checkbox-row-@rowIdx">
                                             </td>
                                 }
-                                <partial name="IndexTables/RenderValueCells" model="new RenderValueCellsModel { structure = structure, calendar = calendar, rowData = rowData }" />
+                                @* Render visible columns only *@
+                                @foreach (var columnInfo in visibleColumns)
+                                {
+                                    object value;
+                                    rowData.GetField(columnInfo.ColumnName, out value);
+                                    var val = TableHelper.CreateCellElement(value, columnInfo, true, calendar);
+                                    <td class="cColumn" @CellValueAttribute(columnInfo, value)>
+                                        <span @formLogicHelper.HtmlLogicEvent(structure, null, null)>@val</span>
+                                    </td>
+                                }
+                                
+                                @* Details Column with hidden columns card view *@
+                                @if (shouldShowDetailsColumn)
+                                {
+                                    <td style="text-align: center; direction: rtl;" class="details-column-cell">
+                                        @{
+                                            // Build JSON data for hidden columns
+                                            var hiddenColumnsData = new List<object>();
+                                            foreach (var hiddenCol in hiddenColumns)
+                                            {
+                                                object hiddenValue;
+                                                rowData.GetField(hiddenCol.ColumnName, out hiddenValue);
+                                                var hiddenVal = TableHelper.CreateCellElement(hiddenValue, hiddenCol, true, calendar);
+                                                // Convert IHtmlContent to string - this preserves HTML tags and Persian characters
+                                                // Use ToString() to get the raw HTML string
+                                                var hiddenValStr = hiddenVal != null ? hiddenVal.ToString() : "";
+                                                // Store as HTML string - will be rendered using innerHTML in JavaScript
+                                                // JSON serialization will properly escape the HTML for safe transport
+                                                hiddenColumnsData.Add(new { label = hiddenCol.Alias, value = hiddenValStr });
+                                            }
+                                            // Serialize with UTF-8 encoding support for Persian characters
+                                            var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+                                            {
+                                                StringEscapeHandling = Newtonsoft.Json.StringEscapeHandling.Default
+                                            };
+                                            var hiddenColumnsJson = Newtonsoft.Json.JsonConvert.SerializeObject(hiddenColumnsData, Newtonsoft.Json.Formatting.None, jsonSettings);
+                                            // Base64 encode to avoid issues with special characters in HTML attributes
+                                            // Use UTF-8 encoding to preserve Persian characters
+                                            var hiddenColumnsJsonBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(hiddenColumnsJson));
+                                        }
+                                        <span class="details-icon" 
+                                              data-hidden-columns-base64="@hiddenColumnsJsonBase64"
+                                              style="cursor: pointer; display: inline-block; width: 20px; height: 20px; background: #1869AA; color: white; border-radius: 50%; text-align: center; line-height: 20px; font-weight: bold; font-size: 12px;">
+                                            i
+                                        </span>
+                                    </td>
+                                }
 
                                         @{
                                     foreach (var subjectInfo in structure.Subjects)
@@ -835,6 +1158,28 @@ new
         var titles = new List<string>();
         var tabContents = new List<HelperResult>();
         <partial name="Common/SideNavi" model="new SideNaviModel { titles = titles, tabContents = tabContents }" />
+    }
+
+    string SummationAttributes(ColumnFieldDefinition item)
+    {
+        if (item.IsSummable)
+        {
+            return "data-summable data-summation-method=\"" + @item.SummationMethod + "\"";
+        }
+        return "";
+    }
+
+    string CellValueAttribute(ColumnFieldDefinition column, object value)
+    {
+        if (column.IsSummable)
+        {
+            if (value is TimeSpan)
+            {
+                value = ((TimeSpan) value).Ticks;
+            }
+            return "<text>data-arithmetic-value=\"" + @Convert.ToDecimal(value) + "\"</text>";
+        }
+        return "";
     }
 
 }
@@ -1171,4 +1516,212 @@ new
         
         return icons[parameter] || icons['IsEqualTo'];
     }
+</script>
+
+@* Details Column Card View JavaScript *@
+<script>
+(function() {
+    'use strict';
+    
+    var openCard = null;
+    var backdrop = null;
+    
+    // Close card function
+    function closeDetailsCard() {
+        if (openCard) {
+            if (openCard.parentNode) {
+                openCard.parentNode.removeChild(openCard);
+            }
+            openCard = null;
+        }
+        if (backdrop) {
+            if (backdrop.parentNode) {
+                backdrop.parentNode.removeChild(backdrop);
+            }
+            backdrop = null;
+        }
+    }
+    
+    // Create and show details card
+    function showDetailsCard(icon, hiddenColumnsData) {
+        // Close any existing card
+        closeDetailsCard();
+        
+        // Create backdrop
+        backdrop = document.createElement('div');
+        backdrop.className = 'details-card-backdrop';
+        backdrop.addEventListener('click', function(e) {
+            if (e.target === backdrop) {
+                closeDetailsCard();
+            }
+        });
+        document.body.appendChild(backdrop);
+        
+        // Create card
+        openCard = document.createElement('div');
+        openCard.className = 'details-card-view';
+        
+        // Card header
+        var header = document.createElement('div');
+        header.className = 'details-card-header';
+        header.innerHTML = '<h4>جزئیات</h4>';
+        
+        var closeBtn = document.createElement('button');
+        closeBtn.className = 'details-card-close';
+        closeBtn.innerHTML = '×';
+        closeBtn.addEventListener('click', closeDetailsCard);
+        header.appendChild(closeBtn);
+        
+        // Card body
+        var body = document.createElement('div');
+        body.className = 'details-card-body';
+        
+        // Add fields
+        if (hiddenColumnsData && Array.isArray(hiddenColumnsData)) {
+            hiddenColumnsData.forEach(function(field) {
+                var fieldDiv = document.createElement('div');
+                fieldDiv.className = 'details-card-field';
+                
+                var label = document.createElement('div');
+                label.className = 'details-card-field-label';
+                label.textContent = field.label || '';
+                
+                var value = document.createElement('div');
+                value.className = 'details-card-field-value';
+                // Always use innerHTML since values contain HTML from CreateCellElement
+                // JSON.parse automatically unescapes JSON strings, so HTML will be properly rendered
+                // This preserves Persian/Farsi characters and HTML formatting (icons, links, etc.)
+                if (field.value) {
+                    value.innerHTML = field.value;
+                } else {
+                    value.textContent = '';
+                }
+                
+                fieldDiv.appendChild(label);
+                fieldDiv.appendChild(value);
+                body.appendChild(fieldDiv);
+            });
+        }
+        
+        openCard.appendChild(header);
+        openCard.appendChild(body);
+        document.body.appendChild(openCard);
+        
+        // Position card near the icon
+        var rect = icon.getBoundingClientRect();
+        var cardWidth = openCard.offsetWidth || 500;
+        var cardHeight = openCard.offsetHeight || 400;
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        
+        // Calculate position (prefer left side, but adjust if needed)
+        var left = rect.left - cardWidth - 10;
+        if (left < 10) {
+            left = rect.right + 10;
+        }
+        if (left + cardWidth > viewportWidth - 10) {
+            left = viewportWidth - cardWidth - 10;
+        }
+        
+        var top = rect.top;
+        if (top + cardHeight > viewportHeight - 10) {
+            top = viewportHeight - cardHeight - 10;
+        }
+        if (top < 10) {
+            top = 10;
+        }
+        
+        openCard.style.left = left + 'px';
+        openCard.style.top = top + 'px';
+        
+        // Close on Escape key
+        var escapeHandler = function(e) {
+            if (e.key === 'Escape') {
+                closeDetailsCard();
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+    }
+    
+    // Initialize details icons
+    function initDetailsIcons() {
+        var detailsIcons = document.querySelectorAll('.details-icon');
+        detailsIcons.forEach(function(icon) {
+            // Remove any existing listeners
+            var newIcon = icon.cloneNode(true);
+            icon.parentNode.replaceChild(newIcon, icon);
+            
+            newIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                var hiddenColumnsJsonBase64 = this.getAttribute('data-hidden-columns-base64');
+                if (hiddenColumnsJsonBase64) {
+                    try {
+                        // Decode from base64 with proper UTF-8 handling for Persian characters
+                        // atob() returns a binary string, we need to convert it to UTF-8
+                        var binaryString = atob(hiddenColumnsJsonBase64);
+                        var bytes = new Uint8Array(binaryString.length);
+                        for (var i = 0; i < binaryString.length; i++) {
+                            bytes[i] = binaryString.charCodeAt(i);
+                        }
+                        // Convert bytes to UTF-8 string using TextDecoder
+                        var hiddenColumnsJson = new TextDecoder('utf-8').decode(bytes);
+                        // Parse JSON
+                        var hiddenColumnsData = JSON.parse(hiddenColumnsJson);
+                        
+                        // Validate data structure
+                        if (!Array.isArray(hiddenColumnsData)) {
+                            console.error('Hidden columns data is not an array:', hiddenColumnsData);
+                            return;
+                        }
+                        
+                        showDetailsCard(this, hiddenColumnsData);
+                    } catch (error) {
+                        console.error('Error parsing hidden columns data:', error);
+                        console.error('Base64 string:', hiddenColumnsJsonBase64);
+                        console.error('Error message:', error.message);
+                        
+                        // Try to decode and show raw JSON for debugging (with UTF-8 handling)
+                        try {
+                            var binaryString = atob(hiddenColumnsJsonBase64);
+                            var bytes = new Uint8Array(binaryString.length);
+                            for (var i = 0; i < binaryString.length; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+                            var decodedJson = new TextDecoder('utf-8').decode(bytes);
+                            console.error('Decoded JSON:', decodedJson);
+                        } catch (decodeError) {
+                            console.error('Error decoding base64:', decodeError);
+                        }
+                    }
+                } else {
+                    console.warn('No hidden columns data found for details icon');
+                }
+            });
+        });
+    }
+    
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDetailsIcons);
+    } else {
+        initDetailsIcons();
+    }
+    
+    // Also initialize after a delay to catch dynamically loaded content
+    setTimeout(initDetailsIcons, 500);
+    setTimeout(initDetailsIcons, 1000);
+    
+    // Close card when clicking outside (handled by backdrop)
+    document.addEventListener('click', function(e) {
+        if (openCard && !openCard.contains(e.target) && e.target !== backdrop) {
+            var clickedIcon = e.target.closest('.details-icon');
+            if (!clickedIcon) {
+                closeDetailsCard();
+            }
+        }
+    });
+})();
 </script>

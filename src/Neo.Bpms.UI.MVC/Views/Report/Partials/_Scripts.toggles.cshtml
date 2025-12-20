@@ -204,7 +204,8 @@ window.toggleFilterTooltip = function(event, targetElement) {
         
         // Calculate panel dimensions - Wider panel for two columns layout
         const panelWidth = Math.min(1800, window.innerWidth * 0.98);
-        const panelHeight = Math.min(window.innerHeight - 40, window.innerHeight * 0.95); // Use almost full height
+        // Fixed height: 590px (Header + 6 rows + Buttons + Padding)
+        const panelHeight = 590;
         
         // Calculate position - Start from higher position
         let top = Math.max(20, toggleRect.bottom + 8); // Start from at least 20px from top
@@ -237,6 +238,8 @@ window.toggleFilterTooltip = function(event, targetElement) {
         panel.style.setProperty('width', panelWidth + 'px', 'important');
         panel.style.setProperty('min-width', '1800px', 'important');
         panel.style.setProperty('max-width', '98vw', 'important');
+        panel.style.setProperty('height', panelHeight + 'px', 'important');
+        panel.style.setProperty('min-height', panelHeight + 'px', 'important');
         panel.style.setProperty('max-height', panelHeight + 'px', 'important');
         panel.style.setProperty('overflow', 'hidden', 'important');
         panel.style.setProperty('z-index', '1050', 'important');

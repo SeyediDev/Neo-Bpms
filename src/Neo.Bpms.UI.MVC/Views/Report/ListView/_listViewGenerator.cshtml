@@ -28,6 +28,7 @@
 	var reportKey = reportInfo.Structure.ConfigId;
 	var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 	var drillDownCount = drillDownSubReports.Count;
+	var selectedColumns = reportInfo.Structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
 }
 
 <partial name="~/Views/Report/Helpers/WindowTopJs.cshtml" model="new WindowTopJsModel {drillDownSubReports = drillDownSubReports, reportKey = reportKey, reportInfo = reportInfo}"/>
@@ -42,7 +43,9 @@
 <div class="col-md-12">
 <div class="table-responsive t-table-wrapper 
      @(Model.Config.IsInlineSubReport ? "no-min-height" : "")
-     @(isDrillDown ? "drill-down-tw" : "")">
+     @(isDrillDown ? "drill-down-tw" : "")"
+     data-column-count="@selectedColumns.Count"
+     data-report-key="@reportKey">
 	@if (canDesign && !bFromDashboard && !isDrillDown && Model.Config.IsSubReport)
 	{
 		<partial name="~/Views/Report/Helpers/RenderDesignTools.cshtml" model="new RenderDesignToolsModel {report = reportInfo, forInlineSubReport = true}"/>
@@ -62,7 +65,6 @@
 			{
 				rowNumber = 1;
 			}
-			var selectedColumns = reportInfo.Structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
 		}
 		@if (!hasSubReportCount && reportInfo.TotalRecord != null)
 		{

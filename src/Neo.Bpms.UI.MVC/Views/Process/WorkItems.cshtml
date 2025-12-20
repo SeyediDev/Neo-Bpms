@@ -167,6 +167,30 @@
     var topBarModel = new TopBarModel {Title = pageTitle, PageIcon = pageIcon, Tools = TopBarTools(Model)};
     <partial name="Common/TopBar" model="topBarModel"/>
 
+<style>
+    /* Reduce font size of filter controls by 25% */
+    .filterDiv {
+        font-size: 0.75em !important;
+    }
+    
+    .filterDiv input,
+    .filterDiv select,
+    .filterDiv textarea,
+    .filterDiv label,
+    .filterDiv .form-control,
+    .filterDiv .form-label,
+    .filterDiv .form-group,
+    .filterDiv .control-label,
+    .filterDiv .help-block,
+    .filterDiv button,
+    .filterDiv .btn,
+    .filterDiv span,
+    .filterDiv div,
+    .filterDiv p {
+        font-size: 1em !important;
+    }
+</style>
+
     <partial name="Helpers/WorkItemsFilter" model="new WorkItemsFilterModel {currentFilter = Model.CartableFilter, pageType = Model.CartableFilter.PageType, processList = ViewBag.processList, activityList = ViewBag.activityList}"/>
     <div class="customDiv col-md-12 col-sm-12">
         @{

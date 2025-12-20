@@ -100,7 +100,10 @@
           z-index: 1050 !important;
           min-width: 1800px !important;
           max-width: 98vw !important;
-          max-height: 90vh !important;
+          /* Fixed height: Header (~60px) + 6 rows (~420px) + Buttons (~70px) + Padding (~40px) = ~590px */
+          height: 590px !important;
+          max-height: 590px !important;
+          min-height: 590px !important;
           /* width set dynamically by JavaScript to avoid conflicts with position: fixed */
           backdrop-filter: blur(10px) !important;
           display: flex !important;
@@ -127,6 +130,8 @@
           padding-bottom: 12px !important;
           border-bottom: 2px solid #e2e8f0 !important;
           flex-shrink: 0 !important;
+          flex-grow: 0 !important;
+          height: auto !important;
         }
         
         
@@ -188,27 +193,25 @@
            Select2 is disabled in filter panel
            ============================================ */
         
+        /* CRITICAL: Hide selects that have been converted to Modern Multi-Select */
+        #filterTooltipPanel select.modern-multi-select-hidden {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          position: absolute !important;
+          left: -9999px !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        
         /* CRITICAL: Override controls-modern.css line 840 - ALL possible selectors */
-        #filterTooltipPanel .modern-form .neo-control select,
-        #filterTooltipPanel .modern-form .neo-control select.form-control,
-        #filterTooltipPanel .modern-form .neo-control select.cBox,
-        #filterTooltipPanel .modern-form select,
-        #filterTooltipPanel .modern-form select.form-control,
-        #filterTooltipPanel .modern-form select.cBox,
-        #filterTooltipPanel .neo-control select,
-        #filterTooltipPanel .neo-control select.form-control,
-        #filterTooltipPanel .neo-control select.cBox,
-        #filterTooltipPanel select:not([multiple]):not([size]),
-        #filterTooltipPanel select.form-control:not([multiple]),
-        #filterTooltipPanel select.cBox:not([multiple]),
-        #filterTooltipPanel .form-control:not([multiple]),
-        #filterTooltipPanel .cBox:not([multiple]),
-        #filterTooltipPanel .modern-filter-wrapper select,
-        #filterTooltipPanel .modern-filter-wrapper .form-control,
-        #filterTooltipPanel .modern-filter-wrapper .cBox,
-        #filterTooltipPanel .modern-filter-content select,
-        #filterTooltipPanel .modern-filter-content .form-control,
-        #filterTooltipPanel .modern-filter-content .cBox {
+        /* But skip selects that are hidden (converted to Modern Multi-Select) */
+        #filterTooltipPanel .modern-form .neo-control select:not(.modern-multi-select-hidden),
+        #filterTooltipPanel .modern-form select:not(.modern-multi-select-hidden),
+        #filterTooltipPanel .neo-control select:not(.modern-multi-select-hidden),
+        #filterTooltipPanel select:not([multiple]):not([size]):not(.modern-multi-select-hidden),
+        #filterTooltipPanel .modern-filter-wrapper select:not(.modern-multi-select-hidden),
+        #filterTooltipPanel .modern-filter-content select:not(.modern-multi-select-hidden) {
           min-height: 38px !important;
           height: 38px !important;
           max-height: 38px !important;
@@ -220,7 +223,14 @@
         }
         
         /* Modern Multi-Select - The only enhanced select we use */
-        #filterTooltipPanel .modern-multi-select-control,
+        #filterTooltipPanel .modern-multi-select-control {
+          display: block !important;
+          width: 100% !important;
+          position: relative !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
         #filterTooltipPanel .modern-multi-select-input {
           min-height: 38px !important;
           height: 38px !important;
@@ -229,6 +239,28 @@
           font-size: 13px !important;
           line-height: 1.5 !important;
           box-sizing: border-box !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 6px !important;
+          background: white !important;
+          cursor: pointer !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-items {
+          flex: 1 !important;
+          display: flex !important;
+          flex-wrap: wrap !important;
+          gap: 4px !important;
+          align-items: center !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-arrow {
+          flex-shrink: 0 !important;
+          margin-right: 8px !important;
+          color: #64748b !important;
+          font-size: 12px !important;
         }
         
         /* Hide Select2 if it gets initialized (shouldn't happen) */
@@ -261,15 +293,16 @@
           display: flex !important;
           gap: 8px !important;
           justify-content: flex-end !important;
-          margin-top: auto !important;
           padding: 16px 0 0 0 !important;
           border-top: 1px solid #e2e8f0 !important;
           flex-shrink: 0 !important;
           flex-grow: 0 !important;
           background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
-          position: relative !important;
+          position: sticky !important;
+          bottom: 0 !important;
           z-index: 10 !important;
           width: 100% !important;
+          margin-top: auto !important;
         }
 
         /* General button styles */
@@ -488,6 +521,39 @@
           margin-top: 4px !important;
           max-height: 300px !important;
           overflow-y: auto !important;
+          height: auto !important;
+          min-height: 100px !important;
+        }
+        
+        /* Ensure search input and options are visible inside open dropdown */
+        #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-search,
+        #filterTooltipPanel .modern-multi-select.open .modern-multi-select-search {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          width: 100% !important;
+          padding: 8px 12px !important;
+          border: none !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+          outline: none !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-options,
+        #filterTooltipPanel .modern-multi-select.open .modern-multi-select-options {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          max-height: 250px !important;
+          overflow-y: auto !important;
+          padding: 0 !important;
+        }
+        
+        /* Ensure options are visible */
+        #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-option,
+        #filterTooltipPanel .modern-multi-select.open .modern-multi-select-option {
+          display: flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
         
         /* Ensure Modern Multi-Select control has proper positioning context */
@@ -527,9 +593,8 @@
           width: 100% !important;
           flex: 1 1 auto !important;
           min-height: 0 !important;
-          max-height: 100% !important;
           overflow: hidden !important;
-          height: 100% !important;
+          height: auto !important;
         }
         
         .filter-main-content {
@@ -538,8 +603,6 @@
           display: flex !important;
           flex-direction: column !important;
           min-height: 0 !important;
-          max-height: 100% !important;
-          height: 100% !important;
           overflow: hidden !important;
           position: relative !important;
         }
@@ -755,16 +818,35 @@
           width: 100% !important;
           flex: 1 1 auto !important;
           min-height: 0 !important;
+          max-height: 420px !important; /* Max 6 rows: 6 rows × 70px (label + input + margin) = 420px */
           overflow-y: auto !important;
-          overflow-x: auto !important;
+          overflow-x: hidden !important; /* Hide horizontal scrollbar - content should fit */
           padding-bottom: 8px !important;
           padding-right: 4px !important;
+          /* Ensure scrollbar is visible and thin */
+          scrollbar-width: thin !important;
+          scrollbar-color: #cbd5e1 #f1f5f9 !important;
+          /* Reduce font size of filter controls by 25% */
+          font-size: 0.75em !important;
         }
         
-        .filter-panel-content-wrapper {
-          max-height: none !important;
-          height: 100% !important;
+        .modern-filter-content input,
+        .modern-filter-content select,
+        .modern-filter-content textarea,
+        .modern-filter-content label,
+        .modern-filter-content .form-control,
+        .modern-filter-content .form-label,
+        .modern-filter-content .form-group,
+        .modern-filter-content .control-label,
+        .modern-filter-content .help-block,
+        .modern-filter-content button,
+        .modern-filter-content .btn,
+        .modern-filter-content span,
+        .modern-filter-content div,
+        .modern-filter-content p {
+          font-size: 1em !important;
         }
+        
         
         /* Premium Scrollbar Design */
         .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar,
@@ -791,31 +873,108 @@
           background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%) !important;
         }
         
-        /* Horizontal scrollbar */
+        /* Horizontal scrollbar - Smaller size */
         .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar:horizontal {
-          height: 6px !important;
+          height: 4px !important;
         }
         
-        /* Reduce filter type icon size to match back icon (20px) */
+        /* Firefox horizontal scrollbar */
+        .filter-tooltip-panel .modern-filter-content {
+          scrollbar-width: thin !important;
+          scrollbar-color: #cbd5e1 #f1f5f9 !important;
+        }
+        
+        /* Make horizontal scrollbar thinner and less prominent */
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar:horizontal {
+          height: 4px !important;
+        }
+        
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb:horizontal {
+          background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%) !important;
+          border-radius: 2px !important;
+          border: 1px solid #f1f5f9 !important;
+        }
+        
+        .filter-tooltip-panel .modern-filter-content::-webkit-scrollbar-thumb:horizontal:hover {
+          background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%) !important;
+        }
+        
+        /* Icons Container - Ensure icons are in one line - RTL layout */
+        .filter-tooltip-panel label {
+          display: flex !important;
+          align-items: center !important;
+          flex-wrap: nowrap !important;
+          gap: 4px !important;
+          flex-direction: row !important; /* Normal row direction for RTL */
+          white-space: nowrap !important;
+          line-height: 1.5 !important;
+          direction: rtl !important; /* RTL direction */
+        }
+        
+        /* Icons wrapper - Keep icons together in one line */
+        .filter-tooltip-panel .filter-parameter-tooltip {
+          display: inline-flex !important;
+          align-items: center !important;
+          vertical-align: middle !important;
+          margin-left: 4px !important;
+          margin-right: 0 !important;
+          flex-shrink: 0 !important;
+          line-height: 1 !important;
+          direction: ltr !important; /* Keep icons LTR */
+        }
+        
+        /* Choice form link (list icon) - should be inline with filter parameter icon */
         .filter-tooltip-panel .choice-form-link {
           width: 20px !important;
           height: 20px !important;
+          min-width: 20px !important;
+          min-height: 20px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          vertical-align: middle !important;
+          flex-shrink: 0 !important;
+          margin-left: 4px !important;
+          margin-right: 0 !important;
+          line-height: 1 !important;
+          direction: ltr !important; /* Keep icons LTR */
         }
         
         .filter-tooltip-panel .choice-form-link svg {
           width: 12px !important;
           height: 12px !important;
+          display: block !important;
         }
         
         /* Reduce filter parameter icon size to match back icon */
         .filter-tooltip-panel .filter-parameter-icon {
           width: 20px !important;
           height: 20px !important;
+          min-width: 20px !important;
+          min-height: 20px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          vertical-align: middle !important;
+          flex-shrink: 0 !important;
+          line-height: 1 !important;
         }
         
         .filter-tooltip-panel .filter-parameter-icon svg {
           width: 12px !important;
           height: 12px !important;
+          display: block !important;
+        }
+        
+        /* Ensure all icon containers are inline and aligned - Override any conflicting styles */
+        .filter-tooltip-panel label > a.choice-form-link,
+        .filter-tooltip-panel label > div.filter-parameter-tooltip,
+        .filter-tooltip-panel label > span.filter-parameter-icon {
+          display: inline-flex !important;
+          align-items: center !important;
+          vertical-align: middle !important;
+          float: none !important;
+          clear: none !important;
         }
     </style>
 

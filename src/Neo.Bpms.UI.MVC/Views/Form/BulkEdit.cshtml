@@ -52,6 +52,34 @@
 <link rel="stylesheet" href="/CommonAssets/Styles/Features/Modern/controls-modern.css" />
 <link rel="stylesheet" href="/Content/common-assets-includes/common-plugins/global/ladda/ladda-themeless.min.css" />
 <script src="@CommonBundles.LaddaJsBundle" asp-append-version="true"></script>
+
+<style>
+    /* Reduce font size of form controls and text by 25% */
+    .modern-form-wrapper,
+    .modern-form-content {
+        font-size: 0.75em !important;
+    }
+    
+    /* Apply font size reduction to all elements inside form wrapper */
+    .modern-form-wrapper *,
+    .modern-form-content * {
+        font-size: inherit !important;
+    }
+    
+    /* Ensure inputs, selects, textareas and their content are smaller */
+    .modern-form-wrapper input,
+    .modern-form-wrapper select,
+    .modern-form-wrapper textarea,
+    .modern-form-wrapper input::placeholder,
+    .modern-form-wrapper textarea::placeholder,
+    .modern-form-content input,
+    .modern-form-content select,
+    .modern-form-content textarea,
+    .modern-form-content input::placeholder,
+    .modern-form-content textarea::placeholder {
+        font-size: 1em !important;
+    }
+</style>
 <script>
     @await Html.PartialAsync("Common/SetPageAddress", structure);
 </script>
