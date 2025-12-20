@@ -497,7 +497,8 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                 // Check if this is an enum field that should render as ComboBox
                 bool isEnumField = col.FieldType == TVariableTypes.StringListItem || 
                                  col.FieldType == TVariableTypes.StringListBitMask ||
-                                 (table.CombosData.ContainsKey(col.ColumnName) && table.CombosData[col.ColumnName].Rows.Any());
+                                 (table.CombosData.ContainsKey(col.ColumnName) && 
+                                 table.CombosData[col.ColumnName].Rows.Any());
                 
                 switch (col.ControlType)
                 {
