@@ -188,6 +188,12 @@ window.toggleFilterTooltip = function(event, targetElement) {
         panel.style.removeProperty('visibility');
         panel.style.removeProperty('opacity');
         panel.style.removeProperty('pointer-events');
+        
+        // Hide auto-hide tab when panel is closed
+        const autoHideTab = document.getElementById('popular-filters-auto-hide-tab');
+        if (autoHideTab) {
+            autoHideTab.classList.remove('show');
+        }
     } else {
         // Show panel
         console.log('[FilterTooltip] Showing panel...');
@@ -294,6 +300,13 @@ window.toggleFilterTooltip = function(event, targetElement) {
             });
         }
         
+        // Update auto-hide tab visibility after panel is shown
+        if (typeof window.updatePopularFiltersAutoHideTabVisibility === 'function') {
+            setTimeout(function() {
+                window.updatePopularFiltersAutoHideTabVisibility();
+            }, 100);
+        }
+        
         console.log('[FilterTooltip] Panel styles applied, checking visibility...');
         
         // Verify visibility after a short delay
@@ -357,6 +370,21 @@ window.toggleFilterTooltip = function(event, targetElement) {
             if (typeof window.ensureFilterFormAssociation === 'function') {
                 console.log('[FilterTooltip] Ensuring filter form association...');
                 window.ensureFilterFormAssociation();
+            }
+            
+            // Initialize popular filters auto-hide state - Multiple times to ensure it runs
+            if (typeof window.initializePopularFiltersAutoHide === 'function') {
+                console.log('[FilterTooltip] Initializing popular filters auto-hide state...');
+                // Call immediately
+                window.initializePopularFiltersAutoHide();
+                // Also call after delays to catch dynamic content
+                [100, 300, 500].forEach(function(delay) {
+                    setTimeout(function() {
+                        window.initializePopularFiltersAutoHide();
+                    }, delay);
+                });
+            } else {
+                console.warn('[FilterTooltip] initializePopularFiltersAutoHide function not found!');
             }
             
             // Initialize popular filters tree
