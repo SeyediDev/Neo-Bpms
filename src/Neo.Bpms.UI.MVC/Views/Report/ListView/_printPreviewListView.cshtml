@@ -120,7 +120,7 @@
                         <td class="@clsNameStr " style="direction: rtl;">
                             @{
                                 var value = ReportRenderer.GetCelValue(colInfo, row);
-                                var val = TableHelper.CreateCellElement(value, colInfo, false, calendar);
+                                var val = TableHelper.CreateCellElement(value, colInfo, calendar);
                                 if (hasSubReportCount)
                                 {
                                     <div>

@@ -342,7 +342,7 @@ IndexTableHelpers.FormLinkClass("text-success") +
             {
                 case BooleanItem.True:
                     cellValue = (object)col.Property(eControlPropertyId.TrueTitle)
-                                ?? TableHelper.CreateCellElement(true, col, false, ControlsRendererData.Options.CalendarType);
+                                ?? TableHelper.CreateCellElement(true, col, ControlsRendererData.Options.CalendarType);
                     cell = true;
                     break;
                 case BooleanItem.False:
@@ -373,7 +373,7 @@ IndexTableHelpers.FormLinkClass("text-success") +
             if (cell)
             {
                 cellValue = TableHelper.CreateCellElement(cellValue ?? false, col,
-                    false, ControlsRendererData.Options.CalendarType);
+                    ControlsRendererData.Options.CalendarType);
             }
         }
 

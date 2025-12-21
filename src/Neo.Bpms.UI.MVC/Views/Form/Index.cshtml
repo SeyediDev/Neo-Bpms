@@ -733,7 +733,7 @@ new
     async Task IndexTable(CommonFormStructure structure, string calendar, bool showCheckBoxes)
     {
             // Column limit for displaying details column
-            var maxColumns = 10;
+            var maxColumns = 13-structure.Subjects.Count;
             var totalColumns = structure.ColumnInfos.Count;
             var shouldShowDetailsColumn = totalColumns > maxColumns;
             var visibleColumnsCount = shouldShowDetailsColumn ? maxColumns - 1 : totalColumns;
@@ -883,7 +883,7 @@ new
                                 {
                                     object value;
                                     rowData.GetField(columnInfo.ColumnName, out value);
-                                    var val = TableHelper.CreateCellElement(value, columnInfo, true, calendar);
+                                    var val = TableHelper.CreateCellElement(value, columnInfo, calendar);
                                     <td class="cColumn" @CellValueAttribute(columnInfo, value)>
                                         <span @formLogicHelper.HtmlLogicEvent(structure, null, null)>@val</span>
                                     </td>
@@ -901,7 +901,7 @@ new
                                                 var firstColumn = visibleColumns[0];
                                                 object firstColumnValueObj;
                                                 rowData.GetField(firstColumn.ColumnName, out firstColumnValueObj);
-                                                var firstColumnVal = TableHelper.CreateCellElement(firstColumnValueObj, firstColumn, true, calendar);
+                                                var firstColumnVal = TableHelper.CreateCellElement(firstColumnValueObj, firstColumn, calendar);
                                                 // Get text value (strip HTML tags for display in header)
                                                 if (firstColumnVal != null)
                                                 {
@@ -922,7 +922,7 @@ new
                                             {
                                                 object hiddenValue;
                                                 rowData.GetField(hiddenCol.ColumnName, out hiddenValue);
-                                                var hiddenVal = TableHelper.CreateCellElement(hiddenValue, hiddenCol, true, calendar);
+                                                var hiddenVal = TableHelper.CreateCellElement(hiddenValue, hiddenCol, calendar);
                                                 // Convert IHtmlContent to string - this preserves HTML tags and Persian characters
                                                 // Use ToString() to get the raw HTML string
                                                 var hiddenValStr = hiddenVal != null ? hiddenVal.ToString() : "";

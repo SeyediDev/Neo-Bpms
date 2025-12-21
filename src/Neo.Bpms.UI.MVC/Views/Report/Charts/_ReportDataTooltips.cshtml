@@ -47,20 +47,19 @@
 			{
 				var titleValue = ReportRenderer.GetCelValue(columnTitle, row);
 				var titleVal =
-					TableHelper.CreateCellElement(titleValue, columnTitle, true, calendar);
+					TableHelper.CreateCellElement(titleValue, columnTitle, calendar);
 				@:rowData['tooltipValues'][@columnIndex]['@columnTitle.Alias'] = '@titleVal';
 			}
 
 			var value = ReportRenderer.GetCelValue(colInfo, row);
-			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			var val = TableHelper.CreateCellElement(value, colInfo, calendar);
 			@:rowData['tooltipValues'][@columnIndex]['@colInfo.Alias'] = '@val';
 
 
 			foreach (var tooltipField in tooltips)
 			{
 				var tooltipValue = ReportRenderer.GetCelValue(tooltipField, row);
-				var tooltipVal = TableHelper.CreateCellElement(tooltipValue, tooltipField, true,
-					calendar);
+				var tooltipVal = TableHelper.CreateCellElement(tooltipValue, tooltipField, calendar);
 				@:rowData['tooltipValues'][@columnIndex]['@tooltipField.Alias'] = '@tooltipVal';
 			}
 		}

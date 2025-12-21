@@ -236,21 +236,35 @@
           min-height: 38px !important;
           height: 38px !important; /* Fixed height for single line */
           max-height: 38px !important; /* Fixed height - no growth */
-          padding: 8px 12px !important;
+          padding-top: 4px !important; /* Less top padding - push chips up */
+          padding-bottom: 8px !important; /* More bottom padding - balance */
+          padding-left: 12px !important;
+          padding-right: 12px !important;
           font-size: 13px !important;
-          line-height: 1.5 !important;
+          line-height: 1 !important; /* CRITICAL: Remove line-height spacing */
           box-sizing: border-box !important;
           display: flex !important;
-          align-items: flex-start !important; /* Align to top */
+          align-items: center !important; /* CRITICAL: Center items vertically */
           justify-content: flex-start !important; /* Change from space-between to flex-start */
           flex-wrap: nowrap !important; /* Single line - no wrap */
           overflow: hidden !important; /* Prevent overflow - chips must stay inside */
+          overflow-x: hidden !important; /* Prevent horizontal scrollbar */
+          overflow-y: hidden !important; /* Prevent vertical scrollbar */
           border: 1px solid #e2e8f0 !important;
           border-radius: 6px !important;
           background: white !important;
           cursor: pointer !important;
           width: 100% !important; /* Ensure full width */
+          min-width: 100% !important; /* Prevent size change */
+          max-width: 100% !important; /* Prevent size change */
           position: relative !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-control {
+          width: 100% !important;
+          min-width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
         }
         
         #filterTooltipPanel .modern-multi-select-items {
@@ -260,30 +274,37 @@
           display: flex !important;
           flex-wrap: nowrap !important; /* Single line - no wrap */
           gap: 4px !important;
-          align-items: flex-start !important; /* Align to top */
+          align-items: center !important; /* CRITICAL: Center chips vertically */
           overflow: hidden !important; /* CRITICAL: Prevent overflow - chips must stay inside */
+          overflow-x: hidden !important; /* Prevent horizontal scrollbar */
+          overflow-y: hidden !important; /* Prevent vertical scrollbar */
           width: auto !important; /* Auto width */
           box-sizing: border-box !important;
           order: 1 !important; /* Ensure items come before badge and arrow */
+          margin: 0 !important; /* Remove any margin */
+          padding: 0 !important; /* Remove any padding */
+          line-height: 1 !important; /* CRITICAL: Remove line-height spacing */
         }
         
-        /* Overflow badge styling */
+        /* Overflow badge styling - Different color from chips, positioned on right */
         #filterTooltipPanel .modern-multi-select-overflow-badge {
           display: none !important; /* Hidden by default */
           align-items: center !important;
-          background: #e0f2fe !important;
-          color: #0369a1 !important;
+          align-self: center !important; /* CRITICAL: Center vertically with chips */
+          background: #fef3c7 !important; /* Different color: yellow/amber background */
+          color: #92400e !important; /* Different color: dark amber text */
           padding: 4px 8px !important;
           border-radius: 4px !important;
           font-size: 13px !important;
-          margin: 0 4px 0 0 !important;
+          margin: 0 0 0 4px !important; /* Margin on left for RTL (right side) */
           gap: 4px !important;
           flex-shrink: 0 !important;
           white-space: nowrap !important;
           cursor: pointer !important;
-          border: 1px solid #bae6fd !important;
+          border: 1px solid #fbbf24 !important; /* Different border color */
           order: 2 !important; /* Between items and arrow */
           transition: background 0.2s ease !important;
+          margin-left: auto !important; /* Push to right */
         }
         
         /* Show badge when it has content - use attribute selector */
@@ -292,35 +313,112 @@
         }
         
         #filterTooltipPanel .modern-multi-select-overflow-badge:hover {
-          background: #bae6fd !important;
+          background: #fde68a !important; /* Lighter yellow on hover */
+          border-color: #f59e0b !important;
         }
         
         #filterTooltipPanel .modern-multi-select-overflow-badge.active {
-          background: #7dd3fc !important;
-          border-color: #0369a1 !important;
+          background: #fcd34d !important; /* Active state */
+          border-color: #d97706 !important;
         }
         
-        /* Overflow popover styling */
+        /* Overflow popover styling - Card View - Hidden by default */
         #filterTooltipPanel .modern-multi-select-overflow-popover {
-          display: none !important; /* Hidden by default */
+          display: none !important; /* CRITICAL: Hidden by default - JavaScript will override this */
           position: absolute !important;
           background: white !important;
           border: 1px solid #e2e8f0 !important;
-          border-radius: 8px !important;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-          padding: 12px !important;
+          border-radius: 12px !important; /* More rounded for card view */
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important; /* Enhanced shadow for card */
+          padding: 16px !important; /* More padding */
           z-index: 1052 !important; /* Above dropdown */
-          min-width: 200px !important;
-          max-width: 300px !important;
-          max-height: 300px !important;
+          min-width: 280px !important; /* Wider for card view */
+          max-width: 400px !important; /* Allow wider cards */
+          max-height: 400px !important; /* More height */
           overflow-y: auto !important;
           overflow-x: hidden !important;
+          flex-direction: column !important;
+          gap: 8px !important; /* Space between cards */
+          visibility: hidden !important; /* Hidden by default */
+          opacity: 0 !important; /* Hidden by default */
+          pointer-events: none !important; /* Disable pointer events when hidden */
         }
         
+        /* Popover header */
+        #filterTooltipPanel .modern-multi-select-overflow-popover .overflow-popover-header {
+          display: block !important;
+          font-weight: 600 !important;
+          font-size: 14px !important;
+          color: #2d3748 !important;
+          margin-bottom: 12px !important;
+          padding-bottom: 8px !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+        }
+        
+        /* Popover content container */
+        #filterTooltipPanel .modern-multi-select-overflow-popover .overflow-popover-content {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 8px !important;
+        }
+        
+        /* Card view item styling */
         #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item {
           display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
           width: 100% !important;
-          margin-bottom: 4px !important;
+          padding: 10px 12px !important; /* Card padding */
+          margin: 0 !important;
+          margin-bottom: 0 !important;
+          background: #f8fafc !important; /* Light background for card */
+          border: 1px solid #e2e8f0 !important; /* Card border */
+          border-radius: 8px !important; /* Rounded corners */
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important; /* Subtle shadow */
+          transition: all 0.2s ease !important;
+          cursor: default !important;
+        }
+        
+        /* Card hover effect */
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item:hover {
+          background: #f1f5f9 !important;
+          border-color: #cbd5e1 !important;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+          transform: translateY(-1px) !important;
+        }
+        
+        /* Card text */
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item > span:first-child {
+          flex: 1 !important;
+          font-size: 13px !important;
+          color: #0369a1 !important;
+          font-weight: 500 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        /* Card remove button */
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item-remove {
+          width: 24px !important;
+          height: 24px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background: #ef4444 !important; /* Red background */
+          color: white !important;
+          border-radius: 50% !important;
+          cursor: pointer !important;
+          transition: all 0.2s ease !important;
+          font-size: 14px !important;
+          font-weight: bold !important;
+          flex-shrink: 0 !important;
+          margin: 0 !important;
+          margin-right: 8px !important; /* Space from text */
+        }
+        
+        #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item-remove:hover {
+          background: #dc2626 !important;
+          transform: scale(1.1) !important;
         }
         
         #filterTooltipPanel .modern-multi-select-overflow-popover .modern-multi-select-item:last-child {
@@ -329,32 +427,90 @@
         
         #filterTooltipPanel .modern-multi-select-arrow {
           flex-shrink: 0 !important;
-          margin-right: 0 !important;
-          margin-left: auto !important; /* Push to right */
-          margin-top: 0 !important; /* Align to top */
+          flex-grow: 0 !important;
+          width: 20px !important;
+          min-width: 20px !important;
+          max-width: 20px !important;
+          margin-right: auto !important; /* CRITICAL: Push to left in RTL (right in LTR) */
+          margin-left: 0 !important; /* No left margin */
+          margin-top: 0 !important; /* No top margin - will be centered by parent */
+          margin-bottom: 0 !important; /* No bottom margin - will be centered by parent */
+          padding: 0 !important;
           color: #64748b !important;
           font-size: 12px !important;
-          align-self: flex-start !important; /* Align to top left */
-          order: 999 !important; /* Ensure arrow is last */
+          align-self: center !important; /* CRITICAL: Center vertically with chips */
+          order: -1 !important; /* CRITICAL: First in flex order (left side in RTL) */
           line-height: 1 !important;
+          text-align: center !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          position: relative !important; /* Override absolute from base CSS */
+          top: auto !important; /* Override top from base CSS */
+          right: auto !important; /* Override right from base CSS */
+          left: auto !important; /* Override left from base CSS */
         }
         
-        /* Ensure chips stay within container and wrap properly */
+        /* Chip (selected item) styling */
         #filterTooltipPanel .modern-multi-select-item {
           display: inline-flex !important;
           align-items: center !important;
           flex-shrink: 0 !important;
           white-space: nowrap !important;
           max-width: 100% !important;
-          margin: 0 !important;
+          margin: 0 !important; /* Remove all margins */
+          margin-top: 0 !important; /* Explicitly remove top margin */
+          margin-bottom: 0 !important; /* Explicitly remove bottom margin */
           box-sizing: border-box !important;
+          background: #e0f2fe !important;
+          color: #0369a1 !important;
+          padding: 4px 8px !important;
+          border-radius: 4px !important;
+          font-size: 13px !important;
+          gap: 4px !important;
+          line-height: 1 !important; /* CRITICAL: Remove line-height spacing */
+          vertical-align: middle !important; /* Center vertically */
         }
         
         #filterTooltipPanel .modern-multi-select-item > span:first-child {
+          flex: 1 !important;
           overflow: hidden !important;
           text-overflow: ellipsis !important;
           white-space: nowrap !important;
           max-width: 200px !important; /* Limit chip text width */
+        }
+        
+        /* Remove button styling */
+        #filterTooltipPanel .modern-multi-select-item-remove {
+          cursor: pointer !important;
+          font-weight: bold !important;
+          color: #0369a1 !important;
+          font-size: 18px !important;
+          line-height: 1 !important;
+          flex-shrink: 0 !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-item-remove:hover {
+          color: #1e40af !important;
+        }
+        
+        /* Placeholder text styling */
+        #filterTooltipPanel .modern-multi-select-items > span {
+          color: #94a3b8 !important;
+        }
+        
+        /* Loading and error message styling */
+        #filterTooltipPanel .modern-multi-select-options > div {
+          padding: 20px !important;
+          text-align: center !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-options > div[style*="color: #64748b"] {
+          color: #64748b !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-options > div[style*="color: #dc2626"] {
+          color: #dc2626 !important;
         }
         
         /* Hide Select2 if it gets initialized (shouldn't happen) */
@@ -451,6 +607,33 @@
           opacity: 1 !important;
         }
         
+        /* Fix ladda-label - ensure it doesn't hide content */
+        .filter-tooltip-panel #submit-filter .ladda-label {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          color: inherit !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter .ladda-label span {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          color: #ffffff !important;
+          font-weight: 500 !important;
+          font-size: 14px !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter .ladda-label svg {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          width: 18px !important;
+          height: 18px !important;
+        }
+        
         /* Other primary buttons */
         .filter-tooltip-panel .btn-primary:not(#submit-filter) {
           background-color: #3b82f6 !important;
@@ -530,13 +713,26 @@
           border-radius: 8px !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
           margin-top: 4px !important;
-          max-height: 300px !important;
+          max-height: 200px !important; /* Reduced from 300px - compact and beautiful */
           overflow: visible !important; /* Remove scroll from outer container - only options container should scroll */
           overflow-y: visible !important;
           overflow-x: hidden !important;
           height: auto !important;
-          min-height: 100px !important;
+          min-height: 80px !important; /* Reduced from 100px */
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
+        }
+        
+        /* Search input styling - Compact */
+        #filterTooltipPanel .modern-multi-select-search {
+          width: 100% !important;
+          padding: 6px 12px !important; /* Reduced from 8px - more compact */
+          border: none !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+          outline: none !important;
+          font-family: inherit !important;
+          font-size: 13px !important;
+          color: #2d3748 !important;
+          background: white !important;
         }
         
         /* Ensure search input and options are visible inside open dropdown */
@@ -545,12 +741,37 @@
           display: block !important;
           visibility: visible !important;
           opacity: 1 !important;
-          width: 100% !important;
-          padding: 8px 12px !important;
-          border: none !important;
-          border-bottom: 1px solid #e2e8f0 !important;
-          outline: none !important;
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
+        }
+        
+        /* Options container styling - Compact with thin scrollbar */
+        #filterTooltipPanel .modern-multi-select-options {
+          max-height: 150px !important; /* Reduced from 250px - shows ~5-6 items */
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          padding: 0 !important;
+          /* Thin scrollbar for compact look */
+          scrollbar-width: thin !important;
+          scrollbar-color: #cbd5e1 #f1f5f9 !important;
+        }
+        
+        /* Webkit scrollbar styling for compact look */
+        #filterTooltipPanel .modern-multi-select-options::-webkit-scrollbar {
+          width: 6px !important; /* Thin scrollbar */
+        }
+        
+        #filterTooltipPanel .modern-multi-select-options::-webkit-scrollbar-track {
+          background: #f1f5f9 !important;
+          border-radius: 3px !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-options::-webkit-scrollbar-thumb {
+          background: #cbd5e1 !important;
+          border-radius: 3px !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-options::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8 !important;
         }
         
         #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-options,
@@ -558,20 +779,59 @@
           display: block !important;
           visibility: visible !important;
           opacity: 1 !important;
-          max-height: 250px !important;
-          overflow-y: auto !important;
-          padding: 0 !important;
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
+        }
+        
+        /* Individual option styling - Compact padding */
+        #filterTooltipPanel .modern-multi-select-option {
+          padding: 8px 12px !important; /* Reduced from 10px - more compact */
+          cursor: pointer !important;
+          display: flex !important;
+          align-items: center !important;
+          border-bottom: 1px solid #f1f5f9 !important;
+          transition: background 0.2s !important;
+          pointer-events: auto !important;
+          user-select: none !important;
+          font-size: 13px !important; /* Ensure consistent font size */
+          line-height: 1.4 !important; /* Compact line height */
+        }
+        
+        #filterTooltipPanel .modern-multi-select-option:hover {
+          background: #f8fafc !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-option.selected {
+          background: #f0f9ff !important;
         }
         
         /* Ensure options are visible and clickable */
         #filterTooltipPanel .modern-multi-select-control.open .modern-multi-select-option,
         #filterTooltipPanel .modern-multi-select.open .modern-multi-select-option {
-          display: flex !important;
           visibility: visible !important;
           opacity: 1 !important;
-          pointer-events: auto !important; /* CRITICAL: Allow clicks */
-          cursor: pointer !important;
+        }
+        
+        /* Option checkmark and text */
+        #filterTooltipPanel .modern-multi-select-option > span:first-child {
+          width: 20px !important;
+          text-align: center !important;
+          flex-shrink: 0 !important;
+        }
+        
+        #filterTooltipPanel .modern-multi-select-option > span:last-child {
+          flex: 1 !important;
+        }
+        
+        /* RTL-aware checkmark margin */
+        [dir="rtl"] #filterTooltipPanel .modern-multi-select-option > span:first-child {
+          margin-right: 8px !important;
+          margin-left: 0 !important;
+        }
+        
+        [dir="ltr"] #filterTooltipPanel .modern-multi-select-option > span:first-child,
+        body:not([dir="rtl"]) #filterTooltipPanel .modern-multi-select-option > span:first-child {
+          margin-left: 8px !important;
+          margin-right: 0 !important;
         }
         
         /* Ensure Modern Multi-Select control has proper positioning context */

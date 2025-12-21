@@ -11,17 +11,16 @@ public class TableHelper
     /// <param name="value"></param>
     /// <param name="cellType"></param>
     /// <param name="cellInfo"></param>
-    /// <param name="isReport"></param>
     /// <param name="calendar"></param>
     /// <returns></returns>
     public static HtmlString CreateCellElement(object value,
-        ColumnFieldDefinition cellInfo, bool isReport = false, string calendar = "shamsi")
+        ColumnFieldDefinition cellInfo, string calendar = "shamsi")
     {
-        string str = CreateCellElem(value, cellInfo, isReport, calendar);
+        string str = CreateCellElem(value, cellInfo, calendar);
         return new HtmlString(str);
     }
 
-    public static string CreateCellElem(object value, InputFieldDefinition cellInfo, bool isReport = false, string calendar = "shamsi")
+    public static string CreateCellElem(object value, InputFieldDefinition cellInfo, string calendar = "shamsi")
     {
         object str = value ?? "";
         switch (cellInfo.FieldType)
@@ -31,9 +30,30 @@ public class TableHelper
                 {
                     if (value is DateTime)
                         goto case TVariableTypes.DateTime;
-                    str = double.TryParse(value?.ToString(), out double v)
-                        ? Math.Abs(v - Math.Floor(v)) < .0001 ? $"{v:n0}" : $"{v:n2}"
-                        : (value?.ToString());
+                    if (double.TryParse(value?.ToString(), out double v))
+                    {
+                        // Check if it's essentially a whole number
+                        if (Math.Abs(v - Math.Floor(v)) < .0001)
+                        {
+                            str = $"{v:n0}";
+                        }
+                        else
+                        {
+                            // Format with enough decimal places, then remove trailing zeros
+                            var culture = System.Globalization.CultureInfo.CurrentCulture;
+                            str = v.ToString("N10", culture);
+                            // Remove trailing zeros after decimal point (culture-aware)
+                            var decimalSeparator = culture.NumberFormat.NumberDecimalSeparator;
+                            if (str.ToString().Contains(decimalSeparator))
+                            {
+                                str = str.ToString().TrimEnd('0').TrimEnd(decimalSeparator.ToCharArray());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        str = value?.ToString();
+                    }
                 }
                 catch
                 {

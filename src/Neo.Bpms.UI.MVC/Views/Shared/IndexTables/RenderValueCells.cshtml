@@ -11,7 +11,7 @@
 	{
 		object value;
 		Model.rowData.GetField(columnInfo.ColumnName, out value);
-		var val = TableHelper.CreateCellElement(value, columnInfo, true, Model.calendar);
+		var val = TableHelper.CreateCellElement(value, columnInfo, Model.calendar);
 		<td class="cColumn" @CellValueAttribute(columnInfo, value)>
 			<span @formLogicHelper.HtmlLogicEvent(Model.structure, null, null)>@val</span>
 		</td>

@@ -119,7 +119,7 @@
 		foreach (var colInfo in columns)
 		{
 			var value = ReportRenderer.GetCelValue(colInfo, row);
-			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			var val = TableHelper.CreateCellElement(value, colInfo, calendar);
 			str += "diagramInfo['" + nodeId + "']['tooltipValues']['" + colInfo.Alias + "'] = '" + val + "';";
 		}
 		@(new HtmlString(str))

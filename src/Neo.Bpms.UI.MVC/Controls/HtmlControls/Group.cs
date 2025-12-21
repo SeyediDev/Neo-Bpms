@@ -30,6 +30,7 @@ public class Group(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
         }
 
         // Render child controls in a row - they will flow horizontally next to each other
+        // Child controls have their own col-md-* classes, so they'll be side by side in this row
         result += @"<div class=""row m-0"">";
         result += controlsRenderer.CreateControls(ControlsRendererData, Field.FieldName);
         result += @"</div>";

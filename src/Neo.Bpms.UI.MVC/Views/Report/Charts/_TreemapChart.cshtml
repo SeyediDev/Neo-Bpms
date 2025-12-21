@@ -51,7 +51,7 @@
 		foreach (var colInfo in columns)
 		{
 			var value = ReportRenderer.GetCelValue(colInfo, row);
-			var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+			var val = TableHelper.CreateCellElement(value, colInfo, calendar);
 			@:rowData['tooltipValues'][@Html.Raw(JsonConvert.SerializeObject(colInfo.Alias))] = @Html.Raw(JsonConvert.SerializeObject(val?.ToString() ?? ""));
 		}
 

@@ -80,7 +80,7 @@
 						<td style="direction: rtl;">
 							@{
 								var value = ReportRenderer.GetCelValue(colInfo, reportInfo.TotalRecord);
-								var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+								var val = TableHelper.CreateCellElement(value, colInfo, calendar);
 								var valStr = val.Value.Trim();
 								var isNumeric = !string.IsNullOrEmpty(valStr) && double.TryParse(valStr, out _);
 							}
@@ -149,7 +149,7 @@
 						<td class="@clsNameStr " style="direction: rtl;">
 							@{
 								var value = ReportRenderer.GetCelValue(colInfo, row);
-								var val = TableHelper.CreateCellElement(value, colInfo, true, calendar);
+								var val = TableHelper.CreateCellElement(value, colInfo, calendar);
 								var percentage = new HtmlString("");
 								var tooltip = new HtmlString("");
                                 var isNumber = false;
