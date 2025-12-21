@@ -269,7 +269,7 @@ window.toggleFilterTooltip = function(event, targetElement) {
             }, 0);
             
             // After short delay (for initial render)
-            setTimeout(function() {
+        setTimeout(function() {
                 window.preventSelect2InFilterPanel();
                 window.enforceComboBoxSizes();
             }, 100);
@@ -292,23 +292,23 @@ window.toggleFilterTooltip = function(event, targetElement) {
             setTimeout(function() {
                 window.updatePopularFiltersAutoHideTabVisibility();
             }, 100);
-        }
-        
+            }
+            
         // Initialize popular filters auto-hide state
         if (typeof window.initializePopularFiltersAutoHide === 'function') {
             window.initializePopularFiltersAutoHide();
             setTimeout(function() {
                 window.initializePopularFiltersAutoHide();
             }, 200);
-        }
-        
-        // Initialize popular filters tree
-        if (typeof window.initializePopularFiltersTree === 'function') {
-            window.initializePopularFiltersTree();
-        }
-        
+            }
+            
+            // Initialize popular filters tree
+            if (typeof window.initializePopularFiltersTree === 'function') {
+                window.initializePopularFiltersTree();
+            }
+            
         // Initialize multi-select (replaces Select2 with Modern Multi-Select)
-        if (typeof window.initializeMultiSelectInTooltip === 'function') {
+            if (typeof window.initializeMultiSelectInTooltip === 'function') {
             setTimeout(function() {
                 window.initializeMultiSelectInTooltip();
                 // Prevent Select2 again after multi-select initialization
@@ -316,13 +316,13 @@ window.toggleFilterTooltip = function(event, targetElement) {
                     window.preventSelect2InFilterPanel();
                 }
             }, 200);
-        }
-        
-        // Ensure form association
-        setTimeout(function() {
-            if (typeof window.ensureFilterFormAssociation === 'function') {
-                window.ensureFilterFormAssociation();
             }
+            
+        // Ensure form association
+            setTimeout(function() {
+                if (typeof window.ensureFilterFormAssociation === 'function') {
+                    window.ensureFilterFormAssociation();
+                }
             
             // Ensure submit button is not in loading state when panel opens
             var $submitBtn = $('#submit-filter');
@@ -336,7 +336,7 @@ window.toggleFilterTooltip = function(event, targetElement) {
                     $spinner.hide();
                 }
             }
-        }, 200);
+            }, 200);
     }
 };
 

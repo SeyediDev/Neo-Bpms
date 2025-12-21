@@ -445,12 +445,15 @@
 }
 
 .modern-filter-wrapper .modern-multi-select-option {
-  padding: 12px 16px !important;
+  padding: 5px 10px !important; /* Reduced by 20% for filter panel */
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   border-bottom: 1px solid #f1f5f9 !important;
   direction: rtl !important;
   text-align: right !important;
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+  gap: 6px !important;
 }
 
 .modern-filter-wrapper .modern-multi-select-option:hover {
@@ -465,8 +468,10 @@
 }
 
 .modern-filter-wrapper .modern-multi-select-option-checkbox {
-  width: 18px !important;
-  height: 18px !important;
+  width: 14px !important; /* Reduced by 20% for filter panel */
+  height: 14px !important; /* Reduced by 20% for filter panel */
+  min-width: 14px !important;
+  min-height: 14px !important;
   border: 2px solid #cbd5e1 !important;
   border-radius: 4px !important;
   display: flex !important;

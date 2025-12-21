@@ -23,8 +23,6 @@
     };
 
     function initializeModernMultiSelect() {
-        console.log('Report Modern Multi-Select: Starting initialization');
-        
         // Ensure all filter inputs are associated with the form
         window.ensureFilterFormAssociation();
         
@@ -52,30 +50,33 @@
         // Handle ALL select fields (both single and multiple) - Convert to multi-select
         // Target all selects in filter panel, skip ones already converted
         const allSelects = $('#filterTooltipPanel select:not(.modern-multi-select-control select):not(.modern-multi-select-options select)');
-        console.log('[ModernMultiSelect] Found', allSelects.length, 'selects to convert in filter panel');
-        
-        if (allSelects.length === 0) {
-            console.warn('[ModernMultiSelect] No selects found! Panel may not be visible yet or selector is wrong.');
-            console.warn('[ModernMultiSelect] Checking if panel exists:', $('#filterTooltipPanel').length > 0);
-            console.warn('[ModernMultiSelect] Panel visible:', $('#filterTooltipPanel').hasClass('show'));
-        }
         
         allSelects.each(function() {
             const $select = $(this);
             
             // Skip if already converted
             if ($select.data('modern-multi-select-converted')) {
-                console.log('[ModernMultiSelect] Skipping already converted select:', $select.attr('name'));
                 return;
             }
-            
-            console.log('[ModernMultiSelect] Converting select:', $select.attr('name'), 'with', $select.find('option').length, 'options');
-            
             // Mark as converted
             $select.data('modern-multi-select-converted', true);
             
-            // Get initial value
-            const initialValue = $select.val();
+            // Get initial value - check both val() and initValue attribute
+            // initValue is set by ControlsRenderer when filter values are loaded from server
+            let initialValue = $select.val();
+            const initValueAttr = $select.attr('initValue');
+            if (initValueAttr && (!initialValue || (Array.isArray(initialValue) && initialValue.length === 0) || initialValue === '')) {
+                // Use initValue if select doesn't have a value yet
+                initialValue = initValueAttr;
+                // Also set it in the select element so it's available
+                if (initValueAttr.includes(',')) {
+                    // Multiple values - set as array
+                    const values = initValueAttr.split(',').map(v => v.trim()).filter(v => v !== '');
+                    $select.val(values);
+                } else {
+                    $select.val(initValueAttr);
+                }
+            }
             
             // Check if this is a remote data select
             const fieldName = $select.attr('name') ? $select.attr('name').replace('[]', '') : '';
@@ -145,7 +146,6 @@
                             formId = formId || currentAddress.formId || '';
                         }
                     } catch (e) {
-                        console.warn('[ModernMultiSelect] Error getting PageAddressManager address:', e);
                     }
                 }
             }
@@ -167,12 +167,6 @@
                               false;
             
             const hasOptions = $select.find('option').length > 0;
-            
-            console.log('[ModernMultiSelect] Field:', fieldName, 'FieldId:', fieldId, 'IsRemote:', isRemote);
-            console.log('[ModernMultiSelect] NamespaceId:', namespaceId, 'EntityId:', entityId, 'FormId:', formId);
-            console.log('[ModernMultiSelect] FilterFormula:', filterFormula, 'PageType:', pageType, 'IsMandatory:', isMandatory);
-            console.log('[ModernMultiSelect] HasOptions:', hasOptions, 'Options count:', $select.find('option').length);
-            
             // Get all options including empty/null option
             let options = [];
             let isLoading = false;
@@ -199,9 +193,6 @@
                     text: text
                 });
             });
-            
-            console.log('[ModernMultiSelect] Initial options loaded:', options.length, 'for field:', fieldName, 'IsRemote:', isRemote);
-            
             // If remote and no options, we'll load from server when dropdown opens
             // If not remote and no options, show empty state
             
@@ -250,6 +241,14 @@
             // This ensures it appears in the correct position in the form
             $select.after($wrapper);
             
+            // Store control data in wrapper for later access (for applying filter values)
+            // This will be populated after all functions are defined
+            const controlDataRef = {
+                $select: $select,
+                $wrapper: $wrapper,
+                fieldName: fieldName
+            };
+            
             // CRITICAL: Ensure popover is hidden on initialization
             if ($overflowPopover.length > 0 && $overflowPopover[0]) {
                 $overflowPopover[0].style.setProperty('display', 'none', 'important');
@@ -265,15 +264,10 @@
                 if ($actualParent[0] !== $controlContainer[0]) {
                     // Move wrapper to control container if needed
                     $controlContainer.append($wrapper);
-                    console.log('[ModernMultiSelect] Moved wrapper to control container');
                 }
             }
             
             // Wrapper and input styles are handled by CSS - no need for inline styles
-            
-            console.log('[ModernMultiSelect] Wrapper created and inserted for:', $select.attr('name'));
-            console.log('[ModernMultiSelect] Select parent:', $parent.length, 'Wrapper parent:', $wrapper.parent().length);
-            
             // Make select multiple for array binding
             $select.prop('multiple', true);
             const originalName = $select.attr('name') || '';
@@ -301,23 +295,17 @@
             // Load data from server (for remoteData)
             function loadDataFromServer(searchTerm) {
                 if (isLoading) {
-                    console.log('[ModernMultiSelect] Already loading data for:', fieldName);
                     return;
                 }
                 
                 if (!isRemote) {
-                    console.log('[ModernMultiSelect] Not remote, skipping server load for:', fieldName);
                     return;
                 }
                 
                 isLoading = true;
                 $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">در حال بارگذاری...</div>');
-                
-                console.log('[ModernMultiSelect] Loading data from server for:', fieldName, 'SearchTerm:', searchTerm);
-                
                 // Validate required fields
                 if (!namespaceId || !entityId) {
-                    console.error('[ModernMultiSelect] Missing required fields for', fieldName, '- NamespaceId:', namespaceId, 'EntityId:', entityId);
                     $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا: اطلاعات فیلد ناقص است (NamespaceId یا EntityId)</div>');
                     isLoading = false;
                     return;
@@ -345,59 +333,53 @@
                         requestData.Qs = getQs();
                         requestData.LCs = getLCs();
                     } catch (e) {
-                        console.warn('[ModernMultiSelect] Error getting Qs/LCs:', e);
                     }
                 }
-                
-                console.log('[ModernMultiSelect] Request data:', requestData);
-                
                 const rootUrl = (window.top && window.top.rootUrl) ? window.top.rootUrl : '';
                 const apiUrl = rootUrl + 'Form/GetComboData';
                 
-                console.log('[ModernMultiSelect] API URL:', apiUrl, 'RequestData:', requestData);
+                // Prepare headers
+                const headers = window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {};
+                
+                // Log request for debugging
+                console.log('[ModernMultiSelect] Loading data for field:', fieldName, {
+                    apiUrl: apiUrl,
+                    requestData: requestData,
+                    namespaceId: namespaceId,
+                    entityId: entityId
+                });
                 
                 $.ajax({
                     url: apiUrl,
                     type: 'POST',
-                    data: requestData,
-                    headers: window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {},
+                    data: requestData, // Send as form data (not JSON)
+                    headers: headers,
                     success: function(response) {
                         isLoading = false;
-                        console.log('[ModernMultiSelect] Server response for', fieldName, ':', response);
-                        console.log('[ModernMultiSelect] Response keys:', response ? Object.keys(response) : 'null');
-                        console.log('[ModernMultiSelect] Response type:', typeof response, 'Is Array:', Array.isArray(response));
-                        console.log('[ModernMultiSelect] Has data:', !!response?.data, 'Has Rows:', !!response?.Rows, 'Has rows:', !!response?.rows);
-                        
                         // Handle different response formats
                         let dataArray = null;
                         
                         if (!response) {
-                            console.warn('[ModernMultiSelect] Response is null or undefined');
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا: پاسخ سرور خالی است</div>');
                             return;
                         }
                         
                         if (Array.isArray(response)) {
                             // Response is directly an array
-                            console.log('[ModernMultiSelect] Response is array, length:', response.length);
                             dataArray = response;
                         } else if (response.data && Array.isArray(response.data)) {
                             // Response has data property with array
-                            console.log('[ModernMultiSelect] Using response.data, length:', response.data.length);
                             dataArray = response.data;
                         } else if (response.Rows && Array.isArray(response.Rows)) {
                             // Response has Rows property (ComboDataViewModel format)
-                            console.log('[ModernMultiSelect] Using response.Rows, length:', response.Rows.length);
                             dataArray = response.Rows;
                         } else if (response.rows && Array.isArray(response.rows)) {
                             // Response has rows property (lowercase)
-                            console.log('[ModernMultiSelect] Using response.rows, length:', response.rows.length);
                             dataArray = response.rows;
                         } else {
                             // Try to find any array property
                             for (const key in response) {
                                 if (Array.isArray(response[key])) {
-                                    console.log('[ModernMultiSelect] Found array property:', key, 'length:', response[key].length);
                                     dataArray = response[key];
                                     break;
                                 }
@@ -415,7 +397,6 @@
                                 const text = item.text || item.name || item.DisplayValue || item.displayValue || item.Text || '';
                                 
                                 if (index < 5) {
-                                    console.log('[ModernMultiSelect] Item', index, ':', { value, text, item });
                                 }
                                 
                                 if (value !== '' && text !== '') {
@@ -426,13 +407,20 @@
                                 }
                             });
                             
-                            console.log('[ModernMultiSelect] Loaded', allOptions.length, 'options from server for:', fieldName);
-                            console.log('[ModernMultiSelect] All options:', allOptions);
+                            // After loading data, apply initial values if they exist
+                            // This is important for popular filters where values are set via initValue attribute
+                            // selectedValues was already set from initialValue at the beginning, so we just need to re-render
+                            if (selectedValues.length > 0) {
+                                // Re-render to show selected items after data is loaded
+                                renderSelectedItems();
+                                updateSelect();
+                            }
+                            
+                            // Render options with correct selected states
                             renderOptions();
                             
                             // Ensure dropdown is visible after loading data
                             if (isOpen) {
-                                console.log('[ModernMultiSelect] Ensuring dropdown is visible after data load');
                                 // Ensure wrapper has 'open' class for CSS rules
                                 if (!$wrapper.hasClass('open')) {
                                     $wrapper.addClass('open');
@@ -451,13 +439,13 @@
                                 $dropdown[0].style.setProperty('border', '1px solid #e2e8f0', 'important');
                                 $dropdown[0].style.setProperty('border-radius', '8px', 'important');
                                 $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
-                                $dropdown[0].style.setProperty('margin-top', '4px', 'important');
-                                $dropdown[0].style.setProperty('max-height', '300px', 'important');
+                                $dropdown[0].style.setProperty('margin-top', '0px', 'important'); // Compact: remove empty gap above search box
+                                $dropdown[0].style.setProperty('max-height', '324px', 'important'); /* Reduced by 10%: 360px * 0.9 = 324px */
                                 $dropdown[0].style.setProperty('overflow', 'visible', 'important');
                                 $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
                                 $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                                 $dropdown[0].style.setProperty('height', 'auto', 'important');
-                                $dropdown[0].style.setProperty('min-height', '100px', 'important');
+                                $dropdown[0].style.setProperty('min-height', '135px', 'important'); /* Reduced by 10%: 150px * 0.9 = 135px */
                                 
                                 // Ensure search input is visible
                                 $searchInput[0].style.setProperty('display', 'block', 'important');
@@ -469,7 +457,7 @@
                                 $options[0].style.setProperty('display', 'block', 'important');
                                 $options[0].style.setProperty('visibility', 'visible', 'important');
                                 $options[0].style.setProperty('opacity', '1', 'important');
-                                $options[0].style.setProperty('max-height', '250px', 'important');
+                                $options[0].style.setProperty('max-height', '270px', 'important'); /* Reduced by 10%: 300px * 0.9 = 270px */
                                 $options[0].style.setProperty('overflow-y', 'auto', 'important');
                                 $options[0].style.setProperty('pointer-events', 'auto', 'important');
                                 
@@ -478,40 +466,57 @@
                                     this.style.setProperty('pointer-events', 'auto', 'important');
                                     this.style.setProperty('cursor', 'pointer', 'important');
                                 });
-                                
-                                console.log('[ModernMultiSelect] Dropdown forced visible. Children count:', $options.children().length);
-                                console.log('[ModernMultiSelect] Search input visible:', $searchInput.is(':visible'), 'Display:', $searchInput.css('display'));
-                                console.log('[ModernMultiSelect] Options container visible:', $options.is(':visible'), 'Display:', $options.css('display'));
-                                console.log('[ModernMultiSelect] Options children visible:', $options.find('.modern-multi-select-option').length, 'options found');
-                                console.log('[ModernMultiSelect] Options pointer-events:', $options.find('.modern-multi-select-option').first().css('pointer-events'));
                             }
                         } else if (dataArray && dataArray.length === 0) {
                             // Empty result is valid
-                            console.log('[ModernMultiSelect] Empty result from server for', fieldName);
                             allOptions = [options[0]]; // Keep only empty option
                             renderOptions();
                         } else {
-                            console.error('[ModernMultiSelect] Invalid response format for', fieldName);
-                            console.error('[ModernMultiSelect] Response structure:', JSON.stringify(response, null, 2));
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: فرمت پاسخ نامعتبر<br><small>بررسی کنسول برای جزئیات</small></div>');
                         }
                     },
                     error: function(xhr, status, error) {
                         isLoading = false;
-                        console.error('[ModernMultiSelect] Error loading data for', fieldName, ':', error, 'Status:', status, 'Response:', xhr.responseText);
-                        $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: ' + (error || 'Unknown error') + '</div>');
+                        // Provide more detailed error information
+                        let errorMessage = 'Unknown error';
+                        if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr && xhr.responseText) {
+                            try {
+                                const errorObj = JSON.parse(xhr.responseText);
+                                errorMessage = errorObj.message || errorObj.Message || errorMessage;
+                            } catch (e) {
+                                errorMessage = xhr.responseText.substring(0, 100);
+                            }
+                        } else if (error) {
+                            errorMessage = error;
+                        } else if (status === 'timeout') {
+                            errorMessage = 'Timeout - درخواست بیش از حد طول کشید';
+                        } else if (status === 'abort') {
+                            errorMessage = 'درخواست لغو شد';
+                        } else if (xhr && xhr.status) {
+                            errorMessage = `HTTP ${xhr.status}: ${xhr.statusText || errorMessage}`;
+                        }
+                        
+                        console.error('[ModernMultiSelect] Error loading data for field:', fieldName, {
+                            status: status,
+                            error: error,
+                            xhr: xhr,
+                            requestData: requestData,
+                            apiUrl: apiUrl
+                        });
+                        
+                        $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: ' + errorMessage + '<br><small>بررسی کنسول برای جزئیات بیشتر</small></div>');
                     }
                 });
             }
             
             // Render options
             function renderOptions() {
-                console.log('[ModernMultiSelect] renderOptions called for', fieldName, 'Options count:', allOptions.length);
                 $options.empty();
                 
                 if (allOptions.length === 1 && allOptions[0].value === '') {
                     // Only empty option, show message
-                    console.log('[ModernMultiSelect] Only empty option, showing message');
                     $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
                     return;
                 }
@@ -519,7 +524,6 @@
                 let renderedCount = 0;
                 allOptions.forEach(function(option, index) {
                     if (!option || !option.text) {
-                        console.warn('[ModernMultiSelect] Skipping invalid option at index', index, ':', option);
                         return; // Skip invalid options
                     }
                     
@@ -537,8 +541,6 @@
                         
                         const value = $(this).data('value');
                         const optionText = option.text || '';
-                        console.log('[ModernMultiSelect] Option clicked (direct handler):', value, 'Text:', optionText, 'Type:', typeof value, 'for:', fieldName, 'Current selected:', selectedValues);
-                        
                         // Ensure this option is in allOptions (in case it was selected before data load)
                         if (value !== '' && value !== null && value !== undefined) {
                             const existsInAllOptions = allOptions.some(function(opt) {
@@ -549,7 +551,6 @@
                                     value: String(value),
                                     text: String(optionText)
                                 });
-                                console.log('[ModernMultiSelect] Added option to allOptions:', { value, text: optionText });
                             }
                         }
                         
@@ -570,8 +571,6 @@
                                 selectedValues.push(value);
                             }
                         }
-                        
-                        console.log('[ModernMultiSelect] Updated selected values:', selectedValues, 'for:', fieldName);
                         renderSelectedItems();
                         renderOptions();
                         updateSelect();
@@ -586,7 +585,6 @@
                     renderedCount++;
                     
                     if (index < 3) {
-                        console.log('[ModernMultiSelect] Rendered option', index, ':', option.text, 'Value:', option.value);
                     }
                 });
                 
@@ -594,11 +592,6 @@
                 $options[0].style.setProperty('display', 'block', 'important');
                 $options[0].style.setProperty('visibility', 'visible', 'important');
                 $options[0].style.setProperty('opacity', '1', 'important');
-                
-                console.log('[ModernMultiSelect] Rendered', renderedCount, 'options. Options container children:', $options.children().length);
-                console.log('[ModernMultiSelect] Dropdown visible:', $dropdown.is(':visible'), 'Display:', $dropdown.css('display'), 'Wrapper has open class:', $wrapper.hasClass('open'));
-                console.log('[ModernMultiSelect] Options container computed display:', window.getComputedStyle($options[0]).display);
-                console.log('[ModernMultiSelect] First option computed display:', $options.children().first().length > 0 ? window.getComputedStyle($options.children().first()[0]).display : 'no options');
             }
             
             // Calculate how many chips can fit in the container
@@ -704,9 +697,6 @@
                         }
                     });
                 }
-                
-                console.log('[ModernMultiSelect] Popover content children:', $overflowPopoverContent.children().length);
-                
                 // Calculate position relative to the main input control
                 const inputOffset = $input.offset();
                 const wrapperOffset = $wrapper.offset();
@@ -733,8 +723,6 @@
                 });
                 
                 $overflowBadge.addClass('active');
-                
-                console.log('[ModernMultiSelect] Popover opened, content count:', $overflowPopoverContent.children().length);
             }
             
             // Update input height based on content (fixed at 38px for single line)
@@ -757,10 +745,7 @@
             
             // Render selected items with overflow handling
             function renderSelectedItems() {
-                console.log('[ModernMultiSelect] renderSelectedItems called for:', fieldName, 'Selected values:', selectedValues, 'All options count:', allOptions.length);
-                
                 if ($itemsContainer.length === 0) {
-                    console.error('[ModernMultiSelect] Items container not found!');
                     return;
                 }
                 
@@ -786,7 +771,6 @@
                 
                 if (selectedValues.length === 0) {
                     $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
-                    console.log('[ModernMultiSelect] No selected values, showing placeholder');
                     updateInputHeight();
                     return;
                 }
@@ -825,9 +809,6 @@
                 // Calculate how many chips can fit
                 const visibleCount = calculateVisibleChipsCount();
                 const overflowCount = selectedValues.length - visibleCount;
-                
-                console.log('[ModernMultiSelect] Total chips:', selectedValues.length, 'Visible:', visibleCount, 'Overflow:', overflowCount);
-                
                 // Clear and render only visible chips
                 $itemsContainer.empty();
                 
@@ -862,10 +843,6 @@
                     $overflowBadge.empty();
                     $overflowBadge.attr('data-visible', 'false');
                 }
-                
-                console.log('[ModernMultiSelect] renderSelectedItems completed. Visible chips:', $itemsContainer.children('.modern-multi-select-item').length, 'Overflow chips:', $overflowPopover.children('.modern-multi-select-item').length);
-                console.log('[ModernMultiSelect] Overflow badge visible:', $overflowBadge.attr('data-visible'), 'Badge content:', $overflowBadge.html());
-                
                 // All styles are handled by CSS - no need for inline styles
                 // Dynamic max-width for items container based on overflow
                 if (overflowCount > 0) {
@@ -885,7 +862,13 @@
                 if (selectedValues.length > 0) {
                     $select.val(selectedValues); // Set new selections
                 }
+                // Use a flag to prevent externalUpdate listener from firing during internal updates
+                $select.data('internal-update', true);
                 $select.trigger('change');
+                // Clear the flag after a short delay
+                setTimeout(function() {
+                    $select.data('internal-update', false);
+                }, 10);
             }
             
             // Toggle dropdown
@@ -894,11 +877,8 @@
                 $wrapper.toggleClass('open', isOpen);
                 
                 if (isOpen) {
-                    console.log('[ModernMultiSelect] Opening dropdown for:', fieldName, 'IsRemote:', isRemote, 'Options:', allOptions.length);
-                    
                     // Ensure wrapper has 'open' class for CSS FIRST
                     if (!$wrapper.hasClass('open')) {
-                        console.log('[ModernMultiSelect] Adding open class to wrapper');
                         $wrapper.addClass('open');
                     }
                     
@@ -915,13 +895,13 @@
                     $dropdown[0].style.setProperty('border', '1px solid #e2e8f0', 'important');
                     $dropdown[0].style.setProperty('border-radius', '8px', 'important');
                     $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
-                    $dropdown[0].style.setProperty('margin-top', '4px', 'important');
-                    $dropdown[0].style.setProperty('max-height', '300px', 'important');
+                    $dropdown[0].style.setProperty('margin-top', '0px', 'important'); // Compact: remove empty gap above search box
+                    $dropdown[0].style.setProperty('max-height', '324px', 'important'); /* Reduced by 10%: 360px * 0.9 = 324px */
                     $dropdown[0].style.setProperty('overflow', 'visible', 'important');
                     $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
                     $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                     $dropdown[0].style.setProperty('height', 'auto', 'important');
-                    $dropdown[0].style.setProperty('min-height', '100px', 'important');
+                    $dropdown[0].style.setProperty('min-height', '135px', 'important'); /* Reduced by 10%: 150px * 0.9 = 135px */
                     
                     // Ensure search input is visible
                     $searchInput[0].style.setProperty('display', 'block', 'important');
@@ -935,26 +915,21 @@
                     
                     // Load data if remote and not loaded yet (only empty option exists)
                     if (isRemote && allOptions.length <= 1) {
-                        console.log('[ModernMultiSelect] Loading remote data for:', fieldName, 'Current options:', allOptions.length);
                         loadDataFromServer('');
                         // Note: renderOptions will be called after data loads
                     } else if (allOptions.length > 1) {
                         // We have options, render them
-                        console.log('[ModernMultiSelect] Rendering', allOptions.length, 'options for:', fieldName);
                         renderOptions();
                     } else {
                         // No options at all
-                        console.log('[ModernMultiSelect] No options available for:', fieldName);
                         $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
                     }
                     
                     // Focus search input
                     setTimeout(function() {
                         $searchInput.focus();
-                        console.log('[ModernMultiSelect] Search input focused. Dropdown visible:', $dropdown.is(':visible'), 'Options count:', $options.children().length);
                     }, 100);
                 } else {
-                    console.log('[ModernMultiSelect] Closing dropdown for:', fieldName);
                     // Hide dropdown
                     $dropdown.css({
                         'display': 'none',
@@ -1013,20 +988,17 @@
                 // Don't toggle if clicking on remove button or item
                 if ($(e.target).closest('.modern-multi-select-item-remove').length > 0 ||
                     $(e.target).closest('.modern-multi-select-item').length > 0) {
-                    console.log('[ModernMultiSelect] Click on item/remove button, ignoring input click');
                     return false;
                 }
                 
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('[ModernMultiSelect] Input clicked for:', fieldName);
                 toggleDropdown();
             });
             
             $arrow.on('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('[ModernMultiSelect] Arrow clicked for:', fieldName);
                 toggleDropdown();
             });
             
@@ -1045,7 +1017,6 @@
             
             $searchInput.on('input', function() {
                 const searchTerm = $(this).val();
-                console.log('[ModernMultiSelect] Search input changed:', searchTerm, 'for:', fieldName);
                 filterOptions(searchTerm);
             });
             
@@ -1064,8 +1035,6 @@
                 
                 const $option = $(this);
                 const value = $option.data('value');
-                console.log('[ModernMultiSelect] Option clicked:', value, 'for:', fieldName, 'Current selected:', selectedValues);
-                
                 if (value === '' || value === null || value === undefined) {
                     // Empty option - clear all selections
                     selectedValues = [];
@@ -1077,8 +1046,6 @@
                     selectedValues = selectedValues.filter(function(v) { return v !== ''; });
                     selectedValues.push(value);
                 }
-                
-                console.log('[ModernMultiSelect] Updated selected values:', selectedValues, 'for:', fieldName);
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
@@ -1096,8 +1063,6 @@
                 
                 const $option = $(this);
                 const value = $option.data('value');
-                console.log('[ModernMultiSelect] Option clicked (wrapper handler):', value, 'Type:', typeof value, 'for:', fieldName, 'Current selected:', selectedValues);
-                
                 if (value === '' || value === null || value === undefined) {
                     selectedValues = [];
                 } else {
@@ -1115,8 +1080,6 @@
                         selectedValues.push(value);
                     }
                 }
-                
-                console.log('[ModernMultiSelect] Updated selected values (wrapper):', selectedValues, 'for:', fieldName);
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
@@ -1135,23 +1098,14 @@
                 const $removeButton = $(this);
                 const $item = $removeButton.closest('.modern-multi-select-item');
                 const value = $item.data('value');
-                
-                console.log('[ModernMultiSelect] Remove clicked (itemsContainer handler) for:', value, 'Type:', typeof value, 'field:', fieldName, 'Current selected:', selectedValues);
-                console.log('[ModernMultiSelect] Item element:', $item[0], 'Remove button:', $removeButton[0]);
-                
                 // Use same comparison logic as elsewhere (handle type mismatches)
                 const beforeCount = selectedValues.length;
                 selectedValues = selectedValues.filter(function(v) { 
                     const shouldKeep = String(v) !== String(value) && v != value && v !== '';
                     if (!shouldKeep) {
-                        console.log('[ModernMultiSelect] Removing value:', v, 'because it matches:', value);
                     }
                     return shouldKeep;
                 });
-                
-                console.log('[ModernMultiSelect] Before remove count:', beforeCount, 'After remove count:', selectedValues.length);
-                console.log('[ModernMultiSelect] After remove, selected values:', selectedValues, 'for:', fieldName);
-                
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
@@ -1171,9 +1125,6 @@
                 const $removeButton = $(this);
                 const $item = $removeButton.closest('.modern-multi-select-item');
                 const value = $item.data('value');
-                
-                console.log('[ModernMultiSelect] Remove clicked (wrapper handler) for:', value, 'field:', fieldName);
-                
                 selectedValues = selectedValues.filter(function(v) { 
                     return String(v) !== String(value) && v != value && v !== ''; 
                 });
@@ -1219,17 +1170,11 @@
                 const $removeButton = $(this);
                 const $item = $removeButton.closest('.modern-multi-select-item');
                 const value = $item.data('value');
-                
-                console.log('[ModernMultiSelect] Remove clicked (popover handler) for:', value, 'field:', fieldName);
-                console.log('[ModernMultiSelect] Current selected values before remove:', selectedValues);
-                
                 // Remove value from selectedValues
                 const beforeCount = selectedValues.length;
                 selectedValues = selectedValues.filter(function(v) { 
                     return String(v) !== String(value) && v != value && v !== ''; 
                 });
-                console.log('[ModernMultiSelect] After remove - before:', beforeCount, 'after:', selectedValues.length);
-                
                 // Update select and render - but DON'T call renderSelectedItems which might close popover
                 renderOptions();
                 updateSelect();
@@ -1320,9 +1265,6 @@
                     $overflowPopover[0].style.setProperty('pointer-events', 'auto', 'important');
                 }
                 $overflowBadge.addClass('active'); // Ensure badge stays active
-                
-                console.log('[ModernMultiSelect] Popover should stay open, content count:', $overflowPopoverContent.children().length);
-                
                 return false;
             });
             
@@ -1359,6 +1301,38 @@
                 }
             });
             
+            // Listen for external changes to select element (e.g., when filter values are loaded)
+            // This allows the control to update when filter values are applied from popular filters
+            $select.on('change.externalUpdate', function() {
+                // Skip if this is an internal update (to prevent infinite loop and preserve multi-select behavior)
+                if ($select.data('internal-update')) {
+                    return;
+                }
+                
+                const newValue = $select.val();
+                let newSelectedValues = [];
+                
+                if (newValue) {
+                    if (Array.isArray(newValue)) {
+                        newSelectedValues = newValue.filter(v => v !== '' && v !== null);
+                    } else if (typeof newValue === 'string' && newValue.includes(',')) {
+                        newSelectedValues = newValue.split(',').map(v => v.trim()).filter(v => v !== '');
+                    } else {
+                        newSelectedValues = [newValue];
+                    }
+                }
+                
+                // Update selectedValues
+                selectedValues = newSelectedValues;
+                
+                // Re-render the control
+                renderSelectedItems();
+                renderOptions(); // Re-render options with updated selected states
+                // Don't call updateSelect() here to avoid infinite loop - the select already has the correct value
+                
+                console.log('[ModernMultiSelect] Updated control from external change:', fieldName, newSelectedValues);
+            });
+            
             // Initialize
             renderSelectedItems();
             updateInputHeight(); // Set initial height
@@ -1373,24 +1347,15 @@
             
             // Ensure select is completely hidden
             $select.attr('style', 'display: none !important; position: absolute !important; left: -9999px !important; opacity: 0 !important; visibility: hidden !important; width: 0 !important; height: 0 !important;');
-            
-            console.log('[ModernMultiSelect] Successfully converted select:', $select.attr('name'));
-            console.log('[ModernMultiSelect] Wrapper visible:', $wrapper.is(':visible'), 'Display:', $wrapper.css('display'), 'Computed:', window.getComputedStyle($wrapper[0]).display);
-            console.log('[ModernMultiSelect] Select hidden:', $select.is(':hidden'), 'Display:', $select.css('display'));
-            
             // Debug: Verify wrapper is in DOM and visible
             setTimeout(function() {
                 const wrapperInDOM = $.contains(document.body, $wrapper[0]) || $('#filterTooltipPanel').find($wrapper).length > 0;
                 const computedDisplay = window.getComputedStyle($wrapper[0]).display;
                 const computedVisibility = window.getComputedStyle($wrapper[0]).visibility;
-                console.log('[ModernMultiSelect] Wrapper in DOM:', wrapperInDOM, 'Computed display:', computedDisplay, 'Computed visibility:', computedVisibility, 'for:', $select.attr('name'));
                 if (!wrapperInDOM || computedDisplay === 'none') {
-                    console.error('[ModernMultiSelect] Wrapper not visible! DOM:', wrapperInDOM, 'Display:', computedDisplay);
                 }
             }, 100);
         });
-        
-        console.log('[ModernMultiSelect] Finished converting', allSelects.length, 'selects');
     }
     
     // Initialize custom modern multi-select control
@@ -1605,9 +1570,91 @@
             }
         });
         
+        // Listen for external changes (e.g., from clear filter button)
+        // This allows external code to clear the select and have the visual control update
+        $hiddenInput.on('change.external', function() {
+            const newValue = $hiddenInput.val();
+            if (!newValue || newValue.trim() === '') {
+                // Clear all selections
+                selectedValues = [];
+                renderSelectedItems();
+                updateOptionStates();
+            } else {
+                // Update selections from hidden input
+                selectedValues = newValue.split(',').filter(v => v.trim() !== '');
+                renderSelectedItems();
+                updateOptionStates();
+            }
+        });
+        
+        // Also listen for regular change events on hidden input
+        $hiddenInput.on('change', function() {
+            const newValue = $hiddenInput.val();
+            if (!newValue || newValue.trim() === '') {
+                selectedValues = [];
+            } else {
+                selectedValues = newValue.split(',').filter(v => v.trim() !== '');
+            }
+            renderSelectedItems();
+            updateOptionStates();
+        });
+        
         // Initialize
         renderSelectedItems();
     }
+    
+    // Function to apply filter values to already initialized Modern Multi-Select controls
+    // This is called after filter values are loaded from server (e.g., when popular filter is selected)
+    function applyFilterValuesToControls() {
+        console.log('[ModernMultiSelect] Applying filter values to controls...');
+        
+        // Instead of re-initializing (which causes errors for remote data selects),
+        // we'll trigger change events on select elements to update the controls
+        // This is safer and doesn't break remote data loading
+        
+        // For already initialized controls, trigger change.externalUpdate event on select element
+        // The control should listen to this and update itself
+        $('#filterTooltipPanel select[data-modern-multi-select-converted="true"]').each(function() {
+            const $select = $(this);
+            const currentValue = $select.val();
+            
+            // Trigger change.externalUpdate event to update the control
+            // This event is specifically for external updates (like from popular filters)
+            $select.trigger('change.externalUpdate');
+            console.log('[ModernMultiSelect] Triggered externalUpdate for select:', $select.attr('name'), 'value:', currentValue);
+        });
+        
+        // Also handle custom Modern Multi-Select controls (those with data-field-name)
+        $('.modern-multi-select-control[data-field-name]').each(function() {
+            const $control = $(this);
+            const fieldName = $control.data('field-name');
+            const $hiddenInput = $(`#field-${fieldName}`);
+            
+            if ($hiddenInput.length > 0) {
+                const hiddenValue = $hiddenInput.val();
+                // Only trigger if there's a value
+                if (hiddenValue && hiddenValue.trim() !== '') {
+                    // Trigger change event to update the control
+                    $hiddenInput.trigger('change.external');
+                    console.log('[ModernMultiSelect] Triggered change for custom control:', fieldName, 'value:', hiddenValue);
+                }
+            }
+        });
+        
+        // For controls that haven't been initialized yet, initialize them
+        // This handles the case where filter values are loaded before controls are initialized
+        setTimeout(function() {
+            // Only initialize controls that haven't been converted yet
+            const uninitializedSelects = $('#filterTooltipPanel select:not([data-modern-multi-select-converted="true"])');
+            if (uninitializedSelects.length > 0) {
+                console.log('[ModernMultiSelect] Initializing', uninitializedSelects.length, 'uninitialized controls');
+                initializeModernMultiSelect();
+            }
+        }, 100);
+    }
+    
+    // Export for global access
+    window.applyFilterValuesToControls = applyFilterValuesToControls;
     
     // Export for global access - Available immediately when this script loads
     // CRITICAL: This must be available before popular-filters.cshtml runs
@@ -1615,7 +1662,6 @@
     
     // Verify function is exported immediately
     if (typeof window.initializeReportModernMultiSelect !== 'function') {
-        console.error('[ReportMultiSelect] ❌ FAILED to export initializeReportModernMultiSelect!');
         throw new Error('Failed to export initializeReportModernMultiSelect');
     }
     
@@ -1625,6 +1671,24 @@
         setTimeout(function() {
             if (typeof ModernMultiSelect !== 'undefined') {
                 initializeModernMultiSelect();
+                
+                // After initialization, wait for filter values to be loaded from server
+                // This is especially important when a popular filter is selected and page reloads
+                // Try multiple times with increasing delays to ensure values are loaded
+                [200, 500, 800, 1200, 2000].forEach(function(delay) {
+                    setTimeout(function() {
+                        // Check if any select elements have values that need to be applied
+                        const selectsWithValues = $('#filterTooltipPanel select[data-modern-multi-select-converted="true"]').filter(function() {
+                            const val = $(this).val();
+                            return val && val.length > 0 && (Array.isArray(val) ? val.length > 0 : val !== '');
+                        });
+                        
+                        if (selectsWithValues.length > 0) {
+                            console.log('[ModernMultiSelect] Found', selectsWithValues.length, 'selects with values, applying to controls...');
+                            applyFilterValuesToControls();
+                        }
+                    }, delay);
+                });
             }
             // Note: If ModernMultiSelect is not available, initialization will happen when called
         }, 100);
@@ -1637,8 +1701,7 @@
 <script>
     (function() {
         if (typeof window.initializeReportModernMultiSelect !== 'function') {
-            console.error('[ReportMultiSelect] ❌ Verification FAILED: initializeReportModernMultiSelect is NOT available!');
-            console.error('[ReportMultiSelect] This will cause filter multi-select to fail.');
+            throw new Error('initializeReportModernMultiSelect is not available');
         }
     })();
 </script>

@@ -1,0 +1,115 @@
+@using Neo.Bpms.UI.Resources.Resources
+<button title="@ViewTexts.ClearFilterForm" type="button"
+        onclick="clearFormFilter()"
+        class="btn btn-outline-secondary">
+    <svg style="width: 24px;height: 24px;vertical-align: middle;margin:0px -2px 1px 0px" viewBox="0 0 24 24">
+        <use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#erase-button" />
+    </svg>
+</button>
+
+<script>
+// Clear filter function for form pages - Handles Modern Multi-Select and all form controls
+window.clearFormFilter = function() {
+    const filterDiv = document.getElementById('filterDiv');
+    if (!filterDiv) {
+        console.warn('Filter div not found');
+        return;
+    }
+    
+    // FIRST: Clear all hidden selects (these are the actual form inputs)
+    const hiddenSelects = filterDiv.querySelectorAll('select.modern-multi-select-hidden');
+    hiddenSelects.forEach(function(select) {
+        const $select = $(select);
+        if ($select.is('[multiple]')) {
+            $select.val(null);
+        } else {
+            $select.val('');
+        }
+        // Trigger change.external event to notify the custom control
+        $select.trigger('change.external');
+        $select.trigger('change');
+    });
+    
+    // SECOND: Clear all Modern Multi-Select controls visually
+    const allControls = filterDiv.querySelectorAll('.modern-multi-select-control');
+    allControls.forEach(function(control) {
+        const $control = $(control);
+        
+        // Manually update the visual control
+        const $itemsContainer = $control.find('.modern-multi-select-items');
+        const $overflowPopover = $control.find('.modern-multi-select-overflow-popover');
+        const $overflowPopoverContent = $overflowPopover.find('.overflow-popover-content');
+        const $overflowBadge = $control.find('.modern-multi-select-overflow-badge');
+        const $dropdown = $control.find('.modern-multi-select-dropdown');
+        
+        // Clear visual items
+        if ($itemsContainer.length > 0) {
+            $itemsContainer.empty();
+            $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
+        }
+        
+        // Clear popover content
+        if ($overflowPopoverContent.length > 0) {
+            $overflowPopoverContent.empty();
+        }
+        
+        // Hide and clear badge
+        if ($overflowBadge.length > 0) {
+            $overflowBadge.hide();
+            $overflowBadge.text('');
+        }
+        
+        // Reset dropdown state
+        if ($dropdown.length > 0) {
+            $dropdown.val('');
+        }
+    });
+    
+    // THIRD: Clear all standard form inputs (text, number, date, etc.)
+    const standardInputs = filterDiv.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], input[type="email"], input[type="tel"], textarea');
+    standardInputs.forEach(function(input) {
+        input.value = '';
+        // Trigger change event
+        $(input).trigger('change');
+    });
+    
+    // FOURTH: Clear all standard select elements (non-modern-multi-select)
+    const standardSelects = filterDiv.querySelectorAll('select:not(.modern-multi-select-hidden)');
+    standardSelects.forEach(function(select) {
+        const $select = $(select);
+        if ($select.hasClass('modern-multi-select-control')) {
+            // Skip modern multi-select controls (already handled above)
+            return;
+        }
+        if ($select.is('[multiple]')) {
+            $select.val(null);
+        } else {
+            // Set to first option or empty
+            if (select.options.length > 0) {
+                select.selectedIndex = 0;
+            }
+        }
+        $select.trigger('change');
+    });
+    
+    // FIFTH: Clear all checkboxes and radio buttons
+    const checkboxes = filterDiv.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+        $(checkbox).trigger('change');
+    });
+    
+    const radioButtons = filterDiv.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(function(radio) {
+        radio.checked = false;
+        $(radio).trigger('change');
+    });
+    
+    // SIXTH: Clear any date pickers or custom controls
+    // Trigger a custom event for any custom controls that need special handling
+    $(filterDiv).trigger('filter:cleared');
+    
+    console.log('Form filter cleared');
+};
+</script>
+

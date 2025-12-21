@@ -7,12 +7,9 @@
 
 // Global submitFilter function for report pages
 window.submitReportFilter = function() {
-    console.log('Report: Submitting filter...');
-    
     // Prevent multiple submissions
     const submitBtn = document.getElementById('submit-filter');
     if (submitBtn && submitBtn.classList.contains('ladda-loading')) {
-        console.warn('Report: Filter submission already in progress, ignoring duplicate call');
         return;
     }
     
@@ -21,25 +18,69 @@ window.submitReportFilter = function() {
         window.ensureFilterFormAssociation();
     }
     
-    // Submit the form
-    const form = document.getElementById('filter-form');
+    // Collect all filter values first
+    collectReportFilterValues();
+    
+    // Try to find form - check multiple possible IDs
+    let form = document.getElementById('filter-form');
+    if (!form) {
+        form = document.querySelector('form[action*="Report"]');
+    }
+    if (!form) {
+        form = document.querySelector('form');
+    }
+    
     if (form) {
-        console.log('Report: Submitting form with filter values...');
+        // Ensure all inputs are in the form
+        const allInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+        allInputs.forEach(function(input) {
+            if (input.getAttribute('form')) {
+                // If input has form attribute, ensure it's correct
+                input.setAttribute('form', form.id || 'filter-form');
+            } else if (!form.contains(input)) {
+                // If input is not in form, add form attribute
+                input.setAttribute('form', form.id || 'filter-form');
+            }
+        });
+        
+        // Submit the form
         form.submit();
     } else {
-        console.error('Report: Filter form not found');
+        // Fallback: try to click hidden submit button
+        const hiddenSubmit = document.getElementById('submitBtn');
+        if (hiddenSubmit) {
+            hiddenSubmit.click();
+        } else {
+            alert('خطا: فرم فیلتر یافت نشد. لطفاً صفحه را رفرش کنید.');
+        }
     }
 };
 
 // Keep backward compatibility for report pages
 window.submitFilter = window.submitReportFilter;
 
+// Ensure submitFilter is available globally and add click handler as backup
+$(document).ready(function() {
+    // Add click handler as backup in case onclick doesn't work
+        $(document).off('click', '#submit-filter').on('click', '#submit-filter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Call the submit function
+        if (typeof window.submitFilter === 'function') {
+            window.submitFilter();
+        } else if (typeof window.submitReportFilter === 'function') {
+            window.submitReportFilter();
+        }
+        
+        return false;
+    });
+});
+
 // Function to collect all filter values for reports
 function collectReportFilterValues() {
     const filterForm = document.getElementById('filter-form');
     if (!filterForm) return;
-    
-    console.log('Report Tooltip: Collecting filter values...');
     
     // Find all filter inputs (including hidden ones)
     const allFilterInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
@@ -47,19 +88,6 @@ function collectReportFilterValues() {
     allFilterInputs.forEach(function(input) {
         // Ensure input is associated with form
         input.setAttribute('form', 'filter-form');
-        
-        // For hidden inputs or inputs with special handling
-        if (input.type === 'hidden' || input.style.display === 'none') {
-            console.log('Report Tooltip: Found hidden input:', input.name, '=', input.value);
-        } else {
-            console.log('Report Tooltip: Found visible input:', input.name, '=', input.value);
-        }
-        
-        // For select elements, ensure values are properly set
-        if (input.tagName === 'SELECT') {
-            const selectedOptions = Array.from(input.selectedOptions).map(option => option.value);
-            console.log('Report Tooltip: Select values for', input.name, ':', selectedOptions);
-        }
     });
     
     // Also check for any dynamically created inputs
@@ -67,15 +95,12 @@ function collectReportFilterValues() {
     dynamicInputs.forEach(function(input) {
         if (!input.getAttribute('form')) {
             input.setAttribute('form', 'filter-form');
-            console.log('Report Tooltip: Associated dynamic input:', input.name, '=', input.value);
         }
     });
 }
 
 // Submit filter function for report tooltip
 function submitReportFilterFromTooltip() {
-    console.log('Report Tooltip: Submitting filter...');
-
     // Collect all filter values and ensure they're properly associated
     collectReportFilterValues();
 
@@ -92,85 +117,79 @@ function submitReportFilterFromTooltip() {
     // Submit the form
     const form = document.getElementById('filter-form');
     if (form) {
-        console.log('Report Tooltip: Submitting form with filter values...');
         form.submit();
-    } else {
-        console.error('Report Tooltip: Filter form not found');
     }
 }
 
 // Clear filter function for report pages - Handles Modern Multi-Select
 window.clearReportFilter = function() {
-    console.log('Report: Clearing filter...');
-    
     const panel = document.getElementById('filterTooltipPanel');
     if (!panel) {
-        console.error('Report: Filter panel not found');
         return;
     }
     
-    // Clear all Modern Multi-Select controls by finding the hidden select and clearing it
-    // The Modern Multi-Select will update its visual representation when the select changes
+    // FIRST: Clear all hidden selects (these are the actual form inputs)
     const hiddenSelects = panel.querySelectorAll('select.modern-multi-select-hidden');
     hiddenSelects.forEach(function(select) {
         const $select = $(select);
-        
-        // Clear the select value
         if ($select.is('[multiple]')) {
             $select.val(null);
         } else {
             $select.val('');
         }
-        
-        // Trigger change to update the Modern Multi-Select visual representation
+        // Trigger change.external event to notify the custom control
+        $select.trigger('change.external');
         $select.trigger('change');
+    });
+    
+    // SECOND: Clear all Modern Multi-Select controls visually
+    const allControls = panel.querySelectorAll('.modern-multi-select-control');
+    allControls.forEach(function(control) {
+        const $control = $(control);
         
-        // Also manually update the visual control
-        const $control = $select.siblings('.modern-multi-select-control').first();
-        if ($control.length > 0) {
-            const $itemsContainer = $control.find('.modern-multi-select-items');
-            const $overflowPopover = $control.find('.modern-multi-select-overflow-popover');
-            const $overflowPopoverContent = $overflowPopover.find('.overflow-popover-content');
-            const $overflowBadge = $control.find('.modern-multi-select-overflow-badge');
-            const $dropdown = $control.find('.modern-multi-select-dropdown');
-            
-            // Clear visual items
-            if ($itemsContainer.length > 0) {
-                $itemsContainer.empty();
-                $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
-            }
-            
-            // Clear popover content
-            if ($overflowPopoverContent.length > 0) {
-                $overflowPopoverContent.empty();
-            }
-            
-            // Hide and clear badge
-            if ($overflowBadge.length > 0) {
-                $overflowBadge.empty();
-                $overflowBadge.attr('data-visible', 'false');
-                $overflowBadge.removeClass('active');
-            }
-            
-            // Close dropdown
-            $control.removeClass('open');
-            if ($dropdown.length > 0 && $dropdown[0]) {
-                $dropdown[0].style.setProperty('display', 'none', 'important');
-                $dropdown[0].style.setProperty('visibility', 'hidden', 'important');
-                $dropdown[0].style.setProperty('opacity', '0', 'important');
-            }
-            
-            // Close popover
-            if ($overflowPopover.length > 0 && $overflowPopover[0]) {
-                $overflowPopover[0].style.setProperty('display', 'none', 'important');
-                $overflowPopover[0].style.setProperty('visibility', 'hidden', 'important');
-                $overflowPopover[0].style.setProperty('opacity', '0', 'important');
-                $overflowPopover[0].style.setProperty('pointer-events', 'none', 'important');
-            }
+        // Manually update the visual control
+        const $itemsContainer = $control.find('.modern-multi-select-items');
+        const $overflowPopover = $control.find('.modern-multi-select-overflow-popover');
+        const $overflowPopoverContent = $overflowPopover.find('.overflow-popover-content');
+        const $overflowBadge = $control.find('.modern-multi-select-overflow-badge');
+        const $dropdown = $control.find('.modern-multi-select-dropdown');
+        
+        // Clear visual items
+        if ($itemsContainer.length > 0) {
+            $itemsContainer.empty();
+            $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
+        }
+        
+        // Clear popover content
+        if ($overflowPopoverContent.length > 0) {
+            $overflowPopoverContent.empty();
+        }
+        
+        // Hide and clear badge
+        if ($overflowBadge.length > 0) {
+            $overflowBadge.empty();
+            $overflowBadge.attr('data-visible', 'false');
+            $overflowBadge.removeClass('active');
+        }
+        
+        // Close dropdown
+        $control.removeClass('open');
+        if ($dropdown.length > 0 && $dropdown[0]) {
+            $dropdown[0].style.setProperty('display', 'none', 'important');
+            $dropdown[0].style.setProperty('visibility', 'hidden', 'important');
+            $dropdown[0].style.setProperty('opacity', '0', 'important');
+        }
+        
+        // Close popover
+        if ($overflowPopover.length > 0 && $overflowPopover[0]) {
+            $overflowPopover[0].style.setProperty('display', 'none', 'important');
+            $overflowPopover[0].style.setProperty('visibility', 'hidden', 'important');
+            $overflowPopover[0].style.setProperty('opacity', '0', 'important');
+            $overflowPopover[0].style.setProperty('pointer-events', 'none', 'important');
         }
     });
     
-    // Clear all regular form fields (inputs, selects, textareas) that are NOT Modern Multi-Select
+    // THIRD: Clear all regular form fields (inputs, selects, textareas) that are NOT Modern Multi-Select
     const regularFields = panel.querySelectorAll('input:not(.modern-multi-select-hidden):not([type="hidden"]), select:not(.modern-multi-select-hidden), textarea');
     regularFields.forEach(function(field) {
         const $field = $(field);
@@ -202,8 +221,6 @@ window.clearReportFilter = function() {
             $field.trigger('change');
         }
     });
-    
-    console.log('Report: Filter cleared');
 };
 </script>
 

@@ -117,14 +117,14 @@
           border: 2px solid #e2e8f0 !important;
           border-radius: 12px !important;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-          padding: 20px !important;
+          padding: 24px !important; /* Increased by 20%: 20px * 1.2 = 24px */
           z-index: 1050 !important;
-          min-width: 1800px !important;
+          min-width: 2160px !important; /* Increased by 20%: 1800px * 1.2 = 2160px */
           max-width: 98vw !important;
-          /* Fixed height: Header (~60px) + 6 rows (~420px) + Buttons (~70px) + Padding (~40px) = ~590px */
-          height: 590px !important;
-          max-height: 590px !important;
-          min-height: 590px !important;
+          /* Fixed height: Header (~60px) + 6 rows (~420px) + Buttons (~70px) + Padding (~40px) = ~590px, increased by 20% = 708px, then increased by 20% again = 850px */
+          height: 850px !important; /* Increased by 20%: 708px * 1.2 = 849.6px ≈ 850px */
+          max-height: 850px !important; /* Increased by 20%: 708px * 1.2 = 850px */
+          min-height: 850px !important; /* Increased by 20%: 708px * 1.2 = 850px */
           /* width set dynamically by JavaScript to avoid conflicts with position: fixed */
           backdrop-filter: blur(10px) !important;
           display: flex !important;
@@ -751,13 +751,13 @@
           border: 1px solid #e2e8f0 !important;
           border-radius: 8px !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-          margin-top: 4px !important;
-          max-height: 240px !important; /* Increased by 20%: 200px * 1.2 = 240px */
+          margin-top: 0 !important; /* Remove empty gap above the search box (more compact) */
+          max-height: 324px !important; /* Reduced by 10%: 360px * 0.9 = 324px */
           overflow: visible !important; /* Remove scroll from outer container - only options container should scroll */
           overflow-y: visible !important;
           overflow-x: hidden !important;
           height: auto !important;
-          min-height: 96px !important; /* Increased by 20%: 80px * 1.2 = 96px */
+          min-height: 135px !important; /* Reduced by 10%: 150px * 0.9 = 135px */
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
@@ -783,9 +783,9 @@
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
-        /* Options container styling - Compact with thin scrollbar */
+        /* Options container styling - Increased height for more items */
         #filterTooltipPanel .modern-multi-select-options {
-          max-height: 180px !important; /* Increased by 20%: 150px * 1.2 = 180px - shows more items */
+          max-height: 270px !important; /* Reduced by 10%: 300px * 0.9 = 270px */
           overflow-y: auto !important;
           overflow-x: hidden !important;
           padding: 0 !important;
@@ -821,9 +821,16 @@
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
-        /* Individual option styling - Compact padding - Reduced by 20% */
+        /* Individual option styling - Compact padding - Reduced by 20% (additional 20% reduction) */
+        /* CRITICAL: Higher specificity to override modern-multi-select.css */
+        #filterTooltipPanel .modern-filter-wrapper .modern-multi-select-option,
+        #filterTooltipPanel .modern-multi-select-options .modern-multi-select-option,
         #filterTooltipPanel .modern-multi-select-option {
-          padding: 6px 12px !important; /* Reduced by 20%: 8px * 0.8 = 6.4px ≈ 6px */
+          padding: 5px 10px !important; /* Reduced by 20%: 6px * 0.8 = 4.8px ≈ 5px, 12px * 0.8 = 9.6px ≈ 10px */
+          min-height: auto !important; /* Remove min-height constraint */
+          height: auto !important; /* Auto height based on content */
+          max-height: none !important; /* Remove max-height constraint */
+          gap: 6px !important; /* Reduced by 20%: 8px * 0.8 = 6.4px ≈ 6px */
           cursor: pointer !important;
           display: flex !important;
           align-items: center !important;
@@ -831,8 +838,28 @@
           transition: background 0.2s !important;
           pointer-events: auto !important;
           user-select: none !important;
-          font-size: 13px !important; /* Ensure consistent font size */
-          line-height: 1.4 !important; /* Compact line height */
+          font-size: 12px !important; /* Reduced font size for compact look */
+          line-height: 1.1 !important; /* Reduced by 20%: 1.4 * 0.8 = 1.12 ≈ 1.1 */
+          box-sizing: border-box !important; /* Include padding in height calculation */
+        }
+        
+        /* Reduce checkbox size by 20% - Higher specificity */
+        #filterTooltipPanel .modern-filter-wrapper .modern-multi-select-option-checkbox,
+        #filterTooltipPanel .modern-multi-select-options .modern-multi-select-option-checkbox,
+        #filterTooltipPanel .modern-multi-select-option-checkbox {
+          width: 14px !important; /* Reduced by 20%: 18px * 0.8 = 14.4px ≈ 14px */
+          height: 14px !important; /* Reduced by 20%: 18px * 0.8 = 14.4px ≈ 14px */
+          min-width: 14px !important;
+          min-height: 14px !important;
+          flex-shrink: 0 !important;
+        }
+        
+        /* Reduce text font size slightly for more compact look - Higher specificity */
+        #filterTooltipPanel .modern-filter-wrapper .modern-multi-select-option-text,
+        #filterTooltipPanel .modern-multi-select-options .modern-multi-select-option-text,
+        #filterTooltipPanel .modern-multi-select-option-text {
+          font-size: 12px !important; /* Slightly smaller: 13px * 0.92 ≈ 12px */
+          line-height: 1.1 !important;
         }
         
         #filterTooltipPanel .modern-multi-select-option:hover {
@@ -1014,8 +1041,8 @@
         /* Popular Filters Section - Main Panel */
         .popular-filters-section {
           flex: 0 0 25% !important;
-          min-width: 300px !important;
-          max-width: 400px !important;
+          min-width: 360px !important; /* Increased by 20%: 300px * 1.2 = 360px */
+          max-width: 480px !important; /* Increased by 20%: 400px * 1.2 = 480px */
           background: #f8fafc !important;
           border-radius: 8px !important;
           border: 1px solid #e2e8f0 !important;
@@ -1135,7 +1162,7 @@
           width: 100% !important;
           flex: 1 1 auto !important;
           min-height: 0 !important;
-          max-height: 420px !important; /* Max 6 rows: 6 rows × 70px (label + input + margin) = 420px */
+          max-height: 504px !important; /* Increased by 20%: 420px × 1.2 = 504px (shows ~7-8 rows) */
           overflow-y: auto !important;
           overflow-x: hidden !important; /* Hide horizontal scrollbar - content should fit */
           padding-bottom: 8px !important;

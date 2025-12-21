@@ -45,6 +45,8 @@ window.initializePopularFiltersTree = function() {
                         return true;
                     if (typeof FilterConfig !== 'undefined' && FilterConfig.navigateTo) {
                         FilterConfig.navigateTo(node.data.filterId);
+                        // Note: navigateTo causes page reload, so filter values will be applied
+                        // after page loads via the auto-initialization in report-modern-multi-select.cshtml
                     }
                     return false;
                 },
