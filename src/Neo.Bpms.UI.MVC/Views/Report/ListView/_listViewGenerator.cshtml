@@ -254,6 +254,125 @@
 
 <partial name="~/Views/Report/Helpers/PartialsCommon.cshtml" model="new PartialsCommonModel {reportInfo = Model}"/>
 
+<script>
+    // حذف صفرهای بی‌ارزش از سلول‌های جدول گزارش
+    (function() {
+        function removeMeaninglessZeros() {
+            // پیدا کردن تمام سلول‌های جدول با کلاس table-col-value
+            const cells = document.querySelectorAll('.table-col-value');
+            
+            cells.forEach(function(cell) {
+                // دریافت متن کامل سلول (شامل HTML)
+                let text = cell.textContent || cell.innerText || '';
+                text = text.trim();
+                
+                // اگر سلول خالی است، ادامه بده
+                if (!text) return;
+                
+                // الگوهای صفر بی‌ارزش: 0, 0.0, 0.00, 0.000, etc.
+                // همچنین اعداد اعشاری که فقط صفرهای trailing دارند: 1.00, 5.0, etc.
+                const zeroPattern = /^0(\.0+)?$/;
+                const trailingZerosPattern = /^(\d+)\.(\d*?)0+$/;
+                
+                // بررسی اینکه آیا مقدار صفر است
+                if (zeroPattern.test(text)) {
+                    // اگر مقدار صفر است، آن را خالی کن
+                    // اما اگر سلول شامل HTML است (مثل tooltip یا percentage)، فقط متن عددی را تغییر بده
+                    const span = cell.querySelector('span');
+                    if (span && span.textContent) {
+                        const spanText = span.textContent.trim();
+                        if (zeroPattern.test(spanText)) {
+                            span.textContent = '';
+                        }
+                    } else {
+                        // اگر فقط متن دارد، آن را خالی کن
+                        cell.textContent = '';
+                    }
+                } else {
+                    // حذف صفرهای trailing از اعداد اعشاری
+                    // مثال: 1.200 -> 1.2, 5.00 -> 5, 10.0 -> 10
+                    const match = text.match(trailingZerosPattern);
+                    if (match) {
+                        const integerPart = match[1];
+                        const decimalPart = match[2];
+                        
+                        let newText;
+                        if (decimalPart === '') {
+                            // اگر بعد از نقطه فقط صفر باشد، نقطه را هم حذف کن
+                            newText = integerPart;
+                        } else {
+                            // اگر اعداد غیرصفر بعد از نقطه باشد، فقط صفرهای trailing را حذف کن
+                            newText = integerPart + '.' + decimalPart;
+                        }
+                        
+                        // به‌روزرسانی متن سلول
+                        const span = cell.querySelector('span');
+                        if (span && span.textContent) {
+                            // اگر span دارد، فقط متن عددی را تغییر بده
+                            const spanText = span.textContent.trim();
+                            const spanMatch = spanText.match(trailingZerosPattern);
+                            if (spanMatch) {
+                                const spanIntegerPart = spanMatch[1];
+                                const spanDecimalPart = spanMatch[2];
+                                if (spanDecimalPart === '') {
+                                    span.textContent = spanIntegerPart;
+                                } else {
+                                    span.textContent = spanIntegerPart + '.' + spanDecimalPart;
+                                }
+                            }
+                        } else {
+                            // اگر فقط متن دارد، آن را تغییر بده
+                            cell.textContent = newText;
+                        }
+                    }
+                }
+            });
+        }
+        
+        // اجرا بعد از لود شدن DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', removeMeaninglessZeros);
+        } else {
+            // اگر DOM قبلاً لود شده، مستقیماً اجرا کن
+            removeMeaninglessZeros();
+        }
+        
+        // همچنین بعد از تغییرات دینامیک (مثل AJAX) نیز اجرا کن
+        // استفاده از MutationObserver برای مشاهده تغییرات در DOM
+        const observer = new MutationObserver(function(mutations) {
+            let shouldRun = false;
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length > 0) {
+                    // بررسی اینکه آیا node جدیدی اضافه شده که جدول باشد
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1) { // Element node
+                            if (node.classList && node.classList.contains('table-col-value')) {
+                                shouldRun = true;
+                            } else if (node.querySelector && node.querySelector('.table-col-value')) {
+                                shouldRun = true;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            if (shouldRun) {
+                // با تاخیر کوتاه اجرا کن تا DOM کاملاً render شود
+                setTimeout(removeMeaninglessZeros, 100);
+            }
+        });
+        
+        // شروع مشاهده تغییرات در body
+        const body = document.body;
+        if (body) {
+            observer.observe(body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    })();
+</script>
+
 @functions{
 
 	void RenderSortableTh(ColumnFieldDefinition colth, bool isInlineSubTable)

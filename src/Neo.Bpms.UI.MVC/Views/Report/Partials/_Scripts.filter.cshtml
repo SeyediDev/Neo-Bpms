@@ -82,7 +82,72 @@ function collectReportFilterValues() {
     const filterForm = document.getElementById('filter-form');
     if (!filterForm) return;
     
-    // Find all filter inputs (including hidden ones)
+    // FIRST: Update all Modern Multi-Select controls before collecting values
+    const panel = document.getElementById('filterTooltipPanel');
+    if (panel) {
+        const allControls = panel.querySelectorAll('.modern-multi-select-control');
+        allControls.forEach(function(control) {
+            const $control = $(control);
+            
+            // Find the hidden select element associated with this control
+            // The hidden select is a sibling of the control wrapper (inserted right before it)
+            let $hiddenSelect = $control.prev('select.modern-multi-select-hidden');
+            
+            // If not found as previous sibling, try to find it in the same parent
+            if ($hiddenSelect.length === 0) {
+                const $parent = $control.parent();
+                const fieldName = $control.data('field-name');
+                
+                // Try to find by field name
+                if (fieldName) {
+                    $hiddenSelect = $parent.find('select.modern-multi-select-hidden[name*="' + fieldName + '"]');
+                }
+                
+                // If still not found, try to find any hidden select in the same parent
+                if ($hiddenSelect.length === 0) {
+                    $hiddenSelect = $parent.find('select.modern-multi-select-hidden').first();
+                }
+            }
+            
+            if ($hiddenSelect.length > 0) {
+                // Extract selected values from the control's items
+                const selectedValues = [];
+                
+                // Get values from visible items in items container
+                const $items = $control.find('.modern-multi-select-items .modern-multi-select-item');
+                $items.each(function() {
+                    const value = $(this).data('value');
+                    if (value !== undefined && value !== null && value !== '') {
+                        selectedValues.push(String(value));
+                    }
+                });
+                
+                // Also check overflow popover for additional selected items
+                const $overflowItems = $control.find('.overflow-popover-content .modern-multi-select-item');
+                $overflowItems.each(function() {
+                    const value = $(this).data('value');
+                    if (value !== undefined && value !== null && value !== '') {
+                        const valueStr = String(value);
+                        // Avoid duplicates
+                        if (selectedValues.indexOf(valueStr) === -1) {
+                            selectedValues.push(valueStr);
+                        }
+                    }
+                });
+                
+                // Update the hidden select with selected values
+                $hiddenSelect.val(null); // Clear first
+                if (selectedValues.length > 0) {
+                    $hiddenSelect.val(selectedValues);
+                }
+                
+                // Ensure it's associated with form
+                $hiddenSelect.attr('form', 'filter-form');
+            }
+        });
+    }
+    
+    // SECOND: Find all filter inputs (including hidden ones)
     const allFilterInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
     
     allFilterInputs.forEach(function(input) {
@@ -90,7 +155,7 @@ function collectReportFilterValues() {
         input.setAttribute('form', 'filter-form');
     });
     
-    // Also check for any dynamically created inputs
+    // THIRD: Also check for any dynamically created inputs
     const dynamicInputs = document.querySelectorAll('input[name*="FilterParameter"], input[name*="[]"]');
     dynamicInputs.forEach(function(input) {
         if (!input.getAttribute('form')) {
