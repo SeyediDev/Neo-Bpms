@@ -676,40 +676,65 @@
                 
                 // Render ALL selected items in popover (card view)
                 if (selectedValues.length > 0) {
-                    selectedValues.forEach(function(value) {
-                        const option = allOptions.find(function(opt) {
-                            return String(opt.value) === String(value) && opt.value !== '';
+                    selectedValues.forEach(function(val) {
+                        let option = allOptions.find(function(opt) {
+                            return String(opt.value) === String(val) && opt.value !== '';
                         });
                         
+                        // Fallback: if option not found in allOptions, try to get it from the select element's options
+                        if (!option) {
+                            const $selectOption = $select.find('option[value="' + val + '"]');
+                            if ($selectOption.length > 0) {
+                                option = {
+                                    value: val,
+                                    text: $selectOption.text() || val
+                                };
+                            } else {
+                                // Fallback to raw value if no option found
+                                option = {
+                                    value: val,
+                                    text: val
+                                };
+                            }
+                        }
+                        
                         if (option) {
-                            const $chip = createChipElement(value, option, true);
+                            const $chip = createChipElement(val, option, true);
                             $overflowPopoverContent.append($chip);
                         }
                     });
                 }
                 
-                // Calculate position relative to badge
-                const badgeOffset = $overflowBadge.offset();
-                const wrapperOffset = $wrapper.offset();
-                const popoverWidth = 300; // Wider for card view
+                console.log('[ModernMultiSelect] Popover content children:', $overflowPopoverContent.children().length);
                 
-                // Position popover below badge, aligned to right
-                const topPosition = (badgeOffset.top - wrapperOffset.top + $overflowBadge.outerHeight() + 4);
-                const rightPosition = ($wrapper.outerWidth() - (badgeOffset.left - wrapperOffset.left + $overflowBadge.outerWidth()));
+                // Calculate position relative to the main input control
+                const inputOffset = $input.offset();
+                const wrapperOffset = $wrapper.offset();
+                const popoverWidth = 320; // Fixed width for popover
+                
+                // Position popover below the main input, aligned to its left edge (in RTL, this is visual right)
+                const topPosition = ($input.position().top + $input.outerHeight() + 4); // 4px margin below input
+                const leftPosition = 0; // Aligned to the left edge of the wrapper
                 
                 // Use setProperty for !important to override CSS
-                $overflowPopover[0].style.setProperty('display', 'flex', 'important');
-                $overflowPopover[0].style.setProperty('visibility', 'visible', 'important');
-                $overflowPopover[0].style.setProperty('opacity', '1', 'important');
-                $overflowPopover[0].style.setProperty('pointer-events', 'auto', 'important');
+                if ($overflowPopover.length > 0 && $overflowPopover[0]) {
+                    $overflowPopover[0].style.setProperty('display', 'flex', 'important');
+                    $overflowPopover[0].style.setProperty('visibility', 'visible', 'important');
+                    $overflowPopover[0].style.setProperty('opacity', '1', 'important');
+                    $overflowPopover[0].style.setProperty('pointer-events', 'auto', 'important');
+                }
                 
                 $overflowPopover.css({
                     'top': topPosition + 'px',
-                    'right': rightPosition + 'px',
-                    'left': 'auto'
+                    'left': leftPosition + 'px',
+                    'right': 'auto', // Ensure right is not set
+                    'max-width': popoverWidth + 'px',
+                    'max-height': Math.min(400, $(window).height() - 100) + 'px' // Max 400px or viewport height - 100px
                 });
                 
                 $overflowBadge.addClass('active');
+                
+                console.log('[ModernMultiSelect] Popover opened, content count:', $overflowPopoverContent.children().length);
             }
             
             // Update input height based on content (fixed at 38px for single line)
@@ -741,10 +766,23 @@
                 
                 // Clear containers
                 $itemsContainer.empty();
-                $overflowPopover.empty();
-                $overflowBadge.empty();
-                $overflowBadge.attr('data-visible', 'false');
-                closeOverflowPopover();
+                // Don't clear popover content here - it will be populated when badge is clicked
+                // CRITICAL: Don't close popover if it's currently open (user is removing items)
+                const isPopoverOpen = $overflowBadge.hasClass('active') && 
+                                    $overflowPopover.is(':visible') &&
+                                    $overflowPopover[0] && 
+                                    $overflowPopover[0].style.getPropertyValue('display') !== 'none';
+                
+                if (!isPopoverOpen) {
+                    // Only clear and close if popover is not open
+                    $overflowPopoverContent.empty();
+                    closeOverflowPopover();
+                }
+                // Don't clear badge if popover is open - it will be updated by remove handler
+                if (!isPopoverOpen) {
+                    $overflowBadge.empty();
+                    $overflowBadge.attr('data-visible', 'false');
+                }
                 
                 if (selectedValues.length === 0) {
                     $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
@@ -1163,31 +1201,127 @@
                 return false;
             });
             
-            // Remove item from popover
-            $overflowPopover.off('click.removeItem').on('click.removeItem', '.modern-multi-select-item-remove', function(e) {
+            // Remove item from popover - Keep popover open after removal
+            // CRITICAL: Use capture phase and highest priority to prevent other handlers
+            $overflowPopoverContent.off('click.removeItemPopover').on('click.removeItemPopover', '.modern-multi-select-item-remove', function(e) {
+                // CRITICAL: Stop all propagation FIRST
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
+                
+                // Also stop on native event
+                if (e.originalEvent) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                    e.originalEvent.stopImmediatePropagation();
+                }
                 
                 const $removeButton = $(this);
                 const $item = $removeButton.closest('.modern-multi-select-item');
                 const value = $item.data('value');
                 
                 console.log('[ModernMultiSelect] Remove clicked (popover handler) for:', value, 'field:', fieldName);
+                console.log('[ModernMultiSelect] Current selected values before remove:', selectedValues);
                 
+                // Remove value from selectedValues
+                const beforeCount = selectedValues.length;
                 selectedValues = selectedValues.filter(function(v) { 
                     return String(v) !== String(value) && v != value && v !== ''; 
                 });
+                console.log('[ModernMultiSelect] After remove - before:', beforeCount, 'after:', selectedValues.length);
                 
-                renderSelectedItems();
+                // Update select and render - but DON'T call renderSelectedItems which might close popover
                 renderOptions();
                 updateSelect();
                 updateInputHeight();
                 
-                // If no more overflow, close popover
-                if (selectedValues.length <= calculateVisibleChipsCount()) {
-                    closeOverflowPopover();
+                // CRITICAL: Re-populate popover with updated list (keep it open)
+                // Clear and re-render all items in popover
+                $overflowPopoverContent.empty();
+                if (selectedValues.length > 0) {
+                    selectedValues.forEach(function(val) {
+                        let option = allOptions.find(function(opt) {
+                            return String(opt.value) === String(val) && opt.value !== '';
+                        });
+                        
+                        if (!option) {
+                            const $selectOption = $select.find('option[value="' + val + '"]');
+                            if ($selectOption.length > 0) {
+                                option = {
+                                    value: val,
+                                    text: $selectOption.text().trim() || val
+                                };
+                            } else {
+                                option = {
+                                    value: val,
+                                    text: val
+                                };
+                            }
+                        }
+                        
+                        if (option) {
+                            const $chip = createChipElement(val, option, true);
+                            $overflowPopoverContent.append($chip);
+                        }
+                    });
                 }
+                
+                // Update items container and badge WITHOUT calling renderSelectedItems
+                // Manually update visible chips
+                $itemsContainer.empty();
+                const visibleCount = calculateVisibleChipsCount();
+                const allChips = [];
+                selectedValues.forEach(function(val) {
+                    let option = allOptions.find(function(opt) {
+                        return String(opt.value) === String(val) && opt.value !== '';
+                    });
+                    if (!option) {
+                        const $selectOption = $select.find('option[value="' + val + '"]');
+                        if ($selectOption.length > 0) {
+                            option = {
+                                value: val,
+                                text: $selectOption.text().trim() || val
+                            };
+                        } else {
+                            option = { value: val, text: val };
+                        }
+                    }
+                    if (option) {
+                        allChips.push({ value: val, option: option });
+                    }
+                });
+                
+                // Render visible chips
+                for (let i = 0; i < Math.min(visibleCount, allChips.length); i++) {
+                    const chipData = allChips[i];
+                    const $chip = createChipElement(chipData.value, chipData.option, false);
+                    $itemsContainer.append($chip);
+                }
+                
+                // Update badge count
+                const overflowCount = selectedValues.length - visibleCount;
+                if (overflowCount > 0) {
+                    $overflowBadge.html('<span>+' + overflowCount + '</span>');
+                    $overflowBadge.attr('data-visible', 'true');
+                } else {
+                    $overflowBadge.empty();
+                    $overflowBadge.attr('data-visible', 'false');
+                    // Only close if no items left at all
+                    if (selectedValues.length === 0) {
+                        closeOverflowPopover();
+                    }
+                }
+                
+                // CRITICAL: Ensure popover stays open
+                if ($overflowPopover.length > 0 && $overflowPopover[0]) {
+                    $overflowPopover[0].style.setProperty('display', 'flex', 'important');
+                    $overflowPopover[0].style.setProperty('visibility', 'visible', 'important');
+                    $overflowPopover[0].style.setProperty('opacity', '1', 'important');
+                    $overflowPopover[0].style.setProperty('pointer-events', 'auto', 'important');
+                }
+                $overflowBadge.addClass('active'); // Ensure badge stays active
+                
+                console.log('[ModernMultiSelect] Popover should stay open, content count:', $overflowPopoverContent.children().length);
                 
                 return false;
             });
@@ -1202,8 +1336,13 @@
                 }
             });
             
-            // Close popover when clicking outside
+            // Close popover when clicking outside (but not when clicking remove button)
             $(document).on('click.modernMultiSelectOverflow_' + fieldName, function(e) {
+                // Don't close if clicking on remove button or inside popover
+                if ($(e.target).closest('.modern-multi-select-item-remove').length > 0) {
+                    return; // Don't close when clicking remove button
+                }
+                
                 if (!$overflowPopover.is(e.target) && 
                     $overflowPopover.has(e.target).length === 0 &&
                     !$overflowBadge.is(e.target) &&

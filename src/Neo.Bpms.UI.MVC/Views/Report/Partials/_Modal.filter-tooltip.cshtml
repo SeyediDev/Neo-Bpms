@@ -66,22 +66,43 @@
             <!-- Left Column - Main Filter Controls -->
             <div class="filter-main-content">
                 <div class="modern-filter-content">
-                    @{
-                        var htmlInputStr = controlsRenderer.Render(controlsRendererData);
-                    }
-                    @htmlInputStr
+                    @controlsRenderer.Render(controlsRendererData)
                 </div>
-                
                 <div class="modern-filter-buttons">
-                    <partial name="Common/FilterEraseButton" />
-                    @if (ViewBag.ScheduledId != null && ViewBag.ScheduledId > 0)
+					<button title="@ViewTexts.ClearFilterForm" type="button"
+							onclick="clearReportFilter()"
+							class="btn btn-outline-secondary">
+						<svg style="width: 24px;height: 24px;vertical-align: middle;margin:0px -2px 1px 0px" viewBox="0 0 24 24">
+							<use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#erase-button" />
+						</svg>
+					</button>
+					@if (ViewBag.ScheduledId != null && ViewBag.ScheduledId > 0)
                     {
                         <button type="button" onclick="ScheduledReport.saveFilterValues(@(ViewBag.ScheduledId ?? 0));" class="btn btn-outline-warning">
                             <span>@ViewTexts.SaveScheduleFilter @(ViewBag.ScheduledName ?? "")</span>
                         </button>
                     }
-                    <partial name="Filter/FilterSaveButtons" model="new FilterSaveButtonsModel{filterId = ViewBag.FilterId, filterName = ViewBag.FilterName}" />
-                    <partial name="Filter/ApplyButton" />
+					@if (ViewBag.FilterId != null && ViewBag.FilterId > 0)
+					{
+						<button type="button" onclick="FilterConfig.saveFilterValues(@ViewBag.FilterId);" class="btn btn-outline-success" style="border:1px solid #94A3B8; background-color:#EFF6FF;border-radius:8px;">
+							<svg style="width: 18px;height: 18px;vertical-align: middle;" viewBox="0 0 18 18">
+								<use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter2-button" />
+							</svg>
+							<span style="color: #2563EB;font-size:14px;">@ViewTexts.SaveFilterValues @ViewBag.FilterName</span>
+						</button>
+					}
+					<button type="button" onclick="FilterConfig.showFiltersModal();" class="btn btn-success add-button">
+						<svg style="width: 18px;height: 18px;vertical-align: middle;" viewBox="0 0 18 18">
+							<use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#add-button" />
+						</svg>
+						<span>@ViewTexts.SaveNewFilter</span>
+					</button>
+                    <button type="button" id="submit-filter" onclick="submitFilter()" class="btn btn-success">
+						<svg style="width: 18px;height: 18px;vertical-align: middle;" viewBox="0 0 18 18">
+							<use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-button" />
+						</svg>
+						<span>@ViewTexts.ApplyFilter</span>
+					</button>
                     <input type="submit" id="submitBtn" value="" style="display:none; position:absolute; left:-9999px;" aria-hidden="true" />
                 </div>
             </div>
@@ -570,13 +591,31 @@
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
         }
         
-        /* Apply Filter Button - Only adjust font-weight to match other buttons */
+        /* Apply Filter Button - Match style of "Save New Filter" button (btn-success) */
         .filter-tooltip-panel #submit-filter,
         .filter-tooltip-panel #submit-filter.btn,
-        .filter-tooltip-panel #submit-filter.btn-primary,
-        .filter-tooltip-panel #submit-filter.ladda-button,
-        .filter-tooltip-panel #submit-filter.save-button {
+        .filter-tooltip-panel #submit-filter.btn-success,
+        .filter-tooltip-panel #submit-filter.ladda-button {
+          display: inline-flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          cursor: pointer !important;
           font-weight: 500 !important;
+          align-items: center !important;
+          gap: 6px !important;
+          /* Match btn-success styling */
+          background-color: #10b981 !important;
+          border-color: #10b981 !important;
+          color: #ffffff !important;
+        }
+        
+        .filter-tooltip-panel #submit-filter:hover,
+        .filter-tooltip-panel #submit-filter.btn:hover,
+        .filter-tooltip-panel #submit-filter.btn-success:hover {
+          background-color: #059669 !important;
+          border-color: #059669 !important;
+          color: #ffffff !important;
         }
         
         .filter-tooltip-panel #submit-filter span,
@@ -713,19 +752,19 @@
           border-radius: 8px !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
           margin-top: 4px !important;
-          max-height: 200px !important; /* Reduced from 300px - compact and beautiful */
+          max-height: 240px !important; /* Increased by 20%: 200px * 1.2 = 240px */
           overflow: visible !important; /* Remove scroll from outer container - only options container should scroll */
           overflow-y: visible !important;
           overflow-x: hidden !important;
           height: auto !important;
-          min-height: 80px !important; /* Reduced from 100px */
+          min-height: 96px !important; /* Increased by 20%: 80px * 1.2 = 96px */
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
-        /* Search input styling - Compact */
+        /* Search input styling - Compact - Reduced by 15% */
         #filterTooltipPanel .modern-multi-select-search {
           width: 100% !important;
-          padding: 6px 12px !important; /* Reduced from 8px - more compact */
+          padding: 5px 12px !important; /* Reduced by 15%: 6px * 0.85 = 5.1px ≈ 5px */
           border: none !important;
           border-bottom: 1px solid #e2e8f0 !important;
           outline: none !important;
@@ -746,7 +785,7 @@
         
         /* Options container styling - Compact with thin scrollbar */
         #filterTooltipPanel .modern-multi-select-options {
-          max-height: 150px !important; /* Reduced from 250px - shows ~5-6 items */
+          max-height: 180px !important; /* Increased by 20%: 150px * 1.2 = 180px - shows more items */
           overflow-y: auto !important;
           overflow-x: hidden !important;
           padding: 0 !important;
@@ -782,9 +821,9 @@
           pointer-events: auto !important; /* CRITICAL: Allow clicks */
         }
         
-        /* Individual option styling - Compact padding */
+        /* Individual option styling - Compact padding - Reduced by 20% */
         #filterTooltipPanel .modern-multi-select-option {
-          padding: 8px 12px !important; /* Reduced from 10px - more compact */
+          padding: 6px 12px !important; /* Reduced by 20%: 8px * 0.8 = 6.4px ≈ 6px */
           cursor: pointer !important;
           display: flex !important;
           align-items: center !important;
@@ -1272,6 +1311,13 @@
           vertical-align: middle !important;
           float: none !important;
           clear: none !important;
+        }
+        
+        /* Remove scrollbar from dWrapper */
+        #filterTooltipPanel .dWrapper {
+          overflow: hidden !important;
+          overflow-x: hidden !important;
+          overflow-y: hidden !important;
         }
     </style>
 

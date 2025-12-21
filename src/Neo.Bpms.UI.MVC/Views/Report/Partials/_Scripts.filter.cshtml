@@ -98,5 +98,112 @@ function submitReportFilterFromTooltip() {
         console.error('Report Tooltip: Filter form not found');
     }
 }
+
+// Clear filter function for report pages - Handles Modern Multi-Select
+window.clearReportFilter = function() {
+    console.log('Report: Clearing filter...');
+    
+    const panel = document.getElementById('filterTooltipPanel');
+    if (!panel) {
+        console.error('Report: Filter panel not found');
+        return;
+    }
+    
+    // Clear all Modern Multi-Select controls by finding the hidden select and clearing it
+    // The Modern Multi-Select will update its visual representation when the select changes
+    const hiddenSelects = panel.querySelectorAll('select.modern-multi-select-hidden');
+    hiddenSelects.forEach(function(select) {
+        const $select = $(select);
+        
+        // Clear the select value
+        if ($select.is('[multiple]')) {
+            $select.val(null);
+        } else {
+            $select.val('');
+        }
+        
+        // Trigger change to update the Modern Multi-Select visual representation
+        $select.trigger('change');
+        
+        // Also manually update the visual control
+        const $control = $select.siblings('.modern-multi-select-control').first();
+        if ($control.length > 0) {
+            const $itemsContainer = $control.find('.modern-multi-select-items');
+            const $overflowPopover = $control.find('.modern-multi-select-overflow-popover');
+            const $overflowPopoverContent = $overflowPopover.find('.overflow-popover-content');
+            const $overflowBadge = $control.find('.modern-multi-select-overflow-badge');
+            const $dropdown = $control.find('.modern-multi-select-dropdown');
+            
+            // Clear visual items
+            if ($itemsContainer.length > 0) {
+                $itemsContainer.empty();
+                $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
+            }
+            
+            // Clear popover content
+            if ($overflowPopoverContent.length > 0) {
+                $overflowPopoverContent.empty();
+            }
+            
+            // Hide and clear badge
+            if ($overflowBadge.length > 0) {
+                $overflowBadge.empty();
+                $overflowBadge.attr('data-visible', 'false');
+                $overflowBadge.removeClass('active');
+            }
+            
+            // Close dropdown
+            $control.removeClass('open');
+            if ($dropdown.length > 0 && $dropdown[0]) {
+                $dropdown[0].style.setProperty('display', 'none', 'important');
+                $dropdown[0].style.setProperty('visibility', 'hidden', 'important');
+                $dropdown[0].style.setProperty('opacity', '0', 'important');
+            }
+            
+            // Close popover
+            if ($overflowPopover.length > 0 && $overflowPopover[0]) {
+                $overflowPopover[0].style.setProperty('display', 'none', 'important');
+                $overflowPopover[0].style.setProperty('visibility', 'hidden', 'important');
+                $overflowPopover[0].style.setProperty('opacity', '0', 'important');
+                $overflowPopover[0].style.setProperty('pointer-events', 'none', 'important');
+            }
+        }
+    });
+    
+    // Clear all regular form fields (inputs, selects, textareas) that are NOT Modern Multi-Select
+    const regularFields = panel.querySelectorAll('input:not(.modern-multi-select-hidden):not([type="hidden"]), select:not(.modern-multi-select-hidden), textarea');
+    regularFields.forEach(function(field) {
+        const $field = $(field);
+        
+        // Skip if this is a Modern Multi-Select control element
+        if ($field.closest('.modern-multi-select-control').length > 0) {
+            return;
+        }
+        
+        if ($field.is('select')) {
+            if ($field.is('[multiple]')) {
+                $field.val(null);
+            } else {
+                // Try to set empty value
+                if ($field.find('option[value=""]').length > 0) {
+                    $field.val('');
+                } else if ($field.find('option[value="0"]').length > 0) {
+                    $field.val('0');
+                } else {
+                    $field.prop('selectedIndex', -1);
+                }
+            }
+            $field.trigger('change');
+        } else if ($field.is('input[type="checkbox"], input[type="radio"]')) {
+            $field.prop('checked', false);
+            $field.trigger('change');
+        } else {
+            $field.val('');
+            $field.trigger('change');
+        }
+    });
+    
+    console.log('Report: Filter cleared');
+};
 </script>
 
