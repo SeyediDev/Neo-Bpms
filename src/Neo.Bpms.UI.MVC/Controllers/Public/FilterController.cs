@@ -178,10 +178,9 @@ public class FilterController(
         });
     }
 
-    private async Task<ConfiguredFilter> FetchFilter(long filterId)
+    private async Task<ConfiguredFilter?> FetchFilter(long filterId)
     {
-        ConfiguredFilter filter = await filterConfigBackupRestore.GetConfig(filterId) ??
-            throw new HttpException("کد فیلتر صحیح نیست");
+        ConfiguredFilter? filter = await filterConfigBackupRestore.GetConfig(filterId);
         return filter;
     }
 }

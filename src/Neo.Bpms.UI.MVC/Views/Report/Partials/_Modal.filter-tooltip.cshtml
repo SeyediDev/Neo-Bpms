@@ -97,7 +97,7 @@
 						</svg>
 						<span>@ViewTexts.SaveNewFilter</span>
 					</button>
-                    <button type="button" id="submit-filter" onclick="submitFilter()" class="btn btn-success">
+                    <button type="button" id="submit-filter" onclick="window.submitFilter && window.submitFilter(); return false;" class="btn btn-success">
 						<svg style="width: 18px;height: 18px;vertical-align: middle;" viewBox="0 0 18 18">
 							<use xlink:href="/Content/common-assets-includes/icons/svgSprite.svg#filter-button" />
 						</svg>

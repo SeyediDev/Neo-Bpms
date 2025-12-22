@@ -5,79 +5,8 @@
  * Filter Functions for Report Pages
  */
 
-// Global submitFilter function for report pages
-window.submitReportFilter = function() {
-    // Prevent multiple submissions
-    const submitBtn = document.getElementById('submit-filter');
-    if (submitBtn && submitBtn.classList.contains('ladda-loading')) {
-        return;
-    }
-    
-    // Ensure all filter inputs are associated with the form
-    if (typeof window.ensureFilterFormAssociation === 'function') {
-        window.ensureFilterFormAssociation();
-    }
-    
-    // Collect all filter values first
-    collectReportFilterValues();
-    
-    // Try to find form - check multiple possible IDs
-    let form = document.getElementById('filter-form');
-    if (!form) {
-        form = document.querySelector('form[action*="Report"]');
-    }
-    if (!form) {
-        form = document.querySelector('form');
-    }
-    
-    if (form) {
-        // Ensure all inputs are in the form
-        const allInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
-        allInputs.forEach(function(input) {
-            if (input.getAttribute('form')) {
-                // If input has form attribute, ensure it's correct
-                input.setAttribute('form', form.id || 'filter-form');
-            } else if (!form.contains(input)) {
-                // If input is not in form, add form attribute
-                input.setAttribute('form', form.id || 'filter-form');
-            }
-        });
-        
-        // Submit the form
-        form.submit();
-    } else {
-        // Fallback: try to click hidden submit button
-        const hiddenSubmit = document.getElementById('submitBtn');
-        if (hiddenSubmit) {
-            hiddenSubmit.click();
-        } else {
-            alert('خطا: فرم فیلتر یافت نشد. لطفاً صفحه را رفرش کنید.');
-        }
-    }
-};
-
-// Keep backward compatibility for report pages
-window.submitFilter = window.submitReportFilter;
-
-// Ensure submitFilter is available globally and add click handler as backup
-$(document).ready(function() {
-    // Add click handler as backup in case onclick doesn't work
-        $(document).off('click', '#submit-filter').on('click', '#submit-filter', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Call the submit function
-        if (typeof window.submitFilter === 'function') {
-            window.submitFilter();
-        } else if (typeof window.submitReportFilter === 'function') {
-            window.submitReportFilter();
-        }
-        
-        return false;
-    });
-});
-
 // Function to collect all filter values for reports
+// Define this FIRST so it's available when submitReportFilter is called
 function collectReportFilterValues() {
     const filterForm = document.getElementById('filter-form');
     if (!filterForm) return;
@@ -163,6 +92,117 @@ function collectReportFilterValues() {
         }
     });
 }
+
+// Ensure collectReportFilterValues is available in window scope for compatibility
+if (typeof window !== 'undefined') {
+    window.collectReportFilterValues = collectReportFilterValues;
+}
+
+// Global submitFilter function for report pages
+// Define AFTER collectReportFilterValues to ensure it's available
+window.submitReportFilter = function() {
+    // Prevent multiple submissions
+    const submitBtn = document.getElementById('submit-filter');
+    if (submitBtn && submitBtn.classList.contains('ladda-loading')) {
+        return;
+    }
+    
+    // Ensure all filter inputs are associated with the form
+    if (typeof window.ensureFilterFormAssociation === 'function') {
+        window.ensureFilterFormAssociation();
+    }
+    
+    // Collect all filter values first
+    collectReportFilterValues();
+    
+    // Try to find form - check multiple possible IDs
+    let form = document.getElementById('filter-form');
+    if (!form) {
+        form = document.querySelector('form[action*="Report"]');
+    }
+    if (!form) {
+        form = document.querySelector('form');
+    }
+    
+    if (form) {
+        // Ensure all inputs are in the form
+        const allInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+        allInputs.forEach(function(input) {
+            if (input.getAttribute('form')) {
+                // If input has form attribute, ensure it's correct
+                input.setAttribute('form', form.id || 'filter-form');
+            } else if (!form.contains(input)) {
+                // If input is not in form, add form attribute
+                input.setAttribute('form', form.id || 'filter-form');
+            }
+        });
+        
+        // Submit the form
+        form.submit();
+    } else {
+        // Fallback: try to click hidden submit button
+        const hiddenSubmit = document.getElementById('submitBtn');
+        if (hiddenSubmit) {
+            hiddenSubmit.click();
+        } else {
+            alert('خطا: فرم فیلتر یافت نشد. لطفاً صفحه را رفرش کنید.');
+        }
+    }
+};
+
+// Keep backward compatibility for report pages
+window.submitFilter = window.submitReportFilter;
+
+// Make submitFilter available in global scope for onclick handlers
+// در HTML، onclick="submitFilter()" استفاده می‌شود که نیاز به function در scope global دارد
+if (typeof window !== 'undefined') {
+    // در browser، window object در scope global است
+    // پس window.submitFilter در scope global در دسترس است
+    // اما برای اطمینان، آن را به صورت مستقیم هم تعریف می‌کنیم
+    if (typeof submitFilter === 'undefined') {
+        // در strict mode یا برخی محیط‌ها، نمی‌توانیم مستقیماً variable در global scope ایجاد کنیم
+        // پس از window استفاده می‌کنیم
+        window.submitFilter = window.submitReportFilter;
+    }
+}
+
+// Ensure submitFilter is available globally and add click handler as backup
+$(document).ready(function() {
+    // Make sure submitFilter is available in global scope for onclick handlers
+    // در HTML، onclick="submitFilter()" استفاده می‌شود
+    if (typeof window.submitFilter === 'function') {
+        // در browser، window object در scope global است
+        // پس window.submitFilter در scope global در دسترس است
+        // اما برای اطمینان، آن را به صورت مستقیم هم تعریف می‌کنیم
+        try {
+            // در strict mode، نمی‌توانیم مستقیماً variable در global scope ایجاد کنیم
+            // پس از window استفاده می‌کنیم که در onclick handlers در دسترس است
+            if (typeof submitFilter === 'undefined') {
+                // در browser، window.submitFilter در onclick handlers در دسترس است
+                // پس نیازی به تعریف مجدد نیست
+            }
+        } catch (e) {
+            // در strict mode، ignore
+        }
+    }
+    
+    // Add click handler as backup in case onclick doesn't work
+    $(document).off('click', '#submit-filter').on('click', '#submit-filter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Call the submit function
+        if (typeof window.submitFilter === 'function') {
+            window.submitFilter();
+        } else if (typeof window.submitReportFilter === 'function') {
+            window.submitReportFilter();
+        } else {
+            console.error('submitFilter function not found!');
+        }
+        
+        return false;
+    });
+});
 
 // Submit filter function for report tooltip
 function submitReportFilterFromTooltip() {

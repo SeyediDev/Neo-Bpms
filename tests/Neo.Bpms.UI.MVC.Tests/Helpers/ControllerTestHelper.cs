@@ -48,6 +48,13 @@ public static class ControllerTestHelper
         var serviceProviderMock = new Mock<IServiceProvider>();
         serviceProviderMock.Setup(x => x.GetService(typeof(IRequesterUser))).Returns(requesterUserMock.Object);
 
+        // Mock Request and Cookies (needed for FetchCulture)
+        var requestMock = new Mock<HttpRequest>();
+        var cookiesMock = new Mock<IRequestCookieCollection>();
+        cookiesMock.Setup(x => x["_culture"]).Returns((string?)null);
+        requestMock.Setup(x => x.Cookies).Returns(cookiesMock.Object);
+        httpContext.Setup(x => x.Request).Returns(requestMock.Object);
+
         httpContext.Setup(x => x.User).Returns(claimsPrincipal);
         httpContext.Setup(x => x.RequestServices).Returns(serviceProviderMock.Object);
 

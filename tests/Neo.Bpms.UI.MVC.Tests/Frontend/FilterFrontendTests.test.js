@@ -137,8 +137,10 @@ describe('Filter Frontend Tests', () => {
         require('./Scripts/filter-functions.js');
         
         // Make functions available globally for testing
-        // در کد اصلی، collectReportFilterValues در scope global است
+        // در کد اصلی، collectReportFilterValues به صورت function declaration تعریف شده که در scope global است
+        // در Jest/Node.js، باید آن را در global scope قرار دهیم تا در دسترس باشد
         if (typeof window.collectReportFilterValues === 'function') {
+            // در Jest، global scope همان global object است
             global.collectReportFilterValues = window.collectReportFilterValues;
         }
     });
@@ -220,10 +222,30 @@ describe('Filter Frontend Tests', () => {
             form.submit = jest.fn();
             
             // Spy باید روی همان function که در window.submitReportFilter استفاده می‌شود setup شود
-            // کد اصلی در filter-functions.js خط 108: collectReportFilterValues() را فراخوانی می‌کند
-            // در کد اصلی، collectReportFilterValues در scope global است
-            // پس باید spy را روی window.collectReportFilterValues setup کنیم
-            const collectSpy = jest.spyOn(window, 'collectReportFilterValues');
+            // کد اصلی در _Scripts.filter.cshtml خط 116: collectReportFilterValues() را مستقیماً فراخوانی می‌کند
+            // در کد تست (filter-functions.js خط 110-116)، چک می‌کند که آیا collectReportFilterValues در scope global است
+            // اگر نباشد، از window.collectReportFilterValues استفاده می‌کند
+            // در Jest، باید از window.collectReportFilterValues استفاده کنیم
+            const originalCollect = window.collectReportFilterValues;
+            if (!originalCollect) {
+                throw new Error('collectReportFilterValues not found in window!');
+            }
+            
+            let collectCalled = false;
+            
+            // Override در window (برای سازگاری با کد تست)
+            window.collectReportFilterValues = function() {
+                collectCalled = true;
+                return originalCollect.apply(this, arguments);
+            };
+            
+            // همچنین در global هم قرار دهیم (برای سازگاری با کد اصلی)
+            global.collectReportFilterValues = window.collectReportFilterValues;
+            
+            // در Jest، نمی‌توانیم مستقیماً function declaration در global scope ایجاد کنیم
+            // اما می‌توانیم از eval استفاده کنیم تا function را در scope global قرار دهیم
+            // این کار برای سازگاری با کد اصلی است که از collectReportFilterValues() استفاده می‌کند
+            eval('collectReportFilterValues = global.collectReportFilterValues;');
 
             // Act
             if (typeof window.submitReportFilter === 'function') {
@@ -231,11 +253,15 @@ describe('Filter Frontend Tests', () => {
             }
 
             // Assert
-            // کد اصلی submitReportFilter در خط 108 collectReportFilterValues را فراخوانی می‌کند
-            expect(collectSpy).toHaveBeenCalled();
+            // کد تست submitReportFilter در خط 110-116 collectReportFilterValues را چک می‌کند
+            // و اگر در scope global نباشد، از window.collectReportFilterValues استفاده می‌کند
+            expect(collectCalled).toBe(true);
             expect(form.submit).toHaveBeenCalled();
             
-            collectSpy.mockRestore();
+            // Restore
+            window.collectReportFilterValues = originalCollect;
+            global.collectReportFilterValues = originalCollect;
+            eval('collectReportFilterValues = originalCollect;');
         });
 
         test('should prevent multiple submissions', () => {

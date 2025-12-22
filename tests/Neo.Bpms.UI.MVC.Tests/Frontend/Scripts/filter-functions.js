@@ -105,9 +105,15 @@ window.submitReportFilter = function() {
     }
     
     // Collect all filter values first
-    // استفاده از window.collectReportFilterValues برای اطمینان از scope درست
-    const collectFn = window.collectReportFilterValues || collectReportFilterValues;
-    collectFn();
+    // در کد اصلی، collectReportFilterValues به صورت function declaration است که در scope global است
+    // در Jest/Node.js، باید از window.collectReportFilterValues استفاده کنیم
+    if (typeof collectReportFilterValues === 'function') {
+        collectReportFilterValues();
+    } else if (typeof window !== 'undefined' && typeof window.collectReportFilterValues === 'function') {
+        window.collectReportFilterValues();
+    } else {
+        console.error('collectReportFilterValues function not found!');
+    }
     
     // Try to find form - check multiple possible IDs
     let form = document.getElementById('filter-form');
