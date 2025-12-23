@@ -198,6 +198,11 @@
             
             // Create Modern Multi-Select control wrapper - All styles in CSS
             const $wrapper = $('<div class="modern-multi-select-control"></div>');
+            
+            // CRITICAL: Add data-field-name and data-control-name for later retrieval during form submission
+            $wrapper.attr('data-field-name', fieldName);
+            $wrapper.attr('data-control-name', fieldName);
+            
             const $input = $('<div class="modern-multi-select-input"></div>');
             const $itemsContainer = $('<div class="modern-multi-select-items"></div>');
             const $overflowBadge = $('<div class="modern-multi-select-overflow-badge" data-visible="false"></div>');
@@ -212,6 +217,39 @@
             $input.append($itemsContainer).append($overflowBadge).append($arrow);
             $dropdown.append($searchInput).append($options);
             $wrapper.append($overflowPopover).append($input).append($dropdown);
+            
+            // CRITICAL: Define updateSelect function to sync select value with selectedValues
+            // This function MUST update the original hidden select element when values change
+            function updateSelect() {
+                // Set the selected value on the original hidden select element
+                if ($select && $select.length > 0) {
+                    // For multi-select, convert array to comma-separated string
+                    if (selectedValues && selectedValues.length > 0) {
+                        const valueString = selectedValues.join(',');
+                        $select.val(valueString);
+                        console.log('Filter Panel: updateSelect set value to:', valueString);
+                    } else {
+                        // Clear select if no values
+                        $select.val('');
+                        console.log('Filter Panel: updateSelect cleared value');
+                    }
+                    
+                    // Trigger change event - but be careful with handlers
+                    // Don't trigger if we're already processing
+                    try {
+                        $select.trigger('change.notFromUser');
+                    } catch (e) {
+                        console.error('Filter Panel: Error triggering change event:', e);
+                    }
+                }
+                
+                // IMPORTANT: Also ensure the select is associated with form for submission
+                if ($select && $select.length > 0) {
+                    if (!$select.attr('form')) {
+                        $select.attr('form', 'filter-form');
+                    }
+                }
+            }
             
             // Store select's parent and position
             const $parent = $select.parent();
@@ -749,25 +787,11 @@
                     return;
                 }
                 
+                console.log('Filter Panel: renderSelectedItems called with:', selectedValues);
+                
+                // SIMPLE VERSION - just render chips without complex overflow handling
                 // Clear containers
                 $itemsContainer.empty();
-                // Don't clear popover content here - it will be populated when badge is clicked
-                // CRITICAL: Don't close popover if it's currently open (user is removing items)
-                const isPopoverOpen = $overflowBadge.hasClass('active') && 
-                                    $overflowPopover.is(':visible') &&
-                                    $overflowPopover[0] && 
-                                    $overflowPopover[0].style.getPropertyValue('display') !== 'none';
-                
-                if (!isPopoverOpen) {
-                    // Only clear and close if popover is not open
-                    $overflowPopoverContent.empty();
-                    closeOverflowPopover();
-                }
-                // Don't clear badge if popover is open - it will be updated by remove handler
-                if (!isPopoverOpen) {
-                    $overflowBadge.empty();
-                    $overflowBadge.attr('data-visible', 'false');
-                }
                 
                 if (selectedValues.length === 0) {
                     $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
@@ -775,90 +799,29 @@
                     return;
                 }
                 
-                // Prepare all chips data
-                const allChips = [];
+                // Render chips for each selected value
                 selectedValues.forEach(function(value) {
-                    const valueStr = String(value);
-                    let option = allOptions.find(function(opt) { 
-                        return String(opt.value) === valueStr || opt.value == value || String(opt.value) == valueStr; 
-                    });
-                    
-                    // If option not found, try to get it from the select element's options
-                    if (!option) {
-                        const $selectOption = $select.find('option[value="' + value + '"]');
-                        if ($selectOption.length > 0) {
-                            option = {
-                                value: value,
-                                text: $selectOption.text() || value
-                            };
-                        }
-                    }
-                    
-                    allChips.push({ value: value, option: option });
+                    // Create chip HTML directly
+                    const chipHTML = '<div class="modern-multi-select-item" data-value="' + value + '">' +
+                                   '<span>' + value + '</span>' +
+                                   '<span class="modern-multi-select-item-remove">×</span>' +
+                                   '</div>';
+                    $itemsContainer.append(chipHTML);
                 });
                 
-                // First, render all chips temporarily to calculate visible count
-                allChips.forEach(function(chipData) {
-                    const $chip = createChipElement(chipData.value, chipData.option, false);
-                    $itemsContainer.append($chip);
-                });
-                
-                // Force a reflow to measure
-                $itemsContainer[0].offsetHeight;
-                
-                // Calculate how many chips can fit
-                const visibleCount = calculateVisibleChipsCount();
-                const overflowCount = selectedValues.length - visibleCount;
-                // Clear and render only visible chips
-                $itemsContainer.empty();
-                
-                if (overflowCount > 0) {
-                    // Render visible chips
-                    for (let i = 0; i < visibleCount; i++) {
-                        const chipData = allChips[i];
-                        const $chip = createChipElement(chipData.value, chipData.option, false);
-                        $itemsContainer.append($chip);
-                    }
-                    
-                    // Render overflow badge - just show count, no "بیشتر" text
-                    $overflowBadge.html('<span>+' + overflowCount + '</span>');
-                    $overflowBadge.attr('data-visible', 'true');
-                    $overflowBadge.css({
-                        'display': 'flex', // Force show
-                        'margin-left': 'auto' // Push to right
-                    });
-                    
-                    // Render ALL chips in popover (card view shows all selections)
-                    allChips.forEach(function(chipData) {
-                        const $chip = createChipElement(chipData.value, chipData.option, true);
-                        $overflowPopoverContent.append($chip);
-                    });
-                } else {
-                    // Render all chips (no overflow)
-                    allChips.forEach(function(chipData) {
-                        const $chip = createChipElement(chipData.value, chipData.option, false);
-                        $itemsContainer.append($chip);
-                    });
-                    // Clear badge when no overflow
-                    $overflowBadge.empty();
-                    $overflowBadge.attr('data-visible', 'false');
-                }
-                // All styles are handled by CSS - no need for inline styles
-                // Dynamic max-width for items container based on overflow
-                if (overflowCount > 0) {
-                    $itemsContainer.css('max-width', 'calc(100% - 100px)');
-                } else {
-                    $itemsContainer.css('max-width', 'calc(100% - 30px)');
-                }
-                
-                // Update height
+                console.log('Filter Panel: Rendered', selectedValues.length, 'chip elements');
                 updateInputHeight();
             }
             
-            // Update select
-            function updateSelect() {
-                // For multiple select, we need to clear first then set values
-                $select.val(null); // Clear all selections
+            // Update input height based on content (fixed at 38px for single line)
+            function updateInputHeight() {
+                // Fixed height for single line - no need to calculate
+                $input.css({
+                    'height': '38px',
+                    'min-height': '38px',
+                    'max-height': '38px'
+                });
+            }
                 if (selectedValues.length > 0) {
                     $select.val(selectedValues); // Set new selections
                 }
@@ -1045,7 +1008,9 @@
                     // Select new value - remove empty option if exists
                     selectedValues = selectedValues.filter(function(v) { return v !== ''; });
                     selectedValues.push(value);
+                    console.log('Filter Panel: After push, selectedValues =', selectedValues);
                 }
+                console.log('Filter Panel: Calling renderSelectedItems with selectedValues:', selectedValues);
                 renderSelectedItems();
                 renderOptions();
                 updateSelect();
@@ -1372,11 +1337,22 @@
         let allOptions = [];
         let isLoading = false;
         
-        // Parse initial values
+        // Parse initial values - handle both string and array
         const initialValue = $hiddenInput.val();
         if (initialValue) {
-            selectedValues = initialValue.split(',').filter(v => v.trim() !== '');
+            if (typeof initialValue === 'string') {
+                // String value - split by comma
+                selectedValues = initialValue.split(',').filter(v => v.trim() !== '');
+            } else if (Array.isArray(initialValue)) {
+                // Already an array - just use it
+                selectedValues = initialValue.filter(v => v && v !== '');
+            } else {
+                // Single value - convert to array
+                selectedValues = [String(initialValue)];
+            }
         }
+        
+        console.log('[ModernMultiSelect Custom] Initialized with values:', selectedValues, 'for control:', $control.data('field-name'));
         
         // Load data from API
         function loadData() {
