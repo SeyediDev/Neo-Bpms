@@ -1351,208 +1351,151 @@
     @* JavaScript functions are now in Report.js *@
     
     <script>
-    // ===== CRITICAL: Submit Filter Function for Report Filter Panel =====
-    // This function is called when the "Apply Filter" button is clicked
-    window.submitReportFilter = function() {
-        console.log('Filter Panel: submitReportFilter called');
+    // ===== CRITICAL: Submit Filter Function Override for Report Filter Panel =====
+    // This function OVERRIDES the one in _Scripts.filter.cshtml to add detailed logging
+    // IMPORTANT: This script runs AFTER _Scripts.filter.cshtml, so it will override the function
+    (function() {
+        // Store the original function if it exists
+        const originalSubmitReportFilter = window.submitReportFilter;
         
-        // Get the filter form
-        const filterForm = document.getElementById('filter-form');
-        if (!filterForm) {
-            console.error('Filter Panel: Form with id="filter-form" not found!');
-            return;
-        }
-        
-        console.log('Filter Panel: Found filter form, processing inputs...');
-        
-        // Get the filter panel
-        const filterPanel = document.getElementById('filterTooltipPanel');
-        if (!filterPanel) {
-            console.warn('Filter Panel: filterTooltipPanel not found');
-        }
-        
-        // STEP 0: Show loading indicator and freeze form
-        const submitButton = document.getElementById('submit-filter');
-        if (submitButton) {
-            // Try Ladda loading indicator first
-            try {
-                if (typeof submitButton.ladda === 'function') {
-                    const laddaButton = submitButton.ladda();
-                    if (laddaButton && typeof laddaButton.start === 'function') {
-                        laddaButton.start();
-                        console.log('Filter Panel: Ladda loading started');
-                    } else {
-                        throw new Error('Ladda not available');
-                    }
+        // Override with enhanced version that includes detailed logging
+        window.submitReportFilter = function() {
+            console.log('Filter Panel: submitReportFilter called (enhanced version)');
+            
+            // Get the filter form
+            const filterForm = document.getElementById('filter-form');
+            if (!filterForm) {
+                console.error('Filter Panel: Form with id="filter-form" not found!');
+                // Fallback to original function if it exists
+                if (originalSubmitReportFilter && typeof originalSubmitReportFilter === 'function') {
+                    return originalSubmitReportFilter.apply(this, arguments);
                 }
-            } catch (e) {
-                // Fallback: manual disable
-                console.log('Filter Panel: Using fallback loading indicator', e.message);
-                submitButton.disabled = true;
-                submitButton.style.opacity = '0.6';
-                submitButton.style.pointerEvents = 'none';
-                submitButton.style.cursor = 'wait';
+                return;
             }
-        }
-        
-        // Disable all form buttons to prevent double submit
-        const allButtons = filterForm.querySelectorAll('button');
-        allButtons.forEach(function(btn) {
-            btn.disabled = true;
-            btn.style.cursor = 'wait';
-        });
-        
-        // STEP 1: Process all regular inputs in filter panel
-        if (filterPanel) {
-            // Find ALL inputs, selects, textareas in the filter panel
-            const allElements = filterPanel.querySelectorAll('input, select, textarea');
-            console.log('Filter Panel: Found', allElements.length, 'form elements');
             
-            allElements.forEach(function(element) {
-                // Skip elements that are clearly internal (like search inputs in combos)
-                const isInternal = element.classList.contains('modern-multi-select-search') ||
-                                  element.classList.contains('modern-multi-select-option-checkbox');
-                
-                if (element.name && !element.getAttribute('form') && !isInternal) {
-                    element.setAttribute('form', 'filter-form');
-                    
-                    if (element.type === 'hidden') {
-                        console.log('Filter Panel: Linked hidden input:', element.name, '=', element.value);
-                    } else if (element.tagName === 'SELECT') {
-                        const vals = Array.from(element.selectedOptions || []).map(o => o.value);
-                        console.log('Filter Panel: Linked select:', element.name, '=', vals.join(','));
-                    } else {
-                        console.log('Filter Panel: Linked element:', element.tagName, element.name);
-                    }
-                }
-            });
-        }
-        
-        // STEP 2: Special handling for Modern Multi-Select
-        // Modern Multi-Select stores selected values in hidden inputs
-        if (filterPanel) {
-            // Find all hidden inputs that might store combo values
-            const hiddenInputs = filterPanel.querySelectorAll('input[type="hidden"]');
+            console.log('Filter Panel: Found filter form, processing inputs...');
             
-            hiddenInputs.forEach(function(hidden) {
-                if (hidden.name && !hidden.getAttribute('form')) {
-                    // Link it to the form
-                    hidden.setAttribute('form', 'filter-form');
-                    console.log('Filter Panel: Linked hidden input (combo):', hidden.name, '=', hidden.value);
-                }
-            });
+            // Get the filter panel
+            const filterPanel = document.getElementById('filterTooltipPanel');
+            if (!filterPanel) {
+                console.warn('Filter Panel: filterTooltipPanel not found');
+            }
             
-            // Also find all select elements and ensure they're linked
-            const allSelects = filterPanel.querySelectorAll('select');
-            allSelects.forEach(function(select) {
-                if (!select.getAttribute('form') && select.name) {
-                    select.setAttribute('form', 'filter-form');
-                    
-                    if (select.multiple) {
-                        const vals = Array.from(select.selectedOptions).map(o => o.value);
-                        console.log('Filter Panel: Linked multi-select:', select.name, '=', vals.join(','));
-                    } else {
-                        console.log('Filter Panel: Linked select:', select.name, '=', select.value);
-                    }
-                }
-            });
-        }
-        
-        // STEP 3: Sync combo box values from UI back to select elements
-        // Modern Multi-Select may not have updated the select element value
-        // So we'll sync it manually by looking at the selected items in the UI
-        console.log('Filter Panel: Syncing combo box values to select elements...');
-        
-        if (filterPanel) {
-            // For each Modern Multi-Select control wrapper, sync selected items to the hidden select
-            const modernControls = filterPanel.querySelectorAll('.modern-multi-select-control[data-field-name]');
+            // Prevent multiple submissions
+            const submitButton = document.getElementById('submit-filter');
+            if (submitButton && submitButton.classList.contains('ladda-loading')) {
+                console.log('Filter Panel: Already submitting, ignoring duplicate call');
+                return;
+            }
             
-            modernControls.forEach(function(control) {
-                const fieldName = control.getAttribute('data-field-name');
-                
-                // Find the corresponding hidden select element
-                const hiddenSelect = filterPanel.querySelector('select[name="' + fieldName + '"]');
-                
-                if (!hiddenSelect) {
-                    console.log('Filter Panel: No select found for field:', fieldName);
-                    return;
-                }
-                
-                // Get the selected item values from the UI
-                const itemsContainer = control.querySelector('.modern-multi-select-items');
-                if (itemsContainer) {
-                    const items = itemsContainer.querySelectorAll('.modern-multi-select-item');
-                    const values = [];
-                    
-                    items.forEach(function(item) {
-                        const value = item.getAttribute('data-value');
-                        if (value && value !== '') {
-                            values.push(value);
+            // STEP 0: Show loading indicator and freeze form
+            if (submitButton) {
+                // Try Ladda loading indicator first
+                try {
+                    if (typeof submitButton.ladda === 'function') {
+                        const laddaButton = submitButton.ladda();
+                        if (laddaButton && typeof laddaButton.start === 'function') {
+                            laddaButton.start();
+                            console.log('Filter Panel: Ladda loading started');
+                        } else {
+                            throw new Error('Ladda not available');
                         }
-                    });
-                    
-                    // Update the select element
-                    if (values.length > 0) {
-                        // Set value as comma-separated string (not array)
-                        hiddenSelect.value = values.join(',');
-                        console.log('Filter Panel: Set select value for', fieldName, '=', hiddenSelect.value);
-                    } else {
-                        hiddenSelect.value = '';
-                        console.log('Filter Panel: Cleared select for', fieldName);
                     }
-                    
-                    // Ensure form attribute is set
-                    if (!hiddenSelect.getAttribute('form')) {
-                        hiddenSelect.setAttribute('form', 'filter-form');
-                    }
+                } catch (e) {
+                    // Fallback: manual disable
+                    console.log('Filter Panel: Using fallback loading indicator - ' + e.message);
+                    submitButton.disabled = true;
+                    submitButton.style.opacity = '0.6';
+                    submitButton.style.pointerEvents = 'none';
+                    submitButton.style.cursor = 'wait';
                 }
-            });
-        }
-        
-        // STEP 4: Final debug - Log all form values before submit
-        console.log('Filter Panel: ===== ALL FORM VALUES BEFORE SUBMIT =====');
-        const formData = new FormData(filterForm);
-        let valueCount = 0;
-        let debugLog = ['===== FILTER VALUES BEING SUBMITTED ====='];
-        debugLog.push('Time: ' + new Date().toLocaleString());
-        debugLog.push('');
-        
-        for (let [key, value] of formData.entries()) {
-            const logMsg = key + ' = ' + value;
-            console.log(logMsg);
-            debugLog.push(logMsg);
-            valueCount++;
-        }
-        
-        debugLog.push('');
-        debugLog.push('Total values: ' + valueCount);
-        console.log('Filter Panel: Total form values: ' + valueCount);
-        
-        // SHOW ALERT BEFORE SUBMIT so user can see what's being sent
-        alert(debugLog.join('\n'));
-        
-        // STEP 5: Hide the filter tooltip panel
-        if (filterPanel) {
-            if (filterPanel.classList.contains('show')) {
-                filterPanel.classList.remove('show');
-                console.log('Filter Panel: Hidden');
             }
             
-            // Also hide the toggle button's active state
-            const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
-            if (toggle && toggle.classList.contains('active')) {
-                toggle.classList.remove('active');
+            // Disable all form buttons to prevent double submit
+            const allButtons = filterForm.querySelectorAll('button');
+            allButtons.forEach(function(btn) {
+                btn.disabled = true;
+                btn.style.cursor = 'wait';
+            });
+            
+            // CRITICAL: Call collectReportFilterValues() first!
+            // This function is defined in _Scripts.filter.cshtml and MUST be called
+            if (typeof collectReportFilterValues === 'function') {
+                console.log('Filter Panel: Calling collectReportFilterValues()...');
+                collectReportFilterValues();
+                console.log('Filter Panel: collectReportFilterValues() completed');
+            } else if (typeof window.collectReportFilterValues === 'function') {
+                console.log('Filter Panel: Calling window.collectReportFilterValues()...');
+                window.collectReportFilterValues();
+                console.log('Filter Panel: window.collectReportFilterValues() completed');
+            } else {
+                console.error('Filter Panel: collectReportFilterValues function not found!');
             }
-        }
+            
+            // Ensure all filter inputs are associated with the form
+            if (typeof window.ensureFilterFormAssociation === 'function') {
+                window.ensureFilterFormAssociation();
+            }
+            
+            // Ensure all inputs are in the form
+            const allInputs = document.querySelectorAll('#filterTooltipPanel input, #filterTooltipPanel select, #filterTooltipPanel textarea');
+            allInputs.forEach(function(input) {
+                if (input.getAttribute('form')) {
+                    // If input has form attribute, ensure it's correct
+                    input.setAttribute('form', filterForm.id || 'filter-form');
+                } else if (!filterForm.contains(input)) {
+                    // If input is not in form, add form attribute
+                    input.setAttribute('form', filterForm.id || 'filter-form');
+                }
+            });
+            
+            // Final debug - Log all form values before submit
+            console.log('Filter Panel: ===== ALL FORM VALUES BEFORE SUBMIT =====');
+            const formData = new FormData(filterForm);
+            let valueCount = 0;
+            let debugLog = ['===== FILTER VALUES BEING SUBMITTED ====='];
+            debugLog.push('Time: ' + new Date().toLocaleString());
+            debugLog.push('');
+            
+            for (let [key, value] of formData.entries()) {
+                const logMsg = key + ' = ' + value;
+                console.log(logMsg);
+                debugLog.push(logMsg);
+                valueCount++;
+            }
+            
+            debugLog.push('');
+            debugLog.push('Total values: ' + valueCount);
+            console.log('Filter Panel: Total form values: ' + valueCount);
+            
+            // SHOW ALERT BEFORE SUBMIT so user can see what's being sent
+            // Comment out this alert in production - it's for debugging only
+            // alert(debugLog.join('\n'));
+            
+            // Hide the filter tooltip panel
+            if (filterPanel) {
+                if (filterPanel.classList.contains('show')) {
+                    filterPanel.classList.remove('show');
+                    console.log('Filter Panel: Hidden');
+                }
+                
+                // Also hide the toggle button's active state
+                const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
+                if (toggle && toggle.classList.contains('active')) {
+                    toggle.classList.remove('active');
+                }
+            }
+            
+            // Submit the form
+            console.log('Filter Panel: Submitting form with all collected values...');
+            filterForm.submit();
+        };
         
-        // STEP 6: Submit the form
-        console.log('Filter Panel: Submitting form with all collected values...');
-        filterForm.submit();
-    };
-    
-    // IMPORTANT: Create an alias so the onclick handler works correctly
-    // The onclick says: onclick="window.submitFilter && window.submitFilter(); return false;"
-    window.submitFilter = window.submitReportFilter;
+        // IMPORTANT: Create an alias so the onclick handler works correctly
+        window.submitFilter = window.submitReportFilter;
+        
+        console.log('Filter Panel: Enhanced submitReportFilter function loaded');
+    })();
     
     // Prevent Select2 initialization in filter panel - MUST be defined first
     window.preventSelect2InFilterPanel = function() {
