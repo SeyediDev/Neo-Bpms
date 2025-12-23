@@ -49,3 +49,4 @@
 - `window.submitFilter` و `window.submitReportFilter` هر دو تعریف شده‌اند
 - یک backup click handler با jQuery هم اضافه شده است
 
+
