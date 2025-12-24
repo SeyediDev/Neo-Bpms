@@ -1205,13 +1205,13 @@ public class FormLogicHelper(ILogger<FormLogicHelper> logger): IFormLogicHelper
 
         ComboData cd = formField?.CheckProperty(eControlPropertyId.RemoteData) ?? true
             ? ComboDataRoutines.InitComboData(uientity, referEntity,
-                false, culture, op.formulaStr, displayFields,
-                formField?.GetProperties(), 1, 1)
+                culture, op.formulaStr, displayFields, formField?.GetProperties(),
+                1)
             : ComboDataRoutines.GetRecords(uientity, referEntity,
-                false, culture, op.formulaStr, 1,
-                formFieldConstraint, displayFields, filterValues,
-                formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(), 5000,
-                true, formField.GetProperties());
+                culture, op.formulaStr, 1, formFieldConstraint,
+                displayFields, filterValues, formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(),
+                5000, true,
+                formField.GetProperties());
         rop.Type = eOperationType.ChangeList;
         rop.Rows = cd.Rows;
         rop.Attr = op.SpecificAttribute.ToString();

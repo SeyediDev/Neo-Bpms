@@ -54,10 +54,10 @@ public partial class FormController
         string filter = GetFieldFilter(formField, model.Filter);
         filter = AddExpressionFilter(model, filter, displayFields, associationEntity);
         ComboData cb = ComboDataRoutines.GetRecords(entity, associationEntity,
-            model.IsMandatory, CultureHelper.GetCurrentNeutralCulture(), filter, model.Page,
-            field.AssociationEntity?.Constraint, displayFields, filterValues,
-            formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(),
-            model.Count ?? 30, true, formField.GetProperties());
+            CultureHelper.GetCurrentNeutralCulture(), filter, model.Page, field.AssociationEntity?.Constraint,
+            displayFields, filterValues, formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(),
+            model.Count ?? 30,
+            true, formField.GetProperties());
         return Json(new ComboDataViewModel(cb));
     }
 
@@ -135,9 +135,9 @@ public partial class FormController
                 {"_initValues", initValuesList}
             };
         string culture = CultureHelper.GetCurrentNeutralCulture();
-        ComboData cb = ComboDataRoutines.GetRecords(entity, associationEntity, true, culture, filter, 1,
-            field.AssociationEntity?.Constraint, displayFields,
-        filterValues, formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(), 5000, true, formField.GetProperties());
+        ComboData cb = ComboDataRoutines.GetRecords(entity, associationEntity, culture, filter, 1, field.AssociationEntity?.Constraint,
+            displayFields, filterValues,
+        formField.GetProperty(eControlPropertyId.OrderBy)?.ToString(), 5000, true, formField.GetProperties());
         return Json(new ComboDataViewModel(cb));
     }
 

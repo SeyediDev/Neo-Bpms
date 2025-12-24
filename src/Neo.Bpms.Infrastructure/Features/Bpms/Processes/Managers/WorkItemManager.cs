@@ -100,8 +100,8 @@ public class WorkItemManager
                 if (entity == null) return;
                 List<string> pkvList = entities.GroupBy(g => g.EntityPkv).Select(e => e.Key).ToList();
                 string filter = $"Id In ({string.Join(",", pkvList)})";
-                ComboData comboData = ComboDataRoutines.GetRecords(entity, entity, true, "", filter, 1, "",
-                     entities.Key.DisplayFields, null, "", pkvList.Count, false);
+                ComboData comboData = ComboDataRoutines.GetRecords(entity, entity, "", filter, 1, "", entities.Key.DisplayFields,
+                     null, "", pkvList.Count, false);
                 foreach (WorkItemViewModel workItem in entities)
                 {
                     FormDataRow entityRecord = comboData.GetRow(workItem.EntityPkv);

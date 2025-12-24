@@ -28,7 +28,7 @@ public partial class FormController
         SetPagePackId(form);
         UiEntity entity = form.entity;
         FormComboData.SetCombosData(form, structure, culture, null, GetLocalParameters(user, null));
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
         SetBulkEditViewBags(workItemFormId, pid, wid, TaskId, ProcessId, Caller,
         queryType, recordsIds, indexFormId, indexFormFilterValues,
         indexFormPageNo, callerPage, structure, user);

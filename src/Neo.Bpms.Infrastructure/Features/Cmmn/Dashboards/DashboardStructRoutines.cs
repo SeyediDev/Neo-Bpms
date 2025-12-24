@@ -39,7 +39,7 @@ public class DashboardStructRoutines(
 
         FormComboData.SetCombosData(config.Dashboard, result.Structure, culture, null, lp);
         if (filterValues != null)
-            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true, config.Dashboard.Entity);
+            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true);
         return result;
     }
 

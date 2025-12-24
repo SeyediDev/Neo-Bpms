@@ -28,7 +28,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
             FormComboData.SetCombosData(config.Report, reportData.Structure, culture, null, lp);
             if (filterValues != null)
             {
-                ComboDataRoutines.SetComboDataSelectedId(reportData.Structure, filterValues, true, config.Report.entity);
+                ComboDataRoutines.SetComboDataSelectedId(reportData.Structure, filterValues, true);
             }
         }
 

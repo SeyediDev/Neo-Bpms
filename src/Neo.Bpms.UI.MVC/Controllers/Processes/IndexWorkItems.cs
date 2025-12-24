@@ -39,7 +39,7 @@ public partial class ProcessController
         WorkItemsViewModel result = new(workItemsList, processFilter, filterValues, recordCount);
         FormComboData.SetCombosData(form, structure, CultureHelper.GetCurrentNeutralCulture(), null, GetLocalParameters(user, null));
         if (result.EntityFilter != null)
-            ComboDataRoutines.SetComboDataSelectedId(structure, result.EntityFilter, true, form.entity);
+            ComboDataRoutines.SetComboDataSelectedId(structure, result.EntityFilter, true);
 
         SetViewBags(user, po?.SortFields, structure, processFilter, process);
 
@@ -85,7 +85,7 @@ public partial class ProcessController
                  };
         FormComboData.SetCombosData(form, structure, CultureHelper.GetCurrentNeutralCulture(), null, GetLocalParameters(user, null));
         if (result.EntityFilter != null)
-            ComboDataRoutines.SetComboDataSelectedId(structure, result.EntityFilter, true, form.entity);
+            ComboDataRoutines.SetComboDataSelectedId(structure, result.EntityFilter, true);
 
         SetViewBags(user, SortFields, structure, processFilter, process);
 

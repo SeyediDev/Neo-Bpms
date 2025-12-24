@@ -80,7 +80,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
              culture, false, user, cfgResult.Configs, cancellationToken);
         FormComboData.SetCombosData(dashboard, result.Structure, culture, null, GetLocalParameters(user, null));
         if (filterValues != null)
-            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true, entity);
+            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true);
         result.Structure.NamespaceId = entity.NamespaceId;
         result.Structure.EntityId = entity.Id;
         result.Structure.Form_ReportId = dashboard.Id;
@@ -164,7 +164,7 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
              culture, false, user, cfgResult.Configs, cancellationToken);
         FormComboData.SetCombosData(dashboard, result.Structure, culture, null, GetLocalParameters(user, null));
         if (FilterValues != null)
-            ComboDataRoutines.SetComboDataSelectedId(result.Structure, FilterValues, true, entity);
+            ComboDataRoutines.SetComboDataSelectedId(result.Structure, FilterValues, true);
         calendar ??= ProjectDefinition.Project.DefaultCalendar;
         SetPagePackId(dashboard);
         result.Structure.NamespaceId = entity.NamespaceId;

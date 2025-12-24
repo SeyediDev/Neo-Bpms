@@ -171,7 +171,7 @@ public partial class FormController(
             FormComboData.SetCombosData(form, structure, culture, null, GetLocalParameters(user, filterValues));
             if (records.FilterValues != null)
                 ComboDataRoutines.SetComboDataSelectedId(structure, records.FilterValues,
-                    true, form.entity);
+                    true);
         }
         catch (Exception e)
         {

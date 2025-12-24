@@ -12,7 +12,7 @@ public class RelationsData : Dictionary<string /*entity key id*/, RelationData>
             Entity entity = field.Entity;
             Entity associationEntity = field.AssociationEntity.DestEntity;
             ComboData records = ComboDataRoutines.GetRecords(entity, associationEntity,
-                true, culture, null, 1);
+                culture, null, 1);
             List<string> nationalIds = [];
             if (associationEntity.Id == "Customer")
             {

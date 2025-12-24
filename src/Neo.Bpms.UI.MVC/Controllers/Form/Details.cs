@@ -45,7 +45,7 @@ public partial class FormController
             return Error(Messages.RecordNotFoundOrDifferentState, "Details");
         }
         FormComboData.SetCombosData(form, structure, culture, record, GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
 
         //		    ViewBag.prevIds = GetPrevId(form.entity, ids);
         //		    ViewBag.nextIds = GetNextId(form.entity, ids);

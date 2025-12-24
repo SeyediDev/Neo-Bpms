@@ -130,7 +130,7 @@ public partial class FormController
         FormComboData.SetCombosData(form, structure,
             CultureHelper.GetCurrentNeutralCulture(),
             record, GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
         SetIframeFormViewBags(user, structure, Id, processId, taskId, wid, indexFormId, isReturnable);
         SetPagePackId(form);
     }

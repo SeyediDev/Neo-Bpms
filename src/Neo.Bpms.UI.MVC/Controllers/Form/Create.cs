@@ -45,8 +45,8 @@ public partial class FormController
         if (!string.IsNullOrEmpty(__parentIds))
         {
             Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
-            ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, true, culture,
-                 FormDataRoutines.GetPKFilter(__parentIds, parentEntity), 1, "", "", lp);
+            ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, culture, FormDataRoutines.GetPKFilter(__parentIds, parentEntity),
+                 1, "", "", lp);
             ViewBag.ParentDisplay = newComboData.Rows.Count > 0 ? newComboData.Rows[0].DisplayValue : "";
         }
         SetPagePackId(form);
@@ -63,7 +63,7 @@ public partial class FormController
             ((BpmsEngine)DependencyInjectionHolder.Instance.BpmsEngine).SetWorkItemStartTime(TaskId, wid.Value, form, user, userGroupId);
         }
         FormComboData.SetCombosData(form, structure, culture, record, lp);
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
         return !string.IsNullOrEmpty(form.SpecificViewPage) ? View(form.GetSpecificViewPage(), record) : View(record);
     }
 
@@ -139,7 +139,7 @@ public partial class FormController
                     SetCommonCreateViewBags(postFormData.parentNamespaceId, postFormData.parentEntityId,
                         postFormData.parentFormSubjectId, postFormData.subTableAssociationFeildId, postFormData.parentIds, workItemFormId, wid, TaskId,
                         ProcessId, Caller, callerPage, user, postFormData.structure);
-                    ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false, postFormData.form.entity);
+                    ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false);
                     FormComboData.SetCombosData(postFormData.form, postFormData.structure, postFormData.Culture, null, GetLocalParameters(user, record));
                     return View(new ElasticObject());
                 }

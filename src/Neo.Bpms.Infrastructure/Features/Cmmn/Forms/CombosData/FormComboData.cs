@@ -92,9 +92,9 @@ public static class FormComboData
         ComboData comboData = combosData.TryGetValue(formField.Id, out ComboData value)
             ? value :
             ComboDataRoutines.InitComboData(form.entity,
-                field.AssociationEntity?.Entity(), isMandatory, culture,
-                field.AssociationEntity?.Constraint, displayFields,
-                formField.GetProperties()?.Select(p => (UIComponentProperty)p), count, pageNo);
+                field.AssociationEntity?.Entity(), culture, field.AssociationEntity?.Constraint,
+                displayFields, formField.GetProperties()?.Select(p => (UIComponentProperty)p),
+                count);
         if (isEnum || (!isOnDemand && !isRemoteData && !isReadOnly && !comboData.GetQuery))
         {
             LocalParameters lp = [];
@@ -127,9 +127,9 @@ public static class FormComboData
             else
             {
                 newComboData = ComboDataRoutines.GetRecords(form.entity,
-                    field.AssociationEntity.Entity(), isMandatory, culture,
-                    formField.Property(eControlPropertyId.FilterFormula), pageNo,
-                    field.AssociationEntity.Constraint, displayFields, lp, null, count, true, formField.GetProperties());
+                    field.AssociationEntity.Entity(), culture, formField.Property(eControlPropertyId.FilterFormula),
+                    pageNo, field.AssociationEntity.Constraint,
+                    displayFields, lp, null, count, true, formField.GetProperties());
             }
             newComboData.GetQuery = true;
             if (!combosData.ContainsKey(formField.Id))

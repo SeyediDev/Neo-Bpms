@@ -115,15 +115,15 @@ public partial class FormController
 
         lcs.AddOrUpdate("q", record);
         FormComboData.SetCombosData(form, structure, culture, record, lcs);
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
         if (!string.IsNullOrEmpty(__parentIds) &&
             !string.IsNullOrEmpty(__parentNamespaceId) &&
             !string.IsNullOrEmpty(__parentEntityId))
         {
             LocalParameters lp = GetLocalParameters(user, null);
             Entity parentEntity = ProjectDefinition.Project.GetEntity(__parentNamespaceId, __parentEntityId);
-            ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, true, culture,
-                    FormDataRoutines.GetPKFilter(__parentIds, parentEntity), 1, "", "", lp);
+            ComboData newComboData = ComboDataRoutines.GetRecords(form.entity, parentEntity, culture, FormDataRoutines.GetPKFilter(__parentIds, parentEntity),
+                    1, "", "", lp);
             ViewBag.ParentDisplay = newComboData.Rows.Count > 0 ? newComboData.Rows[0].DisplayValue : "";
         }
 
@@ -251,7 +251,7 @@ public partial class FormController
 
         FormComboData.SetCombosData(postFormData.form, postFormData.structure, postFormData.Culture, record,
             GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false, postFormData.form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false);
         SetCommonEditViewBags(ids, __parentNamespaceId, __parentEntityId, __parentFormSubjectId, __subTableAssociationFieldId,
             __parentIds, wid, TaskId, ProcessId, "", Caller, callerPage,
             bSubTable == "1", postFormData.structure, user, postFormData.form.entity);

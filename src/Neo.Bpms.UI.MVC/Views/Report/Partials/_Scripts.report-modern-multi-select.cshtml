@@ -329,15 +329,44 @@
                 }
             }
             let allOptions = options;
+            let dataLoaded = false; // Track if data has been loaded from server
             
             // Load data from server (for remoteData)
             function loadDataFromServer(searchTerm) {
+                console.log('[ModernMultiSelect] loadDataFromServer called', {
+                    fieldName: fieldName,
+                    searchTerm: searchTerm,
+                    isLoading: isLoading,
+                    dataLoaded: dataLoaded,
+                    allOptionsLength: allOptions.length,
+                    isRemote: isRemote
+                });
+                
                 if (isLoading) {
+                    console.log('[ModernMultiSelect] Already loading, skipping...');
                     return;
                 }
                 
                 if (!isRemote) {
                     return;
+                }
+                
+                // If data already loaded and no search term, don't reload
+                // BUT: Only skip if we actually have data (more than just empty option)
+                if (dataLoaded && (!searchTerm || searchTerm === '') && allOptions.length > 1) {
+                    // CRITICAL: Reset isLoading before rendering to prevent stuck loading state
+                    isLoading = false;
+                    console.log('[ModernMultiSelect] Data already loaded, rendering options without reload', {
+                        fieldName: fieldName,
+                        allOptionsLength: allOptions.length
+                    });
+                    renderOptions();
+                    return;
+                }
+                
+                // If dataLoaded is true but we don't have data, reset it to allow reload
+                if (dataLoaded && allOptions.length <= 1) {
+                    dataLoaded = false;
                 }
                 
                 isLoading = true;
@@ -392,12 +421,14 @@
                     type: 'POST',
                     data: requestData, // Send as form data (not JSON)
                     headers: headers,
+                    timeout: 30000, // 30 seconds timeout
                     success: function(response) {
                         isLoading = false;
                         // Handle different response formats
                         let dataArray = null;
                         
                         if (!response) {
+                            isLoading = false;
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا: پاسخ سرور خالی است</div>');
                             return;
                         }
@@ -444,6 +475,9 @@
                                     });
                                 }
                             });
+                            
+                            // Mark data as loaded
+                            dataLoaded = true;
                             
                             // After loading data, apply initial values if they exist
                             // This is important for popular filters where values are set via initValue attribute
@@ -507,9 +541,13 @@
                             }
                         } else if (dataArray && dataArray.length === 0) {
                             // Empty result is valid
+                            isLoading = false;
                             allOptions = [options[0]]; // Keep only empty option
+                            // Don't mark as loaded if result is empty - allow retry
+                            dataLoaded = false;
                             renderOptions();
                         } else {
+                            isLoading = false;
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: فرمت پاسخ نامعتبر<br><small>بررسی کنسول برای جزئیات</small></div>');
                         }
                     },
@@ -545,12 +583,20 @@
                         });
                         
                         $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: ' + errorMessage + '<br><small>بررسی کنسول برای جزئیات بیشتر</small></div>');
+                        // Don't mark as loaded on error - allow retry
+                    },
+                    complete: function() {
+                        // Always reset isLoading in complete handler to ensure it's reset even if success/error don't fire
+                        isLoading = false;
+                        console.log('[ModernMultiSelect] AJAX complete, isLoading reset to false');
                     }
                 });
             }
             
             // Render options
             function renderOptions() {
+                // CRITICAL: Always clear loading state and empty options container
+                isLoading = false;
                 $options.empty();
                 
                 if (allOptions.length === 1 && allOptions[0].value === '') {
@@ -789,9 +835,25 @@
                 
                 console.log('Filter Panel: renderSelectedItems called with:', selectedValues);
                 
-                // SIMPLE VERSION - just render chips without complex overflow handling
                 // Clear containers
                 $itemsContainer.empty();
+                // Don't clear popover content here - it will be populated when badge is clicked
+                // CRITICAL: Don't close popover if it's currently open (user is removing items)
+                const isPopoverOpen = $overflowBadge.hasClass('active') && 
+                                    $overflowPopover.is(':visible') &&
+                                    $overflowPopover[0] && 
+                                    $overflowPopover[0].style.getPropertyValue('display') !== 'none';
+                
+                if (!isPopoverOpen) {
+                    // Only clear and close if popover is not open
+                    $overflowPopoverContent.empty();
+                    closeOverflowPopover();
+                }
+                // Don't clear badge if popover is open - it will be updated by remove handler
+                if (!isPopoverOpen) {
+                    $overflowBadge.empty();
+                    $overflowBadge.attr('data-visible', 'false');
+                }
                 
                 if (selectedValues.length === 0) {
                     $itemsContainer.html('<span style="color: #94a3b8;">--- انتخاب کنید ---</span>');
@@ -799,17 +861,85 @@
                     return;
                 }
                 
-                // Render chips for each selected value
+                // Prepare all chips data
+                const allChips = [];
                 selectedValues.forEach(function(value) {
-                    // Create chip HTML directly
-                    const chipHTML = '<div class="modern-multi-select-item" data-value="' + value + '">' +
-                                   '<span>' + value + '</span>' +
-                                   '<span class="modern-multi-select-item-remove">×</span>' +
-                                   '</div>';
-                    $itemsContainer.append(chipHTML);
+                    const valueStr = String(value);
+                    let option = allOptions.find(function(opt) { 
+                        return String(opt.value) === valueStr || opt.value == value || String(opt.value) == valueStr; 
+                    });
+                    
+                    // If option not found, try to get it from the select element's options
+                    if (!option) {
+                        const $selectOption = $select.find('option[value="' + value + '"]');
+                        if ($selectOption.length > 0) {
+                            option = {
+                                value: value,
+                                text: $selectOption.text() || value
+                            };
+                        }
+                    }
+                    
+                    allChips.push({ value: value, option: option });
                 });
                 
-                console.log('Filter Panel: Rendered', selectedValues.length, 'chip elements');
+                // First, render all chips temporarily to calculate visible count
+                allChips.forEach(function(chipData) {
+                    const $chip = createChipElement(chipData.value, chipData.option, false);
+                    $itemsContainer.append($chip);
+                });
+                
+                // Force a reflow to measure
+                $itemsContainer[0].offsetHeight;
+                
+                // Calculate how many chips can fit
+                const visibleCount = calculateVisibleChipsCount();
+                const overflowCount = selectedValues.length - visibleCount;
+                // Clear and render only visible chips
+                $itemsContainer.empty();
+                
+                if (overflowCount > 0) {
+                    // Render visible chips
+                    for (let i = 0; i < visibleCount; i++) {
+                        const chipData = allChips[i];
+                        const $chip = createChipElement(chipData.value, chipData.option, false);
+                        $itemsContainer.append($chip);
+                    }
+                    
+                    // Render overflow badge - just show count, no "بیشتر" text
+                    $overflowBadge.html('<span>+' + overflowCount + '</span>');
+                    $overflowBadge.attr('data-visible', 'true');
+                    $overflowBadge.css({
+                        'display': 'flex', // Force show
+                        'margin-left': 'auto' // Push to right
+                    });
+                    
+                    // Render ALL chips in popover (card view shows all selections)
+                    if (!isPopoverOpen) {
+                        allChips.forEach(function(chipData) {
+                            const $chip = createChipElement(chipData.value, chipData.option, true);
+                            $overflowPopoverContent.append($chip);
+                        });
+                    }
+                } else {
+                    // Render all chips (no overflow)
+                    allChips.forEach(function(chipData) {
+                        const $chip = createChipElement(chipData.value, chipData.option, false);
+                        $itemsContainer.append($chip);
+                    });
+                    // Clear badge when no overflow
+                    $overflowBadge.empty();
+                    $overflowBadge.attr('data-visible', 'false');
+                }
+                // All styles are handled by CSS - no need for inline styles
+                // Dynamic max-width for items container based on overflow
+                if (overflowCount > 0) {
+                    $itemsContainer.css('max-width', 'calc(100% - 100px)');
+                } else {
+                    $itemsContainer.css('max-width', 'calc(100% - 30px)');
+                }
+                
+                // Update height
                 updateInputHeight();
             }
             
@@ -821,17 +951,6 @@
                     'min-height': '38px',
                     'max-height': '38px'
                 });
-            }
-                if (selectedValues.length > 0) {
-                    $select.val(selectedValues); // Set new selections
-                }
-                // Use a flag to prevent externalUpdate listener from firing during internal updates
-                $select.data('internal-update', true);
-                $select.trigger('change');
-                // Clear the flag after a short delay
-                setTimeout(function() {
-                    $select.data('internal-update', false);
-                }, 10);
             }
             
             // Toggle dropdown
@@ -878,13 +997,28 @@
                     
                     // Load data if remote and not loaded yet (only empty option exists)
                     if (isRemote && allOptions.length <= 1) {
+                        console.log('[ModernMultiSelect] Opening dropdown - need to load data', {
+                            fieldName: fieldName,
+                            isRemote: isRemote,
+                            allOptionsLength: allOptions.length,
+                            dataLoaded: dataLoaded,
+                            isLoading: isLoading
+                        });
                         loadDataFromServer('');
                         // Note: renderOptions will be called after data loads
                     } else if (allOptions.length > 1) {
                         // We have options, render them
+                        console.log('[ModernMultiSelect] Opening dropdown - rendering existing options', {
+                            fieldName: fieldName,
+                            allOptionsLength: allOptions.length
+                        });
                         renderOptions();
                     } else {
                         // No options at all
+                        console.log('[ModernMultiSelect] Opening dropdown - no options available', {
+                            fieldName: fieldName,
+                            isRemote: isRemote
+                        });
                         $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
                     }
                     
@@ -907,6 +1041,8 @@
             function closeDropdown() {
                 if (!isOpen) return; // Already closed
                 isOpen = false;
+                // CRITICAL: Reset isLoading when closing dropdown to prevent stuck state
+                isLoading = false;
                 $wrapper.removeClass('open');
                 $dropdown.css({
                     'display': 'none',
@@ -1669,9 +1805,6 @@
             // Note: If ModernMultiSelect is not available, initialization will happen when called
         }, 100);
     });
-    
-    // CRITICAL: Export function for global access
-    window.initializeReportModernMultiSelect = initializeModernMultiSelect;
     
 })(jQuery);
 </script>

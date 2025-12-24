@@ -6,7 +6,7 @@ namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
 public static class ComboDataRoutines
 {
     public static void SetComboDataSelectedId(CommonFormStructure structure,
-        ElasticObject mainData, bool recordIsFilterValue, Entity entity)
+        ElasticObject mainData, bool recordIsFilterValue)
     {
         if (mainData == null)
         {
@@ -20,14 +20,12 @@ public static class ComboDataRoutines
     }
 
     public static ComboData GetRecords(Entity baseEntity, Entity entity,
-        bool isMandatory, string culture, string filter, int pageNo,
-        string constraint = null, string displayFields = null,
-        LocalParameters localParameters = null, string orderBy = null,
-        int topRows = 100000, bool onlyActiveStates = true,
-        IEnumerable<UIComponentProperty> properties = null)
+        string culture, string filter, int pageNo, string constraint = null,
+        string displayFields = null, LocalParameters localParameters = null,
+        string orderBy = null, int topRows = 100000,
+        bool onlyActiveStates = true, IEnumerable<UIComponentProperty> properties = null)
     {
-        ComboData cd = InitComboData(baseEntity, entity, isMandatory, culture, filter, displayFields, properties, topRows,
-            pageNo);
+        ComboData cd = InitComboData(baseEntity, entity, culture, filter, displayFields, properties, topRows);
         if (entity.IsEntityState)
         {
             return GetEntityStatesAsRecordData(baseEntity, cd, culture);
@@ -91,16 +89,17 @@ public static class ComboDataRoutines
     }
 
     public static ComboData InitComboData(Entity baseEntity, Entity entity,
-        bool isMandatory, string culture, string filter, string displayFields,
-        IEnumerable<UIComponentProperty> properties, int count, int pageNo)
+        string culture, string filter, string displayFields, 
+        IEnumerable<UIComponentProperty> properties, int count)
     {
         ComboData cd = new(displayFields)
         {
             NamespaceId = entity?.NamespaceId ?? baseEntity?.NamespaceId,
             EntityId = entity?.Id ?? baseEntity?.Id,
             Filter = filter,
-            culture = culture,
-            Properties = properties?.Where(p => p.PropertyId.In(eControlPropertyId.SuccessWhen
+            Culture = culture,
+            Properties = properties?.Where(p => p.PropertyId.In(
+                  eControlPropertyId.SuccessWhen
                 , eControlPropertyId.DangerWhen
                 , eControlPropertyId.WarningWhen
                 , eControlPropertyId.InfoWhen
@@ -222,7 +221,8 @@ public static class ComboDataRoutines
 
     public static void GetComboRecords(ComboData comboData, string culture)
     {
-        List<string> recordsById = comboData.RecordsById?.Where(r => r.Value == null && !string.IsNullOrEmpty(r.Key))
+        List<string> recordsById = comboData.RecordsById?
+            .Where(r => r.Value == null && !string.IsNullOrEmpty(r.Key))
             .Select(r => r.Key).ToList();
         if (recordsById == null || recordsById.Count == 0)
         {
@@ -396,8 +396,7 @@ public static class ComboDataRoutines
         }
     }
 
-    private static void GetDataRowFromBasicString(string culture, Entity entity, ElasticObject record,
-        List<object> dvs)
+    private static void GetDataRowFromBasicString(string culture, Entity entity, ElasticObject record, List<object> dvs)
     {
         foreach (BasicField field in entity.DisplayStrings)
         {

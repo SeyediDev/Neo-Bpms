@@ -110,7 +110,7 @@ public class DesktopController(
              culture, false, user, cfgResult.Configs, cancellationToken);
         FormComboData.SetCombosData(dashboard, result.Structure, culture, null, GetLocalParameters(user, null));
         if (filterValues != null)
-            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true, entity);
+            ComboDataRoutines.SetComboDataSelectedId(result.Structure, filterValues, true);
         result.Structure.NamespaceId = entity.NamespaceId;
         result.Structure.EntityId = entity.Id;
         result.Structure.Form_ReportId = dashboard.Id;

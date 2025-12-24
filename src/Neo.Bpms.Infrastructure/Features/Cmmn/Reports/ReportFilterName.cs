@@ -144,10 +144,10 @@ public class ReportFilterName(ReportConfigManager reportConfigManager)
             if (!combosData.TryGetValue(fieldId, out ComboData comboData))
             {
                 comboData = ComboDataRoutines.GetRecords(fld.Entity, fld.AssociationEntity.Entity(),
-                    true, /*culture*/null /*todo*/,
-                    $"{fld.AssociationEntity.Entity().KeyFields?.FirstOrDefault()?.Id}=='{fv}'", //todo
-                    1, fld.AssociationEntity.Constraint, null, null,
-                    null, 1, false, null);
+                    null /*todo*/, /*culture*/$"{fld.AssociationEntity.Entity().KeyFields?.FirstOrDefault()?.Id}=='{fv}'",
+                    1, //todo
+                    fld.AssociationEntity.Constraint, null, null, null,
+                    1, false, null);
                 combosData.Add(fieldId, comboData);
             }
 
@@ -279,8 +279,8 @@ public class ReportFilterName(ReportConfigManager reportConfigManager)
                 if (i >= ids.Length) break;
             }
         }
-        ComboData cd0 = ComboDataRoutines.GetRecords(entity, fld.AssociationEntity.Entity(), true,
-            "fa", pkFilter, 1, fld.AssociationEntity.Constraint, /*displayFields:*/ null, null, "", 1, false);
+        ComboData cd0 = ComboDataRoutines.GetRecords(entity, fld.AssociationEntity.Entity(), "fa",
+            pkFilter, 1, fld.AssociationEntity.Constraint, null, /*displayFields:*/ null, "", 1, false);
         return cd0.Rows.Count > 0 ? cd0.Rows[0] : null;
     }
 

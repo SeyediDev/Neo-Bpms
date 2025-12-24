@@ -34,7 +34,7 @@ public partial class FormController
         SetPagePackId(form);
         UiEntity entity = form.entity;
         FormComboData.SetCombosData(form, structure, culture, null, GetLocalParameters(user, null));
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, true, entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, true);
         SetBulkCreateProcessViewBags(TaskId, ProcessId, ProcessVersion, Caller,
             queryType, recordsIds, indexFormId, associationFieldId,
             indexFormFilterValues, indexFormPageNo, callerPage, structure, user);

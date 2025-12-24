@@ -2,22 +2,18 @@
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
 
-public class ComboData
+public class ComboData(string displayFields = null)
 {
-    public ComboData(string displayFields = null)
-    {
-        DisplayFields = displayFields;
-    }
     public List<FormDataRow> Rows = [];
     public string NamespaceId;
     public string EntityId;
 
     public string Filter { get; set; }
-    internal ConcurrentDictionary<string, FormDataRow> RecordsById { get; set; } = new ConcurrentDictionary<string, FormDataRow>();
+    public ConcurrentDictionary<string, FormDataRow> RecordsById { get; set; } = new ConcurrentDictionary<string, FormDataRow>();
     public bool GetQuery { get; set; }
 
-    public string culture;
-    public string DisplayFields;
+    public string Culture { get; set; }
+    public string DisplayFields = displayFields;
     public int Count { private get; set; }
     public bool HasMore => Rows.Count >= Count && Count != 0;
 

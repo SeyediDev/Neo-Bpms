@@ -61,7 +61,7 @@ public partial class FormController
         }
 
         FormComboData.SetCombosData(form, structure, culture, record, GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(structure, record, false, form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(structure, record, false);
         //          var prevIds = GetPrevId(form.entity, ids);
         //			var nextIds = GetNextId(form.entity, ids);
         //          ViewBag.HasPrev = !string.IsNullOrEmpty(prevIds);
@@ -175,7 +175,7 @@ public partial class FormController
         }
         ElasticObject record = (await GetRecord(ids, postResult.form, user, postResult.Culture, postResult.structure, null, cancellationToken)).record;
         FormComboData.SetCombosData(postResult.form, postResult.structure, postResult.Culture, record, GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(postResult.structure, record, false, postResult.form.entity);
+        ComboDataRoutines.SetComboDataSelectedId(postResult.structure, record, false);
         SetCommonDeleteViewBags(__parentNamespaceId, __parentEntityId, __parentFormSubjectId, __subTableAssociationFieldId,
             __parentIds, postResult.structure, user);
         SetPagePackId(postResult.form);
