@@ -151,7 +151,7 @@
 ---
 
 #### 1-5. Combo Box Position Issue
-**Status:** 🔄 In Progress  
+**Status:** ✅ Completed  
 **Priority:** High  
 **Description:**  
 محل کمبو مشکل دارد - باید بررسی شود که wrapper در جای درست insert می‌شود.
@@ -167,6 +167,68 @@
 - ✅ بررسی parent container (neo-control, modern-form)
 - ✅ اطمینان از اینکه wrapper در جای درست insert می‌شود
 - ✅ اضافه کردن logic برای بررسی control container
+
+---
+
+#### 1-6. Combo Cross-Contamination & Initial Values Issue
+**Status:** ✅ Completed  
+**Priority:** Critical  
+**Description:**  
+تداخل مقادیر بین کمبوهای مختلف در لود اولیه و نمایش مقادیر عددی به جای متن ترجمه شده.
+
+**Problems:**
+- مقادیر اولیه کمبوی اکوسیستم با کمبوی RFM قاطی می‌شد
+- کمبوی کشور و شهر مقادیر عددی به جای متن ترجمه شده نشان می‌داد
+- کمبوی اکوسیستم متن اشتباه از entity دیگر نشان می‌داد (NamespaceId و EntityId اشتباه)
+
+**Files:**
+- `_Scripts.report-modern-multi-select.cshtml`
+
+**Solution Applied:**
+- ✅ اضافه کردن unique combo instance ID برای هر کمبو
+- ✅ تغییر API از GetComboData به GetComboInitValues برای مقادیر اولیه
+- ✅ اضافه کردن helper function `hasValidDisplayText` برای تشخیص متن‌های عددی
+- ✅ Remote combos همیشه از سرور fetch می‌کنند (جلوگیری از نمایش متن اشتباه)
+- ✅ اضافه کردن validation برای جلوگیری از cross-contamination
+
+---
+
+#### 1-7. Popular Filter Loading Error
+**Status:** ✅ Completed  
+**Priority:** High  
+**Description:**  
+وقتی فیلتر پرکاربرد ذخیره شده انتخاب می‌شد، همه کمبوها با خطای Authorization مواجه می‌شدند.
+
+**Problems:**
+- خطای Authorization 500 در لود فیلتر پرکاربرد
+- FormId خالی به سرور ارسال می‌شد
+- URL از ItemId استفاده می‌کرد اما کد فقط ReportId را می‌خواند
+
+**Files:**
+- `_Scripts.report-modern-multi-select.cshtml`
+
+**Solution Applied:**
+- ✅ اضافه کردن `getUrlParameter('ItemId')` به منطق بازیابی FormId
+- ✅ بهبود error logging با نمایش جزئیات خطا
+
+---
+
+#### 1-8. Popular Filter Save Issue
+**Status:** ⏳ Pending  
+**Priority:** High  
+**Description:**  
+ذخیره مقادیر فیلتر به درستی انجام نمی‌شود.
+
+**Problems:**
+- ذخیره مقادیر فیلتر درست کار نمی‌کند
+- نیاز به بررسی بیشتر دارد
+
+**Files:**
+- `_Scripts.report-modern-multi-select.cshtml` (احتمالاً)
+- فایل‌های مربوط به ذخیره فیلتر پرکاربرد
+
+**Solution Applied:**
+- ⏳ نیاز به بررسی دارد
 
 ---
 
@@ -189,5 +251,11 @@
 - ✅ 2-1. Button Text, Font, and Icon Display - Completed
 - ✅ 2-2. Apply Filter Method Call and Page Post - Completed
 
-**Status:** 🔍 Review - All fixes applied, waiting for user testing and confirmation
+### 2024-12-24 - Combo Cross-Contamination & Popular Filter Fixes
+- ✅ 1-5. Combo Box Position Issue - Completed
+- ✅ 1-6. Combo Cross-Contamination & Initial Values Issue - Completed (unique IDs, GetComboInitValues API, hasValidDisplayText)
+- ✅ 1-7. Popular Filter Loading Error - Completed (ItemId URL parameter support)
+- ⏳ 1-8. Popular Filter Save Issue - **Pending** - نیاز به بررسی بیشتر دارد
+
+**Current Status:** ⏳ Pending - مشکل ذخیره فیلتر پرکاربرد باید بررسی شود
 
