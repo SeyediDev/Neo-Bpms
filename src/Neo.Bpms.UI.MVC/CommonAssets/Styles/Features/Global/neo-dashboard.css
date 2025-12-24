@@ -2039,8 +2039,8 @@
   background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%) !important;
   border-radius: 0 0 20px 20px !important;
   box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2) !important;
-  margin: 0 !important;
-  margin-bottom: 8px !important;
+  /* همسان‌سازی margin چپ و راست با هدر فرم ایندکس (1.5rem = 24px) */
+  margin: 0 1.5rem 8px 1.5rem !important;
   padding: 20px 24px !important;
   border: none !important;
   position: relative !important;

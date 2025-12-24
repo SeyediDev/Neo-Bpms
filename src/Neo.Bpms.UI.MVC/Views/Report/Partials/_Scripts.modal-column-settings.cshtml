@@ -13,6 +13,15 @@ window.openColumnSettingsModal = function(modalKey) {
     if (modal) {
         // Use Bootstrap modal if available
         if (typeof $ !== 'undefined' && $.fn.modal) {
+            $(modal).on('shown.bs.modal', function() {
+                // Initialize sortable when modal is fully shown
+                if (typeof initializeSortableDimensions === 'function') {
+                    initializeSortableDimensions();
+                }
+                if (typeof initializeSortableColumns === 'function') {
+                    initializeSortableColumns();
+                }
+            });
             $(modal).modal('show');
         } else {
             // Fallback to manual opening
@@ -35,6 +44,16 @@ window.openColumnSettingsModal = function(modalKey) {
             document.body.appendChild(backdrop);
             
             document.body.classList.add('modal-open');
+            
+            // Initialize sortable after a short delay to ensure DOM is ready
+            setTimeout(function() {
+                if (typeof initializeSortableDimensions === 'function') {
+                    initializeSortableDimensions();
+                }
+                if (typeof initializeSortableColumns === 'function') {
+                    initializeSortableColumns();
+                }
+            }, 100);
         }
             
         console.log('Column settings modal opened:', modalId);

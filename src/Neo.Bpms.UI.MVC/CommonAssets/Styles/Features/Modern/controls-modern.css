@@ -2247,6 +2247,8 @@ body {
   border: 1px solid #e2e8f0;
   position: relative;
   overflow: hidden;
+  /* کاهش فاصله از کنترل‌های بالاتر در فرم‌سازها */
+  margin-top: 0.5rem !important;
 }
 
 .modern-table-wrapper {
@@ -3997,4 +3999,76 @@ body {
 .t-table-wrapper .text-danger,
 .t-table-wrapper .index-table-add-btn {
   font-size: 0.825em !important;
+}
+
+/* ===== کاهش فاصله IndexTable از کنترل‌های بالاتر در فرم‌سازها ===== */
+/* در پنل ادمین در فرم‌سازها، IndexTable باید فاصله کمتری از کنترل‌های بالاتر داشته باشد */
+.modern-form .modern-table-container,
+.modern-form .t-table-wrapper {
+  margin-top: 0.5rem !important;
+}
+
+/* برای IndexTable در فرم‌سازها، فاصله از کنترل‌های بالاتر را کاهش بده */
+[id^="form-builder"] .modern-table-container,
+[id^="form-builder"] .t-table-wrapper,
+.form-builder .modern-table-container,
+.form-builder .t-table-wrapper {
+  margin-top: 0.5rem !important;
+}
+
+/* ===== عرض کامل برای کنترل Group در فرم‌ساز ===== */
+/* در پنل ادمین در فرم‌ساز، کنترل‌های Group باید عرض کامل داشته باشند و زیر هم بیایند */
+
+/* اطمینان از اینکه form-element که row است، کنترل‌های col-12 را زیر هم نمایش دهد */
+#mainPartOfTheForm .form-element.row,
+#mainPartOfTheForm #main-part.form-element.row,
+#main-part.form-element.row {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+}
+
+/* اطمینان از اینکه کنترل‌های Group با کلاس group-control-full-width عرض کامل داشته باشند */
+.group-control-full-width {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* اطمینان از اینکه کنترل‌های Group در form-element عرض کامل داشته باشند */
+#mainPartOfTheForm .form-element .neo-control.col-12,
+#mainPartOfTheForm #main-part.form-element .neo-control.col-12,
+#main-part.form-element .neo-control.col-12,
+#mainPartOfTheForm .form-element.row .neo-control.col-12,
+#mainPartOfTheForm #main-part.form-element.row .neo-control.col-12,
+#main-part.form-element.row .neo-control.col-12,
+#mainPartOfTheForm .form-element .group-control-full-width,
+#mainPartOfTheForm #main-part.form-element .group-control-full-width,
+#main-part.form-element .group-control-full-width {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* برای کنترل‌های Group که دارای border هستند */
+#mainPartOfTheForm .form-element .neo-control.col-12 > div[class*="border"],
+#mainPartOfTheForm #main-part.form-element .neo-control.col-12 > div[class*="border"],
+#main-part.form-element .neo-control.col-12 > div[class*="border"],
+.group-control-full-width > div[class*="border"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
 }

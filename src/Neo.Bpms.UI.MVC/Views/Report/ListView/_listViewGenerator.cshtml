@@ -159,10 +159,10 @@
 									{
 										var totalValue = ReportRenderer.GetValue(colInfo, reportInfo.TotalRecord);
 										var total = double.TryParse(totalValue?.ToString(), out var t) ? t : 0;
-										var percent = total == 0 ? 0 : Math.Round(v * 10000 / total) / 100;
+										var percent = total == 0 ? 0 : v * 100 / total;
 										if (percent != 0)
 										{
-											percentage = new HtmlString("(" + percent + "%)");
+											percentage = new HtmlString("(" + percent.ToString("0.##") + "%)");
 										}
 										tooltip = new HtmlString(string.Format("{0} : {1}\n\r{2} : %{3}", ViewTexts.Value, value, ViewTexts.Percentage, Math.Round(v * 10000000 / total) / 100000));
 										isNumber = true;

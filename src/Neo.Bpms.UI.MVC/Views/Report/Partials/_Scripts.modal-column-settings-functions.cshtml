@@ -85,25 +85,118 @@ var findSelectedColumnLi = function (modalKey, entityId, associationName, column
     );
 }
 
-$(".sortable-report-dimensions")
-    .on('click',
-        'li',
-        function (e) {
-            if (e.ctrlKey || e.metaKey) {
-                $(this).toggleClass("selected");
-            } else {
-                $(this).addClass("selected").siblings().removeClass('selected');
-                if ($(this).attr('column-aggrId') === 'Formula') {
-                    formulaColumnId = this.id;
+// Function to initialize sortable for dimensions
+function initializeSortableDimensions() {
+    // Destroy existing sortable instances to avoid conflicts
+    try {
+        if ($.fn.sortable && $(".sortable-report-dimensions").hasClass('ui-sortable')) {
+            $(".sortable-report-dimensions").sortable('destroy');
+        }
+    } catch (e) {
+        console.warn('Error destroying sortable dimensions:', e);
+    }
+    
+    $(".sortable-report-dimensions")
+        .on('click',
+            'li',
+            function (e) {
+                // Prevent click during drag
+                if ($(this).hasClass('ui-sortable-helper')) {
+                    return false;
                 }
-            }
-        })
-    .sortable(
-        {
-            connectWith: ".sortable-report-dimensions",
+                if (e.ctrlKey || e.metaKey) {
+                    $(this).toggleClass("selected");
+                } else {
+                    $(this).addClass("selected").siblings().removeClass('selected');
+                    if ($(this).attr('column-aggrId') === 'Formula') {
+                        formulaColumnId = this.id;
+                    }
+                }
+            })
+        .sortable(
+            {
+                connectWith: ".sortable-report-dimensions",
+                delay: 150,
+                revert: 0,
+                cursor: "grabbing",
+                tolerance: "pointer",
+                helper: function (e, item) {
+                    if (!item.hasClass('selected')) {
+                        item.addClass('selected').siblings().removeClass('selected');
+                    }
+                    var elements = item.parent().children('.selected').clone();
+                    item.data('multidrag', elements).siblings('.selected').remove();
+                    var helper = $('<li/>');
+                    return helper.append(elements);
+                },
+                stop: function (e, ui) {
+                    var elements = ui.item.data('multidrag');
+                    var modalKey = $(this).attr("modalKey");
+                    elements.each(function (idx, element) {
+                        var $element = $(element);
+                        var formula = $element.attr('column-formula');
+                        var entityId = $element.attr('column-entityId');
+                        var associationName = $element.attr('column-associationName');
+                        var columnId = $element.attr('column-name');
+                        var alias = $element.find('.alias').text();
+                        var aggrId = 'InColumn';
+
+                        var selectedLi = findSelectedColumnLi(modalKey, entityId, associationName, columnId, aggrId);
+                        if (ui.item.parent()[0].id == "selectedDimensions-" + modalKey) {
+                            if (selectedLi.length === 0) {
+                                $("#selectedColumns-" + modalKey)
+                                    .append(createLiHtmlString(modalKey, entityId,
+                                        associationName, columnId, aggrId, formula, alias));
+                            }
+                        } else {
+                            selectedLi.remove();
+                        }
+                    });
+                    ui.item.after(elements).remove();
+                }
+            });
+}
+
+// Function to initialize sortable for columns
+function initializeSortableColumns() {
+    // Destroy existing sortable instances to avoid conflicts
+    try {
+        if ($.fn.sortable && $(".sortable-report-columns").hasClass('ui-sortable')) {
+            $(".sortable-report-columns").sortable('destroy');
+        }
+    } catch (e) {
+        console.warn('Error destroying sortable columns:', e);
+    }
+    
+    $(".sortable-report-columns")
+        .on('click',
+            'li',
+            function (e) {
+                // Prevent click during drag
+                if ($(this).hasClass('ui-sortable-helper')) {
+                    return false;
+                }
+                var modalKey = $(this).parent().attr("modalKey");
+                if (e.ctrlKey || e.metaKey) {
+                    $('#showEditFormulaId-' + modalKey).addClass('hidden');
+                    $(this).toggleClass("selected");
+                } else {
+                    $(".columnsSettingsModal li.selected").removeClass("selected");
+                    $(this).addClass("selected");
+
+                    if ($(this).attr('column-aggrId') === 'Formula') {
+                        formulaColumnId = this.id;
+                        $('#showEditFormulaId-' + modalKey).removeClass('hidden');
+                    } else {
+                        $('#showEditFormulaId-' + modalKey).addClass('hidden');
+                    }
+                }
+            })
+        .sortable({
+            connectWith: ".sortable-report-columns",
             delay: 150,
             revert: 0,
-            cursor: "grabbing",
+            tolerance: "pointer",
             helper: function (e, item) {
                 if (!item.hasClass('selected')) {
                     item.addClass('selected').siblings().removeClass('selected');
@@ -115,69 +208,25 @@ $(".sortable-report-dimensions")
             },
             stop: function (e, ui) {
                 var elements = ui.item.data('multidrag');
-                var modalKey = $(this).attr("modalKey");
-                elements.each(function (idx, element) {
-                    var $element = $(element);
-                    var formula = $element.attr('column-formula');
-                    var entityId = $element.attr('column-entityId');
-                    var associationName = $element.attr('column-associationName');
-                    var columnId = $element.attr('column-name');
-                    var alias = $element.find('.alias').text();
-                    var aggrId = 'InColumn';
-
-                    var selectedLi = findSelectedColumnLi(modalKey, entityId, associationName, columnId, aggrId);
-                    if (ui.item.parent()[0].id == "selectedDimensions-" + modalKey) {
-                        if (selectedLi.length === 0) {
-                            $("#selectedColumns-" + modalKey)
-                                .append(createLiHtmlString(modalKey, entityId,
-                                    associationName, columnId, aggrId, formula, alias));
-                        }
-                    } else {
-                        selectedLi.remove();
-                    }
-                });
                 ui.item.after(elements).remove();
             }
         });
+}
 
-$(".sortable-report-columns")
-    .on('click',
-        'li',
-        function (e) {
-            var modalKey = $(this).parent().attr("modalKey");
-            if (e.ctrlKey || e.metaKey) {
-                $('#showEditFormulaId-' + modalKey).addClass('hidden');
-                $(this).toggleClass("selected");
-            } else {
-                $(".columnsSettingsModal li.selected").removeClass("selected");
-                $(this).addClass("selected");
+// Initialize sortable on page load
+$(document).ready(function() {
+    initializeSortableDimensions();
+    initializeSortableColumns();
+});
 
-                if ($(this).attr('column-aggrId') === 'Formula') {
-                    formulaColumnId = this.id;
-                    $('#showEditFormulaId-' + modalKey).removeClass('hidden');
-                } else {
-                    $('#showEditFormulaId-' + modalKey).addClass('hidden');
-                }
-            }
-        })
-    .sortable({
-        connectWith: ".sortable-report-columns",
-        delay: 150,
-        revert: 0,
-        helper: function (e, item) {
-            if (!item.hasClass('selected')) {
-                item.addClass('selected').siblings().removeClass('selected');
-            }
-            var elements = item.parent().children('.selected').clone();
-            item.data('multidrag', elements).siblings('.selected').remove();
-            var helper = $('<li/>');
-            return helper.append(elements);
-        },
-        stop: function (e, ui) {
-            var elements = ui.item.data('multidrag');
-            ui.item.after(elements).remove();
-        }
-    });
+// Re-initialize sortable when modal is shown
+$(document).on('shown.bs.modal', '.columnsSettingsModal', function() {
+    // Small delay to ensure modal is fully rendered
+    setTimeout(function() {
+        initializeSortableDimensions();
+        initializeSortableColumns();
+    }, 100);
+});
 
 function renameColumn(obj) {
     var $alias = $(obj).find('.alias');
@@ -220,6 +269,10 @@ function addToFormulas(modalKey) {
         var entityId = window.top.modalObjects[modalKey].EntityId;
         $('#selectedColumns-' + modalKey)
             .append(createLiHtmlString(modalKey, entityId, "", formulaId, aggrType, newFormula, newFormulaName));
+        // Re-initialize sortable after adding new item
+        setTimeout(function() {
+            initializeSortableColumns();
+        }, 50);
     }
     $('#addFormulaModal-' + modalKey).modal("hide");
 }

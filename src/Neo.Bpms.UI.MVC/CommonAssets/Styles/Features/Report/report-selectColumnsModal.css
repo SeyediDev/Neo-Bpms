@@ -55,6 +55,11 @@
 	float: right;
 	padding: 2px 4px;
 	width: 100%;
+	position: relative;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .columnsSettingsModal ul.vertical-sortable-list li:hover {
@@ -70,6 +75,17 @@
 	cursor: move;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
+	opacity: 0.8;
+	z-index: 1000;
+	pointer-events: none;
+}
+
+.columnsSettingsModal ul.vertical-sortable-list li.ui-sortable-placeholder {
+	visibility: visible !important;
+	background-color: #f0f0f0;
+	border: 2px dashed #999;
+	height: 30px;
+	margin: 2px 0;
 }
 
 
