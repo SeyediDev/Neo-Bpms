@@ -41,6 +41,7 @@ public class FilterControllerTests
     {
         // This test requires ProjectDefinition.Project.GetUiEntity which is static
         // Integration test needed for full coverage
+        await Task.CompletedTask;
     }
 
     [Fact(Skip = "Requires ProjectDefinition.Project.GetUiEntity which is static and cannot be mocked")]
@@ -48,6 +49,7 @@ public class FilterControllerTests
     {
         // This test requires ProjectDefinition.Project.GetUiEntity which is static
         // Integration test needed for full coverage
+        await Task.CompletedTask;
     }
 
     [Fact]
@@ -59,6 +61,13 @@ public class FilterControllerTests
             Values = new List<ConfiguredFilterValue>
             {
                 new() { FieldId = "Field1", Value = "OldValue" }
+            },
+            EntityItem = new EntityItem
+            {
+                ItemType = "Report",
+                NamespaceId = "TestNamespace",
+                EntityId = "TestEntity",
+                ItemId = "TestItem"
             }
         };
 
@@ -228,7 +237,14 @@ public class FilterControllerTests
         // Arrange
         var filter = new ConfiguredFilter(1, "Test Filter")
         {
-            FolderId = 10
+            FolderId = 10,
+            EntityItem = new EntityItem
+            {
+                ItemType = "Report",
+                NamespaceId = "TestNamespace",
+                EntityId = "TestEntity",
+                ItemId = "TestItem"
+            }
         };
 
         _repositoryMock
