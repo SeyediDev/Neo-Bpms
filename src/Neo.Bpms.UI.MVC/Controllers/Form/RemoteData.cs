@@ -10,7 +10,7 @@ public partial class FormController
     [HttpPost]
     public async Task<JsonResult> GetComboData(ComboDataBindingModel model)
     {
-        if (model == null)
+        if (model == null|| model.NamespaceId == null || model.EntityId == null)
         {
             return JsonErrorOfComboData("1000-401");
         }

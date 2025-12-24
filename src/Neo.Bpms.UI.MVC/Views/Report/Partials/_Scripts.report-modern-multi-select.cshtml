@@ -21,6 +21,51 @@
             });
         }
     };
+    
+    // Helper function to diagnose why parameters are null
+    window.diagnoseNullParameters = function(fieldName) {
+        console.group('[ModernMultiSelect] 🔬 Diagnosing null parameters for field: ' + fieldName);
+        
+        const $select = $('select[name="' + fieldName + '"]');
+        if ($select.length === 0) {
+            console.error('❌ Select element not found for field:', fieldName);
+            console.groupEnd();
+            return;
+        }
+        
+        console.log('✅ Select element found');
+        console.log('Select attributes:', {
+            'data-namespace-id': $select.attr('data-namespace-id'),
+            'data-entity-id': $select.attr('data-entity-id'),
+            'data-is-remote': $select.attr('data-is-remote'),
+            'name': $select.attr('name'),
+            'id': $select.attr('id')
+        });
+        
+        const $parent = $select.closest('.neo-control, .modern-form, [data-id]');
+        console.log('Parent div attributes:', {
+            'data-namespace-id': $parent.attr('data-namespace-id'),
+            'data-entity-id': $parent.attr('data-entity-id'),
+            'class': $parent.attr('class')
+        });
+        
+        console.log('Filter panel attributes:', {
+            'data-namespace-id': $('#filterTooltipPanel').attr('data-namespace-id'),
+            'data-entity-id': $('#filterTooltipPanel').attr('data-entity-id')
+        });
+        
+        console.log('Window context:', {
+            'reportContext': window.reportContext,
+            'PageAddressManager': window.PageAddressManager ? 'available' : 'not available'
+        });
+        
+        console.log('URL parameters:', {
+            'NamespaceId': new URLSearchParams(window.location.search).get('NamespaceId'),
+            'EntityId': new URLSearchParams(window.location.search).get('EntityId')
+        });
+        
+        console.groupEnd();
+    };
 
     function initializeModernMultiSelect() {
         // Ensure all filter inputs are associated with the form
@@ -146,8 +191,52 @@
                             formId = formId || currentAddress.formId || '';
                         }
                     } catch (e) {
+                        console.error('[ModernMultiSelect] Error getting PageAddressManager data:', e);
                     }
                 }
+            }
+            
+            // CRITICAL: Log all parameter sources for debugging
+            console.log('[ModernMultiSelect] 🔍 Parameter initialization for field:', fieldName, {
+                namespaceId: namespaceId,
+                entityId: entityId,
+                fieldId: fieldId,
+                formId: formId,
+                isRemote: isRemote,
+                sources: {
+                    selectAttr: {
+                        namespaceId: $select.attr('data-namespace-id') || $select.data('namespace-id'),
+                        entityId: $select.attr('data-entity-id') || $select.data('entity-id')
+                    },
+                    parentDiv: {
+                        namespaceId: $parentDiv.attr('data-namespace-id') || $parentDiv.data('namespace-id'),
+                        entityId: $parentDiv.attr('data-entity-id') || $parentDiv.data('entity-id')
+                    },
+                    filterPanel: {
+                        namespaceId: $('#filterTooltipPanel').attr('data-namespace-id'),
+                        entityId: $('#filterTooltipPanel').attr('data-entity-id')
+                    },
+                    windowContext: {
+                        namespaceId: window.reportContext?.namespaceId,
+                        entityId: window.reportContext?.entityId
+                    },
+                    url: {
+                        namespaceId: getUrlParameter('NamespaceId'),
+                        entityId: getUrlParameter('EntityId')
+                    },
+                    pageAddressManager: window.PageAddressManager ? 'available' : 'not available'
+                }
+            });
+            
+            // CRITICAL: Warn if required parameters are missing
+            if (!namespaceId || !entityId) {
+                console.warn('[ModernMultiSelect] ⚠️ WARNING: Missing required parameters for field:', fieldName, {
+                    namespaceId: namespaceId || 'MISSING',
+                    entityId: entityId || 'MISSING',
+                    isRemote: isRemote,
+                    message: 'This field will not be able to load data from server',
+                    recommendation: 'Add data-namespace-id and data-entity-id attributes to the select element or parent div'
+                });
             }
             
             const filterFormula = $select.attr('filter-formula') || 
@@ -223,15 +312,37 @@
             function updateSelect() {
                 // Set the selected value on the original hidden select element
                 if ($select && $select.length > 0) {
-                    // For multi-select, convert array to comma-separated string
+                    // CRITICAL: Clear all options first, then add selected values as options
+                    // This ensures the select element has the correct options for form submission
+                    $select.empty();
+                    
                     if (selectedValues && selectedValues.length > 0) {
-                        const valueString = selectedValues.join(',');
-                        $select.val(valueString);
-                        console.log('Filter Panel: updateSelect set value to:', valueString);
+                        // Add each selected value as an option and select it
+                        selectedValues.forEach(function(val) {
+                            if (val && val !== '') {
+                                // Get the text for this value
+                                const option = getOptionByValue(val);
+                                const text = option ? option.text : val;
+                                
+                                // Create option element
+                                const $option = $('<option></option>')
+                                    .attr('value', val)
+                                    .attr('selected', 'selected')
+                                    .text(text);
+                                
+                                $select.append($option);
+                            }
+                        });
+                        
+                        // Set the value to the array of selected values
+                        $select.val(selectedValues);
+                        
+                        console.log('[ModernMultiSelect] updateSelect set values:', selectedValues, 'for field:', fieldName);
                     } else {
-                        // Clear select if no values
+                        // Add empty option when no values selected
+                        $select.append($('<option value=""></option>'));
                         $select.val('');
-                        console.log('Filter Panel: updateSelect cleared value');
+                        console.log('[ModernMultiSelect] updateSelect cleared value for field:', fieldName);
                     }
                     
                     // Trigger change event - but be careful with handlers
@@ -239,7 +350,7 @@
                     try {
                         $select.trigger('change.notFromUser');
                     } catch (e) {
-                        console.error('Filter Panel: Error triggering change event:', e);
+                        console.error('[ModernMultiSelect] Error triggering change event:', e);
                     }
                 }
                 
@@ -247,6 +358,17 @@
                 if ($select && $select.length > 0) {
                     if (!$select.attr('form')) {
                         $select.attr('form', 'filter-form');
+                    }
+                    
+                    // Ensure select is multiple
+                    if (!$select.prop('multiple')) {
+                        $select.prop('multiple', true);
+                    }
+                    
+                    // Ensure name has [] for array submission
+                    const currentName = $select.attr('name') || '';
+                    if (currentName && !currentName.endsWith('[]')) {
+                        $select.attr('name', currentName + '[]');
                     }
                 }
             }
@@ -330,52 +452,350 @@
             }
             let allOptions = options;
             let dataLoaded = false; // Track if data has been loaded from server
+            let optionsCache = {}; // Cache for all loaded options (key: value, value: {value, text})
+            let searchCache = {}; // Cache for search results (key: searchTerm, value: array of options)
+            let initialValuesFetched = false; // Track if initial values' texts have been fetched
             
-            // Load data from server (for remoteData)
-            function loadDataFromServer(searchTerm) {
-                console.log('[ModernMultiSelect] loadDataFromServer called', {
-                    fieldName: fieldName,
-                    searchTerm: searchTerm,
-                    isLoading: isLoading,
-                    dataLoaded: dataLoaded,
-                    allOptionsLength: allOptions.length,
-                    isRemote: isRemote
+            // Pagination state
+            let currentPage = 1; // Current page number
+            let currentSearchTerm = ''; // Current search term for pagination
+            let hasMorePages = true; // Whether there are more pages to load
+            let isLoadingMore = false; // Whether we're currently loading more data
+            const itemsPerPage = 30; // Items per page
+            const maxTotalItems = 300; // Maximum total items to keep in memory (10 pages)
+            let totalLoadedItems = 0; // Total items loaded so far
+            
+            // Add selected items to cache so they're never lost
+            function addToCache(value, text) {
+                if (value && value !== '' && text) {
+                    optionsCache[String(value)] = {
+                        value: String(value),
+                        text: String(text)
+                    };
+                }
+            }
+            
+            // Get item from cache or allOptions
+            function getOptionByValue(value) {
+                if (!value || value === '') return null;
+                
+                const valueStr = String(value);
+                
+                // First check cache
+                if (optionsCache[valueStr]) {
+                    return optionsCache[valueStr];
+                }
+                
+                // Then check allOptions
+                const option = allOptions.find(function(opt) {
+                    return String(opt.value) === valueStr;
                 });
                 
-                if (isLoading) {
-                    console.log('[ModernMultiSelect] Already loading, skipping...');
+                if (option) {
+                    // Add to cache for future use
+                    addToCache(option.value, option.text);
+                    return option;
+                }
+                
+                return null;
+            }
+            
+            // Fetch text for values that don't have text (initial values)
+            function fetchTextsForValues(values) {
+                if (!values || values.length === 0) {
+                    return Promise.resolve();
+                }
+                
+                console.log('[ModernMultiSelect] 🔍 fetchTextsForValues called for:', values, 'Field:', fieldName);
+                
+                // CRITICAL: First, try to get texts from original select element options
+                let foundFromSelect = false;
+                values.forEach(function(val) {
+                    if (!val || val === '') return;
+                    
+                    // Check if we already have it
+                    if (getOptionByValue(val)) {
+                        return;
+                    }
+                    
+                    // Try to get from select element
+                    const $selectOption = $select.find('option[value="' + val + '"]');
+                    if ($selectOption.length > 0) {
+                        const text = $selectOption.text().trim();
+                        if (text && text !== '') {
+                            addToCache(val, text);
+                            
+                            // Also add to allOptions
+                            const exists = allOptions.some(function(opt) {
+                                return String(opt.value) === String(val);
+                            });
+                            if (!exists) {
+                                allOptions.push({
+                                    value: String(val),
+                                    text: text
+                                });
+                            }
+                            
+                            foundFromSelect = true;
+                            console.log('[ModernMultiSelect] ✅ Found text from select element:', val, '=', text);
+                        }
+                    }
+                });
+                
+                // If we found all texts from select element, no need to fetch from server
+                const valuesToFetch = values.filter(function(val) {
+                    return !getOptionByValue(val);
+                });
+                
+                if (valuesToFetch.length === 0) {
+                    console.log('[ModernMultiSelect] ✅ All values have text (from cache or select), skipping server fetch. Field:', fieldName);
+                    return Promise.resolve();
+                }
+                
+                // If not remote, we can't fetch from server
+                if (!isRemote) {
+                    console.warn('[ModernMultiSelect] ⚠️ Not remote, cannot fetch texts for:', valuesToFetch, 'Field:', fieldName);
+                    return Promise.resolve();
+                }
+                
+                console.log('[ModernMultiSelect] 🌐 Fetching texts from server for values:', valuesToFetch, 'Field:', fieldName);
+                
+                // CRITICAL: Validate required parameters before sending request
+                if (!namespaceId || !entityId) {
+                    console.error('[ModernMultiSelect] ❌ CRITICAL: Cannot fetch texts - Missing required parameters!', {
+                        fieldName: fieldName,
+                        namespaceId: namespaceId,
+                        entityId: entityId,
+                        valuesToFetch: valuesToFetch,
+                        message: 'NamespaceId or EntityId is null/undefined'
+                    });
+                    return Promise.reject('Missing NamespaceId or EntityId');
+                }
+                
+                // Build request to get texts for these specific values
+                const requestData = {
+                    NamespaceId: namespaceId,
+                    EntityId: entityId,
+                    FieldId: fieldId || fieldName,
+                    FormId: formId || '',
+                    PageType: pageType || 0,
+                    Expression: '', // No search term - we want to get specific values
+                    Filter: filterFormula || '',
+                    IsMandatory: isMandatory || false,
+                    Count: 100, // Get more items to ensure we get all selected values
+                    Page: 1
+                };
+                
+                // CRITICAL: Only add Qs and LCs if they have values
+                if (filterFormula && typeof getQs === 'function' && typeof getLCs === 'function') {
+                    try {
+                        const qs = getQs();
+                        const lcs = getLCs();
+                        
+                        if (qs && qs.length > 0) {
+                            requestData.Qs = qs;
+                        }
+                        if (lcs && lcs.length > 0) {
+                            requestData.LCs = lcs;
+                        }
+                    } catch (e) {
+                        console.error('[ModernMultiSelect] Error getting Qs/LCs:', e);
+                    }
+                }
+                
+                // Note: We don't send SelectedValues as a separate parameter
+                // Instead, we rely on Expression being empty to get all items
+                // The API should return items that match the selected values if they exist
+                
+                const rootUrl = (window.top && window.top.rootUrl) ? window.top.rootUrl : '';
+                const apiUrl = rootUrl + 'Form/GetComboData';
+                const headers = window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {};
+                
+                return $.ajax({
+                    url: apiUrl,
+                    type: 'POST',
+                    data: requestData,
+                    headers: headers,
+                    timeout: 10000
+                }).then(function(response) {
+                    let dataArray = null;
+                    
+                    if (Array.isArray(response)) {
+                        dataArray = response;
+                    } else if (response.data && Array.isArray(response.data)) {
+                        dataArray = response.data;
+                    } else if (response.Rows && Array.isArray(response.Rows)) {
+                        dataArray = response.Rows;
+                    } else if (response.rows && Array.isArray(response.rows)) {
+                        dataArray = response.rows;
+                    } else {
+                        for (const key in response) {
+                            if (Array.isArray(response[key])) {
+                                dataArray = response[key];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (dataArray && dataArray.length > 0) {
+                        dataArray.forEach(function(item) {
+                            const value = item.value || item.id || item.Ids || item.Id || '';
+                            const text = item.text || item.name || item.DisplayValue || item.displayValue || item.Text || '';
+                            
+                            if (value !== '' && text !== '') {
+                                addToCache(value, text);
+                                
+                                // Also add to allOptions if not exists
+                                const exists = allOptions.some(function(opt) {
+                                    return String(opt.value) === String(value);
+                                });
+                                
+                                if (!exists) {
+                                    allOptions.push({
+                                        value: String(value),
+                                        text: String(text)
+                                    });
+                                }
+                            }
+                        });
+                        
+                        console.log('[ModernMultiSelect] Fetched texts for', dataArray.length, 'values');
+                    }
+                }).catch(function(error) {
+                    console.error('[ModernMultiSelect] Error fetching texts:', error);
+                });
+            }
+            
+            // Load data from server (for remoteData)
+            function loadDataFromServer(searchTerm, loadMore) {
+                loadMore = loadMore || false; // Default to false
+                const callStack = new Error().stack; // Get call stack for debugging
+                
+                console.log('[ModernMultiSelect] ⚡ loadDataFromServer called', {
+                    fieldName: fieldName,
+                    searchTerm: searchTerm,
+                    loadMore: loadMore,
+                    currentPage: currentPage,
+                    isLoading: isLoading,
+                    isLoadingMore: isLoadingMore,
+                    dataLoaded: dataLoaded,
+                    allOptionsLength: allOptions.length,
+                    totalLoadedItems: totalLoadedItems,
+                    hasMorePages: hasMorePages,
+                    cacheSize: Object.keys(optionsCache).length,
+                    searchCacheSize: Object.keys(searchCache).length,
+                    isRemote: isRemote,
+                    // CRITICAL: Show required parameters
+                    namespaceId: namespaceId,
+                    entityId: entityId,
+                    fieldId: fieldId,
+                    formId: formId,
+                    callStack: callStack.split('\n').slice(1, 4).join('\n') // Show first 3 lines of stack
+                });
+                
+                if (isLoading || isLoadingMore) {
+                    console.warn('[ModernMultiSelect] ⚠️ Already loading, skipping... Field:', fieldName);
                     return;
                 }
                 
                 if (!isRemote) {
+                    console.log('[ModernMultiSelect] ℹ️ Not remote, skipping server load. Field:', fieldName);
                     return;
                 }
                 
-                // If data already loaded and no search term, don't reload
-                // BUT: Only skip if we actually have data (more than just empty option)
-                if (dataLoaded && (!searchTerm || searchTerm === '') && allOptions.length > 1) {
-                    // CRITICAL: Reset isLoading before rendering to prevent stuck loading state
-                    isLoading = false;
-                    console.log('[ModernMultiSelect] Data already loaded, rendering options without reload', {
-                        fieldName: fieldName,
-                        allOptionsLength: allOptions.length
+                // If search term changed, reset pagination
+                if (searchTerm !== currentSearchTerm) {
+                    console.log('[ModernMultiSelect] 🔄 Search term changed, resetting pagination. Old:', currentSearchTerm, 'New:', searchTerm);
+                    currentSearchTerm = searchTerm;
+                    currentPage = 1;
+                    hasMorePages = true;
+                    totalLoadedItems = 0;
+                    
+                    // Clear allOptions except empty option and selected items
+                    const selectedOptions = allOptions.filter(function(opt) {
+                        return opt.value === '' || selectedValues.includes(opt.value);
                     });
+                    allOptions = selectedOptions;
+                }
+                
+                // If loadMore and no more pages, skip
+                if (loadMore && !hasMorePages) {
+                    console.log('[ModernMultiSelect] ℹ️ No more pages to load. Field:', fieldName);
+                    return;
+                }
+                
+                // Check if we have this search term in cache
+                const searchKey = searchTerm || '__empty__';
+                if (searchCache[searchKey]) {
+                    console.log('[ModernMultiSelect] ✅ Found search results in cache, using cached data. Field:', fieldName, 'SearchTerm:', searchTerm);
+                    isLoading = false;
+                    
+                    // Restore options from search cache
+                    allOptions = [options[0]].concat(searchCache[searchKey]);
+                    
+                    // Ensure selected values are in options
+                    selectedValues.forEach(function(selectedVal) {
+                        if (!selectedVal || selectedVal === '') return;
+                        const exists = allOptions.some(function(opt) {
+                            return String(opt.value) === String(selectedVal);
+                        });
+                        if (!exists) {
+                            const cachedOption = getOptionByValue(selectedVal);
+                            if (cachedOption) {
+                                allOptions.push(cachedOption);
+                            }
+                        }
+                    });
+                    
                     renderOptions();
                     return;
                 }
                 
-                // If dataLoaded is true but we don't have data, reset it to allow reload
-                if (dataLoaded && allOptions.length <= 1) {
-                    dataLoaded = false;
+                // If data already loaded and no search term, don't reload - just render from cache
+                if (dataLoaded && (!searchTerm || searchTerm === '')) {
+                    console.log('[ModernMultiSelect] ✅ Data already loaded, rendering from cache without reload. Field:', fieldName);
+                    isLoading = false;
+                    renderOptions();
+                    return;
                 }
                 
-                isLoading = true;
-                $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">در حال بارگذاری...</div>');
-                // Validate required fields
+                // CRITICAL: Validate required fields BEFORE starting any loading state
                 if (!namespaceId || !entityId) {
-                    $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا: اطلاعات فیلد ناقص است (NamespaceId یا EntityId)</div>');
+                    console.error('[ModernMultiSelect] ❌ CRITICAL: Missing required parameters!', {
+                        fieldName: fieldName,
+                        namespaceId: namespaceId,
+                        entityId: entityId,
+                        fieldId: fieldId,
+                        formId: formId,
+                        isRemote: isRemote,
+                        message: 'Cannot send request without NamespaceId and EntityId'
+                    });
+                    
+                    // Show error message
+                    const errorMsg = [];
+                    if (!namespaceId) errorMsg.push('NamespaceId is null/undefined');
+                    if (!entityId) errorMsg.push('EntityId is null/undefined');
+                    
+                    $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">' +
+                        '<strong>خطا: اطلاعات فیلد ناقص است</strong><br>' +
+                        '<small style="color: #ef4444;">' + errorMsg.join(', ') + '</small><br>' +
+                        '<small>Field: ' + fieldName + '</small>' +
+                        '</div>');
+                    
                     isLoading = false;
+                    isLoadingMore = false;
                     return;
+                }
+                
+                console.log('[ModernMultiSelect] 🌐 Starting AJAX request to server. Field:', fieldName, 'SearchTerm:', searchTerm, 'Page:', currentPage, 'LoadMore:', loadMore);
+                
+                if (loadMore) {
+                    isLoadingMore = true;
+                    // Show loading indicator at bottom of list
+                    $options.append('<div class="loading-more" style="padding: 10px; text-align: center; color: #64748b; border-top: 1px solid #e2e8f0;">در حال بارگذاری بیشتر...</div>');
+                } else {
+                    isLoading = true;
+                    $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">در حال بارگذاری...</div>');
                 }
                 
                 // Build request data according to ComboDataBindingModel
@@ -388,18 +808,25 @@
                     Expression: searchTerm || '', // Search term
                     Filter: filterFormula || '', // Filter formula
                     IsMandatory: isMandatory || false,
-                    Count: 30,
-                    Page: 1,
-                    Qs: [], // Will be populated if Filter exists
-                    LCs: [] // Will be populated if Filter exists
+                    Count: itemsPerPage, // Use variable for items per page
+                    Page: currentPage // Use current page number
                 };
                 
-                // If Filter exists, populate Qs and LCs (similar to layout.js)
+                // CRITICAL: Only add Qs and LCs if Filter exists and they have values
+                // Don't send empty arrays as they can cause model binding issues
                 if (filterFormula && typeof getQs === 'function' && typeof getLCs === 'function') {
                     try {
-                        requestData.Qs = getQs();
-                        requestData.LCs = getLCs();
+                        const qs = getQs();
+                        const lcs = getLCs();
+                        
+                        if (qs && qs.length > 0) {
+                            requestData.Qs = qs;
+                        }
+                        if (lcs && lcs.length > 0) {
+                            requestData.LCs = lcs;
+                        }
                     } catch (e) {
+                        console.error('[ModernMultiSelect] Error getting Qs/LCs:', e);
                     }
                 }
                 const rootUrl = (window.top && window.top.rootUrl) ? window.top.rootUrl : '';
@@ -409,11 +836,14 @@
                 const headers = window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {};
                 
                 // Log request for debugging
-                console.log('[ModernMultiSelect] Loading data for field:', fieldName, {
+                console.log('[ModernMultiSelect] 📤 Sending request to server:', {
+                    fieldName: fieldName,
                     apiUrl: apiUrl,
-                    requestData: requestData,
-                    namespaceId: namespaceId,
-                    entityId: entityId
+                    page: requestData.Page,
+                    count: requestData.Count,
+                    expression: requestData.Expression,
+                    loadMore: loadMore,
+                    requestData: requestData
                 });
                 
                 $.ajax({
@@ -424,11 +854,17 @@
                     timeout: 30000, // 30 seconds timeout
                     success: function(response) {
                         isLoading = false;
+                        isLoadingMore = false;
+                        
+                        // Remove loading indicator
+                        $options.find('.loading-more').remove();
+                        
                         // Handle different response formats
                         let dataArray = null;
                         
                         if (!response) {
                             isLoading = false;
+                            isLoadingMore = false;
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا: پاسخ سرور خالی است</div>');
                             return;
                         }
@@ -456,23 +892,132 @@
                         }
                         
                         if (dataArray && dataArray.length > 0) {
-                            // Clear existing options except empty one
-                            allOptions = [options[0]]; // Keep empty option
+                            const receivedPage = currentPage; // Store current page for logging
                             
-                            // Add server options
+                            console.log('[ModernMultiSelect] ✅ Received', dataArray.length, 'items from server. Field:', fieldName, 'Page:', receivedPage, 'LoadMore:', loadMore);
+                            
+                            // Check if we have more pages
+                            if (dataArray.length < itemsPerPage) {
+                                hasMorePages = false;
+                                console.log('[ModernMultiSelect] 📄 No more pages (received', dataArray.length, '< itemsPerPage', itemsPerPage, ')');
+                            } else {
+                                hasMorePages = true;
+                                // CRITICAL: Increment page AFTER successful load
+                                currentPage++;
+                                console.log('[ModernMultiSelect] 📄 More pages available, incremented to next page:', currentPage);
+                            }
+                            
+                            // IMPORTANT: Don't clear allOptions - merge new data with existing
+                            // This preserves selected items that might not be in current search results
+                            
+                            // First, ensure we have the empty option
+                            if (allOptions.length === 0 || allOptions[0].value !== '') {
+                                allOptions = [options[0]]; // Add empty option if missing
+                            }
+                            
+                            // Prepare array for search cache
+                            const searchResults = [];
+                            
+                            // Add/update server options
                             dataArray.forEach(function(item, index) {
                                 // Handle different item formats
                                 const value = item.value || item.id || item.Ids || item.Id || '';
                                 const text = item.text || item.name || item.DisplayValue || item.displayValue || item.Text || '';
                                 
-                                if (index < 5) {
+                                if (value !== '' && text !== '') {
+                                    const valueStr = String(value);
+                                    const textStr = String(text);
+                                    
+                                    const optionObj = {
+                                        value: valueStr,
+                                        text: textStr
+                                    };
+                                    
+                                    // Add to cache
+                                    addToCache(valueStr, textStr);
+                                    
+                                    // Add to search results for caching
+                                    searchResults.push(optionObj);
+                                    
+                                    // Check if already exists in allOptions
+                                    const existingIndex = allOptions.findIndex(function(opt) {
+                                        return String(opt.value) === valueStr;
+                                    });
+                                    
+                                    if (existingIndex >= 0) {
+                                        // Update existing option
+                                        allOptions[existingIndex] = optionObj;
+                                    } else {
+                                        // Add new option
+                                        allOptions.push(optionObj);
+                                        totalLoadedItems++;
+                                    }
+                                }
+                            });
+                            
+                            // CRITICAL: Memory management - if we have too many items, remove old ones
+                            if (totalLoadedItems > maxTotalItems) {
+                                const itemsToRemove = totalLoadedItems - maxTotalItems;
+                                console.log('[ModernMultiSelect] 🗑️ Memory limit reached, removing', itemsToRemove, 'old items. Field:', fieldName);
+                                
+                                // Remove items from beginning (except empty option and selected items)
+                                let removed = 0;
+                                for (let i = 1; i < allOptions.length && removed < itemsToRemove; i++) {
+                                    const opt = allOptions[i];
+                                    // Don't remove selected items
+                                    if (!selectedValues.includes(opt.value)) {
+                                        allOptions.splice(i, 1);
+                                        i--; // Adjust index after removal
+                                        removed++;
+                                        totalLoadedItems--;
+                                    }
                                 }
                                 
-                                if (value !== '' && text !== '') {
-                                    allOptions.push({
-                                        value: String(value),
-                                        text: String(text)
-                                    });
+                                console.log('[ModernMultiSelect] 🗑️ Removed', removed, 'items, new total:', totalLoadedItems);
+                            }
+                            
+                            // CRITICAL: Cache search results for this search term (only for first page)
+                            if (!loadMore) {
+                                const searchKey = searchTerm || '__empty__';
+                                searchCache[searchKey] = searchResults;
+                                console.log('[ModernMultiSelect] 💾 Cached', searchResults.length, 'results for search term:', searchTerm || '(empty)', 'Field:', fieldName);
+                            }
+                            
+                            // CRITICAL: Ensure all selected values are in allOptions
+                            // This prevents selected items from disappearing after search
+                            selectedValues.forEach(function(selectedVal) {
+                                if (!selectedVal || selectedVal === '') return;
+                                
+                                const exists = allOptions.some(function(opt) {
+                                    return String(opt.value) === String(selectedVal);
+                                });
+                                
+                                if (!exists) {
+                                    // Get from cache
+                                    const cachedOption = getOptionByValue(selectedVal);
+                                    if (cachedOption) {
+                                        allOptions.push(cachedOption);
+                                        console.log('[ModernMultiSelect] Restored selected item from cache:', cachedOption);
+                                    } else {
+                                        // Try to get from original select
+                                        const $selectOption = $select.find('option[value="' + selectedVal + '"]');
+                                        if ($selectOption.length > 0) {
+                                            const text = $selectOption.text().trim() || selectedVal;
+                                            allOptions.push({
+                                                value: String(selectedVal),
+                                                text: text
+                                            });
+                                            addToCache(selectedVal, text);
+                                            console.log('[ModernMultiSelect] Restored selected item from select:', selectedVal, text);
+                                        } else {
+                                            // Last resort: add with value as text
+                                            allOptions.push({
+                                                value: String(selectedVal),
+                                                text: String(selectedVal) + ' (ID)'
+                                            });
+                                            console.warn('[ModernMultiSelect] Added selected item without text:', selectedVal);
+                                        }
+                                    }
                                 }
                             });
                             
@@ -513,8 +1058,8 @@
                                 $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
                                 $dropdown[0].style.setProperty('margin-top', '0px', 'important'); // Compact: remove empty gap above search box
                                 $dropdown[0].style.setProperty('max-height', '324px', 'important'); /* Reduced by 10%: 360px * 0.9 = 324px */
-                                $dropdown[0].style.setProperty('overflow', 'visible', 'important');
-                                $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
+                                $dropdown[0].style.setProperty('overflow', 'hidden', 'important'); /* Hidden to allow overflow-y to work */
+                                $dropdown[0].style.setProperty('overflow-y', 'auto', 'important'); /* Scroll on dropdown - search stays fixed */
                                 $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                                 $dropdown[0].style.setProperty('height', 'auto', 'important');
                                 $dropdown[0].style.setProperty('min-height', '135px', 'important'); /* Reduced by 10%: 150px * 0.9 = 135px */
@@ -529,8 +1074,8 @@
                                 $options[0].style.setProperty('display', 'block', 'important');
                                 $options[0].style.setProperty('visibility', 'visible', 'important');
                                 $options[0].style.setProperty('opacity', '1', 'important');
-                                $options[0].style.setProperty('max-height', '270px', 'important'); /* Reduced by 10%: 300px * 0.9 = 270px */
-                                $options[0].style.setProperty('overflow-y', 'auto', 'important');
+                                $options[0].style.setProperty('max-height', 'none', 'important'); /* No max-height - let dropdown handle scrolling */
+                                $options[0].style.setProperty('overflow-y', 'visible', 'important'); /* No scroll on options */
                                 $options[0].style.setProperty('pointer-events', 'auto', 'important');
                                 
                                 // Ensure all options are clickable
@@ -542,17 +1087,41 @@
                         } else if (dataArray && dataArray.length === 0) {
                             // Empty result is valid
                             isLoading = false;
-                            allOptions = [options[0]]; // Keep only empty option
-                            // Don't mark as loaded if result is empty - allow retry
-                            dataLoaded = false;
+                            isLoadingMore = false;
+                            
+                            // Remove loading indicator
+                            $options.find('.loading-more').remove();
+                            
+                            console.log('[ModernMultiSelect] ℹ️ Received empty array. Field:', fieldName, 'Page:', currentPage);
+                            
+                            // If this is first page, clear options
+                            if (!loadMore) {
+                                allOptions = [options[0]]; // Keep only empty option
+                                dataLoaded = false;
+                            }
+                            
+                            // No more pages
+                            hasMorePages = false;
+                            
                             renderOptions();
                         } else {
                             isLoading = false;
+                            isLoadingMore = false;
+                            
+                            // Remove loading indicator
+                            $options.find('.loading-more').remove();
+                            
+                            console.error('[ModernMultiSelect] ❌ Invalid response format. Field:', fieldName, 'Response:', response);
                             $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: فرمت پاسخ نامعتبر<br><small>بررسی کنسول برای جزئیات</small></div>');
                         }
                     },
                     error: function(xhr, status, error) {
                         isLoading = false;
+                        isLoadingMore = false;
+                        
+                        // Remove loading indicator
+                        $options.find('.loading-more').remove();
+                        
                         // Provide more detailed error information
                         let errorMessage = 'Unknown error';
                         if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
@@ -574,7 +1143,10 @@
                             errorMessage = `HTTP ${xhr.status}: ${xhr.statusText || errorMessage}`;
                         }
                         
-                        console.error('[ModernMultiSelect] Error loading data for field:', fieldName, {
+                        console.error('[ModernMultiSelect] ❌ Error loading data:', {
+                            fieldName: fieldName,
+                            page: currentPage,
+                            loadMore: loadMore,
                             status: status,
                             error: error,
                             xhr: xhr,
@@ -582,7 +1154,14 @@
                             apiUrl: apiUrl
                         });
                         
-                        $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: ' + errorMessage + '<br><small>بررسی کنسول برای جزئیات بیشتر</small></div>');
+                        if (loadMore) {
+                            // If error on load more, just show error message at bottom
+                            $options.append('<div style="padding: 10px; text-align: center; color: #dc2626; border-top: 1px solid #e2e8f0;">خطا: ' + errorMessage + '</div>');
+                        } else {
+                            // If error on first load, show full error
+                            $options.html('<div style="padding: 20px; text-align: center; color: #dc2626;">خطا در بارگذاری داده‌ها: ' + errorMessage + '<br><small>بررسی کنسول برای جزئیات بیشتر</small></div>');
+                        }
+                        
                         // Don't mark as loaded on error - allow retry
                     },
                     complete: function() {
@@ -595,8 +1174,15 @@
             
             // Render options
             function renderOptions() {
-                // CRITICAL: Always clear loading state and empty options container
+                // CRITICAL: Always clear loading states
                 isLoading = false;
+                isLoadingMore = false;
+                
+                // Remove any loading indicators
+                $options.find('.loading-more').remove();
+                
+                // CRITICAL: Always re-render ALL options from allOptions array
+                // This ensures consistency between allOptions and displayed options
                 $options.empty();
                 
                 if (allOptions.length === 1 && allOptions[0].value === '') {
@@ -605,15 +1191,24 @@
                     return;
                 }
                 
-                let renderedCount = 0;
+                // Track already rendered values to avoid duplicates
+                const renderedValues = new Set();
+                
                 allOptions.forEach(function(option, index) {
                     if (!option || !option.text) {
                         return; // Skip invalid options
                     }
                     
+                    // Skip duplicates
+                    const valueStr = String(option.value);
+                    if (renderedValues.has(valueStr)) {
+                        return;
+                    }
+                    renderedValues.add(valueStr);
+                    
                     // Compare values as strings to handle type mismatches (string vs number)
                     const isSelected = selectedValues.some(function(v) { 
-                        return String(v) === String(option.value) || v == option.value; 
+                        return String(v) === valueStr || v == option.value; 
                     });
                     const $option = $('<div class="modern-multi-select-option' + (isSelected ? ' selected' : '') + '" data-value="' + (option.value || '') + '"></div>');
                     
@@ -666,10 +1261,6 @@
                     $option.html('<span>' + (isSelected ? '✓' : '') + '</span><span>' + (option.text || '') + '</span>');
                     
                     $options.append($option);
-                    renderedCount++;
-                    
-                    if (index < 3) {
-                    }
                 });
                 
                 // Ensure options container is visible
@@ -754,23 +1345,25 @@
                 // Render ALL selected items in popover (card view)
                 if (selectedValues.length > 0) {
                     selectedValues.forEach(function(val) {
-                        let option = allOptions.find(function(opt) {
-                            return String(opt.value) === String(val) && opt.value !== '';
-                        });
+                        // CRITICAL: Use cache first, then allOptions, then select element
+                        let option = getOptionByValue(val);
                         
-                        // Fallback: if option not found in allOptions, try to get it from the select element's options
+                        // Fallback: if option not found, try to get it from the select element's options
                         if (!option) {
                             const $selectOption = $select.find('option[value="' + val + '"]');
                             if ($selectOption.length > 0) {
+                                const text = $selectOption.text().trim() || val;
                                 option = {
                                     value: val,
-                                    text: $selectOption.text() || val
+                                    text: text
                                 };
+                                // Add to cache for future use
+                                addToCache(val, text);
                             } else {
                                 // Fallback to raw value if no option found
                                 option = {
                                     value: val,
-                                    text: val
+                                    text: val + ' (ID)'
                                 };
                             }
                         }
@@ -865,17 +1458,26 @@
                 const allChips = [];
                 selectedValues.forEach(function(value) {
                     const valueStr = String(value);
-                    let option = allOptions.find(function(opt) { 
-                        return String(opt.value) === valueStr || opt.value == value || String(opt.value) == valueStr; 
-                    });
                     
-                    // If option not found, try to get it from the select element's options
+                    // CRITICAL: Use cache first for better performance and consistency
+                    let option = getOptionByValue(valueStr);
+                    
+                    // If option not found in cache, try to get it from the select element's options
                     if (!option) {
                         const $selectOption = $select.find('option[value="' + value + '"]');
                         if ($selectOption.length > 0) {
+                            const text = $selectOption.text().trim() || value;
                             option = {
                                 value: value,
-                                text: $selectOption.text() || value
+                                text: text
+                            };
+                            // Add to cache for future use
+                            addToCache(value, text);
+                        } else {
+                            // Fallback: use value as text with indicator
+                            option = {
+                                value: value,
+                                text: value + ' (ID)'
                             };
                         }
                     }
@@ -979,8 +1581,8 @@
                     $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
                     $dropdown[0].style.setProperty('margin-top', '0px', 'important'); // Compact: remove empty gap above search box
                     $dropdown[0].style.setProperty('max-height', '324px', 'important'); /* Reduced by 10%: 360px * 0.9 = 324px */
-                    $dropdown[0].style.setProperty('overflow', 'visible', 'important');
-                    $dropdown[0].style.setProperty('overflow-y', 'visible', 'important');
+                    $dropdown[0].style.setProperty('overflow', 'hidden', 'important'); /* Hidden to allow overflow-y to work */
+                    $dropdown[0].style.setProperty('overflow-y', 'auto', 'important'); /* Scroll on dropdown - search stays fixed */
                     $dropdown[0].style.setProperty('overflow-x', 'hidden', 'important');
                     $dropdown[0].style.setProperty('height', 'auto', 'important');
                     $dropdown[0].style.setProperty('min-height', '135px', 'important'); /* Reduced by 10%: 150px * 0.9 = 135px */
@@ -995,30 +1597,39 @@
                     $options[0].style.setProperty('visibility', 'visible', 'important');
                     $options[0].style.setProperty('opacity', '1', 'important');
                     
-                    // Load data if remote and not loaded yet (only empty option exists)
-                    if (isRemote && allOptions.length <= 1) {
-                        console.log('[ModernMultiSelect] Opening dropdown - need to load data', {
-                            fieldName: fieldName,
-                            isRemote: isRemote,
-                            allOptionsLength: allOptions.length,
-                            dataLoaded: dataLoaded,
-                            isLoading: isLoading
-                        });
+                    // CRITICAL: Check if we need to load data or can use cached data
+                    const hasCache = Object.keys(searchCache).length > 0 || Object.keys(optionsCache).length > 0;
+                    const needsLoad = isRemote && !dataLoaded && allOptions.length <= 1 && !hasCache;
+                    
+                    console.log('[ModernMultiSelect] 🔍 Opening dropdown - Decision point', {
+                        fieldName: fieldName,
+                        isRemote: isRemote,
+                        dataLoaded: dataLoaded,
+                        allOptionsLength: allOptions.length,
+                        hasCache: hasCache,
+                        searchCacheSize: Object.keys(searchCache).length,
+                        optionsCacheSize: Object.keys(optionsCache).length,
+                        needsLoad: needsLoad,
+                        isLoading: isLoading
+                    });
+                    
+                    if (needsLoad) {
+                        console.log('[ModernMultiSelect] 🌐 Opening dropdown - need to load data from server');
                         loadDataFromServer('');
                         // Note: renderOptions will be called after data loads
-                    } else if (allOptions.length > 1) {
-                        // We have options, render them
-                        console.log('[ModernMultiSelect] Opening dropdown - rendering existing options', {
-                            fieldName: fieldName,
-                            allOptionsLength: allOptions.length
-                        });
-                        renderOptions();
+                    } else if (allOptions.length > 1 || hasCache) {
+                        // We have options or cache, render them
+                        console.log('[ModernMultiSelect] ✅ Opening dropdown - rendering existing options/cache');
+                        
+                        // If we have cache but no options, try to load from cache first
+                        if (allOptions.length <= 1 && hasCache) {
+                            loadDataFromServer(''); // This will use cache
+                        } else {
+                            renderOptions();
+                        }
                     } else {
                         // No options at all
-                        console.log('[ModernMultiSelect] Opening dropdown - no options available', {
-                            fieldName: fieldName,
-                            isRemote: isRemote
-                        });
+                        console.log('[ModernMultiSelect] ⚠️ Opening dropdown - no options available');
                         $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
                     }
                     
@@ -1114,9 +1725,21 @@
             $dropdown.css('pointer-events', 'auto');
             $options.css('pointer-events', 'auto');
             
+            // Add debounce for search input to wait for user to finish typing
+            let searchTimeout = null;
             $searchInput.on('input', function() {
                 const searchTerm = $(this).val();
-                filterOptions(searchTerm);
+                
+                // Clear previous timeout
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+                
+                // Wait 500ms after user stops typing before searching
+                searchTimeout = setTimeout(function() {
+                    console.log('[ModernMultiSelect] 🔍 Search debounced, filtering with term:', searchTerm, 'Field:', fieldName);
+                    filterOptions(searchTerm);
+                }, 500); // 500ms delay
             });
             
             $searchInput.on('keydown', function(e) {
@@ -1394,6 +2017,22 @@
                 }
             });
             
+            // Infinite scroll - load more when scrolling to bottom
+            // CRITICAL: Listen to dropdown scroll (not options) so search input stays fixed
+            $dropdown.on('scroll', function() {
+                const scrollTop = $(this).scrollTop();
+                const scrollHeight = $(this)[0].scrollHeight;
+                const clientHeight = $(this).height();
+                
+                // Check if scrolled to bottom (within 50px threshold)
+                const isNearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+                
+                if (isNearBottom && hasMorePages && !isLoading && !isLoadingMore && isRemote) {
+                    console.log('[ModernMultiSelect] 📜 Scrolled to bottom, loading more data. Field:', fieldName, 'Page:', currentPage);
+                    loadDataFromServer(currentSearchTerm, true); // true = loadMore
+                }
+            });
+            
             // Close on outside click - Use namespace to avoid conflicts
             $(document).on('click.modernMultiSelect_' + fieldName, function(e) {
                 if (!$wrapper.is(e.target) && $wrapper.has(e.target).length === 0) {
@@ -1426,6 +2065,28 @@
                 // Update selectedValues
                 selectedValues = newSelectedValues;
                 
+                // CRITICAL: If remote and we have new values without texts, fetch them
+                if (isRemote && newSelectedValues.length > 0) {
+                    const valuesWithoutText = newSelectedValues.filter(function(val) {
+                        return !getOptionByValue(val);
+                    });
+                    
+                    if (valuesWithoutText.length > 0) {
+                        console.log('[ModernMultiSelect] External change - fetching texts for new values:', valuesWithoutText);
+                        fetchTextsForValues(valuesWithoutText).then(function() {
+                            // Re-render after fetching texts
+                            renderSelectedItems();
+                            renderOptions();
+                        }).catch(function(error) {
+                            console.error('[ModernMultiSelect] Error fetching texts for external values:', error);
+                            // Render anyway
+                            renderSelectedItems();
+                            renderOptions();
+                        });
+                        return; // Don't render yet, wait for texts
+                    }
+                }
+                
                 // Re-render the control
                 renderSelectedItems();
                 renderOptions(); // Re-render options with updated selected states
@@ -1435,11 +2096,42 @@
             });
             
             // Initialize
-            renderSelectedItems();
-            updateInputHeight(); // Set initial height
-            // Only render options if we have them (don't render empty state initially)
-            if (allOptions.length > 1) {
-                renderOptions(); // Render options initially so they're ready when dropdown opens
+            // CRITICAL: If we have initial selected values and this is a remote combo, fetch their texts first
+            if (isRemote && selectedValues.length > 0 && !initialValuesFetched) {
+                initialValuesFetched = true;
+                console.log('[ModernMultiSelect] 🔄 Fetching texts for initial values:', selectedValues, 'Field:', fieldName);
+                
+                // Show placeholder while loading
+                $itemsContainer.html('<span style="color: #94a3b8;">در حال بارگذاری...</span>');
+                
+                // Fetch texts first, then render
+                fetchTextsForValues(selectedValues).then(function() {
+                    console.log('[ModernMultiSelect] ✅ Initial values texts fetched successfully, rendering. Field:', fieldName);
+                    
+                    // Now render with texts
+                    renderSelectedItems();
+                    updateInputHeight();
+                    
+                    // Only render options if we have them
+                    if (allOptions.length > 1) {
+                        renderOptions();
+                    }
+                }).catch(function(error) {
+                    console.error('[ModernMultiSelect] ❌ Error fetching initial values texts:', error, 'Field:', fieldName);
+                    // Render anyway with what we have
+                    renderSelectedItems();
+                    updateInputHeight();
+                });
+            } else {
+                // No initial values or not remote - render immediately
+                console.log('[ModernMultiSelect] ℹ️ Rendering immediately (no initial values or not remote). Field:', fieldName);
+                renderSelectedItems();
+                updateInputHeight();
+                
+                // Only render options if we have them (don't render empty state initially)
+                if (allOptions.length > 1) {
+                    renderOptions();
+                }
             }
             
             // Force show wrapper and ensure it's visible with inline styles
@@ -1643,9 +2335,21 @@
             toggleDropdown();
         });
         
+        // Add debounce for search input to wait for user to finish typing
+        let searchTimeout = null;
         $searchInput.on('input', function() {
             const searchTerm = $(this).val();
-            filterOptions(searchTerm);
+            
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            // Wait 500ms after user stops typing before searching
+            searchTimeout = setTimeout(function() {
+                console.log('[ModernMultiSelect Custom] 🔍 Search debounced, filtering with term:', searchTerm);
+                filterOptions(searchTerm);
+            }, 500); // 500ms delay
         });
         
         $searchInput.on('keydown', function(e) {
