@@ -4016,19 +4016,10 @@ body {
   margin-top: 0.5rem !important;
 }
 
-/* ===== عرض کامل برای کنترل Group در فرم‌ساز ===== */
-/* در پنل ادمین در فرم‌ساز، کنترل‌های Group باید عرض کامل داشته باشند و زیر هم بیایند */
+/* ===== عرض کامل برای کنترل Group در همه فرم‌ها ===== */
+/* کنترل‌های Group باید عرض کامل داشته باشند و زیر هم بیایند - در همه فرم‌ها */
 
-/* اطمینان از اینکه form-element که row است، کنترل‌های col-12 را زیر هم نمایش دهد */
-#mainPartOfTheForm .form-element.row,
-#mainPartOfTheForm #main-part.form-element.row,
-#main-part.form-element.row {
-  display: flex !important;
-  flex-direction: column !important;
-  flex-wrap: nowrap !important;
-}
-
-/* اطمینان از اینکه کنترل‌های Group با کلاس group-control-full-width عرض کامل داشته باشند */
+/* کلاس اصلی برای کنترل‌های Group - عرض کامل و نمایش بلوکی */
 .group-control-full-width {
   width: 100% !important;
   display: block !important;
@@ -4038,37 +4029,25 @@ body {
   max-width: 100% !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-/* اطمینان از اینکه کنترل‌های Group در form-element عرض کامل داشته باشند */
-#mainPartOfTheForm .form-element .neo-control.col-12,
-#mainPartOfTheForm #main-part.form-element .neo-control.col-12,
-#main-part.form-element .neo-control.col-12,
-#mainPartOfTheForm .form-element.row .neo-control.col-12,
-#mainPartOfTheForm #main-part.form-element.row .neo-control.col-12,
-#main-part.form-element.row .neo-control.col-12,
-#mainPartOfTheForm .form-element .group-control-full-width,
-#mainPartOfTheForm #main-part.form-element .group-control-full-width,
-#main-part.form-element .group-control-full-width {
-  width: 100% !important;
-  display: block !important;
-  float: none !important;
-  clear: both !important;
-  flex: 0 0 100% !important;
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  box-sizing: border-box !important;
 }
 
 /* برای کنترل‌های Group که دارای border هستند */
-#mainPartOfTheForm .form-element .neo-control.col-12 > div[class*="border"],
-#mainPartOfTheForm #main-part.form-element .neo-control.col-12 > div[class*="border"],
-#main-part.form-element .neo-control.col-12 > div[class*="border"],
 .group-control-full-width > div[class*="border"] {
   width: 100% !important;
   box-sizing: border-box !important;
+}
+
+/* اطمینان از اینکه کنترل‌های Group در row زیر هم بیایند */
+.row > .group-control-full-width,
+.form-element > .group-control-full-width,
+#main-part > .group-control-full-width,
+#mainPartOfTheForm .group-control-full-width,
+.modern-form-content .group-control-full-width {
+  width: 100% !important;
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  display: block !important;
 }

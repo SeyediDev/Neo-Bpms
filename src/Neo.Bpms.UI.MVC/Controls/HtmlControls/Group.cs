@@ -13,9 +13,9 @@ public class Group(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
             .Select(ifd => new LinkDefinition(ifd, ControlsRendererData.Url))
             .Where(l => l.IsAccessibleFor(ControlsRendererData.User))];
 
-        string designModeClass = ControlsRendererData.Options.IsDesignMode ? "group-control-full-width " : "";
+        // Always add group-control-full-width class to ensure Groups display full width and stack vertically
         result += $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}""
-                        class=""col-12 col-md-12 col-sm-12 col-lg-12 {designModeClass}{ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass}"">";
+                        class=""col-12 col-md-12 col-sm-12 col-lg-12 group-control-full-width {ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass}"">";
         RenderDesignIcons(result);
         
         // Container with border and full width - items will be in a row next to each other
