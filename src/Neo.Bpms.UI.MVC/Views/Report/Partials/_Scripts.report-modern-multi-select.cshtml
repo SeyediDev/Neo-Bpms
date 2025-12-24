@@ -71,32 +71,28 @@
         // Ensure all filter inputs are associated with the form
         window.ensureFilterFormAssociation();
         
-        // Initialize custom modern multi-select controls
-        // Only process controls that have data-field-name attribute (skip undefined)
-        $('.modern-multi-select-control[data-field-name]').each(function() {
-            const $control = $(this);
-            const fieldName = $control.data('field-name');
-            
-            // Skip if fieldName is undefined or empty
-            if (!fieldName) {
-                return;
-            }
-            
-            const $hiddenInput = $(`#field-${fieldName}`);
-            
-            if ($hiddenInput.length === 0) {
-                // Don't log warning for controls that don't have hidden inputs (they might be custom controls)
-                return;
-            }
-            
-            initializeCustomModernMultiSelect($control, $hiddenInput);
-        });
+        // DISABLED: Old custom initialization - causes conflict with main implementation
+        // The main implementation (initializeModernMultiSelectFromSelect) handles all select elements
+        // This old code was binding duplicate event handlers and overwriting rendered options
+        // $('.modern-multi-select-control[data-field-name]').each(function() {
+        //     initializeCustomModernMultiSelect($control, $hiddenInput);
+        // });
+        console.log('[ModernMultiSelect] ℹ️ Skipping old custom initialization - using main implementation only');
         
         // Handle ALL select fields (both single and multiple) - Convert to multi-select
         // Target all selects in filter panel, skip ones already converted
         const allSelects = $('#filterTooltipPanel select:not(.modern-multi-select-control select):not(.modern-multi-select-options select)');
         
-        allSelects.each(function() {
+        // CRITICAL: Generate unique combo ID counter to prevent cross-contamination
+        let comboIdCounter = window._modernMultiSelectComboIdCounter || 0;
+        
+        // CRITICAL: Create isolated storage for each combo to prevent cross-contamination
+        // Use a Map with combo instance ID as key
+        if (!window._modernMultiSelectInstances) {
+            window._modernMultiSelectInstances = new Map();
+        }
+        
+        allSelects.each(function(index) {
             const $select = $(this);
             
             // Skip if already converted
@@ -106,26 +102,78 @@
             // Mark as converted
             $select.data('modern-multi-select-converted', true);
             
+            // CRITICAL: Get fieldName FIRST before any other operations
+            const fieldName = $select.attr('name') ? $select.attr('name').replace('[]', '') : '';
+            const fieldId = $select.attr('id') ? $select.attr('id').replace('field-', '') : fieldName;
+            
+            // CRITICAL: Generate unique combo ID for this instance to prevent cross-contamination
+            // Include fieldName in the ID for easier debugging
+            const comboInstanceId = 'combo_' + fieldName + '_' + (++comboIdCounter) + '_' + Date.now();
+            $select.data('combo-instance-id', comboInstanceId);
+            
+            // CRITICAL: Store fieldName and comboInstanceId in separate const variables
+            // These will be captured by closures and used for validation throughout
+            const thisFieldName = fieldName;
+            const thisComboInstanceId = comboInstanceId;
+            
+            // CRITICAL: Log initialization start with all details
+            console.log('[ModernMultiSelect] ==========================================');
+            console.log('[ModernMultiSelect] 🚀 INITIALIZING COMBO #' + index, {
+                fieldName: fieldName,
+                fieldId: fieldId,
+                comboInstanceId: comboInstanceId,
+                selectName: $select.attr('name'),
+                selectId: $select.attr('id'),
+                initValueAttr: $select.attr('initValue'),
+                currentVal: $select.val()
+            });
+            
             // Get initial value - check both val() and initValue attribute
             // initValue is set by ControlsRenderer when filter values are loaded from server
             let initialValue = $select.val();
             const initValueAttr = $select.attr('initValue');
+            
+            // CRITICAL: Parse initValue ONLY for THIS field's select element
+            // Store parsed values in a local variable specific to this iteration
+            let parsedInitialValues = [];
+            
             if (initValueAttr && (!initialValue || (Array.isArray(initialValue) && initialValue.length === 0) || initialValue === '')) {
                 // Use initValue if select doesn't have a value yet
                 initialValue = initValueAttr;
                 // Also set it in the select element so it's available
                 if (initValueAttr.includes(',')) {
                     // Multiple values - set as array
-                    const values = initValueAttr.split(',').map(v => v.trim()).filter(v => v !== '');
-                    $select.val(values);
+                    parsedInitialValues = initValueAttr.split(',').map(v => v.trim()).filter(v => v !== '');
+                    $select.val(parsedInitialValues);
                 } else {
+                    parsedInitialValues = [initValueAttr];
                     $select.val(initValueAttr);
+                }
+            } else if (initialValue) {
+                if (Array.isArray(initialValue)) {
+                    parsedInitialValues = initialValue.filter(v => v !== '' && v !== null);
+                } else if (typeof initialValue === 'string' && initialValue.includes(',')) {
+                    parsedInitialValues = initialValue.split(',').map(v => v.trim()).filter(v => v !== '');
+                } else if (initialValue !== '') {
+                    parsedInitialValues = [initialValue];
                 }
             }
             
-            // Check if this is a remote data select
-            const fieldName = $select.attr('name') ? $select.attr('name').replace('[]', '') : '';
-            const fieldId = $select.attr('id') ? $select.attr('id').replace('field-', '') : fieldName;
+            // CRITICAL: Log parsed initial values for debugging
+            console.log('[ModernMultiSelect] 📋 Parsed initial values for', fieldName, ':', parsedInitialValues);
+            
+            // CRITICAL: Store original initial values to prevent cross-contamination
+            // Store as a COPY, not a reference
+            const frozenInitialValues = JSON.parse(JSON.stringify(parsedInitialValues));
+            $select.data('original-init-value', frozenInitialValues);
+            $select.data('field-name-stored', fieldName);
+            
+            // CRITICAL: Store in global Map for validation
+            window._modernMultiSelectInstances.set(comboInstanceId, {
+                fieldName: fieldName,
+                initialValues: frozenInitialValues,
+                timestamp: Date.now()
+            });
             
             // Check multiple ways to detect remote data
             const isRemote = $select.attr('data-isremote') === 'true' || 
@@ -291,6 +339,8 @@
             // CRITICAL: Add data-field-name and data-control-name for later retrieval during form submission
             $wrapper.attr('data-field-name', fieldName);
             $wrapper.attr('data-control-name', fieldName);
+            // CRITICAL: Add combo instance ID to wrapper for debugging and validation
+            $wrapper.attr('data-combo-instance-id', comboInstanceId);
             
             const $input = $('<div class="modern-multi-select-input"></div>');
             const $itemsContainer = $('<div class="modern-multi-select-items"></div>');
@@ -310,6 +360,17 @@
             // CRITICAL: Define updateSelect function to sync select value with selectedValues
             // This function MUST update the original hidden select element when values change
             function updateSelect() {
+                // CRITICAL: Validate we're updating the correct select
+                const selectComboId = $select.data('combo-instance-id');
+                if (selectComboId !== thisComboInstanceId) {
+                    console.error('[ModernMultiSelect] ❌ CRITICAL: updateSelect called with wrong select!', {
+                        selectComboId: selectComboId,
+                        expectedComboId: thisComboInstanceId,
+                        fieldName: thisFieldName
+                    });
+                    return; // Don't update - something is wrong
+                }
+                
                 // Set the selected value on the original hidden select element
                 if ($select && $select.length > 0) {
                     // CRITICAL: Clear all options first, then add selected values as options
@@ -438,18 +499,15 @@
             
             // Initialize state
             let isOpen = false;
-            // Handle initial value - can be string, array, or null
-            let selectedValues = [];
-            if (initialValue) {
-                if (Array.isArray(initialValue)) {
-                    selectedValues = initialValue.filter(v => v !== '' && v !== null);
-                } else if (typeof initialValue === 'string' && initialValue.includes(',')) {
-                    // Comma-separated values
-                    selectedValues = initialValue.split(',').map(v => v.trim()).filter(v => v !== '');
-                } else {
-                    selectedValues = [initialValue];
-                }
-            }
+            
+            // CRITICAL: Use the frozen initial values that were parsed at the start
+            // This ensures we always use the correct values for THIS specific combo
+            // Make a COPY to prevent any reference issues
+            let selectedValues = JSON.parse(JSON.stringify(frozenInitialValues));
+            
+            // CRITICAL: Log selectedValues initialization with fieldName for debugging
+            console.log('[ModernMultiSelect] 🎯 Initialized selectedValues for', thisFieldName, ':', selectedValues, 'ComboId:', thisComboInstanceId);
+            
             let allOptions = options;
             let dataLoaded = false; // Track if data has been loaded from server
             let optionsCache = {}; // Cache for all loaded options (key: value, value: {value, text})
@@ -506,7 +564,12 @@
                     return Promise.resolve();
                 }
                 
-                console.log('[ModernMultiSelect] 🔍 fetchTextsForValues called for:', values, 'Field:', fieldName);
+                // CRITICAL: Capture combo instance ID at the start of this async operation
+                // This ensures that when the AJAX response comes back, we validate it's for THIS combo
+                const capturedComboInstanceId = comboInstanceId;
+                const capturedFieldName = fieldName;
+                
+                console.log('[ModernMultiSelect] 🔍 fetchTextsForValues called for:', values, 'Field:', fieldName, 'ComboId:', capturedComboInstanceId);
                 
                 // CRITICAL: First, try to get texts from original select element options
                 let foundFromSelect = false;
@@ -572,6 +635,20 @@
                     return Promise.reject('Missing NamespaceId or EntityId');
                 }
                 
+                // CRITICAL WARNING: Double-check parameters before building request
+                if (!namespaceId || !entityId) {
+                    console.error('[ModernMultiSelect] ⚠️⚠️⚠️ WARNING: Building fetchTexts request with NULL parameters! ⚠️⚠️⚠️');
+                    console.error('[ModernMultiSelect] This will cause server-side model binding to fail!');
+                    console.error('[ModernMultiSelect] Parameters:', {
+                        namespaceId: namespaceId,
+                        entityId: entityId,
+                        fieldName: fieldName,
+                        fieldId: fieldId,
+                        formId: formId,
+                        valuesToFetch: valuesToFetch
+                    });
+                }
+                
                 // Build request to get texts for these specific values
                 const requestData = {
                     NamespaceId: namespaceId,
@@ -611,6 +688,27 @@
                 const apiUrl = rootUrl + 'Form/GetComboData';
                 const headers = window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {};
                 
+                // CRITICAL: Log COMPLETE request data before sending
+                console.log('[ModernMultiSelect] 📤 fetchTextsForValues - Sending request:', {
+                    fieldName: fieldName,
+                    apiUrl: apiUrl,
+                    valuesToFetch: valuesToFetch,
+                    // CRITICAL: Log ALL ComboDataBindingModel properties
+                    NamespaceId: requestData.NamespaceId,
+                    EntityId: requestData.EntityId,
+                    FieldId: requestData.FieldId,
+                    FormId: requestData.FormId,
+                    PageType: requestData.PageType,
+                    Expression: requestData.Expression,
+                    Filter: requestData.Filter,
+                    IsMandatory: requestData.IsMandatory,
+                    Count: requestData.Count,
+                    Page: requestData.Page,
+                    hasQs: !!requestData.Qs,
+                    hasLCs: !!requestData.LCs,
+                    fullRequestData: requestData
+                });
+                
                 return $.ajax({
                     url: apiUrl,
                     type: 'POST',
@@ -618,6 +716,19 @@
                     headers: headers,
                     timeout: 10000
                 }).then(function(response) {
+                    // CRITICAL: Validate that this response is for the correct combo instance
+                    // This prevents cross-contamination when multiple combos fetch data simultaneously
+                    const currentComboId = $select.data('combo-instance-id');
+                    if (currentComboId !== capturedComboInstanceId) {
+                        console.warn('[ModernMultiSelect] ⚠️ COMBO MISMATCH DETECTED! Ignoring response to prevent cross-contamination.', {
+                            expectedComboId: capturedComboInstanceId,
+                            currentComboId: currentComboId,
+                            fieldName: capturedFieldName,
+                            message: 'This can happen if combos are re-initialized during AJAX requests'
+                        });
+                        return; // Don't apply this response - it's for a different combo instance
+                    }
+                    
                     let dataArray = null;
                     
                     if (Array.isArray(response)) {
@@ -659,10 +770,10 @@
                             }
                         });
                         
-                        console.log('[ModernMultiSelect] Fetched texts for', dataArray.length, 'values');
+                        console.log('[ModernMultiSelect] Fetched texts for', dataArray.length, 'values. ComboId:', capturedComboInstanceId);
                     }
                 }).catch(function(error) {
-                    console.error('[ModernMultiSelect] Error fetching texts:', error);
+                    console.error('[ModernMultiSelect] Error fetching texts:', error, 'ComboId:', capturedComboInstanceId);
                 });
             }
             
@@ -670,6 +781,11 @@
             function loadDataFromServer(searchTerm, loadMore) {
                 loadMore = loadMore || false; // Default to false
                 const callStack = new Error().stack; // Get call stack for debugging
+                
+                // CRITICAL: Capture combo instance ID at the start of this async operation
+                // This ensures that when the AJAX response comes back, we validate it's for THIS combo
+                const capturedComboInstanceId = comboInstanceId;
+                const capturedFieldName = fieldName;
                 
                 console.log('[ModernMultiSelect] ⚡ loadDataFromServer called', {
                     fieldName: fieldName,
@@ -690,6 +806,7 @@
                     entityId: entityId,
                     fieldId: fieldId,
                     formId: formId,
+                    comboInstanceId: capturedComboInstanceId,
                     callStack: callStack.split('\n').slice(1, 4).join('\n') // Show first 3 lines of stack
                 });
                 
@@ -789,6 +906,19 @@
                 
                 console.log('[ModernMultiSelect] 🌐 Starting AJAX request to server. Field:', fieldName, 'SearchTerm:', searchTerm, 'Page:', currentPage, 'LoadMore:', loadMore);
                 
+                // CRITICAL WARNING: Check if parameters are null BEFORE building request
+                if (!namespaceId || !entityId) {
+                    console.error('[ModernMultiSelect] ⚠️⚠️⚠️ WARNING: Building request with NULL parameters! ⚠️⚠️⚠️');
+                    console.error('[ModernMultiSelect] This will cause server-side model binding to fail!');
+                    console.error('[ModernMultiSelect] Parameters:', {
+                        namespaceId: namespaceId,
+                        entityId: entityId,
+                        fieldName: fieldName,
+                        fieldId: fieldId,
+                        formId: formId
+                    });
+                }
+                
                 if (loadMore) {
                     isLoadingMore = true;
                     // Show loading indicator at bottom of list
@@ -835,13 +965,23 @@
                 // Prepare headers
                 const headers = window.AddAntiForgeryToken ? window.AddAntiForgeryToken() : {};
                 
-                // Log request for debugging
+                // CRITICAL: Log COMPLETE request data for debugging
                 console.log('[ModernMultiSelect] 📤 Sending request to server:', {
                     fieldName: fieldName,
                     apiUrl: apiUrl,
                     page: requestData.Page,
                     count: requestData.Count,
                     expression: requestData.Expression,
+                    // CRITICAL: Log ALL ComboDataBindingModel properties
+                    NamespaceId: requestData.NamespaceId,
+                    EntityId: requestData.EntityId,
+                    FieldId: requestData.FieldId,
+                    FormId: requestData.FormId,
+                    PageType: requestData.PageType,
+                    Filter: requestData.Filter,
+                    IsMandatory: requestData.IsMandatory,
+                    hasQs: !!requestData.Qs,
+                    hasLCs: !!requestData.LCs,
                     loadMore: loadMore,
                     requestData: requestData
                 });
@@ -853,6 +993,21 @@
                     headers: headers,
                     timeout: 30000, // 30 seconds timeout
                     success: function(response) {
+                        // CRITICAL: Validate that this response is for the correct combo instance
+                        // This prevents cross-contamination when multiple combos fetch data simultaneously
+                        const currentComboId = $select.data('combo-instance-id');
+                        if (currentComboId !== capturedComboInstanceId) {
+                            console.warn('[ModernMultiSelect] ⚠️ COMBO MISMATCH DETECTED in loadDataFromServer! Ignoring response.', {
+                                expectedComboId: capturedComboInstanceId,
+                                currentComboId: currentComboId,
+                                fieldName: capturedFieldName,
+                                message: 'This can happen if combos are re-initialized during AJAX requests'
+                            });
+                            isLoading = false;
+                            isLoadingMore = false;
+                            return; // Don't apply this response - it's for a different combo instance
+                        }
+                        
                         isLoading = false;
                         isLoadingMore = false;
                         
@@ -1174,6 +1329,8 @@
             
             // Render options
             function renderOptions() {
+                console.log('[ModernMultiSelect] 🎨 renderOptions called. Field:', fieldName, 'allOptions.length:', allOptions.length);
+                
                 // CRITICAL: Always clear loading states
                 isLoading = false;
                 isLoadingMore = false;
@@ -1185,8 +1342,17 @@
                 // This ensures consistency between allOptions and displayed options
                 $options.empty();
                 
+                console.log('[ModernMultiSelect] 🎨 Options container emptied. Field:', fieldName);
+                
+                if (allOptions.length === 0) {
+                    console.log('[ModernMultiSelect] ⚠️ allOptions is EMPTY! Field:', fieldName);
+                    $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
+                    return;
+                }
+                
                 if (allOptions.length === 1 && allOptions[0].value === '') {
                     // Only empty option, show message
+                    console.log('[ModernMultiSelect] ⚠️ Only empty option exists. Field:', fieldName);
                     $options.html('<div style="padding: 20px; text-align: center; color: #64748b;">گزینه‌ای موجود نیست</div>');
                     return;
                 }
@@ -1267,6 +1433,16 @@
                 $options[0].style.setProperty('display', 'block', 'important');
                 $options[0].style.setProperty('visibility', 'visible', 'important');
                 $options[0].style.setProperty('opacity', '1', 'important');
+                
+                // Log how many options were rendered
+                const renderedCount = $options.find('.modern-multi-select-option').length;
+                console.log('[ModernMultiSelect] ✅ renderOptions completed. Field:', fieldName, 'Rendered:', renderedCount, 'options');
+                
+                // CRITICAL: Verify the options are actually in the DOM
+                if (renderedCount === 0 && allOptions.length > 1) {
+                    console.error('[ModernMultiSelect] ❌ ERROR: allOptions has', allOptions.length, 'items but 0 rendered! Field:', fieldName);
+                    console.error('[ModernMultiSelect] allOptions sample:', allOptions.slice(0, 3));
+                }
             }
             
             // Calculate how many chips can fit in the container
@@ -1426,7 +1602,32 @@
                     return;
                 }
                 
-                console.log('Filter Panel: renderSelectedItems called with:', selectedValues);
+                // CRITICAL: Validate that we're rendering for the correct combo
+                const wrapperFieldName = $wrapper.attr('data-field-name');
+                const wrapperComboId = $wrapper.attr('data-combo-instance-id');
+                
+                if (wrapperFieldName !== thisFieldName) {
+                    console.error('[ModernMultiSelect] ❌ CRITICAL MISMATCH in renderSelectedItems!', {
+                        wrapperFieldName: wrapperFieldName,
+                        expectedFieldName: thisFieldName,
+                        wrapperComboId: wrapperComboId,
+                        expectedComboId: thisComboInstanceId,
+                        selectedValues: selectedValues
+                    });
+                    return; // Don't render - something is wrong
+                }
+                
+                // CRITICAL: Also verify against stored data
+                const storedFieldName = $select.data('field-name-stored');
+                if (storedFieldName && storedFieldName !== thisFieldName) {
+                    console.error('[ModernMultiSelect] ❌ CRITICAL: Select element field mismatch!', {
+                        storedFieldName: storedFieldName,
+                        expectedFieldName: thisFieldName
+                    });
+                    return;
+                }
+                
+                console.log('[ModernMultiSelect] 🎨 renderSelectedItems for', thisFieldName, ':', selectedValues, 'ComboId:', thisComboInstanceId);
                 
                 // Clear containers
                 $itemsContainer.empty();
@@ -2049,6 +2250,27 @@
                     return;
                 }
                 
+                // CRITICAL: Validate combo instance ID to prevent cross-contamination
+                const currentComboId = $select.data('combo-instance-id');
+                if (currentComboId !== thisComboInstanceId) {
+                    console.warn('[ModernMultiSelect] ⚠️ COMBO MISMATCH in externalUpdate! Ignoring.', {
+                        expectedComboId: thisComboInstanceId,
+                        currentComboId: currentComboId,
+                        fieldName: thisFieldName
+                    });
+                    return;
+                }
+                
+                // CRITICAL: Validate stored field name matches
+                const storedFieldName = $select.data('field-name-stored');
+                if (storedFieldName && storedFieldName !== thisFieldName) {
+                    console.error('[ModernMultiSelect] ❌ CRITICAL: Field name mismatch in externalUpdate!', {
+                        storedFieldName: storedFieldName,
+                        expectedFieldName: thisFieldName
+                    });
+                    return;
+                }
+                
                 const newValue = $select.val();
                 let newSelectedValues = [];
                 
@@ -2062,8 +2284,16 @@
                     }
                 }
                 
-                // Update selectedValues
-                selectedValues = newSelectedValues;
+                // CRITICAL: Log the update with combo instance ID for debugging
+                console.log('[ModernMultiSelect] 🔄 External update received:', {
+                    fieldName: thisFieldName,
+                    comboInstanceId: thisComboInstanceId,
+                    currentValues: selectedValues,
+                    newValues: newSelectedValues
+                });
+                
+                // Update selectedValues - make a copy to prevent reference issues
+                selectedValues = JSON.parse(JSON.stringify(newSelectedValues));
                 
                 // CRITICAL: If remote and we have new values without texts, fetch them
                 if (isRemote && newSelectedValues.length > 0) {
@@ -2072,13 +2302,13 @@
                     });
                     
                     if (valuesWithoutText.length > 0) {
-                        console.log('[ModernMultiSelect] External change - fetching texts for new values:', valuesWithoutText);
+                        console.log('[ModernMultiSelect] External change - fetching texts for new values:', valuesWithoutText, 'ComboId:', thisComboInstanceId);
                         fetchTextsForValues(valuesWithoutText).then(function() {
                             // Re-render after fetching texts
                             renderSelectedItems();
                             renderOptions();
                         }).catch(function(error) {
-                            console.error('[ModernMultiSelect] Error fetching texts for external values:', error);
+                            console.error('[ModernMultiSelect] Error fetching texts for external values:', error, 'ComboId:', thisComboInstanceId);
                             // Render anyway
                             renderSelectedItems();
                             renderOptions();
@@ -2092,21 +2322,21 @@
                 renderOptions(); // Re-render options with updated selected states
                 // Don't call updateSelect() here to avoid infinite loop - the select already has the correct value
                 
-                console.log('[ModernMultiSelect] Updated control from external change:', fieldName, newSelectedValues);
+                console.log('[ModernMultiSelect] Updated control from external change:', fieldName, newSelectedValues, 'ComboId:', comboInstanceId);
             });
             
             // Initialize
             // CRITICAL: If we have initial selected values and this is a remote combo, fetch their texts first
             if (isRemote && selectedValues.length > 0 && !initialValuesFetched) {
                 initialValuesFetched = true;
-                console.log('[ModernMultiSelect] 🔄 Fetching texts for initial values:', selectedValues, 'Field:', fieldName);
+                console.log('[ModernMultiSelect] 🔄 Fetching texts for initial values:', selectedValues, 'Field:', fieldName, 'ComboId:', comboInstanceId);
                 
                 // Show placeholder while loading
                 $itemsContainer.html('<span style="color: #94a3b8;">در حال بارگذاری...</span>');
                 
                 // Fetch texts first, then render
                 fetchTextsForValues(selectedValues).then(function() {
-                    console.log('[ModernMultiSelect] ✅ Initial values texts fetched successfully, rendering. Field:', fieldName);
+                    console.log('[ModernMultiSelect] ✅ Initial values texts fetched successfully, rendering. Field:', fieldName, 'ComboId:', comboInstanceId);
                     
                     // Now render with texts
                     renderSelectedItems();
@@ -2117,14 +2347,14 @@
                         renderOptions();
                     }
                 }).catch(function(error) {
-                    console.error('[ModernMultiSelect] ❌ Error fetching initial values texts:', error, 'Field:', fieldName);
+                    console.error('[ModernMultiSelect] ❌ Error fetching initial values texts:', error, 'Field:', fieldName, 'ComboId:', comboInstanceId);
                     // Render anyway with what we have
                     renderSelectedItems();
                     updateInputHeight();
                 });
             } else {
                 // No initial values or not remote - render immediately
-                console.log('[ModernMultiSelect] ℹ️ Rendering immediately (no initial values or not remote). Field:', fieldName);
+                console.log('[ModernMultiSelect] ℹ️ Rendering immediately (no initial values or not remote). Field:', fieldName, 'ComboId:', comboInstanceId);
                 renderSelectedItems();
                 updateInputHeight();
                 
@@ -2148,7 +2378,28 @@
                 if (!wrapperInDOM || computedDisplay === 'none') {
                 }
             }, 100);
+            
+            // CRITICAL: Log combo initialization complete
+            console.log('[ModernMultiSelect] ✅ COMBO INITIALIZED:', {
+                fieldName: thisFieldName,
+                comboInstanceId: thisComboInstanceId,
+                selectedValues: selectedValues,
+                isRemote: isRemote
+            });
+            console.log('[ModernMultiSelect] ==========================================');
         });
+        
+        // CRITICAL: Log summary of all initialized combos
+        console.log('[ModernMultiSelect] 📊 INITIALIZATION SUMMARY:');
+        console.log('[ModernMultiSelect] Total combos initialized:', comboIdCounter);
+        if (window._modernMultiSelectInstances) {
+            window._modernMultiSelectInstances.forEach(function(data, id) {
+                console.log('[ModernMultiSelect] 📌', data.fieldName, ':', data.initialValues, '(ID:', id, ')');
+            });
+        }
+        
+        // CRITICAL: Save the counter globally to prevent ID collisions across multiple calls
+        window._modernMultiSelectComboIdCounter = comboIdCounter;
     }
     
     // Initialize custom modern multi-select control
