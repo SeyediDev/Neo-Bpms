@@ -66,7 +66,7 @@ public abstract class Choice(IFormLogicHelper formLogicHelper, InputFieldDefinit
         result +=
             $"<a target=\"_blank\" href=\"{url}\" title=\"{title}\" " +
             $"class=\"choice-form-link {className}\" " +
-            $"tabindex=\"-1\">";
+            $"tabindex=\"-1\" onclick=\"event.stopPropagation();\">";
         result += svgFilter switch
         {
             SvgFilter.Insert => GetSvgTag("add-icon"),

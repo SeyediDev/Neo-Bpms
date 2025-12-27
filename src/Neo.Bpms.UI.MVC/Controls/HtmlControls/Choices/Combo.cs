@@ -73,17 +73,7 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
     protected NeoStringBuilder RenderFooter(NeoStringBuilder result)
     {
         result.Append("</select>");
-        
-        // اضافه کردن دکمه Clear برای کمبوها (فقط اگر ReadOnly نباشد)
-        if (!CommonProperties.IsReadOnly && !ControlsRendererData.Options.IsFilter)
-        {
-            result.Append($"<button type=\"button\" class=\"combo-clear-btn\" " +
-                     $"onclick=\"clearComboValue('{Field.FieldName}')\" " +
-                     $"title=\"پاک کردن\">" +
-                     $"<i class=\"fa fa-times\"></i>" +
-                     $"</button>");
-        }
-        
+        // Note: Clear button is handled by Select2's data-allow-clear attribute
         result.Append("</div>");
         return result;
     }

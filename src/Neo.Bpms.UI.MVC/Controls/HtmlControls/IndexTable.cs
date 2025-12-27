@@ -153,6 +153,13 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         }
 
         result.Append("</tbody></table></div></div></div></div>");
+        
+        // Add TableModalLinks script include if modal links are enabled
+        if (ShouldOpenInModal(table))
+        {
+            ControlsRendererData.AddIncludeNeed(PluginInclude.TableModalLinks);
+        }
+        
         return result;
     }
 
@@ -183,12 +190,13 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             subjectInfo.HasTooltip && rowData.GetField(subjectInfo.Name + "_Tooltip", out subjectTooltip);
         if (!subjectTooltipExists)
             subjectTooltip = " ";
+        bool openInModal = ShouldOpenInModal(table);
         result.Append($"<td class=\"cColumn\"><span title=\"{subjectTooltip}\">{subjectText}</span>&nbsp;");
         if (subjectInfo.HasDetailsForm)
         {
             result.Append(
                 "<a " +
-IndexTableHelpers.FormLinkClass("text-info") +
+IndexTableHelpers.FormLinkClassWithTitle("text-info", ViewTexts.Details, openInModal) +
                 $" href=\"{GetFormLink(subjectInfo.DetailAction, table, subjectInfo.DetailFormId, subjectInfo.Name, rowIds)}\">" +
                 $"<span class=\"text-info\" title=\"{ViewTexts.Details}\">" +
                 "<i class=\"fa fa-info\"></i>" +
@@ -199,7 +207,7 @@ IndexTableHelpers.FormLinkClass("text-info") +
         if (subjectInfo.HasEditForm)
         {
             result.Append("<a " +
-IndexTableHelpers.FormLinkClass("text-success") +
+IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInModal) +
                       $"href=\"{GetFormLink(subjectInfo.EditAction, table, subjectInfo.EditFormId, subjectInfo.Name, rowIds)}\">" +
                           $"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">" +
                                 "<i class=\"fa fa-pencil\"></i>" +
@@ -229,15 +237,16 @@ IndexTableHelpers.FormLinkClass("text-success") +
     private void RenderLinks(NeoStringBuilder result, TableDefinition table, CommonFormStructure structure,
         string recordId, string rowIds, bool isInDetailsForm, bool isEditable)
     {
+        bool openInModal = ShouldOpenInModal(table);
         result.Append("<td class=\"cColumn\">");
         if (table.HasDetailsForm)
         { 
-            result.Append($"<a {IndexTableHelpers.FormLinkClass("text-info")} href=\"{Url.Action(GetAction(table.DetailAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
+            result.Append($"<a {IndexTableHelpers.FormLinkClassWithTitle("text-info", ViewTexts.Details, openInModal)} href=\"{Url.Action(GetAction(table.DetailAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DetailFormId))}\">" +
                           $"<span class=\"text-info\" title=\"{ViewTexts.Details}\"><i class=\"fa fa-info\"></i></span></a>");
         }
         if (table.HasEditForm && !isInDetailsForm && !isEditable)
         {
-            result.Append($"<a {IndexTableHelpers.FormLinkClass("text-success")} href=\"{Url.Action(GetAction(table.EditAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
+            result.Append($"<a {IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInModal)} href=\"{Url.Action(GetAction(table.EditAction), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.EditFormId))}\">")
                   .Append($"<span class=\"text-success\" title=\"{ViewTexts.Edit}\">")
                   .Append("<i class=\"fa fa-pencil\"></i></span></a>");
         }
@@ -245,9 +254,9 @@ IndexTableHelpers.FormLinkClass("text-success") +
         if (table.HasDeleteForm && !isInDetailsForm)
         {
             if (isEditable)
-                result.Append($"<span {IndexTableHelpers.FormLinkClass("text-danger")} style=\"cursor: pointer;\" onclick=\"tableOp.setDelColStatus(this)\" title=\"{ViewTexts.Delete}\"><i class=\"fa text-danger fa-times\"></i></span>");
+                result.Append($"<span {IndexTableHelpers.FormLinkClass("text-danger", false)} style=\"cursor: pointer;\" onclick=\"tableOp.setDelColStatus(this)\" title=\"{ViewTexts.Delete}\"><i class=\"fa text-danger fa-times\"></i></span>");
             else
-                result.Append($"<a {IndexTableHelpers.FormLinkClass(("text-danger"))} href=\"{Url.Action(GetAction("Delete"), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DeleteFormId))}\">")
+                result.Append($"<a {IndexTableHelpers.FormLinkClassWithTitle("text-danger", ViewTexts.Delete, openInModal)} href=\"{Url.Action(GetAction("Delete"), "Form", ControlsRendererData.Url, IndexTableHelpers.GetUrlObject(table, structure, recordId, rowIds, table.DeleteFormId))}\">")
                       .Append($"<span style=\"cursor: pointer;\" class=\"text-danger\" title=\"{ViewTexts.Delete}\">")
                       .Append("<i class=\"fa fa-times\"></i></span></a>");
         }
@@ -263,6 +272,21 @@ IndexTableHelpers.FormLinkClass("text-success") +
             : action is "Edit" or "Details" or "Delete" or "Create"
             ? "IframeForm"
             : action;
+    }
+
+    /// <summary>
+    /// Determines whether table form links should open in a modal dialog.
+    /// Defaults to true if property is not set.
+    /// </summary>
+    private bool ShouldOpenInModal(TableDefinition table)
+    {
+        // If we're already in iframe mode, don't open modal
+        if (ControlsRendererData.Options.IsIframe)
+            return false;
+        
+        // Check if property is explicitly set, default to true
+        var property = table.GetProperty(eControlPropertyId.OpenLinkInModal);
+        return property?.GetValueAsBoolean() ?? true;
     }
 
     private void RenderColumn(TableDefinition table, ColumnFieldDefinition col, Dictionary<string, string> logics,
@@ -560,6 +584,7 @@ IndexTableHelpers.FormLinkClass("text-success") +
                         "<i class=\"fa fa-plus\" style=\"font-weight: bold; font-size: 16px;\"></i>" +
                    "</span>";
         }
+        bool openInModal = ShouldOpenInModal(table);
         var newUrlObject =
             new
             {
@@ -582,6 +607,7 @@ IndexTableHelpers.FormLinkClass("text-success") +
                 "<line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\" />" +
                 "<line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\" />" +
             "</svg>";
-        return $"<a class=\"index-table-add-btn\" href=\"{createUrl}\" title=\"{title}\">{addIconSvg}</a>";
+        string modalAttr = openInModal ? $" data-open-modal=\"true\" data-modal-title=\"{title}\"" : "";
+        return $"<a class=\"index-table-add-btn table-form-link\" href=\"{createUrl}\" title=\"{title}\"{modalAttr}>{addIconSvg}</a>";
     }
 }

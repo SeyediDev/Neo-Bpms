@@ -12,6 +12,12 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     public ModelNamespace Model { get; set; }
     public UiEntity Entity { get; set; }
     public virtual Type DefinitionEntity { get; }
+    
+    /// <summary>
+    /// Icon class for the entity (e.g., "fa fa-users", "flaticon bpms-flaticon-campaign")
+    /// Override this property in derived UIDefinitions to set the entity's icon.
+    /// </summary>
+    public virtual string? Icon { get; }
 
     /// <summary>
     /// Defines the field structure.
@@ -25,6 +31,12 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
         }
         Entity.Defined = true;
         _order = 0;
+        
+        // Set the entity icon from the definition
+        if (!string.IsNullOrEmpty(Icon))
+        {
+            Entity.Icon = Icon;
+        }
         foreach (DocumentControlDefinitions documentControl in ExtractSubsInstances<DocumentControlDefinitions>())
         {
             var field = AddField(documentControl.GetType().Name, documentControl.Name, 

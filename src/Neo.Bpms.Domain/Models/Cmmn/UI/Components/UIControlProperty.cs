@@ -435,7 +435,15 @@ public enum eControlPropertyId
     [Title("زمان کش ویجت (دقیقه)")]
     [ValueType(PropertyValueType.Int)]
     [ControlGroup(ControlGroup.None)]
-    WidgetCacheTimeMinutes = 600003
+    WidgetCacheTimeMinutes = 600003,
+
+    /// <summary>
+    /// باز شدن لینک‌های آیکن جداول در مدال
+    /// </summary>
+    [Title("باز شدن لینک در مدال")]
+    [ValueType(PropertyValueType.Boolean)]
+    [ControlGroup(ControlGroup.Table)]
+    OpenLinkInModal = 700001
 }
 public enum eControlPropertyTarget
 {

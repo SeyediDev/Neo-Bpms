@@ -13,20 +13,21 @@ public class Group(IFormLogicHelper formLogicHelper, InputFieldDefinition field,
             .Select(ifd => new LinkDefinition(ifd, ControlsRendererData.Url))
             .Where(l => l.IsAccessibleFor(ControlsRendererData.User))];
 
-        // Always add group-control-full-width class to ensure Groups display full width and stack vertically
+        // استایل inline برای اطمینان از عرض کامل و نمایش زیر هم - بدون تداخل با Bootstrap
         result += $@"<div data-id=""{Field.FieldName}"" id=""{Field.FieldName}""
-                        class=""col-12 col-md-12 col-sm-12 col-lg-12 group-control-full-width {ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass}"">";
+                        class=""neo-group-control {ControlsRendererData.ControlsClassString} {CommonProperties.ShowHideRelatedClass}""
+                        style=""width: 100%; display: block; flex: 0 0 100%; max-width: 100%; box-sizing: border-box; padding: 0 15px; margin-bottom: 0;"">";
         RenderDesignIcons(result);
         
-        // Container with border and full width - items will be in a row next to each other
-        result += @"<div class=""border border-secondary rounded p-3 mb-3"">";
+        // Container with modern styling - beautiful card design
+        result += @"<div class=""neo-group-card"">";
         
         // Optional label/header if LabelName property exists
         if (Field.HasProperty(eControlPropertyId.LabelName))
         {
-            result += $@"<div class=""mb-2 pb-2 border-bottom"">";
+            result += $@"<div class=""neo-group-header"">";
             RenderIcon(result, "float-end");
-            result += $"<strong>{Field.Alias}</strong>";
+            result += $"<span class=\"neo-group-title\">{Field.Alias}</span>";
             result += @"</div>";
         }
 

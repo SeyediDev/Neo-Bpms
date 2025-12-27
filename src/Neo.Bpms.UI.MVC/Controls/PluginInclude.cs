@@ -8,5 +8,6 @@ public enum PluginInclude
     OperationButton,
     Toggle,
     ReportControl,
-    Terminal
+    Terminal,
+    TableModalLinks
 }

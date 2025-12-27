@@ -26,8 +26,13 @@ internal static class IndexTableHelpers
         return rowIds;
     }
 
-    internal static string FormLinkClass(string additionalClass) =>
-        $"class=\"icon-link form-link table-form-link {additionalClass}\"";
+    internal static string FormLinkClass(string additionalClass, bool openInModal = true) =>
+        $"class=\"icon-link form-link table-form-link {additionalClass}\"" + 
+        (openInModal ? " data-open-modal=\"true\"" : "");
+
+    internal static string FormLinkClassWithTitle(string additionalClass, string title, bool openInModal = true) =>
+        $"class=\"icon-link form-link table-form-link {additionalClass}\" data-modal-title=\"{title}\"" + 
+        (openInModal ? " data-open-modal=\"true\"" : "");
 
     internal static string GetInputType(ColumnFieldDefinition col)
     {

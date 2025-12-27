@@ -65,8 +65,10 @@ public class ContainersControls(
         foreach (InputFieldDefinition tab in data)
         {
             string tabTitle = tab.Alias;
+            string tabIcon = GetEntityIcon(tab.NamespaceId, tab.EntityId);
+            string iconHtml = !string.IsNullOrEmpty(tabIcon) ? $"<i class=\"{tabIcon}\"></i> " : "";
             stringBuilder.Append($"<li id=\"{tab.FieldName}\" class=\"{(firstUlIteration ? "active" : "")} nav-item\"><a class=\"nav-link {(firstUlIteration ? "active" : "")}\" data-toggle=\"tab\" " +
-                                  $"href=\"#tabcontent-{tab.FieldName}\">{tabTitle}</a></li>");
+                                  $"href=\"#tabcontent-{tab.FieldName}\">{iconHtml}{tabTitle}</a></li>");
             firstUlIteration = false;
         }
 
@@ -120,5 +122,18 @@ public class ContainersControls(
         if (!string.IsNullOrEmpty(properties.BackgroundColor))
             result += $" style=\"background-color:{properties.BackgroundColor}\"";
         return result;
+    }
+    
+    /// <summary>
+    /// Get entity icon from the entity definition.
+    /// This is the primary source of icon for entities.
+    /// </summary>
+    private static string GetEntityIcon(string namespaceId, string entityId)
+    {
+        if (string.IsNullOrEmpty(entityId))
+            return null;
+        
+        var entity = ProjectDefinition.Project?.GetEntity(namespaceId, entityId);
+        return entity?.Icon;
     }
 }

@@ -46,29 +46,30 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
             }
         }
 
-        EntityRelationship entityRelationship = null;
-        Association association = null;
         RelationDeleteUpdateBehavior deleteBehavior = RelationDeleteUpdateBehavior.Error;
         RelationDeleteUpdateBehavior updateBehavior = RelationDeleteUpdateBehavior.Error;
 
+
+        Association association = null;
         foreach (object attr in attributes ?? Enumerable.Empty<object>())
         {
+
             switch (attr)
             {
                 case BaseHierarchicalEntityAttribute _:
-                    entityRelationship = field.BaseEntity = entity.AddBaseEntity(relatedEntity, field);
+                    field.BaseEntity = entity.AddBaseEntity(relatedEntity, field);
                     break;
                 case ParentEntityAttribute parentEntityAttribute:
-                    entityRelationship = association = field.AssociationEntity =
+                    association = field.AssociationEntity =
                         entity.AddParentEntity(relatedEntity, parentEntityAttribute.BooleanFieldIdInParent);
                     deleteBehavior = RelationDeleteUpdateBehavior.Cascade;
                     updateBehavior = RelationDeleteUpdateBehavior.Cascade;
                     break;
                 case CompositionAttribute _:
-                    entityRelationship = entity.SetCompositionEntity(field, relatedEntity);
+                    entity.SetCompositionEntity(field, relatedEntity);
                     break;
                 case WeakEntityAssociationAttribute weakEntityAssociationAttribute:
-                    entityRelationship = association = field.AssociationEntity =
+                    association = field.AssociationEntity =
                         new WeakEntityAssociation(entity, id, name, enName,
                             relatedEntity, weakEntityAssociationAttribute.Constraint,
                             weakEntityAssociationAttribute.ConstraintDbName, fieldFlags);
@@ -76,7 +77,7 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
                     updateBehavior = RelationDeleteUpdateBehavior.Cascade;
                     break;
                 case OAttr_Association associationAttribute:
-                    entityRelationship = association = field.AssociationEntity =
+                    association = field.AssociationEntity =
                         new Association(entity, id, name, enName,
                             relatedEntity, associationAttribute.Constraint,
                             associationAttribute.ConstraintDbName, associationAttribute.OnDeleteBehaviour,
@@ -87,8 +88,8 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
                     break;
             }
         }
-
-        entityRelationship ??= association = field.AssociationEntity =
+        
+        association ??= field.AssociationEntity =
                 new Association(entity, id, name, enName, relatedEntity, null, null, deleteBehavior, updateBehavior, fieldFlags);
 
         foreach (object attr in attributes ?? Enumerable.Empty<object>())

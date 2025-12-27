@@ -646,6 +646,13 @@ public class Entity : BaseModelClass, IModelEntity, ISBVRContainer
 
     public TimeSpan DoSynchronizationInterval { get; set; }
 
+    /// <summary>
+    /// Icon class for the entity (e.g., "fa fa-users", "flaticon bpms-flaticon-campaign")
+    /// This is the primary source of icon for this entity.
+    /// Menu and UI components should fallback to this icon if no specific icon is defined.
+    /// </summary>
+    public string Icon { get; set; }
+
     public bool Equals(Entity e)
     {
         return NamespaceId == e.NamespaceId && Id == e.Id;
