@@ -137,6 +137,9 @@ public abstract partial class FormDefinition
             AddControl(containerControl == eControlTypeId.Accordion ? eControlTypeId.AccordionItem : eControlTypeId.MultiTabItem,
                 $"{tableControlId}_TabItem",
                 labelName ?? tableAssociation.Name, enLabelName ?? tableEntity.EnName);
+            // Set entity info on tab for icon display
+            AddProperty(eControlPropertyId.NamespaceId, tableEntity.NamespaceId);
+            AddProperty(eControlPropertyId.EntityId, tableEntityId);
             StartSubControls();
         }
         var formField = FormField.NewSubTableInstance(form, _parentControlId, tableEntityId, tableAssociationId, tableIndexFormSubjectId, associationId, tableEntity, tableAssociation, labelName, enLabelName);

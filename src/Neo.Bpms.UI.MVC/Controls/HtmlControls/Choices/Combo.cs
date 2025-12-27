@@ -37,13 +37,12 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
         string placeholderAttribute = string.IsNullOrWhiteSpace(encodedPlaceholder)
             ? string.Empty
             : $" data-placeholder=\"{encodedPlaceholder}\"";
-        string allowClearAttribute = !CommonProperties.IsRequired ? " data-allow-clear=\"true\"" : string.Empty;
 
         result.Append(CommonProperties.ReadOnlyRelatedAttribute + " " +
               (isRemoteData ? $"data-isremote=\"true\" filter-formula=\"{Field.PropertyValue(eControlPropertyId.FilterFormula)}\"" : "") +
               (defaultValue != null ? $" data-default-value=\"{defaultValue}\"" : "") +
               (CommonProperties.IsRequired ? " required=\"required\" oninvalid=\"InvalidMsg(this);\" " : "") +
-              placeholderAttribute + allowClearAttribute + " dir=\"" +
+              placeholderAttribute + " dir=\"" +
                   CommonProperties.Direction + "\" title=\"" + CommonProperties.Tooltip + "\" name=\"" + selectName +
                   (ControlsRendererData.Options.IsFilter ? "\" form=\"filter-form" : "") +
                   "\" class=\"cBox\" " +
@@ -73,7 +72,17 @@ public abstract class Combo(IFormLogicHelper formLogicHelper, InputFieldDefiniti
     protected NeoStringBuilder RenderFooter(NeoStringBuilder result)
     {
         result.Append("</select>");
-        // Note: Clear button is handled by Select2's data-allow-clear attribute
+        
+        // اضافه کردن دکمه Clear برای کمبوها (فقط اگر ReadOnly نباشد)
+        if (!CommonProperties.IsReadOnly && !ControlsRendererData.Options.IsFilter)
+        {
+            result.Append($"<button type=\"button\" class=\"combo-clear-btn\" " +
+                     $"onclick=\"clearComboValue('{Field.FieldName}')\" " +
+                     $"title=\"پاک کردن\">" +
+                     $"<i class=\"fa fa-times\"></i>" +
+                     $"</button>");
+        }
+        
         result.Append("</div>");
         return result;
     }

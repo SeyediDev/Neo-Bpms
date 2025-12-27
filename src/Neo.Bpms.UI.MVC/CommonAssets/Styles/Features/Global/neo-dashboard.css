@@ -2459,7 +2459,9 @@
 }
 
 .hamburger-link {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   color: #334155;
   transition: all 0.3s ease;
@@ -2570,6 +2572,27 @@
     color: #00b4d8;
     background-color: rgba(0, 180, 216, 0.1);
   }
+}
+
+/* ===== HEADER ALIGNMENT STYLES ===== */
+.header-title-text {
+  display: flex;
+  align-items: center;
+}
+
+.club-header-logo {
+  display: block;
+  vertical-align: middle;
+}
+
+.header-club-badge {
+  display: flex;
+  align-items: center;
+}
+
+.header-club-badge a {
+  display: flex;
+  align-items: center;
 }
 
 /* ===== TABLE ICON IMPROVEMENTS ===== */
