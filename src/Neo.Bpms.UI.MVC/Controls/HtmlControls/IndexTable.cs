@@ -569,10 +569,26 @@ IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInM
 
         // حفظ ساختار فعلی برای سازگاری CSS/JS، فقط بهبود بصری و امن‌سازی متن
         string title = ControlsRendererData.Encoder.Encode(table.Label ?? "");
+        string entityIcon = GetEntityIcon(table.NamespaceId, table.EntityId);
+        string iconHtml = !string.IsNullOrEmpty(entityIcon) 
+            ? $"<i class=\"{entityIcon}\" style=\"margin-left: 6px;\"></i> " 
+            : "";
         return $"<div class=\"col-lg-12 col-sm-12 tableTitle\">" +
                $"<i onclick=\"tableOp.toggle(this, '{table.FieldName}')\" class=\"toggle fa fa-minus\" aria-label=\"باز/بسته کردن جدول\"></i>" +
-               $"<span class=\"tableTitle-label\" style=\"font-weight:600;color:#1f2937;background:transparent;\">{title}</span>" +
+               $"<span class=\"tableTitle-label\" style=\"font-weight:600;color:#1f2937;background:transparent;\">{iconHtml}{title}</span>" +
                $"</div>";
+    }
+    
+    /// <summary>
+    /// Get entity icon from the entity definition.
+    /// </summary>
+    private static string GetEntityIcon(string namespaceId, string entityId)
+    {
+        if (string.IsNullOrEmpty(entityId))
+            return null;
+        
+        var entity = ProjectDefinition.Project?.GetEntity(namespaceId, entityId);
+        return entity?.Icon;
     }
 
     private string CreateLinkHtml(TableDefinition table, CommonFormStructure structure, string recordId, bool isEditable)

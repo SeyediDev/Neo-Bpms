@@ -188,7 +188,9 @@ public class MenuHelper(
     private void AddLabel(StringBuilder sb, MenuItem item)
     {
         sb.Append("<span>");
-        if (!string.IsNullOrEmpty(item.iconName))
+        // Check for icon (menu icon or entity icon fallback)
+        string iconName = GetMenuItemIcon(item);
+        if (!string.IsNullOrEmpty(iconName))
         {
             AddIconName(sb, item);
         }
@@ -199,9 +201,32 @@ public class MenuHelper(
 
     private void AddIconName(StringBuilder sb, MenuItem item)
     {
-        if (string.IsNullOrEmpty(item.iconName)) return;
+        string iconName = GetMenuItemIcon(item);
+        if (string.IsNullOrEmpty(iconName)) return;
            
-        sb.Append(IconSvg(item.iconName));
+        sb.Append(IconSvg(iconName));
+    }
+    
+    /// <summary>
+    /// Gets the icon for a menu item.
+    /// If the menu item has an icon, it is returned.
+    /// Otherwise, the entity icon is returned (fallback).
+    /// </summary>
+    private static string GetMenuItemIcon(MenuItem item)
+    {
+        // Primary: Menu item's own icon
+        if (!string.IsNullOrEmpty(item.iconName))
+            return item.iconName;
+        
+        // Fallback: Entity's icon
+        string namespaceId = item.GetParameterValue(eMenuItemParameter.NamespaceId);
+        string entityId = item.GetParameterValue(eMenuItemParameter.EntityId);
+        
+        if (string.IsNullOrEmpty(entityId))
+            return null;
+        
+        var entity = ProjectDefinition.Project?.GetEntity(namespaceId, entityId);
+        return entity?.Icon;
     }
     
     private string IconSvg(string iconName)

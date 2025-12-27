@@ -33,7 +33,9 @@ public class ContainersControls(
                 $" href=\"#{Field.FieldName}-collapse-{tab.FieldName}\" aria-expanded=\"{(firstAccordionIteration ? "true" : "false")}\" " +
                 $"aria-controls=\"{Field.FieldName}-collapse-{tab.FieldName}\">");
             string collapseTitle = tab.PropertyValue(eControlPropertyId.LabelName);
-            stringBuilder.Append(collapseTitle + "</a></h5></div>");
+            string accordionIcon = GetEntityIcon(tab.NamespaceId, tab.EntityId);
+            string iconHtml = !string.IsNullOrEmpty(accordionIcon) ? $"<i class=\"{accordionIcon}\"></i> " : "";
+            stringBuilder.Append(iconHtml + collapseTitle + "</a></h5></div>");
 
             stringBuilder.Append(
                 $"<div id=\"{Field.FieldName}-collapse-{tab.FieldName}\" class=\"collapse {(firstAccordionIteration ? "show" : "")}\"" +
