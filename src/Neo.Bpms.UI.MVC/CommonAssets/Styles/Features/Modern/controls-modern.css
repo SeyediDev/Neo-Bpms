@@ -866,14 +866,34 @@ body {
 .modern-form .select2-container .select2-selection--single .select2-selection__arrow {
   height: 60px !important;
   top: 0 !important;
+  left: auto !important;
+  right: 10px !important;
+}
+
+/* RTL arrow position - arrow should be on LEFT for RTL languages */
+[dir="rtl"] .modern-form .select2-container .select2-selection--single .select2-selection__arrow {
   right: auto !important;
   left: 10px !important;
 }
 
-/* RTL arrow position */
-[dir="rtl"] .modern-form .select2-container .select2-selection--single .select2-selection__arrow {
-  left: auto !important;
-  right: 10px !important;
+/* Select2 Clear Button - hidden by default, show on hover/focus */
+.modern-form .select2-container .select2-selection--single .select2-selection__clear {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  pointer-events: none !important;
+}
+
+/* Show clear button on hover */
+.modern-form .select2-container:hover .select2-selection--single .select2-selection__clear {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Show clear button when focused */
+.modern-form .select2-container--focus .select2-selection--single .select2-selection__clear,
+.modern-form .select2-container--open .select2-selection--single .select2-selection__clear {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .modern-form input:focus,
@@ -1132,6 +1152,23 @@ body {
   min-width: 300px;
   max-width: 100%;
   width: auto !important;
+}
+
+/* ===== Max Width for Regular Form Controls ===== */
+/* Prevent controls from stretching too wide on sparse rows */
+/* Only apply to main form area, NOT to tables/subtables */
+#main-part > .neo-control > .dWrapper,
+#main-part > [class*="col-"] > .neo-control > .dWrapper {
+  max-width: 400px;
+}
+
+/* Ensure tables and subtables controls remain full width */
+#SubTablesTabMultiTab .dWrapper,
+.tab-content .dWrapper,
+table .dWrapper,
+td .dWrapper,
+th .dWrapper {
+  max-width: 100% !important;
 }
 
 /* ===== Modern Action Buttons ===== */
@@ -3439,23 +3476,305 @@ body {
     margin-bottom: 0.75rem;
   }
 }
-/* هر تب از SubTablesTabMultiTab در بلوک جدا نمایش داده شود */
+/* ===== MODERN 3D MULTITAB STYLES ===== */
+#SubTablesTabMultiTab {
+    margin-top: 2rem;
+    position: relative;
+}
+
+/* تب‌های ناوبری - استایل سه‌بعدی */
+#SubTablesTabMultiTab .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.05),
+        0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#SubTablesTabMultiTab .nav-tabs::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+}
+
+/* آیتم‌های تب */
+#SubTablesTabMultiTab .nav-tabs .nav-item {
+    margin-bottom: 0;
+}
+
+/* لینک تب - حالت عادی */
+#SubTablesTabMultiTab .nav-tabs .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.08),
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* افکت hover */
+#SubTablesTabMultiTab .nav-tabs .nav-link:hover {
+    color: #1e40af;
+    background: linear-gradient(180deg, #ffffff 0%, #e0e7ff 100%);
+    border-color: #93c5fd;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 16px rgba(59, 130, 246, 0.2),
+        0 2px 4px rgba(59, 130, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* تب فعال - استایل ملایم‌تر */
+#SubTablesTabMultiTab .nav-tabs .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 2px 4px rgba(59, 130, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+    border-radius: 10px 10px 0 0;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+    border-radius: 2px;
+}
+
+/* آیکون تب */
+#SubTablesTabMultiTab .nav-tabs .nav-link i,
+#SubTablesTabMultiTab .nav-tabs .nav-link .icon {
+    font-size: 16px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active i,
+#SubTablesTabMultiTab .nav-tabs .nav-link.active .icon {
+    opacity: 1;
+}
+
+/* محتوای تب */
+#SubTablesTabMultiTab .tab-content {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 12px;
+    position: relative;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.05),
+        0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* هر پانل تب */
 #SubTablesTabMultiTab .tab-content > .tab-pane {
     display: block !important;
-    margin-top: 20px;
+    margin-top: 16px;
     clear: both;
+    animation: tabFadeIn 0.3s ease;
 }
 
-/* فاصله بین تب‌ها */
-#SubTablesTabMultiTab .nav-tabs {
-    margin-bottom: 15px;
-    display: block;
-    width: 100%;
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* جلوگیری از چسبیدن جداول */
+/* عنوان هر بخش تب */
+#SubTablesTabMultiTab .tab-pane > h4,
+#SubTablesTabMultiTab .tab-pane > h5,
+#SubTablesTabMultiTab .tab-pane > .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e40af;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 10px;
+    border-right: 4px solid #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+/* جداول درون تب */
 #SubTablesTabMultiTab table {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== ریسپانسیو MultiTab ===== */
+@media (max-width: 768px) {
+    #SubTablesTabMultiTab .nav-tabs {
+        padding: 10px 12px;
+        gap: 6px;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link {
+        padding: 10px 14px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+    
+    #SubTablesTabMultiTab .tab-content {
+        padding: 16px;
+        border-radius: 0 0 12px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    #SubTablesTabMultiTab .nav-tabs {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link.active {
+        transform: translateY(0) scale(1.02);
+    }
+}
+
+/* ===== GENERAL MODERN NAV-TABS STYLES ===== */
+/* استایل عمومی برای همه تب‌ها در فرم‌ها */
+.neo-control .nav-tabs,
+[data-id] > .row > .col-lg-12 > .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.05),
+        0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.neo-control .nav-tabs .nav-item,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-item {
+    margin-bottom: 0;
+}
+
+.neo-control .nav-tabs .nav-link,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.08),
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.neo-control .nav-tabs .nav-link:hover,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link:hover {
+    color: #1e40af;
+    background: linear-gradient(180deg, #ffffff 0%, #e0e7ff 100%);
+    border-color: #93c5fd;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 16px rgba(59, 130, 246, 0.2),
+        0 2px 4px rgba(59, 130, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.neo-control .nav-tabs .nav-link.active,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 2px 4px rgba(59, 130, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.neo-control .tab-content,
+[data-id] > .row > .col-lg-12 > .tab-content {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 12px;
+    position: relative;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.05),
+        0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
 /* ===== MODERN ACCORDION STYLES ===== */
@@ -4016,38 +4335,56 @@ body {
   margin-top: 0.5rem !important;
 }
 
-/* ===== عرض کامل برای کنترل Group در همه فرم‌ها ===== */
-/* کنترل‌های Group باید عرض کامل داشته باشند و زیر هم بیایند - در همه فرم‌ها */
+/* ===== استایل‌های مختص کنترل Group ===== */
+/* طراحی سه‌بعدی و فشرده برای گروه‌ها */
 
-/* کلاس اصلی برای کنترل‌های Group - عرض کامل و نمایش بلوکی */
-.group-control-full-width {
-  width: 100% !important;
-  display: block !important;
-  float: none !important;
-  clear: both !important;
-  flex: 0 0 100% !important;
-  max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 15px !important;
-  padding-right: 15px !important;
-  box-sizing: border-box !important;
+.neo-group-control {
+  margin-bottom: 0.5rem;
 }
 
-/* برای کنترل‌های Group که دارای border هستند */
-.group-control-full-width > div[class*="border"] {
-  width: 100% !important;
-  box-sizing: border-box !important;
+/* کارت اصلی Group - افکت سه‌بعدی */
+.neo-group-card {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 
+              0 4px 6px rgba(0, 0, 0, 0.04),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
 }
 
-/* اطمینان از اینکه کنترل‌های Group در row زیر هم بیایند */
-.row > .group-control-full-width,
-.form-element > .group-control-full-width,
-#main-part > .group-control-full-width,
-#mainPartOfTheForm .group-control-full-width,
-.modern-form-content .group-control-full-width {
-  width: 100% !important;
-  flex: 0 0 100% !important;
-  max-width: 100% !important;
-  display: block !important;
+.neo-group-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 
+              0 6px 12px rgba(0, 0, 0, 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: #9ca3af;
+}
+
+/* هدر Group - ملایم‌تر */
+.neo-group-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #334155;
+  margin: -0.75rem -1rem 0.625rem -1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 5px 5px 0 0;
+}
+
+/* عنوان Group */
+.neo-group-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* محتوای داخلی Group */
+.neo-group-card .row {
+  margin: 0 -0.375rem;
+}
+
+.neo-group-card .row > [class*="col"] {
+  padding: 0 0.375rem;
 }
