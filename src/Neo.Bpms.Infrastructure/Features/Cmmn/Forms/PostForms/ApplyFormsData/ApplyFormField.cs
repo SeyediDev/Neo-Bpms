@@ -1,5 +1,4 @@
-﻿using Neo.Bpms.Domain.Extensions;
-using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms.UIRules;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms.Resources;

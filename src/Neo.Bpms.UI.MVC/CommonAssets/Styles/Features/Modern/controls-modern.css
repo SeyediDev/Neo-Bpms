@@ -1063,6 +1063,11 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Ensure proper alignment */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
 }
 
 .modern-title-actions {
@@ -1300,7 +1305,9 @@ th .dWrapper {
 /* Page Header Icon Styles - Override sidemenu-icon for header context */
 .page-header-icon {
     position: static !important;
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     vertical-align: middle !important;
     line-height: 1 !important;
     margin-left: 8px !important;
@@ -1324,7 +1331,9 @@ th .dWrapper {
     min-height: 24px !important;
     max-width: 24px !important;
     max-height: 24px !important;
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     vertical-align: middle !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -1343,6 +1352,17 @@ th .dWrapper {
     height: 24px !important;
     display: block !important;
     vertical-align: middle !important;
+}
+
+/* Ensure FontAwesome icons in title are aligned */
+.modern-title-box .modern-title i.fa,
+.modern-title-box .modern-title i.fas,
+.modern-title-box .modern-title i.far {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
 }
 
 .page-header-icon .sidemenu-icon use {

@@ -2456,6 +2456,8 @@
 .modern-hamburger-menu {
   position: relative;
   z-index: 10;
+  display: flex;
+  align-items: center;
 }
 
 .hamburger-link {
@@ -2480,6 +2482,13 @@
   width: 32px;
   height: 32px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-icon svg {
+  display: block;
 }
 
 .hamburger-line {

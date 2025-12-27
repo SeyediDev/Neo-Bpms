@@ -1,8 +1,6 @@
 // Frontend Tests for Filter functionality
 // These tests should be run in a browser environment (e.g., using Playwright, Selenium, or Jest with jsdom)
 
-using Xunit;
-
 namespace Neo.Bpms.UI.MVC.Tests;
 
 /// <summary>

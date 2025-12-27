@@ -1792,6 +1792,9 @@
 		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\State.js">
 			<Link>wwwroot\Scripts\common-assets-includes\features\form\State.js</Link>
 		</Content>
+		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\Form\TableModalLinks.js">
+			<Link>wwwroot\Scripts\common-assets-includes\features\form\TableModalLinks.js</Link>
+		</Content>
 		<Content Include="$(MSBuildThisFileDirectory)Scripts\Features\History\HistoryManager.js">
 			<Link>wwwroot\Scripts\common-assets-includes\features\history\HistoryManager.js</Link>
 		</Content>
