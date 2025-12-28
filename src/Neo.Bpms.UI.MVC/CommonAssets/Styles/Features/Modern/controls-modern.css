@@ -4300,7 +4300,7 @@ th .dWrapper {
   overflow: hidden !important;
 }
 
-/* ===== IndexTable Font Size - Match Form Controls (0.825em) ===== */
+/* ===== IndexTable Font Size - Match Form Controls (14px) ===== */
 .t-table-wrapper,
 .t-table-wrapper table,
 .t-table-wrapper thead,
@@ -4316,13 +4316,13 @@ th .dWrapper {
 .t-table-wrapper .table-striped td,
 .t-table-wrapper .table-bordered th,
 .t-table-wrapper .table-bordered td {
-  font-size: 0.825em !important;
+  font-size: 14px !important;
 }
 
 /* Table header text */
 .t-table-wrapper th,
 .t-table-wrapper .cColumn {
-  font-size: 0.825em !important;
+  font-size: 14px !important;
 }
 
 /* Table cell content */
@@ -4332,7 +4332,7 @@ th .dWrapper {
 .t-table-wrapper .icon-link,
 .t-table-wrapper .form-link,
 .t-table-wrapper .table-form-link {
-  font-size: 0.825em !important;
+  font-size: 14px !important;
 }
 
 /* Table controls (inputs, selects) inside IndexTable */
@@ -4340,12 +4340,9 @@ th .dWrapper {
 .t-table-wrapper select,
 .t-table-wrapper textarea,
 .t-table-wrapper .form-control {
-  font-size: 0.825em !important;
-  padding-top: calc(var(--input-padding-top, 0.5em) * 0.9) !important;
-  padding-bottom: calc(var(--input-padding-bottom, 0.5em) * 0.9) !important;
-  padding-left: calc(var(--input-padding-left, 0.75em) * 0.9) !important;
-  padding-right: calc(var(--input-padding-right, 0.75em) * 0.9) !important;
-  line-height: calc(var(--input-line-height, 1.5) * 0.9) !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  line-height: 1.5 !important;
 }
 
 /* Table action links */
@@ -4353,7 +4350,7 @@ th .dWrapper {
 .t-table-wrapper .text-success,
 .t-table-wrapper .text-danger,
 .t-table-wrapper .index-table-add-btn {
-  font-size: 0.825em !important;
+  font-size: 14px !important;
 }
 
 /* ===== کاهش فاصله IndexTable از کنترل‌های بالاتر در فرم‌سازها ===== */

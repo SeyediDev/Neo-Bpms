@@ -624,6 +624,6 @@ IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInM
                 "<line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\" />" +
             "</svg>";
         string modalAttr = openInModal ? $" data-open-modal=\"true\" data-modal-title=\"{title}\"" : "";
-        return $"<a class=\"index-table-add-btn table-form-link\" href=\"{createUrl}\" title=\"{title}\"{modalAttr}>{addIconSvg}</a>";
+        return $"<a class=\"index-table-add-btn table-form-link\" href=\"{createUrl}\" title=\"{title}\" target=\"_blank\"{modalAttr}>{addIconSvg}</a>";
     }
 }

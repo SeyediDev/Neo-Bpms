@@ -1,51 +1,19 @@
 /**
  * TableModalLinks - Opens IndexTable form links in modal dialogs
  * 
- * This module intercepts clicks on table form links with data-open-modal="true"
- * and opens them in a Bootstrap Dialog modal with an iframe.
+ * Alt+Click opens in modal, regular click opens in new tab (default behavior)
  * 
- * Supports both BootstrapDialog (if available) and standard Bootstrap modals.
+ * Uses BootstrapDialog (same as drilldown modals) for consistent UI
  */
 window.TableModalLinks = (function ($) {
     'use strict';
 
     var defaults = {
         dialogWidth: '90%',
-        dialogHeightRatio: 0.75,
-        modalId: 'tableFormModal'
+        dialogHeightRatio: 0.7
     };
 
-    var currentModal = null;
-
-    /**
-     * Creates the modal HTML if it doesn't exist
-     */
-    function ensureModalExists() {
-        if ($('#' + defaults.modalId).length === 0) {
-            var modalHtml = 
-                '<div class="modal fade" id="' + defaults.modalId + '" tabindex="-1" role="dialog" aria-labelledby="' + defaults.modalId + 'Label">' +
-                    '<div class="modal-dialog modal-xl" role="document" style="width: ' + defaults.dialogWidth + '; max-width: ' + defaults.dialogWidth + ';">' +
-                        '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                                '<h5 class="modal-title" id="' + defaults.modalId + 'Label"></h5>' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                                    '<span aria-hidden="true">&times;</span>' +
-                                '</button>' +
-                            '</div>' +
-                            '<div class="modal-body" style="padding: 0; height: ' + (screen.availHeight * defaults.dialogHeightRatio) + 'px;">' +
-                                '<iframe id="' + defaults.modalId + 'Iframe" style="width: 100%; height: 100%; border: none;" frameborder="0" allowTransparency="true"></iframe>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
-            $('body').append(modalHtml);
-            
-            // Handle modal close - cleanup iframe
-            $('#' + defaults.modalId).on('hidden.bs.modal', function () {
-                $('#' + defaults.modalId + 'Iframe').attr('src', 'about:blank');
-            });
-        }
-    }
+    var currentDialog = null;
 
     /**
      * Opens a form URL in a modal dialog with an iframe
@@ -53,152 +21,55 @@ window.TableModalLinks = (function ($) {
      * @param {string} title - The modal title
      */
     function openFormModal(url, title) {
-        // Build iframe URL - convert to IframeForm if needed
-        var iframeUrl = convertToIframeUrl(url);
-        
-        // Try BootstrapDialog first (if available from open-drilldown.js)
-        var targetWindow = (window.top && window.top !== window) ? window.top : window;
+        // Get BootstrapDialog from window.top (where it's defined in open-drilldown.js)
+        var targetWindow = window.top || window;
         var TargetBootstrapDialog = targetWindow.BootstrapDialog || window.BootstrapDialog;
 
-        if (TargetBootstrapDialog) {
-            openWithBootstrapDialog(iframeUrl, title, TargetBootstrapDialog);
-        } else {
-            // Fallback to standard Bootstrap modal
-            openWithBootstrapModal(iframeUrl, title);
+        if (!TargetBootstrapDialog) {
+            // Fallback: just open in new tab if BootstrapDialog is not available
+            console.warn('TableModalLinks: BootstrapDialog not found, opening in new tab');
+            window.open(url, '_blank');
+            return;
         }
-    }
 
-    /**
-     * Opens form using BootstrapDialog (from open-drilldown.js)
-     */
-    function openWithBootstrapDialog(iframeUrl, title, TargetBootstrapDialog) {
-        // Create iframe container
-        var $container = $('<div style="width:100%;height:100%;"></div>');
-        var $iframe = $('<iframe></iframe>')
-            .attr('src', iframeUrl)
-            .attr('frameborder', '0')
-            .attr('allowTransparency', 'true')
-            .css({
-                'width': '100%',
-                'height': '100%',
-                'border': 'none'
-            });
-        $container.append($iframe);
+        // Create iframe container - same approach as OpenDrillDownModal
+        var $container = $('<div style="width:99%;height:100%;"></div>');
+        $container.append(
+            "<iframe src='" + url + "' style='width:100%; height:100%;' frameborder='0' allowTransparency='true'></iframe>"
+        );
+
+        var dialogTitle = title || (window.tetaI18n && window.tetaI18n.t ? window.tetaI18n.t('Form') : 'Form');
 
         var dialog = new TargetBootstrapDialog({
-            title: title || window.tetaI18n?.t('Form') || 'Form',
+            title: dialogTitle,
             message: $container
         });
 
         dialog.realize();
-        
-        // Apply modal sizing
+
+        // Apply modal sizing - same as OpenDrillDownModal
         var dialogHeight = screen.availHeight * defaults.dialogHeightRatio;
-        dialog.getModalBody().css({
-            'width': '100%',
-            'height': dialogHeight + 'px',
-            'padding': '0'
-        });
-        dialog.getModalDialog().css('width', defaults.dialogWidth);
-        dialog.getModalBody().find('.bootstrap-dialog-body').css({
-            'width': '100%',
-            'height': '100%'
-        });
-        dialog.getModalBody().find('.bootstrap-dialog-message').css({
-            'width': '100%',
-            'height': '100%'
-        });
+        dialog.getModalBody().css("width", "100%");
+        dialog.getModalBody().css("height", dialogHeight + "px");
+        dialog.getModalBody().css("padding", "0");
+        dialog.getModalDialog().css("width", defaults.dialogWidth);
+        dialog.getModalBody().find(".bootstrap-dialog-body").css("width", "100%");
+        dialog.getModalBody().find(".bootstrap-dialog-body").css("height", "100%");
+        dialog.getModalBody().find(".bootstrap-dialog-message").css("width", "100%");
+        dialog.getModalBody().find(".bootstrap-dialog-message").css("height", "100%");
 
-        currentModal = dialog;
-
-        // Handle iframe load for auto-close on success
-        $iframe.on('load', function() {
-            handleIframeLoad(this, function() {
-                dialog.close();
-            });
-        });
+        currentDialog = dialog;
 
         dialog.open();
-    }
-
-    /**
-     * Opens form using standard Bootstrap modal
-     */
-    function openWithBootstrapModal(iframeUrl, title) {
-        ensureModalExists();
-        
-        var $modal = $('#' + defaults.modalId);
-        var $iframe = $('#' + defaults.modalId + 'Iframe');
-        
-        // Set title and iframe source
-        $('#' + defaults.modalId + 'Label').text(title || window.tetaI18n?.t('Form') || 'Form');
-        $iframe.attr('src', iframeUrl);
-        
-        // Handle iframe load for auto-close on success
-        $iframe.off('load').on('load', function() {
-            handleIframeLoad(this, function() {
-                $modal.modal('hide');
-            });
-        });
-        
-        // Show modal
-        $modal.modal('show');
-        currentModal = $modal;
-    }
-
-    /**
-     * Handles iframe load event to detect form submission success
-     */
-    function handleIframeLoad(iframe, closeCallback) {
-        try {
-            var iframeWindow = iframe.contentWindow;
-            if (iframeWindow && iframeWindow.modalFormSubmitted) {
-                closeCallback();
-                // Refresh parent page or table
-                if (window.location && window.location.reload) {
-                    window.location.reload();
-                }
-            }
-        } catch (e) {
-            // Cross-origin restriction, ignore
-        }
-    }
-
-    /**
-     * Converts a regular form URL to IframeForm URL
-     * @param {string} url - Original URL
-     * @returns {string} - IframeForm URL
-     */
-    function convertToIframeUrl(url) {
-        // Check if already an iframe URL
-        if (url.indexOf('IframeForm') > -1 || url.indexOf('IframeIndex') > -1) {
-            return url;
-        }
-
-        // Convert Form actions to IframeForm
-        var formActions = ['Edit', 'Details', 'Delete', 'Create'];
-        for (var i = 0; i < formActions.length; i++) {
-            var action = formActions[i];
-            var pattern = '/Form/' + action;
-            if (url.indexOf(pattern) > -1) {
-                return url.replace(pattern, '/Form/IframeForm');
-            }
-        }
-
-        return url;
     }
 
     /**
      * Closes the currently open modal
      */
     function closeModal() {
-        if (currentModal) {
-            if (currentModal.close) {
-                currentModal.close();
-            } else if (currentModal.modal) {
-                currentModal.modal('hide');
-            }
-            currentModal = null;
+        if (currentDialog && currentDialog.close) {
+            currentDialog.close();
+            currentDialog = null;
         }
     }
 
@@ -214,20 +85,25 @@ window.TableModalLinks = (function ($) {
 
     /**
      * Initializes click handlers for modal links
+     * Alt+Click opens in modal, regular click opens in new tab (default behavior)
      */
     function init() {
         // Use event delegation for dynamically added links
         $(document).on('click', '[data-open-modal="true"]', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
             var $link = $(this);
             var url = $link.attr('href');
             var title = $link.attr('data-modal-title') || $link.attr('title') || '';
 
-            if (url && url !== '#') {
+            // Alt+Click: Open in modal
+            if (e.altKey && url && url !== '#') {
+                e.preventDefault();
+                e.stopPropagation();
                 openFormModal(url, title);
+                return false;
             }
+            
+            // Regular click: Let default behavior happen (open in new tab)
+            // Don't prevent default - the link will work normally
         });
     }
 
