@@ -36,16 +36,16 @@ public class BPMNProcessVersion : BPMNProcessVersionDb
     public MetaModelEntity MetaEntity;
 
     [InDisplayString]
-    [Formula("Process.Name")]
+    [FormulaAttribute("Process.Name")]
     [DisplayNameAndEnName("نام فرآیند")]
     public string ProcessName => Process?.Name;
 
-    [Formula("MetaEntity.MetaNamespace.MetaNamespaceId")]
+    [FormulaAttribute("MetaEntity.MetaNamespace.MetaNamespaceId")]
     [MaxLength(256)]
     [DisplayNameAndEnName("کد فضای نامی")]
     public string ProcessNamespaceId => MetaEntity?.MetaNamespace?.MetaNamespaceId;
 
-    [Formula("MetaEntity.MetaEntityId")]
+    [FormulaAttribute("MetaEntity.MetaEntityId")]
     [MaxLength(256)]
     [DisplayNameAndEnName("کد موجودیت")]
     public string ProcessEntityId => MetaEntity?.MetaEntityId;

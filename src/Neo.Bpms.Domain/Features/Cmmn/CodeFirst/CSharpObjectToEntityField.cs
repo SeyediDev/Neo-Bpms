@@ -189,9 +189,9 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
                     field.Flags |= EntityFieldFlags.NotMap;
                     break;
 
-                case FAttr_IsFormula formula:
+                case FAttr_IsFormulaAttribute formula:
                     {
-                        FAttr_IsFormula at = formula;
+                        FAttr_IsFormulaAttribute at = formula;
                         field.Formula = new EntityFieldFormula
                         {
                             UsedForAggregationOnly = at.UsedForAggregationOnly,

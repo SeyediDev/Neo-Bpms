@@ -117,7 +117,7 @@ public abstract class ActivityInstanceRecordAs : ActivityInstanceRecordDb
 [DisplayNameAndEnName("نمونه المان فرآیند")]
 public class ActivityInstanceRecord : ActivityInstanceRecordAs
 {
-    [Formula("BPMNFlowNode.ProcessVersion.ProcessId")]
+    [FormulaAttribute("BPMNFlowNode.ProcessVersion.ProcessId")]
     [DisplayNameAndEnName("شناسه فرآیند")]
     public long ProcessId;
 
@@ -125,7 +125,7 @@ public class ActivityInstanceRecord : ActivityInstanceRecordAs
     [DisplayNameAndEnName("فرآیند")]
     public BPMNProcess Process;
 
-    [Formula("BPMNFlowNode.ProcessVersion")]
+    [FormulaAttribute("BPMNFlowNode.ProcessVersion")]
     [DisplayNameAndEnName("شناسه نسخه فرآیند")]
     public long ProcessVersionId;
 
@@ -133,56 +133,56 @@ public class ActivityInstanceRecord : ActivityInstanceRecordAs
     [DisplayNameAndEnName("نسخه فرآیند")]
     public BPMNProcessVersion ProcessVersion;
 
-    [Formula("BPMNFlowNode.ActivityInstanceTypeId")]
+    [FormulaAttribute("BPMNFlowNode.ActivityInstanceTypeId")]
     [DisplayNameAndEnName("شناسه نوع نمونه المان")]
     public long ActivityInstanceTypeId; //enum: AiType
 
-    [Formula("BPMNFlowNode.Operation.InterfaceId")]
+    [FormulaAttribute("BPMNFlowNode.Operation.InterfaceId")]
     public long InterfaceNameId;
 
     [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public BPMNInterface InterfaceName;
 
 
-    [Formula("BPMNFlowNode.OperationId")]
+    [FormulaAttribute("BPMNFlowNode.OperationId")]
     public long OperationNameId;
 
     [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public BPMNOperation OperationName;
 
-    [Formula("gethour(CreationTime)")]
+    [FormulaAttribute("gethour(CreationTime)")]
     [DisplayNameAndEnName("ساعت ایجاد")]
     public long CreationHour;
 
-    [Formula("gethour(StartTime)")]
+    [FormulaAttribute("gethour(StartTime)")]
     [DisplayNameAndEnName("ساعت ایجاد")]
     public long StartHour;
 
-    [Formula("gethour(CloseTime)")]
+    [FormulaAttribute("gethour(CloseTime)")]
     [DisplayNameAndEnName("ساعت اتمام")]
     public long CloseHour;
 
-    [Formula("10000000 * SecondDiff(CreationTime,CloseTime)")]
+    [FormulaAttribute("10000000 * SecondDiff(CreationTime,CloseTime)")]
     [DisplayNameAndEnName("مدت زمان فعالیت")]
     public TimeSpan ActiveDuration;//active
 
-    [Formula("10000000 * SecondDiff(StartTime,CompletionTime)")]
+    [FormulaAttribute("10000000 * SecondDiff(StartTime,CompletionTime)")]
     [DisplayNameAndEnName("مدت زمان انجام")]
     public TimeSpan DoneDuration;
 
-    [Formula("10000000 * SecondDiff((ProcessInstance.CreationTime),CreationTime)")]
+    [FormulaAttribute("10000000 * SecondDiff((ProcessInstance.CreationTime),CreationTime)")]
     [DisplayNameAndEnName("فاصله زمانی ایجاد فعالیت در فرآیند")]
     public TimeSpan CreationDistance;
 
-    [Formula("10000000 * SecondDiff((ProcessInstance.CreationTime),StartTime)")]
+    [FormulaAttribute("10000000 * SecondDiff((ProcessInstance.CreationTime),StartTime)")]
     [DisplayNameAndEnName("فاصله زمانی شروع فعالیت در فرآیند")]
     public TimeSpan StartDistance;
 
-    [Formula("10000000 * SecondDiff((ProcessInstance.CreationTime),CloseTime)")]
+    [FormulaAttribute("10000000 * SecondDiff((ProcessInstance.CreationTime),CloseTime)")]
     [DisplayNameAndEnName("فاصله زمانی بسته شدن فعالیت در فرآیند")]
     public TimeSpan CloseDistance;
 
-    [Formula("10000000 * SecondDiff(CreationTime,StartTime)")]
+    [FormulaAttribute("10000000 * SecondDiff(CreationTime,StartTime)")]
     [DisplayNameAndEnName("زمان انتظار/تاخیر")]
     public TimeSpan WaitTime;
 
@@ -218,26 +218,26 @@ public class ActivityInstanceRecord : ActivityInstanceRecordAs
     public PastDateTimeFilter PastDateTimeFilter;
 
     [DisplayNameAndEnName("ماه", EnName = "Month")]
-    [FAttr_IsFormula(Formula = "datename(mm, CompletionTime)")]
+    [FAttr_IsFormulaAttribute(Formula = "datename(mm, CompletionTime)")]
     public string CompletionTimeMonth;
 
     [DisplayNameAndEnName("سال-ماه شمسی", EnName = "Month")]
-    [FAttr_IsFormula(Formula = "PersianYearMonth(CompletionTime)")]
+    [FAttr_IsFormulaAttribute(Formula = "PersianYearMonth(CompletionTime)")]
     public string CompletionTimePersianMonth;
 
-    [Formula("BPMNFlowNode.FlowNodeId")]
+    [FormulaAttribute("BPMNFlowNode.FlowNodeId")]
     [DisplayNameAndEnName("کد المان فرآیند")]
     public string FlowNodeId;
 
     [DisplayNameAndEnName("تاریخ تکمیل", EnName = "Completion Time")]
-    [FAttr_IsFormula(Formula = "DateOf(CompletionTime)")]
+    [FAttr_IsFormulaAttribute(Formula = "DateOf(CompletionTime)")]
     public DateTime DateOfCompletionTime;
 
     [DisplayNameAndEnName("تاریخ بسته شدن", EnName = "Close Time")]
-    [FAttr_IsFormula(Formula = "DateOf(CloseTime)")]
+    [FAttr_IsFormulaAttribute(Formula = "DateOf(CloseTime)")]
     public DateTime DateOfCloseTime;
 
     [DisplayNameAndEnName("تاریخ ایجاد", EnName = "Creation Time")]
-    [FAttr_IsFormula(Formula = "DateOf(CreationTime)")]
+    [FAttr_IsFormulaAttribute(Formula = "DateOf(CreationTime)")]
     public DateTime DateOfCreationTime;
 }

@@ -73,7 +73,7 @@ public abstract class ProcessInstanceRecordAs : ProcessInstanceRecordDb
 
 public class ProcessInstanceRecord : ProcessInstanceRecordAs
 {
-    [Formula("ProcessVersion.ProcessId")]
+    [FormulaAttribute("ProcessVersion.ProcessId")]
     [DisplayNameAndEnName("شناسه فرآیند")]
     public long BPMNProcessId;
 
@@ -81,21 +81,21 @@ public class ProcessInstanceRecord : ProcessInstanceRecordAs
     [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public BPMNProcess BPMNProcess;
 
-    [Formula("ProcessVersion.MetaEntity.MetaNamespaceId")]
+    [FormulaAttribute("ProcessVersion.MetaEntity.MetaNamespaceId")]
     [DisplayNameAndEnName("شناسه فضای نامی")]
     public long MetaNamespaceId;
     [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     [DisplayNameAndEnName("فضای نامی")]
     public MetaModelNamespace MetaNamespace;
 
-    [Formula("ProcessVersion.MetaEntityId")]
+    [FormulaAttribute("ProcessVersion.MetaEntityId")]
     [DisplayNameAndEnName("شناسه موجودیت")]
     public long MetaModelEntityId;
     [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     [DisplayNameAndEnName("موجودیت")]
     public MetaModelEntity MetaModelEntity;
 
-    [Formula("10000000 * SecondDiff(CreationTime,CloseTime)")]
+    [FormulaAttribute("10000000 * SecondDiff(CreationTime,CloseTime)")]
     [DisplayNameAndEnName("مدت زمان")]
     public TimeSpan Duration;
 
@@ -115,11 +115,11 @@ public class ProcessInstanceRecord : ProcessInstanceRecordAs
     [DisplayNameAndEnName("تا تاریخ ایجاد")]
     public DateTime ToCreationTime;
 
-    [FAttr_IsFormula("DateOf(CreationTime)")]
+    [FAttr_IsFormulaAttribute("DateOf(CreationTime)")]
     [DisplayNameAndEnName("تاریخ ایجاد")]
     public DateTime DateOfCreationTime;
 
-    [FAttr_IsFormula("DateOf(CloseTime)")]
+    [FAttr_IsFormulaAttribute("DateOf(CloseTime)")]
     [DisplayNameAndEnName("تاریخ بسته شدن")]
     public DateTime DateOfCloseTime;
 }

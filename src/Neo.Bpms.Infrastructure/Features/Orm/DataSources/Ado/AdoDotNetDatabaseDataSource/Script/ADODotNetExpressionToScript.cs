@@ -334,9 +334,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
                 CheckInjectionKey(ref injectionKey, ref bodyFormula);
                 if (string.IsNullOrEmpty(formula))
                     formula = "(case ";
-                else
-                    formula += "\nelse ";
-                formula += " when " + caseFormula + " then " + bodyFormula + "";
+                formula += "\n when " + caseFormula + " then " + bodyFormula + "";
             }
 
             if (!string.IsNullOrEmpty(defaultFormula))

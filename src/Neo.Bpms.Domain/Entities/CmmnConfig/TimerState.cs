@@ -20,9 +20,9 @@ public class TimerState : BaseCmmnConfigStateBasedEntity
     public DateTime? ExceptionTime { get; set; }
     public string Exception { get; set; }
 
-    [FAttr_IsFormula("IF((StartTime>StopTime),true,false)")]
+    [FAttr_IsFormulaAttribute("IF((StartTime>StopTime),true,false)")]
     public bool Running { get; set; }
 
-    [FAttr_IsFormula("IF((ExceptionTime>StartTime),true,false)")]
+    [FAttr_IsFormulaAttribute("IF((ExceptionTime>StartTime),true,false)")]
     public bool HasException { get; set; }
 }

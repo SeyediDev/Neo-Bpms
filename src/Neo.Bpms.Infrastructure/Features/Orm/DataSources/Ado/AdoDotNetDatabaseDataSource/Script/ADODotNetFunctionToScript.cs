@@ -141,6 +141,10 @@ public abstract partial class AdoDotNetDatabaseDataSource
             case "converttodouble":
                 script = $"CONVERT(float,{ConvertArgumentToScript(forWhere, function, localParameters)})";
                 break;
+            case "string":
+            case "converttostring":
+                script = $"CONVERT(NVARCHAR(MAX),{ConvertArgumentToScript(forWhere, function, localParameters)})";
+                break;
             case "autoincrement": //AutoIncrement()
                 script = GenerateAutoIncrementScript(localParameters);
                 break;
@@ -443,9 +447,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
                 break;
             if (ii == 2)
                 script += "(case ";
-            else
-                script += "\nelse ";
-            script += " when " + switchFormula + "=" + caseFormula + " then " + bodyFormula + "";
+            script += "\n when " + switchFormula + "=" + caseFormula + " then " + bodyFormula + "";
         }
         if (!string.IsNullOrEmpty(defaultFormula))
             script += "\nelse " + defaultFormula + "";

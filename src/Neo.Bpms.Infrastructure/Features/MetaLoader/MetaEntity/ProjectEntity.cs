@@ -129,10 +129,8 @@ public class ProjectEntity: IProjectEntity
         foreach (var entityField in entity.entityFields?.Values ?? Enumerable.Empty<EntityField>())
         {
             entityField.Parent = entity;
-            if (entityField.AssociationEntity != null)
-                entityField.AssociationEntity.Parent = entity;
-            if (entityField.Formula != null)
-                entityField.Formula.FormulaBody = Parser.Parse(entityField.Formula.FormulaText);//todo
+            entityField.AssociationEntity?.Parent = entity;
+            entityField.Formula?.FormulaBody = Parser.Parse(entityField.Formula.FormulaText);//todo
         }
         foreach (var autoCalc in entity.AutoCalcs?.Calculations ?? Enumerable.Empty<AutoCalc>())
         {

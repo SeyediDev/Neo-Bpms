@@ -6,12 +6,12 @@
 /// This attribute is for formula fields
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class FAttr_IsFormula : Attribute
+public class FAttr_IsFormulaAttribute : Attribute
 {
     /// <summary>
     /// تعریف فیلد فرمولی
     /// </summary>
-    public FAttr_IsFormula()
+    public FAttr_IsFormulaAttribute()
     {
 
     }
@@ -19,7 +19,7 @@ public class FAttr_IsFormula : Attribute
     /// تعریف فیلد فرمولی
     /// </summary>
     /// <param name="formula">فرمول</param>
-    public FAttr_IsFormula(string formula)
+    public FAttr_IsFormulaAttribute(string formula)
     {
         Formula = formula;
     }
