@@ -408,7 +408,23 @@ function getControlContainer(fieldName) {
 }
 
 function getSpecifierContainer(specifier) {
+	console.log('[getSpecifierContainer v2.1] specifier:', specifier);
+	
+	// اگر specifier به فرمت name="fieldName" است، fieldName را استخراج کن و از data-id استفاده کن
+	var nameMatch = specifier.match(/name="([^"]+)"/);
+	if (nameMatch) {
+		var fieldName = nameMatch[1];
+		var $dataIdContainer = $('[data-id="' + fieldName + '"]');
+		console.log('[getSpecifierContainer v2.1] fieldName:', fieldName, '$dataIdContainer.length:', $dataIdContainer.length);
+		if ($dataIdContainer.length) {
+			console.log('[getSpecifierContainer v2.1] Using data-id container for:', fieldName);
+			return $dataIdContainer;
+		}
+	}
+	
+	// fallback به روش قبلی
 	var $container = $("[" + specifier + "]").closest(".neo-control");
+	console.log('[getSpecifierContainer v2.1] neo-control.length:', $container.length);
 	if ($container.length)
 		return $container;
 	return $("[" + specifier + "]").closest("div").parent();

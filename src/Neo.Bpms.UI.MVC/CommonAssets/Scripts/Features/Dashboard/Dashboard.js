@@ -663,6 +663,10 @@ window.dashboard_submitWidgetSettings = function (element) {
         return;
     }
     
+    // Get refresh interval (convert seconds to milliseconds)
+    const refreshIntervalSeconds = parseInt(document.getElementById('refreshInterval-' + widgetId)?.value) || 0;
+    const refreshIntervalMs = refreshIntervalSeconds > 0 ? refreshIntervalSeconds * 1000 : 0;
+    
     const ajaxParams = {
         NamespaceId: window.PageAddressManager.getNamespaceId(),
         EntityId: window.PageAddressManager.getEntityId(),
@@ -672,7 +676,8 @@ window.dashboard_submitWidgetSettings = function (element) {
         widgetWidth: document.getElementById('widgetWidth-' + widgetId)?.value,
         widgetHeight: document.getElementById('widgetHeight-' + widgetId)?.value,
         recordsCount: document.getElementById('recordsCount-' + widgetId)?.value,
-        ChartType: document.getElementById('selectChart-' + widgetId)?.value
+        ChartType: document.getElementById('selectChart-' + widgetId)?.value,
+        RefreshIntervalMs: refreshIntervalMs
     };
     
     // Hide modal immediately for better UX
@@ -1112,6 +1117,66 @@ style.textContent = `
     .neo-dashboard-spinner {
         animation: spin 1s linear infinite;
     }
+    .neo-dashboard-auto-refresh-indicator {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 4px;
+        font-size: 11px;
+        color: #3b82f6;
+    }
+    .neo-dashboard-auto-refresh-indicator svg {
+        width: 12px;
+        height: 12px;
+        animation: spin 2s linear infinite;
+    }
 `;
 document.head.appendChild(style);
+
+/**
+ * Initialize auto-refresh for widgets based on their configuration
+ * Called after page load
+ */
+window.dashboard_initAutoRefresh = function() {
+    const widgets = document.querySelectorAll('[widgetId][data-refresh-interval]');
+    widgets.forEach(widget => {
+        const widgetId = widget.getAttribute('widgetId');
+        const refreshIntervalMs = parseInt(widget.getAttribute('data-refresh-interval')) || 0;
+        
+        if (refreshIntervalMs > 0) {
+            // Enable auto-refresh for this widget
+            dashboard_enableAutoRefresh(widgetId, refreshIntervalMs / 1000);
+            
+            // Add visual indicator
+            const widgetTitle = widget.querySelector('.neo-dashboard-widget-title');
+            if (widgetTitle && !widgetTitle.querySelector('.neo-dashboard-auto-refresh-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'neo-dashboard-auto-refresh-indicator';
+                indicator.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                    </svg>
+                    هر ${refreshIntervalMs / 1000}ث
+                `;
+                indicator.title = `به‌روزرسانی خودکار هر ${refreshIntervalMs / 1000} ثانیه`;
+                widgetTitle.style.position = 'relative';
+                widgetTitle.appendChild(indicator);
+            }
+            
+            console.log(`Dashboard: Auto-refresh initialized for widget ${widgetId} (every ${refreshIntervalMs / 1000}s)`);
+        }
+    });
+};
+
+// Initialize auto-refresh on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Delay initialization to ensure widgets are fully rendered
+    setTimeout(dashboard_initAutoRefresh, 500);
+});
 

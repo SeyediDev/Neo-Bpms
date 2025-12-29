@@ -1,6 +1,7 @@
 ﻿@using Neo.Bpms.Domain.Entities.Cmmn.UI
 @using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems
 @using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Components
 
 @{
     var divConfiguration = ViewBag.DivConfiguration as ConfiguredDashboard.ConfigDiv;
@@ -8,6 +9,7 @@
     var reportData = ViewBag.ReportData as ReportData;
     var maxRecord = ViewBag.MaxRecord ?? 15;
     var widgetHeight = ViewBag.widgetHeight ?? 300;
+    var refreshInterval = widget?.GetPropertyValueInt(eControlPropertyId.RefreshEveryXMilliseconds) ?? 0;
 }
 
 @if (divConfiguration != null)
@@ -85,6 +87,30 @@
                                    value="@widgetHeight"
                                    min="200"
                                    max="1000">
+                        </div>
+                    </div>
+                    
+                    @* Auto-Refresh Settings *@
+                    <div class="neo-dashboard-form-group">
+                        <label for="refreshInterval-@divConfiguration.WidgetId" class="neo-dashboard-form-label">
+                            <svg style="width: 16px; height: 16px; margin-left: 4px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 4v6h6M23 20v-6h-6"/>
+                                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                            </svg>
+                            به‌روزرسانی خودکار (ثانیه)
+                        </label>
+                        <div class="neo-dashboard-form-row" style="gap: 12px; align-items: center;">
+                            <input type="number" 
+                                   id="refreshInterval-@divConfiguration.WidgetId" 
+                                   class="neo-dashboard-form-input"
+                                   value="@(refreshInterval > 0 ? refreshInterval / 1000 : 0)"
+                                   min="0"
+                                   max="3600"
+                                   placeholder="0 = غیرفعال"
+                                   style="flex: 1;">
+                            <span style="color: #9ca3af; font-size: 12px; white-space: nowrap;">
+                                (0 = غیرفعال، حداقل 5 ثانیه)
+                            </span>
                         </div>
                     </div>
                 </div>

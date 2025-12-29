@@ -1,4 +1,5 @@
 @using Neo.Bpms.Domain.Models.Cmmn.UI.Reports
+@using Neo.Bpms.Domain.Models.Cmmn.UI.Components
 @using Neo.Bpms.UI.MVC.Helpers
 @using Neo.Bpms.UI.MVC.Models.Dashboard
 @model DashboardWidgetRenderModel
@@ -14,10 +15,12 @@
     var reportUrl = reportData?.Structure != null 
         ? $"Report/Index?NamespaceId={reportData.Structure.NamespaceId}&EntityId={reportData.Structure.EntityId}&ReportId={reportData.Structure.Form_ReportId}&ConfigId={reportData.Structure.ConfigId}"
         : null;
+    var refreshIntervalMs = widget?.GetPropertyValueInt(eControlPropertyId.RefreshEveryXMilliseconds) ?? 0;
 }
 
 <div class="neo-dashboard-widget-container neo-dashboard-column-@width"
      data-widget-height="@(widgetHeight)px"
+     @if (refreshIntervalMs > 0) { <text>data-refresh-interval="@refreshIntervalMs"</text> }
      widgetId="@divConfig.WidgetId">
 
     @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidgetTitle.cshtml", Model)

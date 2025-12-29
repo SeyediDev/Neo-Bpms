@@ -63,6 +63,12 @@
                             "prev",
                             "title"
                         ]
+                    },
+                    {
+                        "position": "bottom",
+                        "content": [
+                            "<div id='menu-version-info' class='menu-version-container'><span class='menu-version-label'>نسخه:</span> <span id='app-version' class='menu-version-number'>...</span></div>"
+                        ]
                     }
                 ]
             });
@@ -166,8 +172,33 @@
                     setSelectedMenuItem();
                 }
             }, 1000);
+            
+            // Load version info
+            loadVersionInfo();
         }
     );
+    
+    // Function to load and display version info
+    function loadVersionInfo() {
+        fetch('/api/version')
+            .then(function(response) {
+                if (response.ok) return response.json();
+                throw new Error('Version API not available');
+            })
+            .then(function(data) {
+                var versionEl = document.getElementById('app-version');
+                if (versionEl && data.shortVersion) {
+                    versionEl.textContent = data.shortVersion;
+                    versionEl.title = 'نسخه کامل: ' + data.version + (data.gitCommit ? '\nکامیت: ' + data.gitCommit : '') + '\nمحیط: ' + data.environment;
+                }
+            })
+            .catch(function(err) {
+                var versionEl = document.getElementById('app-version');
+                if (versionEl) {
+                    versionEl.textContent = '1.0.0';
+                }
+            });
+    }
 
     document.addEventListener("click", function (evnt) {
         var anchor = evnt.target.closest('a[href="#/"]');

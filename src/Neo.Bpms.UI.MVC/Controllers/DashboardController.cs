@@ -510,6 +510,16 @@ public class DashboardController(DashboardConfigBackupRestore dashboardConfigBac
                 widget.SetProperty(eControlPropertyId.MaxRecordCount, model.RecordsCount);
             if (!string.IsNullOrEmpty(model.WidgetHeight))
                 widget.SetProperty(eControlPropertyId.HeightInPixels, model.WidgetHeight);
+            // Auto-refresh interval (minimum 5 seconds, or 0 to disable)
+            if (model.RefreshIntervalMs > 0)
+            {
+                int intervalMs = Math.Max(model.RefreshIntervalMs, 5000); // Minimum 5 seconds
+                widget.SetProperty(eControlPropertyId.RefreshEveryXMilliseconds, intervalMs.ToString());
+            }
+            else
+            {
+                widget.SetProperty(eControlPropertyId.RefreshEveryXMilliseconds, "0");
+            }
             Report widgetReport = ProjectDefinition.Project
                  .GetUiEntity(widget.ReportNamespaceId, widget.ReportEntityId)
                  ?.GetReport(widget.ReportId);
@@ -730,6 +740,10 @@ public class SubmitWidgetSettingsModel
     public int WidgetWidth { get; set; }
     public string WidgetHeight { get; set; }
     public string RecordsCount { get; set; }
+    /// <summary>
+    /// Auto-refresh interval in milliseconds (0 = disabled)
+    /// </summary>
+    public int RefreshIntervalMs { get; set; }
 }
 
 public class SubmitWidgetOrderModel
