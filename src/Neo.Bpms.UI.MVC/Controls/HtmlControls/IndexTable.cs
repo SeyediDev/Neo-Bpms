@@ -56,7 +56,9 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
                       name=""{table.FieldName}"" class=""{table.FieldName} table table-striped table-bordered"">
 				    <thead>");
 
-        if (ControlsRendererData.Options.IsReadOnly)
+        // در حالت ReadOnly، هدر جدول نمایش داده می‌شود
+        // اما اگر جدول داخل یک container (مثل MultiTab) باشد، عنوان تب کافی است
+        if (ControlsRendererData.Options.IsReadOnly && string.IsNullOrEmpty(table.parentControlId))
         {
             int colSpan = columns.Count + (table.Subjects ?? Enumerable.Empty<IndexFormSubjectId>()).Count() + 1;
             result.Append(
@@ -344,6 +346,15 @@ IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInM
             case TVariableTypes.File:
                 cellValue = ControlsRendererData.Encoder.Encode(cellValue?.ToString() ?? "");
                 break;
+            case TVariableTypes.Double:
+            case TVariableTypes.Decimal:
+                cellValue = FormatDecimalValue(cellValue);
+                break;
+            case TVariableTypes.Int:
+            case TVariableTypes.Long:
+            case TVariableTypes.Short:
+                cellValue = FormatIntegerValue(cellValue);
+                break;
             default:
                 cellValue = ControlsRendererData.Encoder.Encode(cellValue?.ToString() ?? "");
                 break;
@@ -402,6 +413,47 @@ IndexTableHelpers.FormLinkClassWithTitle("text-success", ViewTexts.Edit, openInM
         }
 
         return cell;
+    }
+
+    private static string FormatDecimalValue(object cellValue)
+    {
+        if (cellValue == null || string.IsNullOrEmpty(cellValue.ToString()))
+            return "";
+        
+        if (decimal.TryParse(cellValue.ToString(), out decimal v))
+        {
+            // Check if it's essentially a whole number
+            if (v == Math.Floor(v))
+            {
+                return $"{v:n0}";
+            }
+            else
+            {
+                // Format with enough decimal places, then remove trailing zeros
+                var culture = System.Globalization.CultureInfo.CurrentCulture;
+                string str = v.ToString("N10", culture);
+                // Remove trailing zeros after decimal point (culture-aware)
+                var decimalSeparator = culture.NumberFormat.NumberDecimalSeparator;
+                if (str.Contains(decimalSeparator))
+                {
+                    str = str.TrimEnd('0').TrimEnd(decimalSeparator.ToCharArray());
+                }
+                return str;
+            }
+        }
+        return cellValue.ToString() ?? "";
+    }
+
+    private static string FormatIntegerValue(object cellValue)
+    {
+        if (cellValue == null || string.IsNullOrEmpty(cellValue.ToString()))
+            return "";
+        
+        if (long.TryParse(cellValue.ToString(), out long intVal))
+        {
+            return $"{intVal:n0}";
+        }
+        return cellValue.ToString() ?? "";
     }
 
     private void RenderEditableColumn(TableDefinition table, ColumnFieldDefinition col, int counter,

@@ -125,6 +125,25 @@ public class FormQuery
         if (AddFormOrderBy())
             any = true;
         if (any) return;
+        
+        // Auto order by field with "order" or "ترتیب" in alias/name
+        ColumnFieldDefinition orderField = structure.ColumnInfos.FirstOrDefault(col =>
+            (!string.IsNullOrEmpty(col.Alias) && 
+             (col.Alias.Contains("ترتیب", StringComparison.OrdinalIgnoreCase) || 
+              col.Alias.Contains("order", StringComparison.OrdinalIgnoreCase))) ||
+            (!string.IsNullOrEmpty(col.ColumnName) && 
+             col.ColumnName.Contains("order", StringComparison.OrdinalIgnoreCase)));
+        
+        if (orderField != null)
+        {
+            EntityField field = entity.GetField(orderField.ColumnName);
+            if (field != null && field.AssociationEntity == null)
+            {
+                q.OrderBy(orderField.ColumnName, SortType.Ascending);
+                return;
+            }
+        }
+        
         foreach (ColumnFieldDefinition item in structure.ColumnInfos)
         {
             EntityField field = entity.GetField(item.ColumnName);

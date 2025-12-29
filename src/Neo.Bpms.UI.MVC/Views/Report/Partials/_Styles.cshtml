@@ -62,6 +62,13 @@
 
 @* Modal Styles for Report Designs and Scheduling - Scoped to prevent conflicts *@
 <style>
+    /* CSS Variables for Report Modals - همگام با هدر گزارش */
+    :root {
+        --modal-header-primary: #0f766e;
+        --modal-header-secondary: #115e59;
+        --modal-header-accent: #14b8a6;
+    }
+    
     /* Report Modal Styles - Unique namespace to prevent conflicts with included CSS */
     /* These styles are specific to report page modals and won't conflict with other modals */
     #report-designs-modal.report-modal,
@@ -71,12 +78,12 @@
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        background: rgba(0, 0, 0, 0.5) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
         z-index: 10000 !important;
         display: none !important;
         align-items: center !important;
         justify-content: center !important;
-        backdrop-filter: blur(4px) !important;
+        backdrop-filter: blur(6px) !important;
     }
     
     #report-designs-modal.report-modal.show,
@@ -87,17 +94,18 @@
     #report-designs-modal .report-modal-content,
     #scheduling-modal .report-modal-content {
         background: #ffffff !important;
-        border-radius: 12px !important;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
         width: 90% !important;
-        max-width: 800px !important;
-        max-height: 85vh !important;
+        max-width: 700px !important;
+        max-height: 80vh !important;
         display: flex !important;
         flex-direction: column !important;
         overflow: hidden !important;
-        animation: report-modal-slide-in 0.3s ease !important;
+        animation: report-modal-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         position: relative !important;
         z-index: 10001 !important;
+        border: 1px solid rgba(15, 118, 110, 0.1) !important;
     }
     
     /* Ensure buttons in modal are above modal content */
@@ -201,41 +209,44 @@
     
     #report-designs-modal .report-modal-header,
     #scheduling-modal .report-modal-header {
-        padding: 20px 24px !important;
-        border-bottom: 1px solid #e9ecef !important;
+        padding: 18px 24px !important;
+        border-bottom: none !important;
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        background: linear-gradient(135deg, #1869AA 0%, #3b82f6 100%) !important;
+        background: linear-gradient(135deg, var(--modal-header-primary) 0%, var(--modal-header-secondary) 100%) !important;
         color: #ffffff !important;
+        border-radius: 16px 16px 0 0 !important;
     }
     
     #report-designs-modal .report-modal-header h5,
     #scheduling-modal .report-modal-header h5 {
         margin: 0 !important;
-        font-size: 18px !important;
+        font-size: 17px !important;
         font-weight: 600 !important;
+        letter-spacing: 0.3px !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     }
     
     #report-designs-modal .report-modal-close,
     #scheduling-modal .report-modal-close {
-        background: rgba(255, 255, 255, 0.2) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
         border: none !important;
         color: #ffffff !important;
-        width: 32px !important;
-        height: 32px !important;
-        border-radius: 50% !important;
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 10px !important;
         cursor: pointer !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
     #report-designs-modal .report-modal-close:hover,
     #scheduling-modal .report-modal-close:hover {
-        background: rgba(255, 255, 255, 0.3) !important;
-        transform: rotate(90deg) !important;
+        background: rgba(255, 255, 255, 0.25) !important;
+        transform: scale(1.08) !important;
     }
     
     #report-designs-modal .report-modal-body,
@@ -243,20 +254,89 @@
         padding: 20px 24px !important;
         overflow-y: auto !important;
         flex: 1 !important;
+        background: #fafafa !important;
+    }
+    
+    /* دکمه‌های بالای مدال */
+    #report-designs-modal .btn-group,
+    #scheduling-modal .btn-group {
+        display: flex !important;
+        gap: 8px !important;
+    }
+    
+    #report-designs-modal .btn-outline-success,
+    #scheduling-modal .btn-outline-success {
+        border-color: var(--modal-header-primary) !important;
+        color: var(--modal-header-primary) !important;
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    #report-designs-modal .btn-outline-success:hover,
+    #scheduling-modal .btn-outline-success:hover {
+        background: var(--modal-header-primary) !important;
+        color: #ffffff !important;
+        border-color: var(--modal-header-primary) !important;
+    }
+    
+    #report-designs-modal .btn-outline-primary,
+    #scheduling-modal .btn-outline-primary {
+        border-color: var(--modal-header-accent) !important;
+        color: var(--modal-header-secondary) !important;
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    #report-designs-modal .btn-outline-primary:hover,
+    #scheduling-modal .btn-outline-primary:hover {
+        background: var(--modal-header-accent) !important;
+        color: #ffffff !important;
+        border-color: var(--modal-header-accent) !important;
     }
     
     #report-designs-modal .report-tree-container,
     #scheduling-modal .report-tree-container {
-        min-height: 300px !important;
-        padding: 12px !important;
-        background: #f8f9fa !important;
-        border-radius: 8px !important;
-        border: 1px solid #e9ecef !important;
+        min-height: 280px !important;
+        padding: 16px !important;
+        background: #ffffff !important;
+        border-radius: 12px !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05) !important;
     }
     
     #report-designs-modal .search-box,
     #scheduling-modal .search-box {
         margin-bottom: 16px !important;
+    }
+    
+    #report-designs-modal .search-box .input-group,
+    #scheduling-modal .search-box .input-group {
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    #report-designs-modal .search-box .form-control,
+    #scheduling-modal .search-box .form-control {
+        border: 1px solid #e5e7eb !important;
+        border-left: none !important;
+        padding: 10px 14px !important;
+    }
+    
+    #report-designs-modal .search-box .form-control:focus,
+    #scheduling-modal .search-box .form-control:focus {
+        border-color: var(--modal-header-accent) !important;
+        box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15) !important;
+    }
+    
+    #report-designs-modal .search-box .input-group-text,
+    #scheduling-modal .search-box .input-group-text {
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-right: none !important;
+        color: #6b7280 !important;
     }
     
     /* Responsive - Scoped to report modals only */

@@ -399,6 +399,11 @@ function preProcessFormula(formula, elem, bReport) {
 }
 
 function getControlContainer(fieldName) {
+	// اول از data-id استفاده کن که container کامل فیلد است
+	var $dataIdContainer = $('[data-id="' + fieldName + '"]');
+	if ($dataIdContainer.length) {
+		return $dataIdContainer;
+	}
 	return getSpecifierContainer("name=\"" + fieldName + "\"");
 }
 
@@ -1330,9 +1335,51 @@ function instantiatePlugins() {
 	AddClearBeneficiary.instantiate();
 }
 
+// Select2 Change Handler - برای اجرای ShowHide و سایر UI Rules
+// این handler لازم است چون Select2 از jQuery events استفاده می‌کند و onchange attribute DOM با آن کار نمی‌کند
+var Select2ChangeHandler = function() {
+	var initializeChangeHandlers = function() {
+		// برای همه select ها که onchange attribute دارند
+		$(document).on('change', 'select[onchange]', function(e) {
+			// اگر از طریق Select2 trigger شده، اجازه بده handler اجرا شود
+			var $select = $(this);
+			var onchangeAttr = $select.attr('onchange');
+			
+			console.log('[Select2ChangeHandler] Change detected on:', $select.attr('name'), 'onchange:', onchangeAttr);
+			
+			// اگر onchange شامل inputChanged است، آن را فراخوانی کن
+			if (onchangeAttr && onchangeAttr.indexOf('inputChanged') !== -1) {
+				try {
+					// استخراج پارامترها از onchange attribute
+					var match = onchangeAttr.match(/inputChanged\(this,\s*'([^']*)',\s*'([^']*)'\)/);
+					if (match) {
+						var source = match[1];
+						var scope = match[2];
+						console.log('[Select2ChangeHandler] Calling inputChanged with source:', source, 'scope:', scope);
+						
+						// فراخوانی تابع inputChanged
+						if (typeof inputChanged === 'function') {
+							inputChanged(this, source, scope);
+						}
+					}
+				} catch (ex) {
+					console.error('[Select2ChangeHandler] Error executing onchange:', ex);
+				}
+			}
+		});
+		
+		console.log('[Select2ChangeHandler] Initialized');
+	};
+	
+	return {
+		initialize: initializeChangeHandlers
+	};
+}();
+
 $(function() {
 	initializePluginsDefaults();
 	instantiatePlugins();
+	Select2ChangeHandler.initialize();
 	$('[nodatamandatory]').prop('selectedIndex', -1);
 	$('[nodatamandatory]').trigger('change');
 	$('form').trigger('reinitialize.areYouSure');

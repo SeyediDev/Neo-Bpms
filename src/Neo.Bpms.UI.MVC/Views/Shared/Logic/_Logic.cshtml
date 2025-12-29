@@ -8,9 +8,16 @@
 
 @{
     var __parentIds = ViewBag.__parentIds ?? 0;
+    var uiRulesCount = Model?.Logic?.Logics?.Count ?? 0;
+    var uiRulesSources = Model?.Logic?.Logics != null 
+        ? string.Join(",", Model.Logic.Logics.Select(l => l.TriggeringEvent?.Source ?? "null").Distinct())
+        : "none";
 
     <script>
         window.top.logicParentIds = '@__parentIds';
+        
+        // Debug: UI Rules count = @uiRulesCount, Sources = @uiRulesSources
+        console.log('[_Logic.cshtml] UI Rules count:', @uiRulesCount, 'Sources:', '@uiRulesSources');
 
         function pageLoaded(This) {
             @{
@@ -29,6 +36,7 @@
         }
 
         function inputChanged(This, source, scope) {
+            console.log('[inputChanged] source:', source, 'scope:', scope);
             $(This).removeAttr("initvalue");
             @{
             var ChangeStr = formLogicHelper.HtmlLogicController(Model, "onUserChange");

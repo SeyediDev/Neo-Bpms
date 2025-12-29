@@ -57,7 +57,8 @@
                 break;
             case PluginInclude.TableModalLinks:
             {
-                @* Include BootstrapDialog dependencies for modal functionality *@
+                @* Include Bootstrap and BootstrapDialog dependencies for modal functionality *@
+                <link href="~/Content/common-assets-includes/common-plugins/global/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>
                 <link href="~/Content/common-assets-includes/common-plugins/global/bootstrap-dialog/bootstrap-dialog.css" rel="stylesheet" type="text/css"/>
                 <script src="@CommonBundles.OpenDrillDownJsBundle" asp-append-version="true"></script>
                 <script src="~/Scripts/common-assets-includes/features/form/TableModalLinks.js" asp-append-version="true"></script>

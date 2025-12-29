@@ -26,14 +26,15 @@ public class TableHelper
         switch (cellInfo.FieldType)
         {
             case TVariableTypes.Double:
+            case TVariableTypes.Decimal:
                 try
                 {
                     if (value is DateTime)
                         goto case TVariableTypes.DateTime;
-                    if (double.TryParse(value?.ToString(), out double v))
+                    if (decimal.TryParse(value?.ToString(), out decimal v))
                     {
                         // Check if it's essentially a whole number
-                        if (Math.Abs(v - Math.Floor(v)) < .0001)
+                        if (v == Math.Floor(v))
                         {
                             str = $"{v:n0}";
                         }
@@ -60,6 +61,25 @@ public class TableHelper
                     str = value?.ToString();
                 }
 
+                break;
+            case TVariableTypes.Int:
+            case TVariableTypes.Long:
+            case TVariableTypes.Short:
+                try
+                {
+                    if (long.TryParse(value?.ToString(), out long intVal))
+                    {
+                        str = $"{intVal:n0}";
+                    }
+                    else
+                    {
+                        str = value?.ToString();
+                    }
+                }
+                catch
+                {
+                    str = value?.ToString();
+                }
                 break;
             case TVariableTypes.BOOL:
                 str = CreateBoolElement(cellInfo, value);

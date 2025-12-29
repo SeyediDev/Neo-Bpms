@@ -312,11 +312,27 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         switch (cellType)
         {
             case TVariableTypes.Double:
+            case TVariableTypes.Decimal:
                 try
                 {
-                    if (double.TryParse(value?.ToString(), out double v))
+                    if (decimal.TryParse(value?.ToString(), out decimal v))
                     {
-                        str = Math.Abs(v - Math.Floor(v)) < .001 ? $"{v:n0}" : $"{v:n2}";
+                        if (v == Math.Floor(v))
+                        {
+                            str = $"{v:n0}";
+                        }
+                        else
+                        {
+                            // Format with enough decimal places, then remove trailing zeros
+                            var culture = System.Globalization.CultureInfo.CurrentCulture;
+                            str = v.ToString("N10", culture);
+                            // Remove trailing zeros after decimal point (culture-aware)
+                            var decimalSeparator = culture.NumberFormat.NumberDecimalSeparator;
+                            if (str.ToString().Contains(decimalSeparator))
+                            {
+                                str = str.ToString().TrimEnd('0').TrimEnd(decimalSeparator.ToCharArray());
+                            }
+                        }
                     }
                     else
                     {
@@ -328,6 +344,25 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
                     str = value?.ToString();
                 }
 
+                break;
+            case TVariableTypes.Int:
+            case TVariableTypes.Long:
+            case TVariableTypes.Short:
+                try
+                {
+                    if (long.TryParse(value?.ToString(), out long intVal))
+                    {
+                        str = $"{intVal:n0}";
+                    }
+                    else
+                    {
+                        str = value?.ToString();
+                    }
+                }
+                catch
+                {
+                    str = value?.ToString();
+                }
                 break;
             case TVariableTypes.BOOL:
                 break;

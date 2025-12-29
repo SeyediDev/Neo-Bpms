@@ -62,15 +62,17 @@ public class ContainersControls(
         IEnumerable<InputFieldDefinition> data = Structure.Fields.Where(f => f.parentControlId == Field.FieldName &&
                                                                         f.ControlType == eControlTypeId.MultiTabItem);
         string isOneTab = data.Count() == 1 ? "d-none" : string.Empty;
-        stringBuilder.Append($"<ul class=\"nav nav-tabs  {isOneTab}  \" >");
+        stringBuilder.Append($"<ul class=\"nav nav-tabs {isOneTab}\" role=\"tablist\">");
         bool firstUlIteration = true;
         foreach (InputFieldDefinition tab in data)
         {
             string tabTitle = tab.Alias;
             string tabIcon = GetEntityIcon(tab.NamespaceId, tab.EntityId);
             string iconHtml = !string.IsNullOrEmpty(tabIcon) ? $"<i class=\"{tabIcon}\"></i> " : "";
-            stringBuilder.Append($"<li id=\"{tab.FieldName}\" class=\"{(firstUlIteration ? "active" : "")} nav-item\"><a class=\"nav-link {(firstUlIteration ? "active" : "")}\" data-toggle=\"tab\" " +
-                                  $"href=\"#tabcontent-{tab.FieldName}\">{iconHtml}{tabTitle}</a></li>");
+            // Bootstrap 4: active فقط روی nav-link باشد، نه روی nav-item
+            stringBuilder.Append($"<li id=\"{tab.FieldName}\" class=\"nav-item\">" +
+                                 $"<a class=\"nav-link {(firstUlIteration ? "active" : "")}\" data-toggle=\"tab\" " +
+                                 $"href=\"#tabcontent-{tab.FieldName}\">{iconHtml}{tabTitle}</a></li>");
             firstUlIteration = false;
         }
 
@@ -81,8 +83,11 @@ public class ContainersControls(
         foreach (InputFieldDefinition tab in Structure.Fields.Where(f =>
             f.parentControlId == Field.FieldName && f.ControlType == eControlTypeId.MultiTabItem))
         {
+            // Bootstrap 4: استفاده از active برای تب فعال
             stringBuilder.Append(
-                $"<div data-id=\"{tab.FieldName}\" id=\"tabcontent-{tab.FieldName}\" class=\"sortable-container tab-pane {(firstContentIteration ? "active" : "")}\"><div class=\"row m-0\">");
+                $"<div data-id=\"{tab.FieldName}\" id=\"tabcontent-{tab.FieldName}\" " +
+                $"class=\"sortable-container tab-pane {(firstContentIteration ? "active" : "")}\">" +
+                $"<div class=\"row m-0\">");
             stringBuilder.Append(controlsRenderer.CreateControls(ControlsRendererData, tab.FieldName));
             stringBuilder.Append("</div></div>");
             firstContentIteration = false;

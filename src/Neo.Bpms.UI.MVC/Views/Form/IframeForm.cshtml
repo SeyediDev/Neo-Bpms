@@ -91,7 +91,16 @@
     @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
     {
             <text>
+        // نمایش پیام موفقیت
         window.top.toast.success('@ViewBag.SuccessMessage', '@structure.Name');
+        
+        // بستن مدال و رفرش صفحه والد - اگر داخل مدال هستیم
+        if (window.top && window.top.TableModalLinks && window.top.TableModalLinks.refreshAndClose) {
+            // با کمی تاخیر اجرا می‌شود تا toast نمایش داده شود
+            setTimeout(function() {
+                window.top.TableModalLinks.refreshAndClose();
+            }, 500);
+        }
             </text>
     }
 </script>
