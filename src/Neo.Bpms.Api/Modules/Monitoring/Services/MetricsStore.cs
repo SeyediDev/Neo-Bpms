@@ -221,33 +221,60 @@ public class MetricsStore : IMetricsStore
 
     public ApplicationMetrics GetApplicationMetrics()
     {
-        var totalStats = GetStats("request.total");
+        // Try custom metric names first, then fall back to ASP.NET Core built-in names
+        var totalStats = GetStats("request.total") 
+                      ?? GetStats("http.server.request.duration")
+                      ?? GetStats("http-server-request-duration");
+        
         var successStats = GetStats("request.success");
         var failureStats = GetStats("request.failure");
-        var durationStats = GetStats("request.duration");
-        var inflightStats = GetStats("request.inflights");
+        
+        var durationStats = GetStats("request.duration") 
+                         ?? GetStats("http.server.request.duration")
+                         ?? GetStats("http-server-request-duration");
+        
+        var inflightStats = GetStats("request.inflights") 
+                         ?? GetStats("http.server.active_requests")
+                         ?? GetStats("http-server-active-requests")
+                         ?? GetStats("kestrel.current_connections")
+                         ?? GetStats("kestrel-current-connections");
 
-        var total = (long)(totalStats?.SumValue ?? 0);
-        var success = (long)(successStats?.SumValue ?? 0);
+        var total = (long)(totalStats?.Count ?? 0);
+        var success = (long)(successStats?.SumValue ?? total); // Assume all successful if no failure tracking
         var failure = (long)(failureStats?.SumValue ?? 0);
 
         // Calculate requests per second (last minute)
         var oneMinuteAgo = DateTime.UtcNow.AddMinutes(-1);
-        var recentRequests = Query(new MetricsQueryRequest
+        var recentCount = 0;
+        
+        // Try different metric names for recent request count
+        foreach (var metricName in new[] { "request.total", "http.server.request.duration", "http-server-request-duration" })
         {
-            MetricName = "request.total",
-            From = oneMinuteAgo
-        }).Count();
+            var requests = Query(new MetricsQueryRequest
+            {
+                MetricName = metricName,
+                From = oneMinuteAgo
+            });
+            recentCount = requests.Count();
+            if (recentCount > 0) break;
+        }
+
+        // Calculate success rate - if we have duration data but no explicit success/failure tracking
+        var successRate = 100.0;
+        if (total > 0 && failure > 0)
+        {
+            successRate = (double)(total - failure) / total * 100;
+        }
 
         return new ApplicationMetrics
         {
             TotalRequests = total,
             SuccessfulRequests = success,
             FailedRequests = failure,
-            SuccessRate = total > 0 ? (double)success / total * 100 : 100,
+            SuccessRate = successRate,
             AverageResponseTimeMs = durationStats?.AvgValue ?? 0,
-            ActiveRequests = (int)(inflightStats?.CurrentValue ?? 0),
-            RequestsPerSecond = recentRequests / 60.0
+            ActiveRequests = (int)(inflightStats?.CurrentValue ?? inflightStats?.Count ?? 0),
+            RequestsPerSecond = recentCount / 60.0
         };
     }
 

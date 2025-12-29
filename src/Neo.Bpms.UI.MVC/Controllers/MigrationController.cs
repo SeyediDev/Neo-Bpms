@@ -18,7 +18,7 @@ public class MigrationController : ControllerBaseMVC
         return View(optionsModel);
     }
 
-    private void CheckAccess()
+    private static void CheckAccess()
     {
         return;
         /*Domain.Entities.Security.Authentication.IdentityUser user = GetUser();
@@ -130,7 +130,7 @@ public class MigrationActionsController(MigrationSingleton migrationManager)
         return Json(new { Messages = messages, migrationManager.IsBusy });
     }
 
-    private void CheckAccess()
+    private static void CheckAccess()
     {
         return;
         /*Domain.Entities.Security.Authentication.IdentityUser user = GetUser();

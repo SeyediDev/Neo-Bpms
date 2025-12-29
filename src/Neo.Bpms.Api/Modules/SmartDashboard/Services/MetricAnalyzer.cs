@@ -120,12 +120,16 @@ public class MetricAnalyzer : IMetricAnalyzer
 
     public async Task<IEnumerable<AnalyzedMetric>> AnalyzeAllMetricsAsync(CancellationToken cancellationToken = default)
     {
-        var metrics = _metricsStore.GetAllMetrics();
+        var metricDefinitions = _metricsStore.GetMetricDefinitions();
         var analyzedMetrics = new List<AnalyzedMetric>();
 
-        foreach (var metric in metrics)
+        foreach (var metricDef in metricDefinitions)
         {
-            var analyzed = AnalyzeMetricInternal(metric.Name, metric.Unit, metric.Value);
+            // Get latest value from time series
+            var timeSeries = _metricsStore.GetTimeSeries(metricDef.Name, DateTime.UtcNow.AddMinutes(-5), DateTime.UtcNow);
+            var latestValue = timeSeries.DataPoints.LastOrDefault()?.Value ?? 0;
+            
+            var analyzed = AnalyzeMetricInternal(metricDef.Name, metricDef.Unit, latestValue);
             if (analyzed != null)
             {
                 analyzedMetrics.Add(analyzed);
@@ -138,13 +142,16 @@ public class MetricAnalyzer : IMetricAnalyzer
 
     public async Task<AnalyzedMetric?> AnalyzeMetricAsync(string metricName, CancellationToken cancellationToken = default)
     {
-        var metrics = _metricsStore.GetAllMetrics();
-        var metric = metrics.FirstOrDefault(m => m.Name.Equals(metricName, StringComparison.OrdinalIgnoreCase));
+        var metricDef = _metricsStore.GetMetricDefinition(metricName);
         
-        if (metric == null)
+        if (metricDef == null)
             return null;
 
-        return AnalyzeMetricInternal(metric.Name, metric.Unit, metric.Value);
+        // Get latest value from time series
+        var timeSeries = _metricsStore.GetTimeSeries(metricDef.Name, DateTime.UtcNow.AddMinutes(-5), DateTime.UtcNow);
+        var latestValue = timeSeries.DataPoints.LastOrDefault()?.Value ?? 0;
+
+        return AnalyzeMetricInternal(metricDef.Name, metricDef.Unit, latestValue);
     }
 
     private AnalyzedMetric AnalyzeMetricInternal(string name, string? unit, double value)

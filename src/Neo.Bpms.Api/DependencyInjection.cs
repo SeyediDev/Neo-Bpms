@@ -1,5 +1,6 @@
 using Neo.Bpms.Api.Modules.Monitoring.Hubs;
 using Neo.Bpms.Api.Modules.Monitoring.Services;
+using Neo.Bpms.Api.Modules.SmartDashboard.Services;
 using Neo.Bpms.Api.Modules.Version;
 
 namespace Neo.Bpms.Api;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         if (options.EnableMonitoring)
         {
             AddMonitoringServices(services);
+            AddSmartDashboardServices(services);
         }
 
         // Register SignalR
@@ -54,6 +56,9 @@ public static class DependencyInjection
     {
         options ??= endpoints.ServiceProvider.GetService<NeoBpmsApiOptions>() ?? new NeoBpmsApiOptions();
 
+        // Map API controllers from this assembly
+        endpoints.MapControllers();
+
         // Map monitoring hub
         if (options.EnableMonitoring)
         {
@@ -76,9 +81,21 @@ public static class DependencyInjection
         services.AddHostedService<MonitoringCleanupService>();
         services.AddHostedService<MonitoringBroadcaster>();
         
+        // Register system metrics publisher (built-in metrics)
+        services.AddHostedService<SystemMetricsPublisher>();
+        
         // Register Serilog monitoring service
         // This adds MonitoringSerilogSink to capture logs
         services.AddHostedService<SerilogMonitoringService>();
+    }
+
+    private static void AddSmartDashboardServices(IServiceCollection services)
+    {
+        // Register Smart Dashboard services
+        services.AddSingleton<IMetricAnalyzer, MetricAnalyzer>();
+        services.AddSingleton<IWidgetRecommender, WidgetRecommender>();
+        services.AddSingleton<ILayoutEngine, LayoutEngine>();
+        services.AddSingleton<ISmartDashboardGenerator, SmartDashboardGenerator>();
     }
 }
 

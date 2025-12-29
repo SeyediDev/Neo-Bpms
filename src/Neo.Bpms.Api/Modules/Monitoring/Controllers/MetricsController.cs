@@ -94,5 +94,28 @@ public class MetricsController : ControllerBase
     {
         return Ok(_store.GetApplicationMetrics());
     }
+
+    /// <summary>
+    /// Get all collected metrics with current values - useful for debugging
+    /// </summary>
+    [HttpGet("all")]
+    public ActionResult<object> GetAllMetrics()
+    {
+        var definitions = _store.GetMetricDefinitions().ToList();
+        var result = definitions.Select(d => new 
+        {
+            Name = d.Name,
+            Type = d.Type,
+            Unit = d.Unit,
+            Description = d.Description,
+            Stats = _store.GetStats(d.Name)
+        }).OrderByDescending(m => m.Stats?.Count ?? 0).ToList();
+        
+        return Ok(new 
+        { 
+            TotalMetrics = result.Count,
+            Metrics = result 
+        });
+    }
 }
 

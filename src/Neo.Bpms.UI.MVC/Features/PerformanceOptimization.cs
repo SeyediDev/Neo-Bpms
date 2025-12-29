@@ -1,14 +1,86 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System.IO.Compression;
+using System.Linq;
 
 namespace Neo.Bpms.UI.MVC.Features;
 
 public static class PerformanceOptimization
 {
+    /// <summary>
+    /// Adds performance optimizations (response compression) with environment from service provider
+    /// Note: IWebHostEnvironment must be registered in services before calling this method
+    /// </summary>
     public static IServiceCollection AddPerformanceOptimizations(this IServiceCollection services)
+    {
+        // Add response compression first
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+
+        // Configure compression options based on environment using IWebHostEnvironment
+        services.AddOptions<ResponseCompressionOptions>()
+            .Configure<IWebHostEnvironment>((options, env) =>
+            {
+                // Base MIME types from defaults
+                var mimeTypes = ResponseCompressionDefaults.MimeTypes.ToList();
+                
+                // Add additional MIME types
+                mimeTypes.AddRange([
+                    "text/css",
+                    "application/javascript",
+                    "application/json",
+                    "application/xml",
+                    "text/xml",
+                    "text/plain",
+                    "text/json",
+                    "image/svg+xml",
+                    "application/font-woff",
+                    "application/font-woff2",
+                    "font/woff",
+                    "font/woff2"
+                ]);
+                
+                // Exclude HTML from compression in development to allow browser refresh script injection
+                if (env.IsDevelopment())
+                {
+                    mimeTypes.Remove("text/html");
+                }
+                else
+                {
+                    if (!mimeTypes.Contains("text/html"))
+                    {
+                        mimeTypes.Add("text/html");
+                    }
+                }
+                
+                options.MimeTypes = mimeTypes;
+            });
+
+        services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Optimal;
+        });
+
+        services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Optimal;
+        });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds performance optimizations (response compression) with explicit environment
+    /// </summary>
+    public static IServiceCollection AddPerformanceOptimizations(this IServiceCollection services, IHostEnvironment environment)
     {
         // Response Compression (Gzip & Brotli)
         services.AddResponseCompression(options =>
@@ -16,13 +88,16 @@ public static class PerformanceOptimization
             options.EnableForHttps = true;
             options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
-            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-            [
+            
+            // Base MIME types from defaults
+            var mimeTypes = ResponseCompressionDefaults.MimeTypes.ToList();
+            
+            // Add additional MIME types
+            mimeTypes.AddRange([
                 "text/css",
                 "application/javascript",
                 "application/json",
                 "application/xml",
-                "text/html",
                 "text/xml",
                 "text/plain",
                 "text/json",
@@ -32,6 +107,24 @@ public static class PerformanceOptimization
                 "font/woff",
                 "font/woff2"
             ]);
+            
+            // Exclude HTML from compression in development to allow browser refresh script injection
+            // In production, HTML can be compressed for better performance
+            if (environment.IsDevelopment())
+            {
+                // Remove text/html from compression in development
+                mimeTypes.Remove("text/html");
+            }
+            else
+            {
+                // Include text/html in production
+                if (!mimeTypes.Contains("text/html"))
+                {
+                    mimeTypes.Add("text/html");
+                }
+            }
+            
+            options.MimeTypes = mimeTypes;
         });
 
         services.Configure<BrotliCompressionProviderOptions>(options =>

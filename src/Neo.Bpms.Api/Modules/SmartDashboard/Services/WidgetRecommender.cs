@@ -225,24 +225,24 @@ public class WidgetRecommender : IWidgetRecommender
         }
 
         var thresholds = new ThresholdConfiguration();
-        var lowerName = metric.Name.ToLowerInvariant();
+        var metricLowerName = metric.Name.ToLowerInvariant();
 
         // CPU/Memory - high is bad
-        if (lowerName.Contains("cpu") || lowerName.Contains("memory") || lowerName.Contains("disk"))
+        if (metricLowerName.Contains("cpu") || metricLowerName.Contains("memory") || metricLowerName.Contains("disk"))
         {
             thresholds.WarningThreshold = 70;
             thresholds.CriticalThreshold = 90;
             thresholds.InvertThresholds = false;
         }
         // Error rate - any is bad
-        else if (lowerName.Contains("error"))
+        else if (metricLowerName.Contains("error"))
         {
             thresholds.WarningThreshold = 1;
             thresholds.CriticalThreshold = 5;
             thresholds.InvertThresholds = false;
         }
         // Success rate - low is bad
-        else if (lowerName.Contains("success"))
+        else if (metricLowerName.Contains("success"))
         {
             thresholds.WarningThreshold = 99;
             thresholds.CriticalThreshold = 95;
