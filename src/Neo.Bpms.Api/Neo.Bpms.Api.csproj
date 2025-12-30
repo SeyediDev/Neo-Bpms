@@ -31,6 +31,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
+    <ProjectReference Include="..\Neo.Bpms.Infrastructure\Neo.Bpms.Infrastructure.csproj" />
+    <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />
+    <ProjectReference Include="..\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj" />
   </ItemGroup>
 
 </Project>

@@ -65,7 +65,7 @@ public class DataModelService : IDataModelService
                     
                     if (!string.IsNullOrEmpty(column))
                     {
-                        result.Rows = result.Rows.OrderBy(row =>
+                        var orderedRows = result.Rows.OrderBy(row =>
                         {
                             var value = row.Values.GetValueOrDefault(column);
                             return value;
@@ -73,8 +73,10 @@ public class DataModelService : IDataModelService
 
                         if (direction == "desc")
                         {
-                            result.Rows = result.Rows.Reverse().ToList();
+                            orderedRows.Reverse();
                         }
+                        
+                        result.Rows = orderedRows;
                     }
                 }
                 break;

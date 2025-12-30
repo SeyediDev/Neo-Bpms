@@ -72,3 +72,30 @@ public class GridConfigResponse
     public bool EnableFiltering { get; set; } = true;
 }
 
+public class ExcelExportRequest
+{
+    public List<FilterCondition>? Filters { get; set; }
+    public SortOption? SortBy { get; set; }
+    public List<string>? Columns { get; set; }
+}
+
+public class FilterCondition
+{
+    public string ColumnId { get; set; } = string.Empty;
+    public string Operator { get; set; } = "equals";
+    public object? Value { get; set; }
+}
+
+public class SortOption
+{
+    public string Column { get; set; } = string.Empty;
+    public string Direction { get; set; } = "asc";
+}
+
+public class ExcelImportResponse
+{
+    public bool Success { get; set; }
+    public int Imported { get; set; }
+    public List<string>? Errors { get; set; }
+}
+

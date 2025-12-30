@@ -122,5 +122,45 @@ export class GridApiClient {
   getCircuitState() {
     return this.circuitBreaker.getState();
   }
+
+  /**
+   * Export grid data to Excel
+   */
+  async exportExcel(endpoint: string, options: {
+    filters?: any[];
+    sortBy?: { column: string; direction: string } | null;
+    columns?: string[];
+  }): Promise<Blob> {
+    return this.circuitBreaker.execute(async () => {
+      const response = await this.client.post(
+        `${endpoint}/export-excel`,
+        options,
+        { responseType: 'blob' }
+      );
+      return response.data;
+    });
+  }
+
+  /**
+   * Import data from Excel
+   */
+  async importExcel(endpoint: string, formData: FormData): Promise<{
+    success: boolean;
+    imported: number;
+    errors?: string[];
+  }> {
+    return this.circuitBreaker.execute(async () => {
+      const response = await this.client.post(
+        `${endpoint}/import-excel`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data;
+    });
+  }
 }
 
