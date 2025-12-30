@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" />
     <PackageReference Include="MinVer" PrivateAssets="All" />
     <PackageReference Include="Serilog" />
