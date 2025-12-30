@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Asp.Versioning.Routing;
+using Microsoft.Extensions.Hosting;
 
 namespace Neo.Bpms.UI.MVC;
 
@@ -117,11 +118,16 @@ public static class DependencyInjection
     {
         options ??= new BpmsMVCConfigurationOptions();
         
+        // Get environment to check if we're in development mode
+        var environment = app.ApplicationServices.GetService<Microsoft.Extensions.Hosting.IHostEnvironment>();
+        var isDevelopment = environment?.IsDevelopment() ?? false;
+        
         _ = app.UseXXssProtection(xssProtectionOptions => xssProtectionOptions.EnabledWithBlockMode());
         _ = app.UseXContentTypeOptions();
         _ = app.UseXfo(xfoOptions => xfoOptions.SameOrigin());
-        _ = app.UseCsp(cspOptions => cspOptions
-                .DefaultSources(s => s.Self())
+        _ = app.UseCsp(cspOptions =>
+        {
+            cspOptions.DefaultSources(s => s.Self())
                 .StyleSources(s => s.Self()
                     .UnsafeInline()
                 )
@@ -132,7 +138,16 @@ public static class DependencyInjection
                 )
                 .FontSources(s => s.Self()
                     .CustomSources("data:", "https://cdn.jsdelivr.net"))
-                .ImageSources(s => s.Self().CustomSources("data:")));
+                .ImageSources(s => s.Self().CustomSources("data:"));
+            
+            // Allow WebSocket connections in development mode for browser refresh
+            // Note: CSP doesn't support port wildcards, but allowing the host should allow any port
+            if (isDevelopment)
+            {
+                cspOptions.ConnectSources(s => s.Self()
+                    .CustomSources("ws://localhost", "ws://127.0.0.1", "http://localhost", "http://127.0.0.1"));
+            }
+        });
         AddPermissionPolicyHeaderMiddleware(app);
 
         _ = app.UseRouting();

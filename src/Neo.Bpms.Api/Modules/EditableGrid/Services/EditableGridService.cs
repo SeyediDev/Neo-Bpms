@@ -280,6 +280,84 @@ public partial class EditableGridService : IEditableGridService
         return columns;
     }
 
+    private RowActionsConfig? ConvertRowActions(CommonFormStructure structure)
+    {
+        if (!structure.HasDetails && !structure.HasEdit && !structure.HasDelete && 
+            (structure.Subjects == null || structure.Subjects.Count == 0) &&
+            (structure.Fields == null || !structure.Fields.Any(f => f.ControlType == eControlTypeId.SpecificLinkColumn)))
+        {
+            return null;
+        }
+
+        var config = new RowActionsConfig
+        {
+            HasDetails = structure.HasDetails,
+            HasEdit = structure.HasEdit,
+            HasDelete = structure.HasDelete,
+            DetailFormId = structure.DetailFormId,
+            EditFormId = structure.EditFormId,
+            DeleteFormId = structure.DeleteFormId,
+            DetailAction = structure.DetailAction,
+            EditAction = structure.EditAction,
+        };
+
+        // Convert subject forms
+        if (structure.Subjects != null && structure.Subjects.Count > 0)
+        {
+            config.SubjectForms = structure.Subjects
+                .Where(s => s.HasEditForm || s.HasDetailsForm)
+                .Select(s => new SubjectFormLink
+                {
+                    Name = s.Name,
+                    Alias = s.Alias,
+                    HasEditForm = s.HasEditForm,
+                    HasDetailsForm = s.HasDetailsForm,
+                    EditFormId = s.EditFormId,
+                    DetailFormId = s.DetailFormId,
+                    EditAction = s.EditAction,
+                    DetailAction = s.DetailAction,
+                })
+                .ToList();
+        }
+
+        // Convert specific link columns
+        if (structure.Fields != null)
+        {
+            var specificLinks = structure.Fields
+                .Where(f => f.ControlType == eControlTypeId.SpecificLinkColumn && f.GetProperties() != null)
+                .Select(f =>
+                {
+                    var link = new SpecificLinkColumn
+                    {
+                        Label = f.Label ?? f.FieldName,
+                        LinkTarget = f.PropertyValue(eControlPropertyId.LinkTarget) ?? "",
+                        LinkParameters = new Dictionary<string, string>(),
+                    };
+
+                    // Extract link parameters
+                    foreach (var property in f.GetProperties(eControlPropertyId.LinkParameter))
+                    {
+                        var paramStr = property.Value?.ToString() ?? "";
+                        var parts = paramStr.Split('=');
+                        if (parts.Length == 2)
+                        {
+                            link.LinkParameters[parts[0]] = parts[1];
+                        }
+                    }
+
+                    return link;
+                })
+                .ToList();
+
+            if (specificLinks.Count > 0)
+            {
+                config.SpecificLinks = specificLinks;
+            }
+        }
+
+        return config;
+    }
+
     private string GetColumnType(InputFieldDefinition field)
     {
         return field.ControlType switch
@@ -678,6 +756,7 @@ public partial class EditableGridService : IEditableGridService
                             EnablePagination = true,
                             EnableSorting = true,
                             EnableFiltering = true,
+                            RowActions = ConvertRowActions(structure),
                         };
                         
                         _configCache[endpoint] = config;

@@ -11,6 +11,7 @@ export interface QueuedChange {
   timestamp: number;
   retryCount: number;
   status: 'pending' | 'saving' | 'saved' | 'error';
+  isNew?: boolean; // Indicates if this is a new row
 }
 
 export interface QueueConfig {

@@ -70,6 +70,40 @@ public class GridConfigResponse
     public bool EnablePagination { get; set; } = true;
     public bool EnableSorting { get; set; } = true;
     public bool EnableFiltering { get; set; } = true;
+    public RowActionsConfig? RowActions { get; set; }
+}
+
+public class RowActionsConfig
+{
+    public bool HasDetails { get; set; }
+    public bool HasEdit { get; set; }
+    public bool HasDelete { get; set; }
+    public string? DetailFormId { get; set; }
+    public string? EditFormId { get; set; }
+    public string? DeleteFormId { get; set; }
+    public string? DetailAction { get; set; }
+    public string? EditAction { get; set; }
+    public List<SubjectFormLink>? SubjectForms { get; set; }
+    public List<SpecificLinkColumn>? SpecificLinks { get; set; }
+}
+
+public class SubjectFormLink
+{
+    public string Name { get; set; } = string.Empty;
+    public string Alias { get; set; } = string.Empty;
+    public bool HasEditForm { get; set; }
+    public bool HasDetailsForm { get; set; }
+    public string? EditFormId { get; set; }
+    public string? DetailFormId { get; set; }
+    public string? EditAction { get; set; }
+    public string? DetailAction { get; set; }
+}
+
+public class SpecificLinkColumn
+{
+    public string Label { get; set; } = string.Empty;
+    public string LinkTarget { get; set; } = string.Empty;
+    public Dictionary<string, string>? LinkParameters { get; set; }
 }
 
 public class ExcelExportRequest

@@ -44,6 +44,16 @@ export const CellEditor: React.FC<CellEditorProps> = ({
     if (e.key === 'Enter' && column.type !== 'multiselect') {
       e.preventDefault();
       onBlur();
+      // After blur, trigger navigation to next row
+      if (onKeyDown) {
+        // Create a synthetic ArrowDown event
+        const syntheticEvent = {
+          ...e,
+          key: 'ArrowDown',
+          preventDefault: () => {},
+        } as React.KeyboardEvent;
+        setTimeout(() => onKeyDown(syntheticEvent), 50);
+      }
     } else if (e.key === 'Escape') {
       e.preventDefault();
       onBlur();

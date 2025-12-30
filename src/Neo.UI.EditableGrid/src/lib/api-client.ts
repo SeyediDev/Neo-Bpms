@@ -28,6 +28,36 @@ export interface GridRow {
   [key: string]: any;
 }
 
+export interface RowActionsConfig {
+  hasDetails?: boolean;
+  hasEdit?: boolean;
+  hasDelete?: boolean;
+  detailFormId?: string;
+  editFormId?: string;
+  deleteFormId?: string;
+  detailAction?: string;
+  editAction?: string;
+  subjectForms?: SubjectFormLink[];
+  specificLinks?: SpecificLinkColumn[];
+}
+
+export interface SubjectFormLink {
+  name: string;
+  alias: string;
+  hasEditForm: boolean;
+  hasDetailsForm: boolean;
+  editFormId?: string;
+  detailFormId?: string;
+  editAction?: string;
+  detailAction?: string;
+}
+
+export interface SpecificLinkColumn {
+  label: string;
+  linkTarget: string;
+  linkParameters?: Record<string, string>;
+}
+
 export interface BatchUpdateRequest {
   changes: Array<{
     rowId: string | number;
@@ -82,7 +112,17 @@ export class GridApiClient {
    */
   async getData(endpoint: string, params?: any): Promise<GridData> {
     return this.circuitBreaker.execute(async () => {
-      const response = await this.client.get(endpoint, { params });
+      const response = await this.client.get(`/${endpoint}`, { params });
+      return response.data;
+    });
+  }
+
+  /**
+   * Get grid configuration (columns, types, etc.)
+   */
+  async getConfig(endpoint: string): Promise<{ columns: GridColumn[]; rowActions?: RowActionsConfig }> {
+    return this.circuitBreaker.execute(async () => {
+      const response = await this.client.get(`/${endpoint}/config`);
       return response.data;
     });
   }
@@ -103,7 +143,7 @@ export class GridApiClient {
         })),
       };
 
-      const response = await this.client.post(`${endpoint}/batch-update`, request);
+      const response = await this.client.post(`/${endpoint}/batch-update`, request);
       return response.data;
     });
   }
@@ -130,10 +170,12 @@ export class GridApiClient {
     filters?: any[];
     sortBy?: { column: string; direction: string } | null;
     columns?: string[];
+    page?: number;
+    pageSize?: number;
   }): Promise<Blob> {
     return this.circuitBreaker.execute(async () => {
       const response = await this.client.post(
-        `${endpoint}/export-excel`,
+        `/${endpoint}/export-excel`,
         options,
         { responseType: 'blob' }
       );
@@ -151,7 +193,7 @@ export class GridApiClient {
   }> {
     return this.circuitBreaker.execute(async () => {
       const response = await this.client.post(
-        `${endpoint}/import-excel`,
+        `/${endpoint}/import-excel`,
         formData,
         {
           headers: {
