@@ -1,45 +1,38 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
-  },
+  plugins: [
+    react(),
+    dts({
+      insertTypesEntry: true,
+    }),
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'NeoAdminPanelCore',
-      formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'js'}`,
+      formats: ['es'],
+      fileName: 'index',
     },
     rollupOptions: {
-      external: [
-        'react',
-        'react-dom',
-        'react-router-dom',
-        '@reduxjs/toolkit',
-        'react-redux',
-        '@tanstack/react-query',
-        'axios',
-      ],
+      external: ['react', 'react-dom', 'react-router-dom', 'react-redux'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           'react-router-dom': 'ReactRouterDOM',
-          '@reduxjs/toolkit': 'RTK',
           'react-redux': 'ReactRedux',
-          '@tanstack/react-query': 'ReactQuery',
-          axios: 'axios',
         },
       },
     },
-    sourcemap: true,
-    minify: 'esbuild',
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
   },
 });
 

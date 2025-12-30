@@ -1,19 +1,44 @@
 /**
  * Neo BPMS Admin Panel Core
  * 
- * Reusable SPA Infrastructure for Admin Panels
- * 
- * @package @neo/admin-panel-core
- * @version 1.0.0
+ * Reusable infrastructure for Neo Admin Panel SPA
  */
 
+// ==================== Components ====================
+export * from './components';
+
+// Layout components (re-exported for convenience)
+export { 
+  Sidebar, 
+  Header, 
+  AdminLayout 
+} from './components/layout';
+
+export type { 
+  SidebarProps, 
+  MenuItem,
+  HeaderProps,
+  Breadcrumb,
+  Notification,
+  UserInfo,
+  AdminLayoutProps
+} from './components/layout';
+
+// ==================== Pages ====================
+export * from './pages';
+
+// ==================== Router ====================
+export * from './router';
+
 // ==================== Auth ====================
-export * from './auth';
+export { AuthProvider, useAuthContext } from './auth/AuthProvider';
+export { useAuth } from './auth/useAuth';
+export { ProtectedRoute } from './auth/ProtectedRoute';
 
 // ==================== API ====================
-export * from './api';
+export { apiClient, ApiClient } from './api/apiClient';
 
-// ==================== State Management ====================
+// ==================== State ====================
 export * from './state';
 
 // ==================== Hooks ====================
@@ -25,12 +50,5 @@ export * from './types';
 // ==================== Config ====================
 export * from './config';
 
-// ==================== Utils ====================
-export * from './utils';
-
-// ==================== Layout ====================
-export * from './layout';
-
-// ==================== Components (will be added) ====================
-// export * from './components';
-
+// ==================== Features ====================
+export * from './features';

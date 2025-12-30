@@ -1,0 +1,41 @@
+{
+  "name": "@neo/ui-editable-grid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Neo BPMS Editable Grid - Google Sheets-like Micro-Frontend",
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start -p 3002",
+    "lint": "next lint",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "next": "^14.2.21",
+    "@tanstack/react-table": "^8.20.5",
+    "axios": "^1.7.9",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "date-fns-jalali": "^4.1.0-0",
+    "react-datepicker": "^7.3.0",
+    "react-select": "^5.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "@types/react-datepicker": "^4.19.4",
+    "typescript": "^5.7.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.21"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

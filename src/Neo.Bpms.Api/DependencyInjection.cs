@@ -1,6 +1,8 @@
 using Neo.Bpms.Api.Modules.Monitoring.Hubs;
 using Neo.Bpms.Api.Modules.Monitoring.Services;
 using Neo.Bpms.Api.Modules.SmartDashboard.Services;
+using Neo.Bpms.Api.Modules.EditableGrid;
+using Neo.Bpms.Api.Modules.PowerBIDashboard;
 using Neo.Bpms.Api.Modules.Version;
 
 namespace Neo.Bpms.Api;
@@ -33,6 +35,12 @@ public static class DependencyInjection
             AddMonitoringServices(services);
             AddSmartDashboardServices(services);
         }
+
+        // Register editable grid module
+        services.AddEditableGridModule();
+
+        // Register PowerBI-like dashboard module
+        services.AddPowerBIDashboardModule();
 
         // Register SignalR
         services.AddSignalR();

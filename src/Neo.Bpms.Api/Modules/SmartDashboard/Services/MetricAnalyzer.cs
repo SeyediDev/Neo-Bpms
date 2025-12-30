@@ -118,7 +118,7 @@ public class MetricAnalyzer : IMetricAnalyzer
         _metricsStore = metricsStore;
     }
 
-    public async Task<IEnumerable<AnalyzedMetric>> AnalyzeAllMetricsAsync(CancellationToken cancellationToken = default)
+    public Task<IEnumerable<AnalyzedMetric>> AnalyzeAllMetricsAsync(CancellationToken cancellationToken = default)
     {
         var metricDefinitions = _metricsStore.GetMetricDefinitions();
         var analyzedMetrics = new List<AnalyzedMetric>();
@@ -137,21 +137,22 @@ public class MetricAnalyzer : IMetricAnalyzer
         }
 
         // Sort by priority descending
-        return analyzedMetrics.OrderByDescending(m => m.Priority);
+        IEnumerable<AnalyzedMetric> result = analyzedMetrics.OrderByDescending(m => m.Priority);
+        return Task.FromResult(result);
     }
 
-    public async Task<AnalyzedMetric?> AnalyzeMetricAsync(string metricName, CancellationToken cancellationToken = default)
+    public Task<AnalyzedMetric?> AnalyzeMetricAsync(string metricName, CancellationToken cancellationToken = default)
     {
         var metricDef = _metricsStore.GetMetricDefinition(metricName);
         
         if (metricDef == null)
-            return null;
+            return Task.FromResult<AnalyzedMetric?>(null);
 
         // Get latest value from time series
         var timeSeries = _metricsStore.GetTimeSeries(metricDef.Name, DateTime.UtcNow.AddMinutes(-5), DateTime.UtcNow);
         var latestValue = timeSeries.DataPoints.LastOrDefault()?.Value ?? 0;
 
-        return AnalyzeMetricInternal(metricDef.Name, metricDef.Unit, latestValue);
+        return Task.FromResult<AnalyzedMetric?>(AnalyzeMetricInternal(metricDef.Name, metricDef.Unit, latestValue));
     }
 
     private AnalyzedMetric AnalyzeMetricInternal(string name, string? unit, double value)
