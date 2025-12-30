@@ -122,7 +122,10 @@ export class GridApiClient {
    */
   async getConfig(endpoint: string): Promise<{ columns: GridColumn[]; rowActions?: RowActionsConfig }> {
     return this.circuitBreaker.execute(async () => {
-      const response = await this.client.get(`/${endpoint}/config`);
+      // Changed to use query parameter instead of path parameter to support endpoints with slashes
+      const response = await this.client.get('/config', { 
+        params: { endpoint } 
+      });
       return response.data;
     });
   }
