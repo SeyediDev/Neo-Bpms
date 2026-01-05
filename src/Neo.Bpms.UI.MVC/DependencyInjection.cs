@@ -141,11 +141,20 @@ public static class DependencyInjection
                 .ImageSources(s => s.Self().CustomSources("data:"));
             
             // Allow WebSocket connections in development mode for browser refresh
-            // Note: CSP doesn't support port wildcards, but allowing the host should allow any port
+            // Note: CSP requires explicit ports. ASP.NET Core dynamically assigns ports for:
+            // - Browser refresh (typically 51051)
+            // - Browser Link (typically 51095)
+            // If you see CSP violations for other ports, add them here
             if (isDevelopment)
             {
                 cspOptions.ConnectSources(s => s.Self()
-                    .CustomSources("ws://localhost", "ws://127.0.0.1", "http://localhost", "http://127.0.0.1"));
+                    .CustomSources(
+                        "ws://localhost", "ws://127.0.0.1", 
+                        "http://localhost", "http://127.0.0.1",
+                        // Specific ports for ASP.NET Core browser refresh and Browser Link
+                        "ws://localhost:51051", "ws://localhost:51095",
+                        "http://localhost:51051", "http://localhost:51095"
+                    ));
             }
         });
         AddPermissionPolicyHeaderMiddleware(app);

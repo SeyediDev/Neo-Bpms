@@ -1,5 +1,6 @@
 using Neo.Bpms.Api.Modules.Monitoring.Models;
 using Neo.Bpms.Api.Modules.Monitoring.Services;
+using System.Text;
 
 namespace Neo.Bpms.Api.Modules.Monitoring.Controllers;
 
@@ -116,6 +117,34 @@ public class MetricsController : ControllerBase
             TotalMetrics = result.Count,
             Metrics = result 
         });
+    }
+
+    /// <summary>
+    /// OTLP endpoint for receiving metrics from external APIs
+    /// POST /api/monitoring/metrics/otlp
+    /// </summary>
+    [HttpPost("otlp")]
+    [Consumes("application/json", "application/x-protobuf")]
+    public async Task<IResult> ReceiveOtlpMetrics(HttpRequest request)
+    {
+        try
+        {
+            using var reader = new StreamReader(request.Body, Encoding.UTF8);
+            var json = await reader.ReadToEndAsync();
+            
+            _logger.LogDebug("Received OTLP metrics data: {Length} bytes", json.Length);
+            
+            // Note: Full OTLP implementation would parse the JSON/protobuf and convert to MetricDataPoint
+            // For now, MeterListener in MetricsCollector handles metrics from the same process
+            // For cross-process collection, implement proper OTLP deserialization here
+            
+            return Results.Ok(new { received = true, message = "Metrics received" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error receiving OTLP metrics");
+            return Results.Problem("Error receiving metrics", statusCode: 500);
+        }
     }
 }
 

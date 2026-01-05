@@ -1,5 +1,7 @@
 using Neo.Bpms.Api.Modules.Monitoring.Models;
 using Neo.Bpms.Api.Modules.Monitoring.Services;
+using System.Text;
+using System.Text.Json;
 
 namespace Neo.Bpms.Api.Modules.Monitoring.Controllers;
 
@@ -85,6 +87,74 @@ public class LogsController : ControllerBase
     public ActionResult<IEnumerable<string>> GetSourceContexts()
     {
         return Ok(_store.GetSourceContexts());
+    }
+
+    /// <summary>
+    /// OTLP endpoint for receiving logs from external APIs
+    /// POST /api/monitoring/logs/otlp
+    /// </summary>
+    [HttpPost("otlp")]
+    [Consumes("application/json")]
+    public async Task<IResult> ReceiveOtlpLogs(HttpRequest request)
+    {
+        try
+        {
+            using var reader = new StreamReader(request.Body, Encoding.UTF8);
+            var json = await reader.ReadToEndAsync();
+            
+            _logger.LogDebug("Received OTLP logs data: {Length} bytes", json.Length);
+            
+            // Parse OTLP JSON format and convert to LogEntry
+            // For now, we'll accept a simple JSON format that matches our LogEntry model
+            try
+            {
+                var logEntries = System.Text.Json.JsonSerializer.Deserialize<List<LogEntry>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (logEntries != null)
+                {
+                    foreach (var entry in logEntries)
+                    {
+                        _store.Record(entry);
+                    }
+                    _logger.LogInformation("Received and stored {Count} log entries from external API", logEntries.Count);
+                    return Results.Ok(new { received = true, count = logEntries.Count, message = "Logs received and stored" });
+                }
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogWarning(ex, "Failed to parse OTLP logs JSON, trying alternative format");
+                
+                // Try to parse as single LogEntry
+                try
+                {
+                    var singleEntry = System.Text.Json.JsonSerializer.Deserialize<LogEntry>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    
+                    if (singleEntry != null)
+                    {
+                        _store.Record(singleEntry);
+                        _logger.LogInformation("Received and stored 1 log entry from external API");
+                        return Results.Ok(new { received = true, count = 1, message = "Log received and stored" });
+                    }
+                }
+                catch (JsonException)
+                {
+                    // Ignore and return error
+                }
+            }
+            
+            return Results.BadRequest(new { error = "Invalid log entry format" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error receiving OTLP logs");
+            return Results.Problem("Error receiving logs", statusCode: 500);
+        }
     }
 }
 

@@ -95,6 +95,11 @@ public static class DependencyInjection
         // Register Serilog monitoring service
         // This adds MonitoringSerilogSink to capture logs
         services.AddHostedService<SerilogMonitoringService>();
+        
+        // OTLP endpoints are available via TracesController and MetricsController
+        // POST /api/monitoring/traces/otlp
+        // POST /api/monitoring/metrics/otlp
+        // These endpoints receive telemetry data from external APIs
     }
 
     private static void AddSmartDashboardServices(IServiceCollection services)
