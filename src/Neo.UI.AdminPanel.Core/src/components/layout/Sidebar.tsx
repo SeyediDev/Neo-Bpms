@@ -189,7 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
     >
       {/* Header / Logo */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between h-16 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         {!collapsed && (
           <div className="flex items-center gap-3">
             {typeof logo === 'string' ? (
@@ -206,8 +206,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => onCollapsedChange?.(!collapsed)}
           className={clsx(
-            'p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800',
-            'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
+            'p-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600',
+            'text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100',
+            'transition-colors border border-gray-200 dark:border-gray-600',
             collapsed && 'mx-auto'
           )}
           title={collapsed ? 'باز کردن منو' : 'بستن منو'}

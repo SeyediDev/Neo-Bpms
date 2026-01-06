@@ -173,6 +173,7 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
                 padding: 1.5rem 2rem;
                 gap: 1rem;
                 min-height: 160px;
+                background: var(--neo-dashboard-bg-primary);
             }
 
             .dashboard-metric-box__value {
@@ -182,6 +183,11 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
                 font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
                 direction: rtl;
                 unicode-bidi: embed;
+                color: var(--neo-dashboard-text-primary);
+            }
+
+            [data-theme="dark"] .dashboard-metric-box__value {
+                color: #f1f5f9;
             }
         </style>
     }

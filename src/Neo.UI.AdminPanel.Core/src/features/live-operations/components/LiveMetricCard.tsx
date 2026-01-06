@@ -36,9 +36,9 @@ const TrendIndicator: React.FC<{ direction: TrendDirection; percent?: number }> 
   percent,
 }) => {
   const colors: Record<TrendDirection, string> = {
-    up: 'text-emerald-500',
-    down: 'text-red-500',
-    stable: 'text-gray-400',
+    up: 'text-emerald-600 dark:text-emerald-400',
+    down: 'text-red-600 dark:text-red-400',
+    stable: 'text-gray-600 dark:text-gray-400',
   };
 
   const icons: Record<TrendDirection, React.ReactNode> = {
@@ -63,7 +63,7 @@ const TrendIndicator: React.FC<{ direction: TrendDirection; percent?: number }> 
     <div className={clsx('flex items-center gap-1', colors[direction])}>
       {icons[direction]}
       {percent !== undefined && (
-        <span className="text-xs font-medium">
+        <span className="text-xs font-semibold">
           {percent > 0 ? '+' : ''}
           {percent.toFixed(1)}%
         </span>
@@ -183,11 +183,11 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
               )}
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">
                 {metric.name}
               </h3>
               {metric.category && (
-                <span className="text-xs text-gray-400">{metric.category}</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">{metric.category}</span>
               )}
             </div>
           </div>
@@ -198,7 +198,7 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
               {formatValue(metric.value, metric.format)}
             </span>
             {metric.unit && (
-              <span className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+              <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">
                 {metric.unit}
               </span>
             )}

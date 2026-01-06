@@ -3,24 +3,11 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <RazorCompileOnBuild>true</RazorCompileOnBuild>
     <RazorCompileOnPublish>true</RazorCompileOnPublish>
-    <EnableCompressedAssets>false</EnableCompressedAssets>
-    <!-- Suppress warnings for Razor generated code:
-         CS1998: Async method lacks 'await' operators
-         CS8321: Local function is declared but never used
-         CS4014: Call is not awaited
-         NETSDK1206: SQLite RID warning for .NET 8.0
-         NU1701: Old package compatibility warning (Captcha) -->
     <NoWarn>$(NoWarn);1998;8321;4014;NETSDK1206;NU1701</NoWarn>
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <UpgradeBackupLocation>D:\Projects\Club\Backend\Backup\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <ProjectGuid>{DB8B2D82-D591-40A6-AF2E-AC1DC043CBB1}</ProjectGuid>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

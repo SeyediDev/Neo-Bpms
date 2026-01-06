@@ -206,7 +206,7 @@ export function DataTable<T>({
         {/* Header */}
         <thead
           className={clsx(
-            'bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400',
+            'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
             stickyHeader && 'sticky top-0 z-10'
           )}
         >
@@ -234,7 +234,7 @@ export function DataTable<T>({
                   'px-4 font-medium',
                   compact ? 'py-2' : 'py-3',
                   bordered && 'border-l border-gray-200 dark:border-gray-700 first:border-l-0',
-                  column.sortable && 'cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700',
+                  column.sortable && 'cursor-pointer select-none hover:bg-gray-200 dark:hover:bg-gray-600',
                   column.align === 'center' && 'text-center',
                   column.align === 'right' && 'text-left',
                   !column.align && 'text-right'
@@ -280,8 +280,8 @@ export function DataTable<T>({
                   onClick={() => onRowClick?.(row, rowIndex)}
                   className={clsx(
                     'transition-colors',
-                    striped && rowIndex % 2 === 1 && 'bg-gray-50/50 dark:bg-gray-900/20',
-                    hoverable && 'hover:bg-gray-50 dark:hover:bg-gray-700/50',
+                    striped && rowIndex % 2 === 1 && 'bg-gray-50 dark:bg-gray-800/50',
+                    hoverable && 'hover:bg-gray-50 dark:hover:bg-gray-700',
                     onRowClick && 'cursor-pointer',
                     isSelected && 'bg-purple-50 dark:bg-purple-900/20'
                   )}

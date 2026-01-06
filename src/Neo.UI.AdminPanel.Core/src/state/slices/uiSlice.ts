@@ -55,6 +55,7 @@ const loadPersistedUiState = (): Partial<UiState> => {
 /**
  * Initial UI state
  */
+const persistedState = loadPersistedUiState();
 const initialState: UiState = {
   theme: defaultTheme,
   language: 'fa',
@@ -65,8 +66,23 @@ const initialState: UiState = {
   loadingMessage: null,
   breadcrumbs: [],
   pageTitle: null,
-  ...loadPersistedUiState(),
+  ...persistedState,
 };
+
+// Apply initial theme to document
+if (typeof document !== 'undefined') {
+  const root = document.documentElement;
+  const theme = persistedState.theme || defaultTheme;
+  root.setAttribute('data-theme', theme.mode);
+  root.setAttribute('dir', theme.direction);
+  root.style.setProperty('--primary-color', theme.primaryColor);
+  // Add/remove 'dark' class for Tailwind dark mode
+  if (theme.mode === 'dark') {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+}
 
 /**
  * Generate unique notification ID
@@ -93,6 +109,12 @@ const uiSlice = createSlice({
       root.setAttribute('data-theme', state.theme.mode);
       root.setAttribute('dir', state.theme.direction);
       root.style.setProperty('--primary-color', state.theme.primaryColor);
+      // Add/remove 'dark' class for Tailwind dark mode
+      if (state.theme.mode === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
     },
 
     /**
@@ -101,7 +123,14 @@ const uiSlice = createSlice({
     toggleThemeMode: (state) => {
       state.theme.mode = state.theme.mode === 'light' ? 'dark' : 'light';
       localStorage.setItem(STORAGE_KEYS.THEME, JSON.stringify(state.theme));
-      document.documentElement.setAttribute('data-theme', state.theme.mode);
+      const root = document.documentElement;
+      root.setAttribute('data-theme', state.theme.mode);
+      // Add/remove 'dark' class for Tailwind dark mode
+      if (state.theme.mode === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
     },
 
     /**

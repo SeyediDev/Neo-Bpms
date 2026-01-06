@@ -1361,8 +1361,6 @@ var Select2ChangeHandler = function() {
 			var $select = $(this);
 			var onchangeAttr = $select.attr('onchange');
 			
-			console.log('[Select2ChangeHandler] Change detected on:', $select.attr('name'), 'onchange:', onchangeAttr);
-			
 			// اگر onchange شامل inputChanged است، آن را فراخوانی کن
 			if (onchangeAttr && onchangeAttr.indexOf('inputChanged') !== -1) {
 				try {
@@ -1371,7 +1369,6 @@ var Select2ChangeHandler = function() {
 					if (match) {
 						var source = match[1];
 						var scope = match[2];
-						console.log('[Select2ChangeHandler] Calling inputChanged with source:', source, 'scope:', scope);
 						
 						// فراخوانی تابع inputChanged
 						if (typeof inputChanged === 'function') {
@@ -1383,8 +1380,6 @@ var Select2ChangeHandler = function() {
 				}
 			}
 		});
-		
-		console.log('[Select2ChangeHandler] Initialized');
 	};
 	
 	return {

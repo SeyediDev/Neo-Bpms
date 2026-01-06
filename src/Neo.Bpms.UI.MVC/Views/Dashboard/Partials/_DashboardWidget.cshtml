@@ -21,7 +21,7 @@
 <div class="neo-dashboard-widget-container neo-dashboard-column-@width"
      data-widget-height="@(widgetHeight)px"
      @if (refreshIntervalMs > 0) { <text>data-refresh-interval="@refreshIntervalMs"</text> }
-     widgetId="@divConfig.WidgetId">
+     widgetId="@divConfig.WidgetId" >
 
     @await Html.PartialAsync("~/Views/Dashboard/Partials/_DashboardWidgetTitle.cshtml", Model)
 

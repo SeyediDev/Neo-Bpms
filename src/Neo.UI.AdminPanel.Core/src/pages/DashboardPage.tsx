@@ -93,11 +93,11 @@ function StatCard({ title, value, change, changeLabel, icon, color = 'blue', onC
 
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-medium text-white/80">{title}</span>
-          {icon && <div className="text-white/80">{icon}</div>}
+          <span className="text-sm font-medium text-white">{title}</span>
+          {icon && <div className="text-white">{icon}</div>}
         </div>
 
-        <div className="text-3xl font-bold mb-2" style={{ direction: 'ltr', textAlign: 'right' }}>
+        <div className="text-3xl font-bold text-white mb-2" style={{ direction: 'ltr', textAlign: 'right' }}>
           {typeof value === 'number' ? value.toLocaleString('fa-IR') : value}
         </div>
 
@@ -115,13 +115,13 @@ function StatCard({ title, value, change, changeLabel, icon, color = 'blue', onC
             )}
             <span className={clsx(
               'font-medium',
-              isPositive && 'text-green-200',
-              isNegative && 'text-red-200',
-              !change && 'text-white/60'
+              isPositive && 'text-green-100',
+              isNegative && 'text-red-100',
+              !change && 'text-white/90'
             )}>
               {Math.abs(change)}%
             </span>
-            {changeLabel && <span className="text-white/60">{changeLabel}</span>}
+            {changeLabel && <span className="text-white/90">{changeLabel}</span>}
           </div>
         )}
       </div>
@@ -277,12 +277,16 @@ export function DashboardPage({
 
       {/* Quick Actions */}
       {quickActions.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">دسترسی سریع</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {quickActions.map((action, index) => (
-              <QuickAction key={index} {...action} />
-            ))}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">دسترسی سریع</h2>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {quickActions.map((action, index) => (
+                <QuickAction key={index} {...action} />
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -304,22 +308,26 @@ export function DashboardPage({
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">فعالیت‌های اخیر</h2>
-          {recentActivity.length > 0 ? (
-            <div className="space-y-1 max-h-80 overflow-y-auto">
-              {recentActivity.map((activity) => (
-                <ActivityItemComponent key={activity.id} {...activity} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-400">
-              <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm">فعالیتی ثبت نشده است</p>
-            </div>
-          )}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">فعالیت‌های اخیر</h2>
+          </div>
+          <div className="p-6">
+            {recentActivity.length > 0 ? (
+              <div className="space-y-1 max-h-80 overflow-y-auto">
+                {recentActivity.map((activity) => (
+                  <ActivityItemComponent key={activity.id} {...activity} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-400">
+                <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm">فعالیتی ثبت نشده است</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

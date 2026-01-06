@@ -114,7 +114,11 @@ export function Modal({
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
+      <div className={clsx(
+        'fixed inset-0 backdrop-blur-sm',
+        'bg-black/50 dark:bg-black/70',
+        'transition-opacity duration-200'
+      )} aria-hidden="true" />
 
       {/* Modal */}
       <div

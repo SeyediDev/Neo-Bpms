@@ -47,7 +47,7 @@ export const TimeFrameSelector: React.FC<TimeFrameSelectorProps> = ({
               'rounded-lg font-medium transition-all duration-200',
               sizeClasses[size],
               isSelected
-                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             )}
           >

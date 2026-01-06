@@ -99,7 +99,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Mobile Overlay */}
       {mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className={clsx(
+            'fixed inset-0 z-40 lg:hidden',
+            'bg-black/50 dark:bg-black/70',
+            'transition-opacity duration-300'
+          )}
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
