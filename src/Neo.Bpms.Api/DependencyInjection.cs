@@ -56,6 +56,9 @@ public static class DependencyInjection
     {
         options ??= endpoints.ServiceProvider.GetService<NeoBpmsApiOptions>() ?? new NeoBpmsApiOptions();
 
+        // Map Neo endpoints (includes monitoring controllers)
+        endpoints.MapNeoEndpoints();
+
         // Map API controllers from this assembly
         endpoints.MapControllers();
 
