@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <RazorCompileOnBuild>true</RazorCompileOnBuild>
+    <RazorCompileOnPublish>true</RazorCompileOnPublish>
+    <EnableCompressedAssets>false</EnableCompressedAssets>
     <!-- Suppress warnings for Razor generated code:
          CS1998: Async method lacks 'await' operators
          CS8321: Local function is declared but never used

@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using Neo.Bpms.Api.Modules.Monitoring.Services;
+using Neo.Endpoint.Features.Monitoring.Services;
 using Neo.Bpms.Api.Modules.SmartDashboard.Models;
 
 namespace Neo.Bpms.Api.Modules.SmartDashboard.Services;

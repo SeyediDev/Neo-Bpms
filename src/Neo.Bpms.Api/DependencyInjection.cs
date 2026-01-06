@@ -1,9 +1,8 @@
-using Neo.Bpms.Api.Modules.Monitoring.Hubs;
-using Neo.Bpms.Api.Modules.Monitoring.Services;
 using Neo.Bpms.Api.Modules.SmartDashboard.Services;
 using Neo.Bpms.Api.Modules.EditableGrid;
 using Neo.Bpms.Api.Modules.PowerBIDashboard;
 using Neo.Bpms.Api.Modules.Version;
+using Neo.Endpoint;
 
 namespace Neo.Bpms.Api;
 
@@ -25,14 +24,10 @@ public static class DependencyInjection
         configureOptions?.Invoke(options);
         services.AddSingleton(options);
 
-        // Configure storage options from configuration
-        services.Configure<MonitoringStorageOptions>(
-            configuration.GetSection("NeoBpmsApi:Monitoring"));
-
         // Register monitoring module services
         if (options.EnableMonitoring)
         {
-            AddMonitoringServices(services);
+            services.AddNeoMonitoringServices(configuration);
             AddSmartDashboardServices(services);
         }
 
@@ -41,9 +36,6 @@ public static class DependencyInjection
 
         // Register PowerBI-like dashboard module
         services.AddPowerBIDashboardModule();
-
-        // Register SignalR
-        services.AddSignalR();
 
         // Register version service
         services.AddSingleton<IVersionService, VersionService>();
@@ -67,39 +59,7 @@ public static class DependencyInjection
         // Map API controllers from this assembly
         endpoints.MapControllers();
 
-        // Map monitoring hub
-        if (options.EnableMonitoring)
-        {
-            endpoints.MapHub<MonitoringHub>("/hubs/monitoring");
-        }
-
         return endpoints;
-    }
-
-    private static void AddMonitoringServices(IServiceCollection services)
-    {
-        // Register stores as singletons (shared state)
-        services.AddSingleton<IMetricsStore, MetricsStore>();
-        services.AddSingleton<ITraceStore, TraceStore>();
-        services.AddSingleton<ILogStore, LogStore>();
-
-        // Register collectors as hosted services
-        services.AddHostedService<MetricsCollector>();
-        services.AddHostedService<TraceCollector>();
-        services.AddHostedService<MonitoringCleanupService>();
-        services.AddHostedService<MonitoringBroadcaster>();
-        
-        // Register system metrics publisher (built-in metrics)
-        services.AddHostedService<SystemMetricsPublisher>();
-        
-        // Register Serilog monitoring service
-        // This adds MonitoringSerilogSink to capture logs
-        services.AddHostedService<SerilogMonitoringService>();
-        
-        // OTLP endpoints are available via TracesController and MetricsController
-        // POST /api/monitoring/traces/otlp
-        // POST /api/monitoring/metrics/otlp
-        // These endpoints receive telemetry data from external APIs
     }
 
     private static void AddSmartDashboardServices(IServiceCollection services)
