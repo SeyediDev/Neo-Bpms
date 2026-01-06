@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace Neo.Bpms.Domain.Models.Attributes.FieldAttributes;
+﻿namespace Neo.Bpms.Domain.Models.Attributes.FieldAttributes;
 
 /// <summary>
 /// تعریف فیلد فرمولی

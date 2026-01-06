@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using Neo.Bpms.Api.Modules.PowerBIDashboard.Services;
 
 namespace Neo.Bpms.Api.Modules.PowerBIDashboard;
