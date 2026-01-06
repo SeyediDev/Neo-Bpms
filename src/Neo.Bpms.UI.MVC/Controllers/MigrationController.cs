@@ -1,9 +1,10 @@
-﻿using Neo.Bpms.Engine.DDL;
-using Neo.Bpms.Infrastructure.Features.MetaLoader;
-using Neo.Bpms.Infrastructure.Features.Bpms.MetaDataPart;
-using Neo.Bpms.Infrastructure.Features.Orm.DDL;
-using Neo.Bpms.Domain.Models.Cmmn.Data;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Data;
+using Neo.Bpms.Engine.DDL;
 using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
+using Neo.Bpms.Infrastructure.Features.Bpms.MetaDataPart;
+using Neo.Bpms.Infrastructure.Features.MetaLoader;
+using Neo.Bpms.Infrastructure.Features.Orm.DDL;
+using Neo.Domain.Features.Client;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -18,13 +19,9 @@ public class MigrationController : ControllerBaseMVC
         return View(optionsModel);
     }
 
-    private static void CheckAccess()
+    private void CheckAccess()
     {
-        return;
-        /*Domain.Entities.Security.Authentication.IdentityUser user = GetUser();
-        if (!AccessServices.CheckControllerActionAccess(user, "Migration", "Index"))
-            throw new HttpException(Messages.PageAccessDenied);
-        */
+        ViewBag.user = GetUser(User);
     }
 }
 
