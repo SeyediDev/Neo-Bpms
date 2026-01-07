@@ -12,8 +12,8 @@ public class GridDataRequest
 
 public class GridDataResponse
 {
-    public List<GridColumn> Columns { get; set; } = new();
-    public List<Dictionary<string, object?>> Rows { get; set; } = new();
+    public List<GridColumn> Columns { get; set; } = [];
+    public List<Dictionary<string, object?>> Rows { get; set; } = [];
     public int TotalCount { get; set; }
     public int Page { get; set; }
     public int PageSize { get; set; }
@@ -39,7 +39,7 @@ public class SelectOption
 
 public class BatchUpdateRequest
 {
-    public List<CellChange> Changes { get; set; } = new();
+    public List<CellChange> Changes { get; set; } = [];
 }
 
 public class CellChange
@@ -65,7 +65,7 @@ public class UpdateError
 
 public class GridConfigResponse
 {
-    public List<GridColumn> Columns { get; set; } = new();
+    public List<GridColumn> Columns { get; set; } = [];
     public bool EnableEditing { get; set; } = true;
     public bool EnablePagination { get; set; } = true;
     public bool EnableSorting { get; set; } = true;

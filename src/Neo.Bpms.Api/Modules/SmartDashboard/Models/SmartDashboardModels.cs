@@ -133,7 +133,7 @@ public class AnalyzedMetric
     public double? MinValue { get; set; }
     public double? MaxValue { get; set; }
     public double? AvgValue { get; set; }
-    public Dictionary<string, string> Tags { get; set; } = new();
+    public Dictionary<string, string> Tags { get; set; } = [];
     public string? Category { get; set; }
     public int Priority { get; set; } = 50; // 0-100, higher = more important
     public DateTime LastUpdated { get; set; }
@@ -150,7 +150,7 @@ public class WidgetRecommendation
     public double Confidence { get; set; } // 0-1
     public string Reason { get; set; } = string.Empty;
     public WidgetConfiguration Configuration { get; set; } = new();
-    public List<WidgetType> AlternativeWidgets { get; set; } = new();
+    public List<WidgetType> AlternativeWidgets { get; set; } = [];
 }
 
 /// <summary>
@@ -230,8 +230,8 @@ public class GeneratedDashboard
     public string? Description { get; set; }
     public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
     public int GridColumns { get; set; } = 4;
-    public List<DashboardWidget> Widgets { get; set; } = new();
-    public List<WidgetGroup> Groups { get; set; } = new();
+    public List<DashboardWidget> Widgets { get; set; } = [];
+    public List<WidgetGroup> Groups { get; set; } = [];
     public DashboardMetadata Metadata { get; set; } = new();
 }
 
@@ -242,7 +242,7 @@ public class WidgetGroup
 {
     public string Name { get; set; } = string.Empty;
     public string? Icon { get; set; }
-    public List<string> WidgetIds { get; set; } = new();
+    public List<string> WidgetIds { get; set; } = [];
     public int Order { get; set; }
 }
 
@@ -255,7 +255,7 @@ public class DashboardMetadata
     public int TotalWidgets { get; set; }
     public string GenerationStrategy { get; set; } = "smart";
     public double ConfidenceScore { get; set; }
-    public List<string> Warnings { get; set; } = new();
+    public List<string> Warnings { get; set; } = [];
 }
 
 /// <summary>
@@ -269,7 +269,7 @@ public class DashboardTemplate
     public string? ThumbnailUrl { get; set; }
     public string Category { get; set; } = "general";
     public bool IsBuiltIn { get; set; }
-    public List<TemplateWidgetSlot> Slots { get; set; } = new();
+    public List<TemplateWidgetSlot> Slots { get; set; } = [];
 }
 
 /// <summary>
@@ -281,8 +281,8 @@ public class TemplateWidgetSlot
     public string Label { get; set; } = string.Empty;
     public GridPosition Position { get; set; } = new();
     public WidgetSize PreferredSize { get; set; }
-    public List<WidgetType> AllowedWidgetTypes { get; set; } = new();
-    public List<MetricType> PreferredMetricTypes { get; set; } = new();
+    public List<WidgetType> AllowedWidgetTypes { get; set; } = [];
+    public List<MetricType> PreferredMetricTypes { get; set; } = [];
     public string? MetricNamePattern { get; set; }
 }
 
@@ -294,8 +294,8 @@ public class UserDashboardConfig
     public int UserId { get; set; }
     public string DashboardId { get; set; } = string.Empty;
     public string? TemplateId { get; set; }
-    public List<DashboardWidget> CustomWidgets { get; set; } = new();
-    public Dictionary<string, object> Preferences { get; set; } = new();
+    public List<DashboardWidget> CustomWidgets { get; set; } = [];
+    public Dictionary<string, object> Preferences { get; set; } = [];
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

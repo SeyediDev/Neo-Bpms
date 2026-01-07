@@ -40,16 +40,16 @@ public class ElementViewModelTests
         // Arrange
         var element = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel>
-            {
+            Inputs =
+            [
                 new(),
                 new(),
                 new()
-            },
-            Outputs = new List<FlowElementViewModel>
-            {
+            ],
+            Outputs =
+            [
                 new()
-            }
+            ]
         };
 
         // Act
@@ -65,17 +65,17 @@ public class ElementViewModelTests
         // Arrange
         var element = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel>
-            {
+            Inputs =
+            [
                 new()
-            },
-            Outputs = new List<FlowElementViewModel>
-            {
+            ],
+            Outputs =
+            [
                 new(),
                 new(),
                 new(),
                 new()
-            }
+            ]
         };
 
         // Act
@@ -91,16 +91,16 @@ public class ElementViewModelTests
         // Arrange
         var element = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel>
-            {
+            Inputs =
+            [
                 new(),
                 new()
-            },
-            Outputs = new List<FlowElementViewModel>
-            {
+            ],
+            Outputs =
+            [
                 new(),
                 new()
-            }
+            ]
         };
 
         // Act

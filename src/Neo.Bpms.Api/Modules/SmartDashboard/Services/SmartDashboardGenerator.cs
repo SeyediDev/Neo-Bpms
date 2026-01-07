@@ -12,8 +12,8 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
     private readonly ILayoutEngine _layoutEngine;
 
     // Built-in templates
-    private static readonly List<DashboardTemplate> BuiltInTemplates = new()
-    {
+    private static readonly List<DashboardTemplate> BuiltInTemplates =
+    [
         new DashboardTemplate
         {
             Id = "system-overview",
@@ -21,15 +21,15 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
             Description = "داشبورد نظارت بر منابع سیستم شامل CPU، حافظه و دیسک",
             Category = "system",
             IsBuiltIn = true,
-            Slots = new List<TemplateWidgetSlot>
-            {
-                new() { Id = "cpu", Label = "CPU", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.GaugeChart }, MetricNamePattern = "cpu" },
-                new() { Id = "memory", Label = "حافظه", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.GaugeChart }, MetricNamePattern = "memory" },
-                new() { Id = "requests", Label = "درخواست‌ها", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, MetricNamePattern = "request" },
-                new() { Id = "errors", Label = "خطاها", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, MetricNamePattern = "error" },
-                new() { Id = "response-time", Label = "زمان پاسخ", Position = new() { Row = 1, Column = 0, RowSpan = 1, ColSpan = 2 }, PreferredSize = WidgetSize.Medium, AllowedWidgetTypes = new() { WidgetType.TimeSeriesChart, WidgetType.SparklineChart }, MetricNamePattern = "response" },
-                new() { Id = "throughput", Label = "نرخ پردازش", Position = new() { Row = 1, Column = 2, RowSpan = 1, ColSpan = 2 }, PreferredSize = WidgetSize.Medium, AllowedWidgetTypes = new() { WidgetType.TimeSeriesChart, WidgetType.SparklineChart }, MetricNamePattern = "throughput" },
-            }
+            Slots =
+            [
+                new() { Id = "cpu", Label = "CPU", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.GaugeChart], MetricNamePattern = "cpu" },
+                new() { Id = "memory", Label = "حافظه", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.GaugeChart], MetricNamePattern = "memory" },
+                new() { Id = "requests", Label = "درخواست‌ها", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], MetricNamePattern = "request" },
+                new() { Id = "errors", Label = "خطاها", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], MetricNamePattern = "error" },
+                new() { Id = "response-time", Label = "زمان پاسخ", Position = new() { Row = 1, Column = 0, RowSpan = 1, ColSpan = 2 }, PreferredSize = WidgetSize.Medium, AllowedWidgetTypes = [WidgetType.TimeSeriesChart, WidgetType.SparklineChart], MetricNamePattern = "response" },
+                new() { Id = "throughput", Label = "نرخ پردازش", Position = new() { Row = 1, Column = 2, RowSpan = 1, ColSpan = 2 }, PreferredSize = WidgetSize.Medium, AllowedWidgetTypes = [WidgetType.TimeSeriesChart, WidgetType.SparklineChart], MetricNamePattern = "throughput" },
+            ]
         },
         new DashboardTemplate
         {
@@ -38,13 +38,13 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
             Description = "نظارت بر وضعیت سلامت و عملکرد برنامه",
             Category = "application",
             IsBuiltIn = true,
-            Slots = new List<TemplateWidgetSlot>
-            {
-                new() { Id = "health", Label = "وضعیت سلامت", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.StatusIndicator }, MetricNamePattern = "health" },
-                new() { Id = "uptime", Label = "آپتایم", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, MetricNamePattern = "uptime" },
-                new() { Id = "gc", Label = "GC", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard, WidgetType.BarChart }, MetricNamePattern = "gc" },
-                new() { Id = "threads", Label = "تردها", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, MetricNamePattern = "thread" },
-            }
+            Slots =
+            [
+                new() { Id = "health", Label = "وضعیت سلامت", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.StatusIndicator], MetricNamePattern = "health" },
+                new() { Id = "uptime", Label = "آپتایم", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], MetricNamePattern = "uptime" },
+                new() { Id = "gc", Label = "GC", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard, WidgetType.BarChart], MetricNamePattern = "gc" },
+                new() { Id = "threads", Label = "تردها", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], MetricNamePattern = "thread" },
+            ]
         },
         new DashboardTemplate
         {
@@ -53,14 +53,14 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
             Description = "نظارت بر عملکرد درخواست‌های HTTP و API",
             Category = "web",
             IsBuiltIn = true,
-            Slots = new List<TemplateWidgetSlot>
-            {
-                new() { Id = "requests-per-sec", Label = "درخواست/ثانیه", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard, WidgetType.SparklineChart }, PreferredMetricTypes = new() { MetricType.Rate } },
-                new() { Id = "success-rate", Label = "نرخ موفقیت", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.GaugeChart }, MetricNamePattern = "success" },
-                new() { Id = "avg-response", Label = "میانگین پاسخ", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, PreferredMetricTypes = new() { MetricType.Histogram } },
-                new() { Id = "active-connections", Label = "اتصالات فعال", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, MetricNamePattern = "connection" },
-                new() { Id = "latency-chart", Label = "نمودار تاخیر", Position = new() { Row = 1, Column = 0, RowSpan = 2, ColSpan = 4 }, PreferredSize = WidgetSize.ExtraLarge, AllowedWidgetTypes = new() { WidgetType.TimeSeriesChart }, MetricNamePattern = "latency" },
-            }
+            Slots =
+            [
+                new() { Id = "requests-per-sec", Label = "درخواست/ثانیه", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard, WidgetType.SparklineChart], PreferredMetricTypes = [MetricType.Rate] },
+                new() { Id = "success-rate", Label = "نرخ موفقیت", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.GaugeChart], MetricNamePattern = "success" },
+                new() { Id = "avg-response", Label = "میانگین پاسخ", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], PreferredMetricTypes = [MetricType.Histogram] },
+                new() { Id = "active-connections", Label = "اتصالات فعال", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], MetricNamePattern = "connection" },
+                new() { Id = "latency-chart", Label = "نمودار تاخیر", Position = new() { Row = 1, Column = 0, RowSpan = 2, ColSpan = 4 }, PreferredSize = WidgetSize.ExtraLarge, AllowedWidgetTypes = [WidgetType.TimeSeriesChart], MetricNamePattern = "latency" },
+            ]
         },
         new DashboardTemplate
         {
@@ -69,15 +69,15 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
             Description = "داشبورد ساده با مهم‌ترین متریک‌ها",
             Category = "general",
             IsBuiltIn = true,
-            Slots = new List<TemplateWidgetSlot>
-            {
-                new() { Id = "metric1", Label = "متریک ۱", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.GaugeChart, WidgetType.NumberCard }, PreferredMetricTypes = new() { MetricType.Gauge } },
-                new() { Id = "metric2", Label = "متریک ۲", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.GaugeChart, WidgetType.NumberCard }, PreferredMetricTypes = new() { MetricType.Gauge } },
-                new() { Id = "metric3", Label = "متریک ۳", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, PreferredMetricTypes = new() { MetricType.Counter } },
-                new() { Id = "metric4", Label = "متریک ۴", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = new() { WidgetType.NumberCard }, PreferredMetricTypes = new() { MetricType.Counter } },
-            }
+            Slots =
+            [
+                new() { Id = "metric1", Label = "متریک ۱", Position = new() { Row = 0, Column = 0, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.GaugeChart, WidgetType.NumberCard], PreferredMetricTypes = [MetricType.Gauge] },
+                new() { Id = "metric2", Label = "متریک ۲", Position = new() { Row = 0, Column = 1, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.GaugeChart, WidgetType.NumberCard], PreferredMetricTypes = [MetricType.Gauge] },
+                new() { Id = "metric3", Label = "متریک ۳", Position = new() { Row = 0, Column = 2, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], PreferredMetricTypes = [MetricType.Counter] },
+                new() { Id = "metric4", Label = "متریک ۴", Position = new() { Row = 0, Column = 3, RowSpan = 1, ColSpan = 1 }, PreferredSize = WidgetSize.Small, AllowedWidgetTypes = [WidgetType.NumberCard], PreferredMetricTypes = [MetricType.Counter] },
+            ]
         }
-    };
+    ];
 
     public SmartDashboardGenerator(
         IMetricAnalyzer metricAnalyzer,

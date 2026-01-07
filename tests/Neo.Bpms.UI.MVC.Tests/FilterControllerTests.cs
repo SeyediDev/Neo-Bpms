@@ -53,10 +53,10 @@ public class FilterControllerTests
         // Arrange
         var existingFilter = new ConfiguredFilter(1, "Test Filter")
         {
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "OldValue" }
-            },
+            ],
             EntityItem = new EntityItem
             {
                 ItemType = "Report",
@@ -124,7 +124,7 @@ public class FilterControllerTests
         var model = new SaveFilterValuesModel
         {
             FilterId = 999,
-            FilterValues = new List<ConfiguredFilterValue>()
+            FilterValues = []
         };
 
         // Act

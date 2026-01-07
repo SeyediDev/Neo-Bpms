@@ -48,8 +48,8 @@ public class ClubRolesService : IClubRolesService
 
     private List<ClubRoleInfo> GetDefaultRoles()
     {
-        return new List<ClubRoleInfo>
-        {
+        return
+        [
             new ClubRoleInfo { Name = "Admin", DisplayName = "مدیر سیستم" },
             new ClubRoleInfo { Name = "Manager", DisplayName = "مدیر" },
             new ClubRoleInfo { Name = "MarketingManager", DisplayName = "مدیر بازاریابی" },
@@ -57,7 +57,7 @@ public class ClubRolesService : IClubRolesService
             new ClubRoleInfo { Name = "Analyst", DisplayName = "تحلیل‌گر" },
             new ClubRoleInfo { Name = "CallCenterSupport", DisplayName = "پشتیبانی مرکز تماس" },
             new ClubRoleInfo { Name = "CallCenterManager", DisplayName = "مدیر مرکز تماس" }
-        };
+        ];
     }
 
     private string GetRoleDisplayName(string roleName)

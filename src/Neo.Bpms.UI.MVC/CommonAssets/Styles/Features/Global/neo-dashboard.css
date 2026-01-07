@@ -704,8 +704,8 @@
 
 /* ===== DASHBOARD WIDGETS ===== */
 .neo-dashboard-widget-container {
-  background: var(--neo-dashboard-bg-card);
-  border: 1px solid var(--neo-dashboard-border-light);
+  background: var(--neo-dashboard-bg-card, #ffffff);
+  border: 1px solid var(--neo-dashboard-border-light, #e2e8f0);
   border-radius: var(--neo-dashboard-radius-xl);
   box-shadow: var(--neo-dashboard-shadow-sm);
   overflow: visible; /* تغییر از hidden به visible برای نمایش محتوا */
@@ -714,6 +714,11 @@
   min-height: 200px;
   display: flex;
   flex-direction: column;
+}
+
+[data-theme="dark"] .neo-dashboard-widget-container {
+  background: var(--neo-dashboard-bg-card, #1e293b);
+  border-color: var(--neo-dashboard-border-light, #334155);
 }
 
 .neo-dashboard-widget-container:hover {
@@ -733,17 +738,18 @@
 
 /* ===== WIDGET TITLE BAR (Always Visible) ===== */
 .neo-dashboard-widget-title-bar {
-  background: var(--neo-dashboard-bg-tertiary);
+  background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--neo-dashboard-spacing-md) var(--neo-dashboard-spacing-lg);
-  border-bottom: 2px solid var(--neo-dashboard-border-light);
+  border-bottom: 2px solid var(--neo-dashboard-border-light, #e2e8f0);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] .neo-dashboard-widget-title-bar {
-  background: var(--neo-dashboard-bg-tertiary);
+  background: var(--neo-dashboard-bg-tertiary, #334155);
+  border-bottom-color: var(--neo-dashboard-border-light, #334155);
 }
 
 .neo-dashboard-widget-title-content {
@@ -807,8 +813,8 @@
 
 /* ===== WIDGET HEADER ===== */
 .neo-dashboard-widget-header {
-  background: var(--neo-dashboard-bg-tertiary);
-  border-bottom: 1px solid var(--neo-dashboard-border-light);
+  background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
+  border-bottom: 1px solid var(--neo-dashboard-border-light, #e2e8f0);
   padding: var(--neo-dashboard-spacing-md);
   display: flex;
   align-items: center;
@@ -817,7 +823,8 @@
 }
 
 [data-theme="dark"] .neo-dashboard-widget-header {
-  background: var(--neo-dashboard-bg-tertiary);
+  background: var(--neo-dashboard-bg-tertiary, #334155);
+  border-bottom-color: var(--neo-dashboard-border-light, #334155);
 }
 
 .neo-dashboard-widget-title {
@@ -912,6 +919,7 @@
   width: 100%;
   height: 100%;
   box-shadow: var(--neo-dashboard-shadow-sm);
+  background: transparent;
 }
 
 .neo-metric-box__icon {
@@ -940,7 +948,25 @@
   font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
   direction: rtl;
   unicode-bidi: embed;
-  color: var(--neo-dashboard-text-primary);
+  color: var(--neo-dashboard-text-primary, #1e293b);
+}
+
+/* رنگ متن metric box بر اساس بک‌گراند ویجت */
+.neo-dashboard-widget-container .neo-metric-box__value,
+.neo-dashboard-widget .neo-metric-box__value {
+  /* به صورت پیش‌فرض، اگر ویجت بک‌گراند تیره دارد، متن باید روشن باشد */
+  color: #f1f5f9;
+}
+
+/* برای تم روشن، اگر ویجت بک‌گراند روشن دارد */
+[data-theme="light"] .neo-dashboard-widget-container .neo-metric-box__value,
+:root:not([data-theme="dark"]) .neo-dashboard-widget-container .neo-metric-box__value {
+  color: #1e293b;
+}
+
+/* برای تم تاریک */
+[data-theme="dark"] .neo-metric-box__value {
+  color: var(--neo-dashboard-text-primary, #f1f5f9);
 }
 
 .neo-metric-box__title {
@@ -1686,8 +1712,8 @@
 
 /* ===== DASHBOARD WIDGETS ===== */
 .neo-dashboard-widget {
-  background: var(--neo-dashboard-bg-card);
-  border: 1px solid var(--neo-dashboard-border-light);
+  background: var(--neo-dashboard-bg-card, #ffffff);
+  border: 1px solid var(--neo-dashboard-border-light, #e2e8f0);
   border-radius: var(--neo-dashboard-radius-lg);
   box-shadow: var(--neo-dashboard-shadow-sm);
   padding: var(--neo-dashboard-spacing-lg);
@@ -1695,6 +1721,11 @@
   transition: var(--neo-dashboard-transition-normal);
   position: relative;
   overflow: hidden;
+}
+
+[data-theme="dark"] .neo-dashboard-widget {
+  background: var(--neo-dashboard-bg-card, #1e293b);
+  border-color: var(--neo-dashboard-border-light, #334155);
 }
 
 .neo-dashboard-widget:hover {
@@ -1708,7 +1739,13 @@
   justify-content: space-between;
   margin-bottom: var(--neo-dashboard-spacing-md);
   padding-bottom: var(--neo-dashboard-spacing-sm);
-  border-bottom: 1px solid var(--neo-dashboard-border-light);
+  border-bottom: 1px solid var(--neo-dashboard-border-light, #e2e8f0);
+  background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
+}
+
+[data-theme="dark"] .neo-dashboard-widget-header {
+  background: var(--neo-dashboard-bg-tertiary, #334155);
+  border-bottom-color: var(--neo-dashboard-border-light, #334155);
 }
 
 .neo-dashboard-widget-title {
@@ -3678,17 +3715,22 @@
   gap: var(--neo-dashboard-spacing-sm);
   padding: var(--neo-dashboard-spacing-sm) var(--neo-dashboard-spacing-lg);
   min-height: 36px;
-  color: var(--neo-dashboard-text-secondary);
+  color: var(--neo-dashboard-text-secondary, #64748b);
   text-decoration: none;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--neo-dashboard-bg-tertiary);
+  background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
   box-shadow: var(--neo-dashboard-shadow-sm);
   transition: all var(--neo-dashboard-transition-normal);
   white-space: nowrap;
   font-weight: var(--neo-dashboard-font-weight-medium);
   font-size: var(--neo-dashboard-font-size-sm);
   cursor: pointer;
+}
+
+[data-theme="dark"] .dashboard-tab-link {
+  background: var(--neo-dashboard-bg-tertiary, #334155);
+  color: var(--neo-dashboard-text-secondary, #cbd5e1);
 }
 
 .dashboard-tab-link:hover {

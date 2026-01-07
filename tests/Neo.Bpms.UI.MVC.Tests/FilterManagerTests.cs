@@ -32,11 +32,11 @@ public class FilterManagerTests
         var filterId = 1L;
         var configuredFilter = new ConfiguredFilter(filterId, "Test Filter")
         {
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "Value1" },
                 new() { FieldId = "Field2", Value = "Value2" }
-            }
+            ]
         };
 
         _repositoryMock
@@ -69,11 +69,11 @@ public class FilterManagerTests
         var filterId = 1L;
         var configuredFilter = new ConfiguredFilter(filterId, "Test Filter")
         {
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "FilterValue1" },
                 new() { FieldId = "Field2", Value = "FilterValue2" }
-            }
+            ]
         };
 
         _repositoryMock
@@ -108,10 +108,10 @@ public class FilterManagerTests
         {
             IsDefault = true,
             UserId = user.Id, // Set user ID so CheckAccess passes
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "DefaultValue1" }
-            }
+            ]
         };
 
         var configuredFilters = new List<ConfiguredFilter> { defaultFilter };
@@ -158,11 +158,11 @@ public class FilterManagerTests
         var filterId = 1L;
         var configuredFilter = new ConfiguredFilter(filterId, "Test Filter")
         {
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "FilterValue1" },
                 new() { FieldId = "Field2", Value = "FilterValue2" }
-            }
+            ]
         };
 
         _repositoryMock
@@ -225,10 +225,10 @@ public class FilterManagerTests
         {
             IsDefault = true,
             UserId = user.Id, // Set user ID so CheckAccess passes
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "DefaultValue1" }
-            }
+            ]
         };
 
         var configuredFilters = new List<ConfiguredFilter> { defaultFilter };
@@ -284,10 +284,10 @@ public class FilterManagerTests
         var filterId = 1L;
         var configuredFilter = new ConfiguredFilter(filterId, "Test Filter")
         {
-            Values = new List<ConfiguredFilterValue>
-            {
+            Values =
+            [
                 new() { FieldId = "Field1", Value = "FilterValue1" }
-            }
+            ]
         };
 
         _repositoryMock

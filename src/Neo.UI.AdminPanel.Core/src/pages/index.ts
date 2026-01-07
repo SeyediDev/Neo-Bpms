@@ -9,3 +9,5 @@ export type { NotFoundPageProps } from './NotFoundPage';
 
 export { LiveOperationsPage } from './LiveOperationsPage';
 export type { LiveOperationsPageProps } from './LiveOperationsPage';
+
+export { MonitoringPage } from './MonitoringPage';

@@ -24,7 +24,7 @@ namespace Neo.Bpms.Api.Modules.EditableGrid.Services;
 public partial class EditableGridService : IEditableGridService
 {
     private readonly ILogger<EditableGridService> _logger;
-    private readonly Dictionary<string, GridConfigResponse> _configCache = new();
+    private readonly Dictionary<string, GridConfigResponse> _configCache = [];
     private readonly FormStructRoutines _formStructRoutines;
     private readonly FormDataRoutines _formDataRoutines;
     private readonly IServiceProvider _serviceProvider;
@@ -128,7 +128,7 @@ public partial class EditableGridService : IEditableGridService
                 : null;
 
             var cancellationToken = CancellationToken.None;
-            var localParameters = user != null ? new LocalParameters(user) : new LocalParameters();
+            var localParameters = user != null ? new LocalParameters(user) : [];
             
             // Set combo data for select/multiselect fields
             if (user != null)
@@ -322,7 +322,7 @@ public partial class EditableGridService : IEditableGridService
                     {
                         Label = f.Label ?? f.FieldName,
                         LinkTarget = f.PropertyValue(eControlPropertyId.LinkTarget) ?? "",
-                        LinkParameters = new Dictionary<string, string>(),
+                        LinkParameters = [],
                     };
 
                     // Extract link parameters
@@ -514,7 +514,7 @@ public partial class EditableGridService : IEditableGridService
         {
             Success = true,
             Updated = 0,
-            Errors = new List<UpdateError>(),
+            Errors = [],
         };
 
         // Parse endpoint
@@ -662,7 +662,7 @@ public partial class EditableGridService : IEditableGridService
                     }
                     else
                     {
-                        foreach (var error in errors ?? new ExceptionInfos())
+                        foreach (var error in errors ?? [])
                         {
                             response.Errors!.Add(new UpdateError
                             {
@@ -782,28 +782,28 @@ public partial class EditableGridService : IEditableGridService
         
         return endpoint switch
         {
-            "sample" => new List<GridColumn>
-            {
+            "sample" =>
+            [
                 new() { Id = "id", Name = "شناسه", Type = "number", Editable = false, Width = 100 },
                 new() { Id = "name", Name = "نام", Type = "text", Editable = true, Required = true, Width = 200 },
                 new() { Id = "email", Name = "ایمیل", Type = "text", Editable = true, Width = 250 },
                 new() { Id = "age", Name = "سن", Type = "number", Editable = true, Width = 100 },
                 new() { Id = "status", Name = "وضعیت", Type = "select", Editable = true, Width = 150,
-                    Options = new List<SelectOption>
-                    {
+                    Options =
+                    [
                         new() { Value = "active", Label = "فعال" },
                         new() { Value = "inactive", Label = "غیرفعال" },
                         new() { Value = "pending", Label = "در انتظار" },
-                    }
+                    ]
                 },
                 new() { Id = "createdAt", Name = "تاریخ ایجاد", Type = "date", Editable = true, Width = 150 },
                 new() { Id = "isActive", Name = "فعال", Type = "boolean", Editable = true, Width = 80 },
-            },
-            _ => new List<GridColumn>
-            {
+            ],
+            _ =>
+            [
                 new() { Id = "id", Name = "شناسه", Type = "number", Editable = false },
                 new() { Id = "name", Name = "نام", Type = "text", Editable = true },
-            },
+            ],
         };
     }
 
@@ -947,7 +947,7 @@ public partial class EditableGridService : IEditableGridService
         {
             Success = true,
             Imported = 0,
-            Errors = new List<string>(),
+            Errors = [],
         };
 
         // Parse endpoint

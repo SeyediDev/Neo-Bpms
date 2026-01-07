@@ -25,14 +25,14 @@ public class DataModelService : IDataModelService
         // Placeholder implementation
         return await Task.FromResult(new DataTable
         {
-            Columns = new List<DataColumn>
-            {
+            Columns =
+            [
                 new() { Name = "id", Type = "number" },
                 new() { Name = "name", Type = "string" },
                 new() { Name = "value", Type = "number" },
                 new() { Name = "date", Type = "date" },
-            },
-            Rows = new List<DataRow>(),
+            ],
+            Rows = [],
             TotalCount = 0,
         });
     }
@@ -121,8 +121,8 @@ public class DataModelService : IDataModelService
     {
         var result = new DataTable
         {
-            Columns = new List<DataColumn>(),
-            Rows = new List<DataRow>(),
+            Columns = [],
+            Rows = [],
         };
 
         // Add group by columns
@@ -161,7 +161,7 @@ public class DataModelService : IDataModelService
 
         foreach (var group in grouped)
         {
-            var row = new DataRow { Values = new Dictionary<string, object?>() };
+            var row = new DataRow { Values = [] };
 
             // Add group by values
             var firstRow = group.First();
@@ -212,7 +212,7 @@ public class DataModelService : IDataModelService
                     Formula = calculatedField.Formula,
                 }
             },
-            Rows = new List<DataRow>(),
+            Rows = [],
             TotalCount = source.TotalCount,
         };
 
@@ -236,7 +236,7 @@ public class DataModelService : IDataModelService
         var result = new DataTable
         {
             Columns = new List<DataColumn>(source.Columns),
-            Rows = new List<DataRow>(),
+            Rows = [],
         };
 
         result.Rows = source.Rows.Where(row =>
@@ -314,7 +314,7 @@ public class DataModelService : IDataModelService
         var result = new DataTable
         {
             Columns = new List<DataColumn>(leftData.Columns),
-            Rows = new List<DataRow>(),
+            Rows = [],
         };
 
         // Add right columns (excluding the join key)

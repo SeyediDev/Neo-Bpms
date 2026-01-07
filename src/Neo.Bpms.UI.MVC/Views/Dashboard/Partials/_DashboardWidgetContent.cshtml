@@ -173,7 +173,7 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
                 padding: 1.5rem 2rem;
                 gap: 1rem;
                 min-height: 160px;
-                background: var(--neo-dashboard-bg-primary);
+                background: transparent;
             }
 
             .dashboard-metric-box__value {
@@ -183,9 +183,21 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
                 font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
                 direction: rtl;
                 unicode-bidi: embed;
-                color: var(--neo-dashboard-text-primary);
             }
 
+            /* Metric box در داخل widget container - رنگ متن باید با بک‌گراند ویجت هماهنگ باشد */
+            .neo-dashboard-widget-container .dashboard-metric-box__value {
+                /* به صورت پیش‌فرض، اگر ویجت بک‌گراند تیره دارد، متن باید روشن باشد */
+                color: #f1f5f9;
+            }
+
+            /* برای تم روشن، اگر ویجت بک‌گراند روشن دارد */
+            [data-theme="light"] .neo-dashboard-widget-container .dashboard-metric-box__value,
+            :root:not([data-theme="dark"]) .neo-dashboard-widget-container .dashboard-metric-box__value {
+                color: #1e293b;
+            }
+
+            /* برای تم تاریک */
             [data-theme="dark"] .dashboard-metric-box__value {
                 color: #f1f5f9;
             }

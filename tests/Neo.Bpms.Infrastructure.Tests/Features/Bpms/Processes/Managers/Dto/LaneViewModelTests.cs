@@ -38,12 +38,12 @@ public class LaneViewModelTests
         // Arrange
         var element = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel> { new(), new() },
-            Outputs = new List<FlowElementViewModel> { new() }
+            Inputs = [new(), new()],
+            Outputs = [new()]
         };
         var lane = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element }
+            Elements = [element]
         };
 
         // Act
@@ -60,17 +60,17 @@ public class LaneViewModelTests
         // Arrange
         var element1 = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel> { new() },
-            Outputs = new List<FlowElementViewModel> { new(), new() }
+            Inputs = [new()],
+            Outputs = [new(), new()]
         };
         var element2 = new ElementViewModel
         {
-            Inputs = new List<FlowElementViewModel> { new(), new(), new() },
-            Outputs = new List<FlowElementViewModel> { new() }
+            Inputs = [new(), new(), new()],
+            Outputs = [new()]
         };
         var lane = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element1, element2 }
+            Elements = [element1, element2]
         };
 
         // Act

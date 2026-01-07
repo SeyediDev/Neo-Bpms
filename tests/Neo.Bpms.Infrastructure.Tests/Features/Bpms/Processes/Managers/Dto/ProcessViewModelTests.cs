@@ -29,11 +29,11 @@ public class ProcessViewModelTests
         var element = new ElementViewModel { Id = "element-1" };
         var lane = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element }
+            Elements = [element]
         };
         var process = new ProcessViewModel
         {
-            Lanes = new List<LaneViewModel> { lane }
+            Lanes = [lane]
         };
 
         // Act
@@ -50,11 +50,11 @@ public class ProcessViewModelTests
         var element = new ElementViewModel { Id = "element-1" };
         var lane = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element }
+            Elements = [element]
         };
         var process = new ProcessViewModel
         {
-            Lanes = new List<LaneViewModel> { lane }
+            Lanes = [lane]
         };
 
         // Act
@@ -72,15 +72,15 @@ public class ProcessViewModelTests
         var element2 = new ElementViewModel { Id = "element-2" };
         var lane1 = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element1 }
+            Elements = [element1]
         };
         var lane2 = new LaneViewModel
         {
-            Elements = new List<ElementViewModel> { element2 }
+            Elements = [element2]
         };
         var process = new ProcessViewModel
         {
-            Lanes = new List<LaneViewModel> { lane1, lane2 }
+            Lanes = [lane1, lane2]
         };
 
         // Act

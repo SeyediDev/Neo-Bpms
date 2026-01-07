@@ -5,8 +5,8 @@ namespace Neo.Bpms.Api.Modules.PowerBIDashboard.Models;
 /// </summary>
 public class DataTable
 {
-    public List<DataColumn> Columns { get; set; } = new();
-    public List<DataRow> Rows { get; set; } = new();
+    public List<DataColumn> Columns { get; set; } = [];
+    public List<DataRow> Rows { get; set; } = [];
     public int TotalCount { get; set; }
 }
 
@@ -27,7 +27,7 @@ public class DataColumn
 /// </summary>
 public class DataRow
 {
-    public Dictionary<string, object?> Values { get; set; } = new();
+    public Dictionary<string, object?> Values { get; set; } = [];
 }
 
 /// <summary>
@@ -55,8 +55,8 @@ public class TransformationRequest
 /// </summary>
 public class AggregationRequest
 {
-    public List<string> GroupBy { get; set; } = new();
-    public Dictionary<string, string> Aggregations { get; set; } = new(); // column -> function (sum, avg, count, etc.)
+    public List<string> GroupBy { get; set; } = [];
+    public Dictionary<string, string> Aggregations { get; set; } = []; // column -> function (sum, avg, count, etc.)
 }
 
 /// <summary>
@@ -87,8 +87,8 @@ public class FilterRequest
 /// </summary>
 public class GroupRequest
 {
-    public List<string> GroupBy { get; set; } = new();
-    public Dictionary<string, string> Aggregations { get; set; } = new();
+    public List<string> GroupBy { get; set; } = [];
+    public Dictionary<string, string> Aggregations { get; set; } = [];
 }
 
 /// <summary>

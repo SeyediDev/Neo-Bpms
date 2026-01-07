@@ -30,6 +30,10 @@ interface DashboardData {
 interface SystemMetricsProps {
   data: DashboardData | null;
   loading: boolean;
+  /** Optional callback for showing toast notifications (for admin panel integration) */
+  onShowToast?: (message: string) => void;
+  /** Optional callback for showing error toast notifications */
+  onShowErrorToast?: (message: string) => void;
 }
 
 function formatBytes(bytes: number): string {
@@ -70,8 +74,9 @@ interface DrillDownInfo {
   unit?: string;
 }
 
-export function SystemMetrics({ data, loading }: SystemMetricsProps) {
+export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: SystemMetricsProps) {
   const [drillDown, setDrillDown] = useState<DrillDownInfo | null>(null);
+  const [resetting, setResetting] = useState(false);
   
   const system = data?.system;
   const app = data?.application;
@@ -94,8 +99,74 @@ export function SystemMetrics({ data, loading }: SystemMetricsProps) {
     setDrillDown({ metricName, displayName, unit });
   };
 
+  const resetAllMetrics = async () => {
+    if (!confirm('آیا از ریست کردن کلیه متریک‌ها اطمینان دارید؟ این عمل تمام آمار را به صفر برمی‌گرداند.')) {
+      return;
+    }
+
+    setResetting(true);
+    try {
+      const response = await fetch('/api/monitoring/metrics/reset', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const message = 'کلیه متریک‌ها با موفقیت ریست شدند';
+        if (onShowToast) {
+          onShowToast(message);
+        } else {
+          alert(message);
+        }
+        // Refresh data after reset
+        window.location.reload();
+      } else {
+        const errorMessage = 'خطا در ریست کردن متریک‌ها';
+        if (onShowErrorToast) {
+          onShowErrorToast(errorMessage);
+        } else {
+          alert(errorMessage);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to reset metrics:', error);
+      const errorMessage = 'خطا در ریست کردن متریک‌ها';
+      if (onShowErrorToast) {
+        onShowErrorToast(errorMessage);
+      } else {
+        alert(errorMessage);
+      }
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
+      {/* Header with Reset Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={resetAllMetrics}
+          disabled={resetting}
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
+        >
+          {resetting ? (
+            <>
+              <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              در حال ریست...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              ریست همه متریک‌ها
+            </>
+          )}
+        </button>
+      </div>
+
       {/* System Gauges */}
       <section>
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">

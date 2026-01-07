@@ -77,7 +77,7 @@ public class LayoutEngine : ILayoutEngine
                     Name = category,
                     Icon = GetIconForCategory(category),
                     Order = order++,
-                    WidgetIds = new List<string>()
+                    WidgetIds = []
                 };
                 groups[category] = group;
             }
