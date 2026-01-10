@@ -140,7 +140,7 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
         var metricValue = reportData.GetMetricBoxValue();
         var structure = reportData.Structure;
         <div class="dashboard-metric-box shadow-sm" >
-            Salam<span class="dashboard-metric-box__value" data-original-value="@metricValue">@metricValue</span>
+            <span class="dashboard-metric-box__value" data-original-value="@metricValue">@metricValue</span>
         </div>
         <script>
             // Convert English digits to Persian digits
@@ -183,7 +183,7 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
                 font-family: 'VazirDigitGroup', 'Vazir Digit', 'Vazir FD', 'Vazir', 'Yekan', 'Tahoma', 'Arial', sans-serif;
                 direction: rtl;
                 unicode-bidi: embed;
-                color: var(--neo-dashboard-text-primary, #f1f5f9);
+				color: var(--neo-text-secondary, #f1f5f9) !important; 
             }
 
             /* رنگ متن metric box بر اساس تم */
@@ -201,7 +201,7 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
 
             /* برای تم تاریک */
             [data-theme="dark"] .dashboard-metric-box__value {
-                color: var(--neo-dashboard-text-primary, #f1f5f9);
+				color: var(--neo-text-secondary, #f1f5f9);
             }
         </style>
     }
