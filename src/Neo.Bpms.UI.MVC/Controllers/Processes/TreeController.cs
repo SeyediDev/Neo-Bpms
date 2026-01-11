@@ -137,7 +137,7 @@ public class TreeController : BpmsController
         }
     }
 
-    private void SaveNewBusinessRule(TreeConfig treeConfig, IdentityUser user)
+    private static void SaveNewBusinessRule(TreeConfig treeConfig, IdentityUser user)
     {
         BusinessRule businessRule = new()
         {

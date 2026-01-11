@@ -4,7 +4,6 @@ using Neo.Bpms.Domain.Models.Bpmn.Extensions.BusinessProcesses;
 using Neo.Bpms.Infrastructure.Features.BpmnConversion;
 using Neo.Bpms.Infrastructure.Features.Bpms.Engine;
 
-
 namespace Neo.Bpms.UI.MVC.Controllers;
 
 public partial class ProcessController
@@ -22,6 +21,7 @@ public partial class ProcessController
              BpmnExporter.ExportType.Bpmn);
         return Json(new { xml = result, errors = bpmnDefinition.ErrorInfos, processName = bpmnDefinition.Name });
     }
+
     [HttpGet]
     public JsonResult DownloadProcessVersion(long? processId, long? versionId)
     {
@@ -49,6 +49,7 @@ public partial class ProcessController
         CheckProcessesDesignAccess(user, false);
         return View();
     }
+    
     [HttpGet]
     public ActionResult BusinessRuleDesign(string businessRuleCode, string versionId, string nodeId)
     {
@@ -150,6 +151,7 @@ public partial class ProcessController
         }
         return Json(new { success = result, isLock, errors = fatalError });
     }
+    
     [HttpPost]
     public JsonResult ProcessAdministratorLock(string processId, string versionId, bool isLock)
     {
@@ -178,6 +180,7 @@ public partial class ProcessController
         }
         return Json(new { success = result, isLock, errors = fatalError });
     }
+    
     [HttpGet]
     public JsonResult ProcessCheckedIn(string processId, string versionId)
     {
@@ -201,6 +204,7 @@ public partial class ProcessController
         }
         return Json(new { success = result, checkedIn, errors = fatalError });
     }
+    
     [HttpPost]
     public JsonResult ProcessCheckedIn(string processId, string versionId, bool check)
     {
@@ -251,6 +255,7 @@ public partial class ProcessController
              new { id = pv.Value?.ProcessIdVersionId, name = pv.Value?.Name });
         return Json(processes);
     }
+    
     [HttpGet]
     public JsonResult AllBusinessRuleList()
     {

@@ -30,7 +30,7 @@ var ScheduledReport = function() {
     var constScheduleLogUri= 'Form?EntityId=ScheduledReportLog&NamespaceId=SystemConfigs';
 
     var deleteSchedule = function (id, configId, cb) {
-        var result = confirm("آیا از حذف این زمان بندی مطمئنید؟");
+        var result = confirm("آیا از حذف این زمان‌بندی مطمئنید؟");
         if (!result) return;
 	    $.ajax({
 		    type: "POST",
