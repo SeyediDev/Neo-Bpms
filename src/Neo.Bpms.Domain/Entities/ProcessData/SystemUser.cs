@@ -1,7 +1,7 @@
 ﻿namespace Neo.Bpms.Domain.Entities.ProcessData;
 
-[Entity_Index("NationalNumber")]
-[Entity_Index("UserName", true)]
+[Models.Attributes.EntityAttributes.EntityIndex("NationalNumber")]
+[Models.Attributes.EntityAttributes.EntityIndex("UserName", true)]
 [DisplayNameAndEnName("کاربر سیستم")]
 public class SystemUser : BaseCmmnStateBasedEntityStringKey, ICheckTimeOut
 {

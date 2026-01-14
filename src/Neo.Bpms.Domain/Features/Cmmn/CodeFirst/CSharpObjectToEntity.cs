@@ -169,9 +169,9 @@ public class CSharpObjectToEntity(INameSpaceRepository nameSpaceRepository) : CS
                 case EAttr_DefaultOrderBy _:
                     //TODO
                     break;
-                case Entity_Index attrIndex:
+                case Models.Attributes.EntityAttributes.EntityIndex attrIndex:
                     {
-                        EntityIndex idx = attrIndex.IsUnique
+                        Models.Cmmn.Entities.EntityIndex idx = attrIndex.IsUnique
                             ? entity.AddUniqueIndex(attrIndex.Id, attrIndex.EnName, attrIndex.Name, attrIndex.Clustered)
                             : entity.AddIndex(attrIndex.Id, attrIndex.EnName, attrIndex.Name, attrIndex.Clustered);
                         if (idx != null)

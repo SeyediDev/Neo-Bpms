@@ -73,7 +73,7 @@ public class CSharpObjectToModel
                 });
                 break;
 
-            case FAttr_Index indexAttr:
+            case FieldIndex indexAttr:
                 EntityIndex idx = indexAttr.IsUnique
                     ? entity.AddUniqueIndex(field.Id, field.EnName, field.Id, indexAttr.Clustered)
                     : entity.AddIndex(field.Id, field.EnName, field.Id, indexAttr.Clustered);

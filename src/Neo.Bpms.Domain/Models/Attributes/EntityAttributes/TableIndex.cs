@@ -8,6 +8,6 @@
 /// </remarks>
 /// <param name="fields">فیلد های ایندکس یا با استفاده از کلید '#I' بعد از نام فیلد بصورت ستون ها شامل شده در ایندکس</param>
 /// <param name="clustered"></param>
-public class TableIndex(string fields, bool clustered = false) : Entity_Index(fields, false, clustered)
+public class TableIndex(string fields, bool clustered = false) : EntityIndex(fields, false, clustered)
 {
 }

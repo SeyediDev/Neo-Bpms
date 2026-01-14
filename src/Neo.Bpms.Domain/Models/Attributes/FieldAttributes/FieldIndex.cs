@@ -6,7 +6,7 @@
 /// each entity can have multiple unique or non unique indexes.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
-public class FAttr_Index : Attribute
+public class FieldIndex : Attribute
 {
     /// <summary>
     /// Gets or sets a value indicating whether the index [is unique].

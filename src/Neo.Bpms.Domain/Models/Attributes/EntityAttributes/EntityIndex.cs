@@ -12,7 +12,7 @@
 /// <param name="isUnique">منحصر به فرد است</param>
 /// <param name="clustered">کلاستر شده است</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public class Entity_Index(string fields, bool isUnique = false, bool clustered = false) : Attribute
+public class EntityIndex(string fields, bool isUnique = false, bool clustered = false) : Attribute
 {
 
     /// <summary>
