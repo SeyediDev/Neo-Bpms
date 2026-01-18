@@ -12,8 +12,20 @@
 /// <param name="isUnique">منحصر به فرد است</param>
 /// <param name="clustered">کلاستر شده است</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public class EntityIndex(string fields, bool isUnique = false, bool clustered = false) : Attribute
+public class EntityIndexAttribute(string fields, bool isUnique = false, bool clustered = false) : Attribute
 {
+    public EntityIndexAttribute(bool isUnique, bool clustered, params string[] fields)
+        : this(string.Join(',', fields), isUnique, clustered)
+    {
+    }
+    public EntityIndexAttribute(bool isUnique, params string[] fields)
+        : this(string.Join(',', fields), isUnique, false)
+    {
+    }
+    public EntityIndexAttribute(params string[] fields)
+        : this(string.Join(',', fields), false, false)
+    {
+    }
 
     /// <summary>
     /// Gets or sets the index fields.

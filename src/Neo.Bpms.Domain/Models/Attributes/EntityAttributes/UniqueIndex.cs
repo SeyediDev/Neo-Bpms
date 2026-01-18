@@ -8,6 +8,6 @@
 /// </remarks>
 /// <param name="fields">فیلد های ایندکس یا با استفاده از کلید '#I' بعد از نام فیلد بصورت ستون ها شامل شده در ایندکس</param>
 /// <param name="clustered">کلاستر شده است</param>
-public class UniqueIndex(string fields, bool clustered = false) : EntityIndex(fields, true, clustered)
+public class UniqueIndex(string fields, bool clustered = false) : EntityIndexAttribute(fields, true, clustered)
 {
 }
