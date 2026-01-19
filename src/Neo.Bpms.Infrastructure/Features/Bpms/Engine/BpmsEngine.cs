@@ -72,12 +72,12 @@ public class BpmsEngine: IBpmsEngine
                     {
                         MachineName = machineName,
                         ProcessName = processName,
-                        StartTime = DateTime.Now
+                        StartTime = DateTime.UtcNow
                     });
                 }
                 else
                 {
-                    bpmnEngineRecord.StartTime = DateTime.Now;
+                    bpmnEngineRecord.StartTime = DateTime.UtcNow;
                     _ = au.Update(bpmnEngineRecord);
                 }
 

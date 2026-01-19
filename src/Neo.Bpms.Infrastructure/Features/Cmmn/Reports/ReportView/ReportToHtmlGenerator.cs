@@ -145,7 +145,7 @@ public class ReportToHtmlGenerator : ReportViewGenerator
                 <div class='col-md-12 col-sm-12 col-xs-12'>
                     <div class='row' style='margin: auto 0px;'>
                         <div class='col-md-6 col-sm-6 col-xs-12 reportHeader'>";
-        DateTime dt = DateTime.Now; //todo
+        DateTime dt = DateTime.UtcNow; //todo
         string dStr = "";
         string tStr = "";
         if (dt.Year > 1900)

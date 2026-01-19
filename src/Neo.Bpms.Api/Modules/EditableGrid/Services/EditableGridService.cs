@@ -822,7 +822,7 @@ public partial class EditableGridService : IEditableGridService
                 ["email"] = $"user{startId + i}@example.com",
                 ["age"] = 20 + (i % 30),
                 ["status"] = i % 3 == 0 ? "active" : i % 3 == 1 ? "inactive" : "pending",
-                ["createdAt"] = DateTime.Now.AddDays(-i).ToString("O"),
+                ["createdAt"] = DateTime.UtcNow.AddDays(-i).ToString("O"),
                 ["isActive"] = i % 2 == 0,
             };
             rows.Add(row);

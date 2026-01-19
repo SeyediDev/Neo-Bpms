@@ -20,7 +20,7 @@ public class ReportTimer(
         catch (Exception exception)
         {
             string eventText = $"One exception catched on ReportTimer {job.JobSchedule.Id} - {job.JobSchedule.Name} at " +
-                                 DateTime.Now.ToString("G");
+                                 DateTime.UtcNow.ToString("G");
             _ = $"<div>{eventText}</div><div>{exception}</div>";
             return (false, null);
         }

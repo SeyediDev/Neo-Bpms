@@ -18,7 +18,7 @@ public class CatchRuntime(ProcessVersionRuntime processVersion, CatchEvent catch
             case IntermediateCatchEvent _:
                 var ei = new EventWaitingInstance(0, this, pi, ProcessInstanceStateId.Activated)
                 {
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.UtcNow
                 };
                 ei.Save();
                 break;

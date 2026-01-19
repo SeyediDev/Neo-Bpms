@@ -23,7 +23,7 @@ public class EventBasedGatewayRuntime(ProcessVersionRuntime processVersion, Even
                 GatewaySyncWaitingInstance gwi = new(0, this, pi,
                     ProcessInstanceStateId.Activated)
                 {
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.UtcNow
                 };
                 gwi.Save();
             }

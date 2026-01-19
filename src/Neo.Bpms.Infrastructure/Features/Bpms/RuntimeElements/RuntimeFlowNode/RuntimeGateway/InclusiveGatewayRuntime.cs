@@ -29,7 +29,7 @@ public class InclusiveGatewayRuntime(ProcessVersionRuntime processVersion, Inclu
             gwi = new GatewaySyncWaitingInstance(0, this, pi, ProcessInstanceStateId.Activated)
             {
                 activationCount = 0,
-                CreationTime = DateTime.Now
+                CreationTime = DateTime.UtcNow
             };
             gwi.Save();
             CheckAndAddNotStartedInputs(pi, seq, gwi);

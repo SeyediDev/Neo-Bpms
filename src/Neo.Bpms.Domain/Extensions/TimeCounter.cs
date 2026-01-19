@@ -26,7 +26,7 @@ public class TimeCounter
         if (bStarted)
             return true;
         bStarted = true;
-        TimeStart = DateTime.Now;
+        TimeStart = DateTime.UtcNow;
         return true;
     }
     /// <summary>
@@ -50,7 +50,7 @@ public class TimeCounter
         if (!bStarted)
             return true;
         bStarted = false;
-        TimeStop = DateTime.Now;
+        TimeStop = DateTime.UtcNow;
         TotTime += TimeStop - TimeStart;
         FuncName = "";
         return true;

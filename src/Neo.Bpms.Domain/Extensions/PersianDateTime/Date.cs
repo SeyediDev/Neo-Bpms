@@ -2,7 +2,7 @@
 
 public partial class DateUtil
 {
-    public static DateTime TodayDate => DateTime.Now.Date;
+    public static DateTime TodayDate => DateTime.UtcNow.Date;
 
     public static void SplitDate(string date, out int year, out int month, out int day)
     {

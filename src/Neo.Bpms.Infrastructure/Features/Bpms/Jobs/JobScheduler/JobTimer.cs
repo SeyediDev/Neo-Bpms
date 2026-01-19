@@ -7,7 +7,7 @@ public abstract partial class JobTimer : TimerRoutineAsync
 {
     public override async Task<bool> DoTimerRoutineAsync(DateTime dt)
     {
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         var jobs = await FetchSchedulesList(now, default);
         foreach (var job in jobs)
         {
@@ -54,7 +54,7 @@ public abstract partial class JobTimer : TimerRoutineAsync
     }
     private void LogException(Exception exception, Job job, string location)
     {
-        Logger.LogCritical(exception, $"{GetType().Name}: One exception catched on {location} in JobTimer. JobSchedule {job.JobSchedule.Id} - {job.JobSchedule.Name} {job.JobItem} at " + DateTime.Now.ToString("G"));
+        Logger.LogCritical(exception, $"{GetType().Name}: One exception catched on {location} in JobTimer. JobSchedule {job.JobSchedule.Id} - {job.JobSchedule.Name} {job.JobItem} at " + DateTime.UtcNow.ToString("G"));
     }
 
     protected abstract void RecordLog(Job record, ElasticObject logRecord);

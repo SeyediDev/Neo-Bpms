@@ -26,7 +26,7 @@ public abstract partial class DDLManager
 
     private void ReportToFile()
     {
-        var date = DateTime.Now;
+        var date = DateTime.UtcNow;
         var path = Directory.GetCurrentDirectory() + "\\Report";
         Directory.CreateDirectory(path);
         var fn = date.ToString("yyyy-MM-dd hh-mm-ss");

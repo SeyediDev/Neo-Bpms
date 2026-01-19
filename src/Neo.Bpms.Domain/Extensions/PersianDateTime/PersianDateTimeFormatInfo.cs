@@ -424,7 +424,7 @@ public partial class DateUtil
     {
         if (shamsi == string.Empty)
         {
-            return DateTime.Now;
+            return DateTime.UtcNow;
         }
         else
         {
@@ -435,7 +435,7 @@ public partial class DateUtil
                 DateTime shamsidate = Mdate.ToDateTime(Convert.ToInt32(prdate[0]), Convert.ToInt32(prdate[1]), Convert.ToInt32(prdate[2]), 1, 1, 1, 1, GregorianCalendar.ADEra);
                 return Convert.ToDateTime(shamsidate.ToShortDateString());
             }
-            catch { return DateTime.Now; }
+            catch { return DateTime.UtcNow; }
         }
     }
 }

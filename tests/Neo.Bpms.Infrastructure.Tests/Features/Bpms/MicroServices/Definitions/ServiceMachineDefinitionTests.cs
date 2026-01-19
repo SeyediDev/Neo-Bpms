@@ -21,7 +21,7 @@ public class ServiceMachineDefinitionTests
     {
         // Arrange
         var machine = new ServiceMachineDefinition("Machine1");
-        var initialTime = DateTime.Now;
+        var initialTime = DateTime.UtcNow;
         // Wait a bit to ensure time difference
         Thread.Sleep(10);
 
@@ -113,7 +113,7 @@ public class ServiceMachineDefinitionTests
         // Use reflection to set _latestAliveTime to a time more than 125 seconds ago
         var field = typeof(ServiceMachineDefinition).GetField("_latestAliveTime", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        field!.SetValue(machine, DateTime.Now.AddSeconds(-130));
+        field!.SetValue(machine, DateTime.UtcNow.AddSeconds(-130));
 
         // Act
         var isAlive = machine.IsAlive();

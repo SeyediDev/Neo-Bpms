@@ -98,6 +98,6 @@ internal class CatchingTimer : CatchingEvent
     private bool CheckTimeDuration(ProcessInstance pi, FlowNodeInstance ai)
     {
         var c = new TimerInInstance(pi, ai, _timer?.dueDuration);
-        return c.CheckTimeDuration(DateTime.Now);
+        return c.CheckTimeDuration(DateTime.UtcNow);
     }
 }

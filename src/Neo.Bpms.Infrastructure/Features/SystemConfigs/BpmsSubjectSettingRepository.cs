@@ -117,7 +117,7 @@ public class BpmsSubjectSettingRepository(
     public async Task RemoveAsync(long id, CancellationToken cancellationToken = default)
     {
         int result = await commandRepo.ExecuteUpdateAsync(x => x.Id == id,
-            x => x.SetProperty(p => p.ExpireDate, DateTime.Now)
+            x => x.SetProperty(p => p.ExpireDate, DateTime.UtcNow)
                   .SetProperty(p => p.IsDeleted, true), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -128,7 +128,7 @@ public class BpmsSubjectSettingRepository(
             x.SubjectTitle == subjectTitle &&
             x.SubjectId == subjectId &&
             x.Key == key,
-            x => x.SetProperty(p => p.ExpireDate, DateTime.Now)
+            x => x.SetProperty(p => p.ExpireDate, DateTime.UtcNow)
                   .SetProperty(p => p.IsDeleted, true), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

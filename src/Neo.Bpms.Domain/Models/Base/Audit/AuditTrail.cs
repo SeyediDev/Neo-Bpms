@@ -38,7 +38,7 @@ public class AuditTrail : IAuditTrail
             DataTransaction = new DataTransaction(dataTransactionRunner);
         }
 
-        DateTime = DateTime.Now;
+        DateTime = DateTime.UtcNow;
         TriggerTypeId = triggerTypeId;
         User = user;
         UserGroupId = userGroupId;

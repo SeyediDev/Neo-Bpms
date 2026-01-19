@@ -3,8 +3,8 @@
 namespace Neo.Bpms.Domain.Entities.ProcessData;
 
 [DontAudit]
-[TableIndex("ProcessVersionId,EntityPKV")] //todo
-[TableIndex("BPMNEngineId,Locked,Id#I")] //todo
+[EntityIndex("ProcessVersionId,EntityPKV")] //todo
+[EntityIndex("BPMNEngineId,Locked,Id#I")] //todo
 [DisplayNameAndEnName("نمونه فرآیند")]
 public abstract class ProcessInstanceRecordDb : BaseProcessDataEntity
 {

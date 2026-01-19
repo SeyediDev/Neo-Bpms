@@ -3,13 +3,13 @@
     public class ServiceMachineDefinition(string machineId)
     {
         public string MachineId { get; private set; } = machineId;
-        private DateTime _latestAliveTime = DateTime.Now;
+        private DateTime _latestAliveTime = DateTime.UtcNow;
         private bool _hadUnsuccessfulConnection;
         public ConcurrentDictionary<string, FunctionInMachineDefinition> Functions { get; } = new ConcurrentDictionary<string, FunctionInMachineDefinition>();
 
         public void UpdateAlivedTime()
         {
-            _latestAliveTime = DateTime.Now;
+            _latestAliveTime = DateTime.UtcNow;
             YouAreConnected();
         }
 
@@ -30,7 +30,7 @@
         public bool IsAlive()
         {
             //todo Decide on 125 seconds criteria for a bad machine and don't hardcode it.
-            return !_hadUnsuccessfulConnection && DateTime.Now.Subtract(_latestAliveTime) < TimeSpan.FromSeconds(125);
+            return !_hadUnsuccessfulConnection && DateTime.UtcNow.Subtract(_latestAliveTime) < TimeSpan.FromSeconds(125);
         }
 
         public bool HasReadyResourceFor(string functionName)

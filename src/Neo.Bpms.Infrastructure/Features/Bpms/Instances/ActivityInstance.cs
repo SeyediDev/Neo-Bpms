@@ -130,10 +130,10 @@ public class ActivityInstance : FlowNodeInstance2
     /*
 		public override TimeSpan ActiveTime => state == ActivityInstanceStateId.Ready
 			? TimeSpan.Zero
-			: (state == ActivityInstanceStateId.Active ? DateTime.Now : CompletionTime) - StartTime;
+			: (state == ActivityInstanceStateId.Active ? DateTime.UtcNow : CompletionTime) - StartTime;
 
 		public override TimeSpan RemainingActiveTime => state == ActivityInstanceStateId.Active
-			? StartTime - DateTime.Now + AllowedExecutionTime
+			? StartTime - DateTime.UtcNow + AllowedExecutionTime
 			: TimeSpan.Zero;
 
 		public double ActivePerformanceRatio => AllowedActiveTime.Milliseconds > 0
@@ -201,7 +201,7 @@ public class ActivityInstance : FlowNodeInstance2
     public void Start()
     {
         userTaskState = UserTaskInstanceStateId.Started;
-        StartTime = DateTime.Now;
+        StartTime = DateTime.UtcNow;
         Clean();
     }
 
@@ -230,7 +230,7 @@ public class ActivityInstance : FlowNodeInstance2
         CheckStartTime();
         userTaskState = UserTaskInstanceStateId.Completed;
         state = ActivityInstanceStateId.Completed;
-        CompletionTime = DateTime.Now;
+        CompletionTime = DateTime.UtcNow;
         Close();
     }
 
@@ -244,7 +244,7 @@ public class ActivityInstance : FlowNodeInstance2
     {
         userTaskState = UserTaskInstanceStateId.Failed;
         state = ActivityInstanceStateId.Failed;
-        CompletionTime = DateTime.Now; //todo correct??
+        CompletionTime = DateTime.UtcNow; //todo correct??
         Close();
     }
 
@@ -274,14 +274,14 @@ public class ActivityInstance : FlowNodeInstance2
     {
         if (StartTime == null)
         {
-            StartTime = DateTime.Now;
+            StartTime = DateTime.UtcNow;
         }
     }
 
     public void Init(long loopCounter)
     {
         ActualOwnerId = AuditTrail.User?.Id; //todo
-        CreationTime = DateTime.Now;
+        CreationTime = DateTime.UtcNow;
         LoopCounter = loopCounter;
         Born();
     }

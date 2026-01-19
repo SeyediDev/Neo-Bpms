@@ -28,7 +28,7 @@ public class TakingScheduledReport(
         IdentityUser user, string culture, CancellationToken cancellationToken)
     {
         user ??= await identityUserService.GetIdentityUserAsync(scheduledReport.UserId, cancellationToken);
-        DateTime nowDateTime = DateTime.Now;
+        DateTime nowDateTime = DateTime.UtcNow;
         int recordsCount = scheduledReport.MaxRecordCount > 0 ? (int)scheduledReport.MaxRecordCount : 10000;
 
         FetchScheduledReportFilterValues(scheduledReport, out ElasticObject filterValues);

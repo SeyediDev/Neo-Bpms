@@ -241,7 +241,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private static string GenerateDateScript(string functionName)
     {
-        var d = DateTime.Now;
+        var d = DateTime.UtcNow;
         var script = "'" + d.Year + "/" + d.Month + "/" + d.Day + "'";
         if (functionName == "serverdatetime")
             script += " " + d.Hour + ":" + d.Minute + ":" + d.Second + "'";

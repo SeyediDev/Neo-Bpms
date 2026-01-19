@@ -40,7 +40,7 @@ public class BackupMover(BackUpOptions backUpOptions)
 
     private bool CheckTimeOfBackup()
     {
-        return DateTime.Now.TimeOfDay > backUpOptions.BackupMovementStartTimeOfDay;
+        return DateTime.UtcNow.TimeOfDay > backUpOptions.BackupMovementStartTimeOfDay;
     }
 
     private void MoveLocalBackup()
@@ -92,17 +92,17 @@ public class BackupMover(BackUpOptions backUpOptions)
 
         bool MaximumDaysPassed()
         {
-            return (date.Date - DateTime.Now.Date).Days > backUpOptions.MaximumBackupKeepingDays;
+            return (date.Date - DateTime.UtcNow.Date).Days > backUpOptions.MaximumBackupKeepingDays;
         }
 
         bool IsTodayBackup()
         {
-            return date.Date == DateTime.Now.Date;
+            return date.Date == DateTime.UtcNow.Date;
         }
 
         bool IsYesterdayBackup()
         {
-            return date.Date == DateTime.Now.Date.AddDays(-1);
+            return date.Date == DateTime.UtcNow.Date.AddDays(-1);
         }
 
         return IsTodayBackup()

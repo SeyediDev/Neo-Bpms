@@ -250,7 +250,7 @@ public class ProjectProcess(/*ILogger logger*/) : IProjectProcess
             pathPrefix);
         var fileName = ProcessVersionFileName(businessProcess.Id, businessProcessVersion.Id);
         ProjectMetaFile.SaveFile(bpmnXml, versionFolder, fileName);
-        ProjectMetaFile.SaveFile(bpmnXml, versionFolder + "\\History", DateTime.Now.ToString("s") + "_" + fileName);
+        ProjectMetaFile.SaveFile(bpmnXml, versionFolder + "\\History", DateTime.UtcNow.ToString("s") + "_" + fileName);
         if (!saveDiagram) return;
         var diagramFolder =
             $"{BusinessProcessFolder(businessProcess, (string.IsNullOrEmpty(pathPrefix) ? "" : pathPrefix + "\\") + "Diagrams")}\\Versions\\{businessProcessVersion.Id}";

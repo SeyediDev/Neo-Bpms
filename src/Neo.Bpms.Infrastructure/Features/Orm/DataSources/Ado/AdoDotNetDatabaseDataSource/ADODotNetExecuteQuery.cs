@@ -59,7 +59,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     protected int ExecuteNonQuery(out bool succeed, List<object> parameters, AdoDotNetDatabaseConnection con)
     {
-        var t0 = DateTime.Now;
+        var t0 = DateTime.UtcNow;
         int rowAffected;
         using (var oleSelectCommand = OpenCommand(SqlCommand, con.dbConnection))
         {
@@ -75,14 +75,14 @@ public abstract partial class AdoDotNetDatabaseDataSource
     protected void ExecuteReader(DbCommand oleSelectCommand, out DbDataReader dataReader, out int recordsAffected, AdoDotNetDatabaseConnection con)
     {
         if (con == null) { recordsAffected = 0; dataReader = null; return; }
-        var t0 = DateTime.Now;
+        var t0 = DateTime.UtcNow;
         dataReader = oleSelectCommand.ExecuteReader();
         recordsAffected = DataReader.RecordsAffected;
     }
     protected void ExecuteReader(DbCommand oleSelectCommand, out int recordsAffected, AdoDotNetDatabaseConnection con)
     {
         if (con == null) { recordsAffected = 0; DataReader = null; return; }
-        var t0 = DateTime.Now;
+        var t0 = DateTime.UtcNow;
         DataReader = oleSelectCommand.ExecuteReader();
         recordsAffected = DataReader.RecordsAffected;
     }

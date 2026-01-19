@@ -74,7 +74,7 @@ public partial class UserTaskRuntime(ProcessVersionRuntime processVersion, UserT
         {
             auditTrail.EntityPkv = wi.pi.EntityPkv;
             AuditTrace($"SetTaskStartTime(TaskId:{wi.activity.Id} EntityPkv:{wi.pi.EntityPkv})", wi.pi, wi);
-            wi.StartTime = DateTime.Now;
+            wi.StartTime = DateTime.UtcNow;
             wi.Save();
             wi.pi.Execution.DoJobs();
             DataStorage.SaveAudit(auditTrail);

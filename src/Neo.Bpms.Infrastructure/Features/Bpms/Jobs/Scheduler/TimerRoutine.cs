@@ -43,7 +43,7 @@ public class TimerRoutine
         {
             try
             {
-                var dt = DateTime.Now;
+                var dt = DateTime.UtcNow;
                 doTimerRoutine(dt);
             }
             catch (Exception exception)
@@ -78,7 +78,7 @@ public class TimerRoutine
     protected void AddNotification(string code, string smsNumber, LocalParameters values)
     {
         values ??= [];
-        var time = DateTime.Now;
+        var time = DateTime.UtcNow;
         values.Add("Name", Name);
         values.Add("MachineName", Environment.MachineName);
         values.Add("ProcessName", System.Diagnostics.Process.GetCurrentProcess()?.ProcessName);

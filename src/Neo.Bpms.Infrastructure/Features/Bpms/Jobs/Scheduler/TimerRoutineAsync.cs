@@ -23,7 +23,7 @@ public abstract class TimerRoutineAsync : TimerRoutine
         }
         try
         {
-            var dt = DateTime.Now;
+            var dt = DateTime.UtcNow;
             await DoTimerRoutineAsync(dt);
         }
         catch (Exception exception)

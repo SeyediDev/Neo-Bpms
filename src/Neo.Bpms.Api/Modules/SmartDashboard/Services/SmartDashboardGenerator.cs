@@ -155,7 +155,7 @@ public class SmartDashboardGenerator : ISmartDashboardGenerator
         var dashboard = new GeneratedDashboard
         {
             Name = request.Name ?? "داشبورد هوشمند",
-            Description = $"تولید شده در {DateTime.Now:yyyy/MM/dd HH:mm}",
+            Description = $"تولید شده در {DateTime.UtcNow:yyyy/MM/dd HH:mm}",
             GeneratedAt = DateTime.UtcNow,
             GridColumns = 4,
             Widgets = widgets,

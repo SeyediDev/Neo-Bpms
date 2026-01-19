@@ -141,7 +141,7 @@ public partial class ApplyUtility
     {
         var auditField = Entity.GetField(dateAuditFieldName);
         if (auditField == null) return;
-        var d = DateTime.Now;
+        var d = DateTime.UtcNow;
         if (record != null)
         {
             record[auditField.DbFieldName] = d;

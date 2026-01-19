@@ -539,10 +539,10 @@ public partial class QueryUtility : EntityConnection
     public bool GetDocuments(LocalParameters filterValues = null)
     {
         PreProcessQuery(filterValues);
-        var t0 = DateTime.Now.Ticks;
+        var t0 = DateTime.UtcNow.Ticks;
         var r = DataSource.openForRead();
         CommandTxt = DataSource.SqlCommand;
-        QueryTime = DateTime.Now.Ticks - t0;
+        QueryTime = DateTime.UtcNow.Ticks - t0;
         if (!r)
             ReleaseQuery();
         return r;

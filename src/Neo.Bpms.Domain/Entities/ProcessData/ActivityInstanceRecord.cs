@@ -110,9 +110,9 @@ public abstract class ActivityInstanceRecordAs : ActivityInstanceRecordDb
     public UserTaskInstanceState UserTaskState;
 }
 
-[TableIndex("BPMNFlowNodeId,StateId,userTaskStateId,ActualOwnerId")]
-[TableIndex("ActualOwnerId,StateId,userTaskStateId")]
-[TableIndex("ProcessInstanceId")]
+[EntityIndex("BPMNFlowNodeId,StateId,userTaskStateId,ActualOwnerId")]
+[EntityIndex("ActualOwnerId,StateId,userTaskStateId")]
+[EntityIndex("ProcessInstanceId")]
 [DontAudit]
 [DisplayNameAndEnName("نمونه المان فرآیند")]
 public class ActivityInstanceRecord : ActivityInstanceRecordAs

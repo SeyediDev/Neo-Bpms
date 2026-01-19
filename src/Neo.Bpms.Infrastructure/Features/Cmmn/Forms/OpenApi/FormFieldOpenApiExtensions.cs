@@ -45,7 +45,7 @@ internal static class FormFieldOpenApiExtensions
             case TVariableTypes.DateTime:
                 return new OpenApiSchema { Type = "string", Format = "date-time", Description = name, Example = new OpenApiDateTime(DateTimeOffset.Now) };
             case TVariableTypes.Date:
-                return new OpenApiSchema { Type = "string", Format = "date", Description = name, Example = new OpenApiDate(DateTime.Now) };
+                return new OpenApiSchema { Type = "string", Format = "date", Description = name, Example = new OpenApiDate(DateTime.UtcNow) };
             case TVariableTypes.StringListItem:
                 break;
             case TVariableTypes.HourMinute:

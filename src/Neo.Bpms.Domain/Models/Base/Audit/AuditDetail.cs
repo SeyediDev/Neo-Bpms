@@ -13,7 +13,7 @@ public class AuditDetail(long id, string title,
 
     public long Id { get; set; } = id;
     public string Title { get; set; } = title;
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    public DateTime DateTime { get; set; } = DateTime.UtcNow;
     public long? ProcessVersionId { get; set; } = processVersionId;
     public long? FlowNodeId { get; set; } = flowNodeId;
     public long? ProcessInstanceId { get; set; } = processInstanceId;

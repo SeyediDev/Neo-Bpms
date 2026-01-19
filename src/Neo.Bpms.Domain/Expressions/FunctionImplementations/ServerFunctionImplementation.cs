@@ -8,7 +8,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static DateTime ServerDateTime()
     {
-        return DateTime.Now;
+        return DateTime.UtcNow;
     }
 
     /// <summary>
@@ -17,7 +17,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static DateTime serverdatetime()
     {
-        return DateTime.Now;
+        return DateTime.UtcNow;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static DateTime ServerDate()
     {
-        return DateTime.Now.Date;
+        return DateTime.UtcNow.Date;
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static DateTime serverdate()
     {
-        return DateTime.Now.Date;
+        return DateTime.UtcNow.Date;
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static TimeSpan ServerTime()
     {
-        return DateTime.Now.TimeOfDay;
+        return DateTime.UtcNow.TimeOfDay;
     }
 
     /// <summary>
@@ -53,6 +53,6 @@ public partial class BuiltInFunctions : IFunctionImplementations
     /// <returns></returns>
     public static TimeSpan servertime()
     {
-        return DateTime.Now.TimeOfDay;
+        return DateTime.UtcNow.TimeOfDay;
     }
 }

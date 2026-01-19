@@ -6,7 +6,7 @@
 /// each entity can have multiple unique or non unique indexes.
 /// </summary>
 /// <remarks>
-/// تعریف INDEX در دیتا بیس برای موجودیت
+/// تعریف INDEX در دیتابیس برای موجودیت
 /// </remarks>
 /// <param name="fields">فیلد های ایندکس یا با استفاده از کلید '#I' بعد از نام فیلد بصورت ستون ها شامل شده در ایندکس</param>
 /// <param name="isUnique">منحصر به فرد است</param>
@@ -18,10 +18,12 @@ public class EntityIndexAttribute(string fields, bool isUnique = false, bool clu
         : this(string.Join(',', fields), isUnique, clustered)
     {
     }
+
     public EntityIndexAttribute(bool isUnique, params string[] fields)
         : this(string.Join(',', fields), isUnique, false)
     {
     }
+
     public EntityIndexAttribute(params string[] fields)
         : this(string.Join(',', fields), false, false)
     {

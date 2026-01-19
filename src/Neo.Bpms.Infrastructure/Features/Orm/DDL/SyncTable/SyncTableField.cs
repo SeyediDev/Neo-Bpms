@@ -403,7 +403,7 @@ ALTER TABLE {dbTable.FullName} ADD DEFAULT {defaultValue} FOR [{dbField.Name}]";
         var tmpField = dbTable.GetField(tempColumnName);
         if (tmpField != null)
             if (!DropDbField(entity, dbTable, tmpField))
-                tempColumnName += DateTime.Now.Ticks;
+                tempColumnName += DateTime.UtcNow.Ticks;
         if (!AddDbField(entity, dbTable, tempColumnName, fieldTypeStr, false, false))
             return;
         var ddl = DDLGenerator.ChangeField(dbTable.FullName, tempColumnName, pField.DbFieldName, castFieldType);
@@ -414,7 +414,7 @@ ALTER TABLE {dbTable.FullName} ADD DEFAULT {defaultValue} FOR [{dbField.Name}]";
             var castField = dbTable.GetField(castColumnName);
             if (castField != null)
                 if (!DropDbField(entity, dbTable, castField))
-                    castColumnName += DateTime.Now.Ticks;
+                    castColumnName += DateTime.UtcNow.Ticks;
             if (!RenameDbField(entity, dbTable, dbField, pField.DbFieldName, castColumnName))
             {
                 AddLog("10.0.145", Log.Error, entity.Name + ":" + castColumnName);

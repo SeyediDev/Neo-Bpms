@@ -117,7 +117,7 @@ public class EditableGridController : ControllerBase
             var fileBytes = await _gridService.ExportToExcelAsync(endpoint, request);
             return File(fileBytes, 
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                $"grid-export-{DateTime.Now:yyyy-MM-dd}.xlsx");
+                $"grid-export-{DateTime.UtcNow:yyyy-MM-dd}.xlsx");
         }
         catch (Exception ex)
         {

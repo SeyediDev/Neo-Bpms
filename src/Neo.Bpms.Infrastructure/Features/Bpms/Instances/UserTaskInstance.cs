@@ -30,10 +30,10 @@ public class UserTaskInstance : ActivityInstance
 
     public UserTask UserTask => activity as UserTask;
 
-    //public TimeSpan ExecutionTime => userTaskState < UserTaskInstanceStateId.Started ? TimeSpan.Zero : (userTaskState == UserTaskInstanceStateId.Started ? DateTime.Now : CompletionTime) - StartTime;
-    //public TimeSpan RemainingExecutionTime => userTaskState < UserTaskInstanceStateId.Started ? TimeSpan.Zero : (userTaskState == UserTaskInstanceStateId.Started ? StartTime - DateTime.Now + AllowedExecutionTime : TimeSpan.Zero);
+    //public TimeSpan ExecutionTime => userTaskState < UserTaskInstanceStateId.Started ? TimeSpan.Zero : (userTaskState == UserTaskInstanceStateId.Started ? DateTime.UtcNow : CompletionTime) - StartTime;
+    //public TimeSpan RemainingExecutionTime => userTaskState < UserTaskInstanceStateId.Started ? TimeSpan.Zero : (userTaskState == UserTaskInstanceStateId.Started ? StartTime - DateTime.UtcNow + AllowedExecutionTime : TimeSpan.Zero);
     public override TimeSpan RemainingActiveTime => userTaskState < UserTaskInstanceStateId.Completed
-        ? CreationTime - DateTime.Now + AllowedActiveTime
+        ? CreationTime - DateTime.UtcNow + AllowedActiveTime
         : TimeSpan.Zero;
     //public double ExecutionPerformanceRatio => AllowedExecutionTime.Milliseconds > 0 ? ExecutionTime.Milliseconds * 100 / AllowedExecutionTime.Milliseconds : 0;
 
@@ -74,7 +74,7 @@ public class UserTaskInstance : ActivityInstance
 				}
 				catch(Exception)
 				{
-					return DateTime.Now;
+					return DateTime.UtcNow;
 				}
 
 			} 

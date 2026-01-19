@@ -64,7 +64,7 @@ namespace Neo.Bpms.Infrastructure.Features.Bpms.MicroServices
             Fail = fail;
             _takeBackToQueue = takeBackToQueue;
             UserParams = userParams;
-            LastNotifiedTime = DateTime.Now;
+            LastNotifiedTime = DateTime.UtcNow;
         }
 
         public void FinishWork(LocalParameters output, bool isImmediate)
@@ -100,15 +100,15 @@ namespace Neo.Bpms.Infrastructure.Features.Bpms.MicroServices
             if (progressValue < Progress) return;
             Progress = progressValue;
             Detail = detail;
-            LastNotifiedTime = DateTime.Now;
+            LastNotifiedTime = DateTime.UtcNow;
         }
 
         public void QueueIfTimedOut()
         {
-            if (DateTime.Now.Subtract(LastNotifiedTime) > TimeoutCriteria)
+            if (DateTime.UtcNow.Subtract(LastNotifiedTime) > TimeoutCriteria)
             {
                 Logger.LogInformation("Timeout {0} {1} last:{2} now:{3} criteria:{4}", Function.FuncName, CurrentRequestId,
-                    LastNotifiedTime, DateTime.Now, TimeoutCriteria);
+                    LastNotifiedTime, DateTime.UtcNow, TimeoutCriteria);
                 //                FailWork(new LocalParameters(), null, false);
                 TakeBackToQueue(dontRun: false); //todo IMPORTANT! number of tries
             }

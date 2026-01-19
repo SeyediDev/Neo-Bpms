@@ -43,7 +43,7 @@ public abstract class ScopeInstance : IPropertyValueContainer
     protected ScopeInstance(long instanceId, object instanceState)
     {
         Id = instanceId;
-        CreationTime = DateTime.Now;
+        CreationTime = DateTime.UtcNow;
         // ReSharper disable once VirtualMemberCallInConstructor
         SetState(instanceState);
     }
@@ -53,8 +53,8 @@ public abstract class ScopeInstance : IPropertyValueContainer
         Id = instanceId;
     }
 
-    public virtual TimeSpan ActiveTime => (IsActive() ? DateTime.Now : CloseTime ?? DateTime.Now) - CreationTime;
-    public virtual TimeSpan RemainingActiveTime => CreationTime + AllowedActiveTime - DateTime.Now;
+    public virtual TimeSpan ActiveTime => (IsActive() ? DateTime.UtcNow : CloseTime ?? DateTime.UtcNow) - CreationTime;
+    public virtual TimeSpan RemainingActiveTime => CreationTime + AllowedActiveTime - DateTime.UtcNow;
 
     public double PerformanceRatio => AllowedActiveTime.Milliseconds > 0
         ? ActiveTime.Milliseconds * 100 / AllowedActiveTime.Milliseconds
@@ -157,7 +157,7 @@ public abstract class ScopeInstance : IPropertyValueContainer
 
     internal virtual void Close()
     {
-        CloseTime = DateTime.Now;
+        CloseTime = DateTime.UtcNow;
     }
 
     internal void AddAuditDetail(BPMNAuditDetailTypeId typeId, string text)

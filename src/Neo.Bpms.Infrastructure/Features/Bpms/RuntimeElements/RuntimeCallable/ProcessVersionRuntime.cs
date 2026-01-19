@@ -101,7 +101,7 @@ public class ProcessVersionRuntime(Process definition, string versionNo) : Calla
         ProcessInstance pi = new(0, ProcessInstanceStateId.Activated,
             this, entityPkv, parentAiId, execution)
         {
-            CreationTime = DateTime.Now,
+            CreationTime = DateTime.UtcNow,
             CreatorUserId = execution.AuditTrail.User?.Id
         };
         //pi.AllowedActiveTime = definition.AllowedActiveTime;
