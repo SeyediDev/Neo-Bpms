@@ -99,6 +99,7 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
             EnName = memberItem.MemberInfo.GetDisplayableName(),
             DBName = memberItem.MemberInfo.Name
         };
+        
         ExtractIds(ids, memberItem.MemberInfo.GetCustomAttributes(true));
         TVariableTypes fieldType = EntityField.GetFieldType(memberItem.MemberType, logger);
         EntityField field = new(entity, id, ids.Name, ids.EnName, memberItem.MemberType, fieldType)
