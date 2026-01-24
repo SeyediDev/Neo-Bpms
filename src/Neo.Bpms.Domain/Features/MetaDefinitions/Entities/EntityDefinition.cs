@@ -88,6 +88,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     /// <returns></returns>
     public void DefineUI()
     {
+        RefineEntity();
         DefineSubjectsForms();
         Forms();
         foreach (ReportDefinition report in ExtractSubsInstances<ReportDefinition>())
@@ -98,6 +99,21 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
         {
             _ = dashboard.DefineDashboard(Entity, this);
         }
+    }
+    protected virtual void RefineEntity()
+    {
+    }
+    
+    protected EntityField? RenameField(string fieldName, string name, string enName)
+    {
+        var field = Entity.GetField(fieldName);
+        if (field != null)
+        {
+            field.Name = name;
+            field.EnName = enName;
+        }
+
+        return field;
     }
 
     #region IdentifyReport functions

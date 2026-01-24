@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities;
+﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
+
+namespace Neo.Bpms.Domain.Features.Definitions.Entities;
 
 /// <summary>
 /// Base class to define forms and their details. All form definitions in the business and meta models are sub classes of this object.
@@ -233,7 +235,7 @@ public abstract partial class FormDefinition
     /// <param name="fieldId">Name of the field.</param>
     /// <param name="controlTypeId"></param>
     /// <returns></returns>
-    public FormField AddColumn(string fieldId, eControlTypeId controlTypeId = eControlTypeId.None)
+    public FormField AddColumn(string fieldId, eControlTypeId controlTypeId= eControlTypeId.None)
     {
         _currentFormField = null;
         if (form.formFields.Any(f => f.Id == fieldId && f.FieldOrControlType == FormField.Type.ColumnField))
@@ -607,7 +609,7 @@ public abstract partial class FormDefinition
     /// <param name="control"></param>
     protected virtual void AddColumnInAddAll(EntityField field, eControlTypeId control)
     {
-        _ = control == eControlTypeId.None ? AddColumn(field.Id) : AddColumn(field.Id, control);
+        AddColumn(field.Id, control);
 
         if (field.Required ||
             (field.AssociationEntity?.Maps?.Any(m => entity.GetField(m.SourceField)?.Required ?? false) ?? false))

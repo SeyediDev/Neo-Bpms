@@ -61,10 +61,10 @@ public abstract partial class FormDefinition
     /// <returns></returns>
     public FormField AddSubTable<TTableEntity, TTableAssociation>(
         string tableIndexFormSubjectId, string labelName, string association = null,
-        bool editable = false, ContainerControl containerControl = ContainerControl.None, string enLabelName = null, string filter = null)
+        bool editable = false, ContainerControl containerControl = ContainerControl.None, string enLabelName = null, string filter = null, int? recordCount=null)
     {
         return AddSubTable(typeof(TTableEntity).Name, typeof(TTableAssociation).Name,
-            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter);
+            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter, recordCount);
     }
 
     /// <summary>
@@ -81,10 +81,10 @@ public abstract partial class FormDefinition
     public FormField AddSubTable<TTableEntity>(string tableAssociation,
         string tableIndexFormSubjectId, string labelName, string association = null,
         bool editable = false, ContainerControl containerControl = ContainerControl.None,
-        string enLabelName = null, string filter = null)
+        string enLabelName = null, string filter = null, int? recordCount = null)
     {
         return AddSubTable(typeof(TTableEntity).Name, tableAssociation,
-            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter);
+            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter, recordCount);
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public abstract partial class FormDefinition
     public FormField AddSubTable(string tableEntityId, string tableAssociationId = null,
         string tableIndexFormSubjectId = null, string labelName = null, string associationId = null,
         bool editable = false, ContainerControl containerControl = ContainerControl.None, 
-        string enLabelName = null, eControlPropertyId? controlPropertyId=null, string filter = null)
+        string enLabelName = null, eControlPropertyId? controlPropertyId=null, string filter = null, int? recordCount = null)
     {
         if (!GetSubTable(form, tableEntityId, tableAssociationId, out var tableEntity, out var tableAssociation))
         {
@@ -146,6 +146,10 @@ public abstract partial class FormDefinition
         if( !string.IsNullOrEmpty(filter) )
         {
             AddProperty(eControlPropertyId.FilterFormula, filter);
+        }
+        if (recordCount!=null)
+        {
+            AddProperty(eControlPropertyId.MaxRecordCount, recordCount);
         }
         if (notTabular)
         {

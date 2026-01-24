@@ -76,7 +76,8 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
 
     public IndexFormData GetRecords(CommonFormStructure structure, Entity entity, Form form, string culture,
         ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp,
-        IList<string> filterList, IdentityUser user, bool setAssociationDisplay, string parentFieldId, CancellationToken cancellationToken)
+        IList<string> filterList, IdentityUser user, bool setAssociationDisplay, string parentFieldId,
+        int? recordCount, CancellationToken cancellationToken)
     {
         JoinQueriesData joinQueries = new();
         IndexFormData result = new(filterValues);
@@ -96,6 +97,8 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             filterList, false, joinQueries);
         if (!string.IsNullOrEmpty(parentFieldId))
             q.SelectField(parentFieldId);
+        if (recordCount != null)
+            q.SetPage(1, recordCount.Int());
         if (!q.GetDocuments(filterValues, lp))
             return result;
         queryInfo?.AddByQueryUtility(q);
@@ -453,9 +456,10 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         {
             filterList.Add(filterProperty);
         }
+        var recordCountProperty = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
 
         IndexFormData indexData = await GetRecordsWithoutJoin(structure, entity, form, culture, filterValues,
-            sortFields, 1, 1000, null, lp, filterList, user,
+            sortFields, 1, recordCountProperty==null?100: recordCountProperty.Int(), null, lp, filterList, user,
             false, setAssociationDisplay, cancellationToken);
         var docFields = structure.ColumnInfos.Where(f => f.ControlType == eControlTypeId.File || f.ControlType == eControlTypeId.AdvancedUpload);
         if (docFields.Any())
@@ -487,6 +491,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         {
             filterList.Add(filterProperty);
         }
+        var recordCount = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
 
         string parentFieldId = "";
         if (getTableParentFieldId)
@@ -495,7 +500,8 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         }
 
         IndexFormData indexData = GetRecords(structure, entity, form, culture, null,
-            null, lp, filterList, user, setAssociationDisplay, parentFieldId, cancellationToken);
+            null, lp, filterList, user, setAssociationDisplay, parentFieldId,
+            recordCount?.Int(), cancellationToken);
         return indexData.Rows;
     }
 

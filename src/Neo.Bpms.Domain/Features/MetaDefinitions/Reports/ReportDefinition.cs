@@ -110,13 +110,13 @@ public abstract class ReportDefinition : FormDefinition
     /// </summary>
     /// <param name="fieldId">field Id</param>
     /// <returns></returns>
-    protected bool AddColumn(string fieldId)
+    protected bool AddColumn(string fieldId, string alias = null)
     {
         var field = report.GetEntityField(fieldId);
-        return AddColumn(field);
+        return AddColumn(field, alias);
     }
 
-    private bool AddColumn(EntityField field)
+    private bool AddColumn(EntityField field, string alias)
     {
         if (field == null) return false;
         bool asGroupBy = false, asAggregation = false;
@@ -129,12 +129,16 @@ public abstract class ReportDefinition : FormDefinition
             asGroupBy = true;
         }
         _currentField = Report.AddColumn(reportFields, field.Id, asGroupBy, asAggregation);
+        if (string.IsNullOrEmpty(alias))
+        {
+            _currentField.alias = alias;
+        }
         return _currentField != null;
     }
 
     protected override void AddColumnInAddAll(EntityField field, eControlTypeId control)
     {
-        AddColumn(field);
+        AddColumn(field.Id, control);
         if (field.Required ||
             (field.AssociationEntity?.Maps?.Any(m => entity.GetField(m.SourceField)?.Required ?? false) ?? false))
             AddFieldProperty(eControlPropertyId.Required, true);
