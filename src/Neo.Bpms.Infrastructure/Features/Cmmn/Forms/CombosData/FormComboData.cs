@@ -115,7 +115,7 @@ public static class FormComboData
                 for (int i=0; i< enumNames.Length; i++)
                 {
                     var enumItem = enumItems.GetValue(i);
-                    var enumItemId = (int)enumItems.GetValue(i);
+                    var enumItemId = enumItems.GetValue(i);
                     var displayValue = FormDataRoutines.GetEnumText(enumType, enumItem, culture)?? enumNames[i];
                     newComboData.AddRow(new FormDataRow()
                     {

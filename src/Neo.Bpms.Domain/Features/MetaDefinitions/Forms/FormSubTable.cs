@@ -19,7 +19,7 @@ public abstract partial class FormDefinition
         string labelName, string multipleForeignKeyFieldId, string association = null, string enLabelName = null)
     {
         var formField = AddSubTable(tableEntityId, tableAssociation, tableIndexFormSubjectId, labelName,
-            association, true, eControlTypeId.None, enLabelName);
+            association, true, ContainerControl.None, enLabelName);
         if (formField != null && !string.IsNullOrWhiteSpace(multipleForeignKeyFieldId))
         {
             formField.SubTableToMultipleCombo(multipleForeignKeyFieldId);
@@ -41,7 +41,7 @@ public abstract partial class FormDefinition
         string labelName, string multipleForeignKeyFieldId, string association = null, string enLabelName = null)
     {
         var formField = AddSubTable<TTableEntity, TTableAssociation>(tableIndexFormSubjectId, labelName, association
-        , true, eControlTypeId.None, enLabelName);
+        , true, ContainerControl.None, enLabelName);
         if (formField != null && !string.IsNullOrWhiteSpace(multipleForeignKeyFieldId))
         {
             formField.SubTableToMultipleCombo(multipleForeignKeyFieldId);
@@ -61,10 +61,10 @@ public abstract partial class FormDefinition
     /// <returns></returns>
     public FormField AddSubTable<TTableEntity, TTableAssociation>(
         string tableIndexFormSubjectId, string labelName, string association = null,
-        bool editable = false, eControlTypeId containerControl = eControlTypeId.None, string enLabelName = null)
+        bool editable = false, ContainerControl containerControl = ContainerControl.None, string enLabelName = null, string filter = null)
     {
         return AddSubTable(typeof(TTableEntity).Name, typeof(TTableAssociation).Name,
-            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName);
+            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter);
     }
 
     /// <summary>
@@ -80,11 +80,11 @@ public abstract partial class FormDefinition
     /// <returns></returns>
     public FormField AddSubTable<TTableEntity>(string tableAssociation,
         string tableIndexFormSubjectId, string labelName, string association = null,
-        bool editable = false, eControlTypeId containerControl = eControlTypeId.None,
-        string enLabelName = null)
+        bool editable = false, ContainerControl containerControl = ContainerControl.None,
+        string enLabelName = null, string filter = null)
     {
         return AddSubTable(typeof(TTableEntity).Name, tableAssociation,
-            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName);
+            tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter);
     }
 
     /// <summary>
@@ -101,7 +101,8 @@ public abstract partial class FormDefinition
     /// <returns></returns>
     public FormField AddSubTable(string tableEntityId, string tableAssociationId = null,
         string tableIndexFormSubjectId = null, string labelName = null, string associationId = null,
-        bool editable = false, eControlTypeId containerControl = eControlTypeId.None, string enLabelName = null, eControlPropertyId? controlPropertyId=null)
+        bool editable = false, ContainerControl containerControl = ContainerControl.None, 
+        string enLabelName = null, eControlPropertyId? controlPropertyId=null, string filter = null)
     {
         if (!GetSubTable(form, tableEntityId, tableAssociationId, out var tableEntity, out var tableAssociation))
         {
@@ -111,22 +112,16 @@ public abstract partial class FormDefinition
         }
         if (tableAssociation == null)
             throw new Exception("Invalid association " + tableEntityId + "-" + tableAssociationId);
-        if (containerControl != eControlTypeId.None)
-        {
-            var att = containerControl.GetAttribute<ControlGroupAttribute>();
-            if (!att.ControlGroup.Any(cg => cg == ControlGroup.ContainerGroup))
-                throw new Exception("Invalid Container ControlType in" + tableEntityId + "-" + tableAssociationId);
-        }
         var tableControlId = FormField.SubTableInstanceId(tableEntityId, tableAssociationId, tableIndexFormSubjectId);
-        //const eControlTypeId containerControl = eControlTypeId.Accordion; //eControlTypeId.MultiTab
-        var notTabular = containerControl != eControlTypeId.None && string.IsNullOrEmpty(_parentControlId);
+        //const ContainerControl containerControl = ContainerControl.Accordion; //ContainerControl.MultiTab
+        var notTabular = containerControl != ContainerControl.None && string.IsNullOrEmpty(_parentControlId);
         if (notTabular)
         {
             var fmtId = "SubTablesTab" + containerControl;
-            var fmt = form?.formFields.FirstOrDefault(f => f.ControlTypeId == containerControl && f.Id == fmtId);
+            var fmt = form?.formFields.FirstOrDefault(f => f.ControlTypeId == (eControlTypeId)containerControl && f.Id == fmtId);
             if (fmt == null)
             {
-                AddControl(containerControl, fmtId);
+                AddControl((eControlTypeId)containerControl, fmtId);
                 StartSubControls();
             }
             else
@@ -134,7 +129,7 @@ public abstract partial class FormDefinition
                 _currentFormField = fmt;
                 _parentControlId = fmt.ControlId;
             }
-            AddControl(containerControl == eControlTypeId.Accordion ? eControlTypeId.AccordionItem : eControlTypeId.MultiTabItem,
+            AddControl(containerControl == ContainerControl.Accordion ? eControlTypeId.AccordionItem : eControlTypeId.MultiTabItem,
                 $"{tableControlId}_TabItem",
                 labelName ?? tableAssociation.Name, enLabelName ?? tableEntity.EnName);
             // Set entity info on tab for icon display
@@ -148,6 +143,10 @@ public abstract partial class FormDefinition
             AddProperty(eControlPropertyId.Editable);
         if(controlPropertyId!=null)
             AddProperty(controlPropertyId.Value);
+        if( !string.IsNullOrEmpty(filter) )
+        {
+            AddProperty(eControlPropertyId.FilterFormula, filter);
+        }
         if (notTabular)
         {
             EndSubControls();

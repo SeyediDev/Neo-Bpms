@@ -141,21 +141,16 @@ public enum eControlTypeId
     /// </remarks>
     [ControlGroup(ControlGroup.None)]
     BusinessDefinedControl = 100001,
+}
 
-    [ControlGroup(ControlGroup.ContainerGroup)]
-    MainPage = 220,
-
-    [ControlGroup(ControlGroup.ContainerGroup)]
-    AppHeader = 230,
-
-    [ControlGroup(ControlGroup.ContainerGroup)]
-    AppToolbar = 240,
-
-    [ControlGroup(ControlGroup.ContainerGroup)]
-    AppCard = 250,
-
-    [ControlGroup(ControlGroup.ContainerGroup)]
-    AppFormSelector = 260,
+public enum ContainerControl
+{
+    None = eControlTypeId.None,
+    Accordion = eControlTypeId.Accordion,
+    Group = eControlTypeId.Group,
+    MultiTab = eControlTypeId.MultiTab,
+    FieldSet = eControlTypeId.FieldSet,
+    GridColumn = eControlTypeId.GridColumn,
 }
 
 public class UIControlType(eControlTypeId id, string name) : BaseModelClass(null, (int)id, name)

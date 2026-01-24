@@ -16,7 +16,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         Entity entity, Form form, string culture,
         ElasticObject filterValues, string sortFields,
         int pageNo, int recordsPerPage, QueryInfo queryInfo, LocalParameters lp,
-        IList<string> filterList, IdentityUser user, bool checkPaging, bool setAssociationDisplay, 
+        IList<string> filterList, IdentityUser user, bool checkPaging, bool setAssociationDisplay,
         CancellationToken cancellationToken)
     {
         JoinQueriesData joinQueries =
@@ -45,7 +45,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             return result;
         queryInfo?.AddByQueryUtility(q);
         List<ElasticObject> records = [.. GetRecordsRows(q, result)];
-        foreach( var record in  records )
+        foreach (var record in records)
         {
             lp.AddOrUpdate("q", record);
             FetchJoinQuery.SetJoinQueryReference(culture, joinQueries, q, referFormFields, record, setAssociationDisplay, user);
@@ -100,7 +100,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             return result;
         queryInfo?.AddByQueryUtility(q);
         List<ElasticObject> records = [.. GetRecordsRows(q, result)];
-        Parallel.ForEach(records, record => 
+        Parallel.ForEach(records, record =>
         {
             FetchJoinQuery.SetJoinQueryReference(culture, joinQueries, q, referFormFields, record, setAssociationDisplay, user);
             SetEnumValues(culture, form, record);
@@ -196,7 +196,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
 
     public static void SetEnumValues(string culture, Form form, ElasticObject record)
     {
-        foreach (var field in form.formFields.Where(f => f.Field?.IsEnum??false))
+        foreach (var field in form.formFields.Where(f => f.Field?.IsEnum ?? false))
         {
             var value = record[field.Id];
             if (value != null)
@@ -415,7 +415,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
     #region private
 
     private long GetRecordCount(CommonFormStructure structure, Entity entity, Form form,
-        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp, IEnumerable<string> filterList, 
+        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp, IEnumerable<string> filterList,
         CancellationToken cancellationToken)
     {
         if (entity.entityFields == null) return 0;
@@ -445,12 +445,19 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, sortFields, form, user);
         List<string> filterList = [];
         if (ids != null)
+        {
             filterList.Add(TableAssociationFilter(table, ids));
+        }
+        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
+        if (!string.IsNullOrEmpty(filterProperty))
+        {
+            filterList.Add(filterProperty);
+        }
 
         IndexFormData indexData = await GetRecordsWithoutJoin(structure, entity, form, culture, filterValues,
             sortFields, 1, 1000, null, lp, filterList, user,
             false, setAssociationDisplay, cancellationToken);
-        var docFields = structure.ColumnInfos.Where(f => f.ControlType == eControlTypeId.File|| f.ControlType == eControlTypeId.AdvancedUpload);
+        var docFields = structure.ColumnInfos.Where(f => f.ControlType == eControlTypeId.File || f.ControlType == eControlTypeId.AdvancedUpload);
         if (docFields.Any())
         {
             foreach (var row in indexData.Rows)
@@ -472,7 +479,14 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, form, user);
         List<string> filterList = [];
         if (ids != null)
+        {
             filterList.Add(TableAssociationFilter(table, ids));
+        }
+        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
+        if (!string.IsNullOrEmpty(filterProperty))
+        {
+            filterList.Add(filterProperty);
+        }
 
         string parentFieldId = "";
         if (getTableParentFieldId)
@@ -513,7 +527,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
 
         return string.Join(" And ", associationFilters);
     }
-    
+
     public static string GetEnumText(Type enumType, object value, string culture)
     {
         // Handle nullable enums

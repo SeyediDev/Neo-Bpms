@@ -162,7 +162,7 @@ public class SystemUserDefinitions : EntityDefinition
             AddField(nameof(SystemUser.PasswordHash), eControlPropertyId.IsPassword);
             AddProperty(eControlPropertyId.Required);
             AddSubTable("SystemUser_UserGroup", "User", null, "گروه کاربری", "Id", true,
-                eControlTypeId.None, "UserGroup");
+                ContainerControl.None, "UserGroup");
         }
         protected override void DataOperations()
         {

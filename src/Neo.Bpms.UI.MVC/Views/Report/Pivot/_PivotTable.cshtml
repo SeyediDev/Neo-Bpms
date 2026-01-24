@@ -381,9 +381,9 @@
 					const isFirstRow = vfIndex === 0;
 					const isLastRow = vfIndex === valueFields.length - 1;
 
-							html += '<tr class="' + (isFirstInGroup && isFirstRow ? 'pivot-row-group-start' : '') + ' ' + (isLastInGroup && isLastRow ? 'pivot-row-group-end' : '') + '">';
+				    html += '<tr class="' + (isFirstInGroup && isFirstRow ? 'pivot-row-group-start' : '') + ' ' + (isLastInGroup && isLastRow ? 'pivot-row-group-end' : '') + '">';
 
-					if (vfIndex === 0) {
+					if (isFirstRow) {
 						html += '<th class="pivot-row-header" rowspan="' + rowSpan + '">' + this.formatKey(rowKey) + '</th>';
 					}
 
@@ -403,8 +403,8 @@
 						const value = this.pivotData[rowKey]?.[colKey]?.[valueFieldName] ?? null;
 						const hasValue = value !== null && value !== undefined;
 						const tooltip = this.buildTooltip(this.getFieldLabel(valueField), value, rowKey, colKey);
-						// فقط برای سطر اول (vfIndex === 0) و فقط برای colKeyهایی که Total نیستند، آیکون drill down را نمایش بده
-						const showDrillDown = this.options.hasSubReport && hasValue && vfIndex === 0 && colKey !== 'Total';
+						// فقط برای سطر اول (isFirstRow) و فقط برای colKeyهایی که Total نیستند، آیکون drill down را نمایش بده
+							const showDrillDown = this.options.hasSubReport && hasValue && isFirstRow && colKey !== 'Total';
 						const isTotalColumn = colKey === 'Total';
 						let cellClass = showDrillDown ? 'pivot-value pivot-value-clickable' : 'pivot-value';
 						if (isTotalColumn) {
@@ -434,7 +434,7 @@
 				
 				html += '<tr class="pivot-total-row' + (isFirstRow ? ' pivot-row-group-start' : '') + (isLastRow ? ' pivot-row-group-end' : '') + '">';
 
-				if (vfIndex === 0) {
+				if (isFirstRow) {
 					html += '<th class="pivot-row-header pivot-row-header--total" rowspan="' + rowSpan + '">' + this.formatKey(rowKey) + '</th>';
 				}
 
