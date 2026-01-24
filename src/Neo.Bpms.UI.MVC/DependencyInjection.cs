@@ -206,8 +206,15 @@ public static class DependencyInjection
         _ = app.Use(async (context, next) =>
         {
             context.Response.Headers.Append("Permissions-Policy",
-                "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
-            await next();
+                "accelerometer=(), camera=(), geolocation=(_Layout), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+            try
+            {
+                await next();
+            }
+            catch( Exception ex)
+            {
+                string message = ex.ToString();
+            }
         });
     }
     //private static void MigrationToDatabase(bool syncMetaData = false)

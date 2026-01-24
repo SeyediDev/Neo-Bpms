@@ -5,21 +5,7 @@
 @model IdentityUser
 @inject IMenuHelper menuHelper
 
-
-@* <nav class="sidebar collapsed" id="sidebar"> *@
-@*     <button class="menu-toggle" onclick="toggleSidebar()">☰</button> *@
-@*     <ul id="mainMenuUL"> *@
-@*         @menuHelper.GetMenuItems(ViewBag.PagePackId as string, Model, Url) *@
-@*     </ul> *@
-@* </nav> *@
-
-@*     <script> *@
-@*         function toggleSidebar() { *@
-@*           document.getElementById('sidebar').classList.toggle('collapsed'); *@
-@*         } *@
-@*     </script> *@
 <link href="/bundles/mmenu/mmenu.css" rel="stylesheet" />
-@* <link href="/bundles/mmenu/demo.css" rel="stylesheet" /> *@
 <link href="~/bundles/mmenu/mmenu-rtl-fix.css" asp-append-version="true" rel="stylesheet" />
 <link href="~/bundles/mmenu/custom-menu-icons.css" asp-append-version="true" rel="stylesheet" />
 <link href="~/CommonAssets/Styles/Features/Global/neo-dashboard.css" asp-append-version="true" rel="stylesheet" />
@@ -31,10 +17,9 @@
         @menuHelper.GetMenuItems(ViewBag.PagePackId as string, Model, Url)
     </ul>
 </nav>
-<!-- mmenu scripts -->
 
+<!-- mmenu scripts -->
 <script>
-    //new Mmenu(document.querySelector("#menu2"));
     document.addEventListener(
         "DOMContentLoaded", () => {
             var menuInstance = new Mmenu( "#menu2", {
@@ -208,11 +193,3 @@
         }
     });
 </script>
-
-
-
-@* <nav id="menu" @(CultureHelper.IsRightToLeft() ? "dir=rtl" : "dir=ltr")> *@
-@* 	<ul id="mainMenuUL"> *@
-@*         @menuHelper.GetMenuItems(ViewBag.PagePackId as string, Model, Url) *@
-@* 	</ul> *@
-@* </nav> *@
