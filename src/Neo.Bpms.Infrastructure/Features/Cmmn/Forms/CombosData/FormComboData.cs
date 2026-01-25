@@ -1,6 +1,7 @@
 ﻿using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions.Extensions;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
+using Neo.Common.Extensions;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
 
@@ -115,7 +116,7 @@ public static class FormComboData
                 for (int i=0; i< enumNames.Length; i++)
                 {
                     var enumItem = enumItems.GetValue(i);
-                    var enumItemId = enumItems.GetValue(i);
+                    var enumItemId = (int)enumItems.GetValue(i);
                     var displayValue = FormDataRoutines.GetEnumText(enumType, enumItem, culture)?? enumNames[i];
                     newComboData.AddRow(new FormDataRow()
                     {

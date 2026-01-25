@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Engine.Data.ADODotNet;
+﻿using Neo.Common.Extensions;
+
+namespace Neo.Bpms.Engine.Data.ADODotNet;
 
 /// <summary>
 /// The ado dot net database data source that implement dml functions.
@@ -22,12 +24,12 @@ public abstract partial class AdoDotNetDatabaseDataSource
         if (value is bool b) return b ? "1" : "0";
         if (type?.IsEnum ?? false)
         {
-            return Convert.ToInt32(value).ToString();
+            return value.EnumToInt(type)?.ToString();
         }
 
         if (value.GetType().IsEnum)
         {
-            return Convert.ToInt32(value).ToString();
+            return value.EnumToInt(type)?.ToString();
         }
 
         if (value is string && type == typeof(DateTime))
@@ -134,7 +136,10 @@ public abstract partial class AdoDotNetDatabaseDataSource
         if (injectionKey != null && str.Length >= injectionKey.Length &&
             str[..injectionKey.Length].ToUpper() == injectionKey)
             return str[injectionKey.Length..];
-        if (type == typeof(long) || type == typeof(double) || type == typeof(bool))
+        if (type == typeof(int) || 
+            type == typeof(long) || 
+            type == typeof(double) || 
+            type == typeof(bool))
         {
             if (str == "undefined") return "null";
             if (type == typeof(bool))
@@ -144,7 +149,7 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
             if (str.Length == 0)
                 return "null";
-            if (type == typeof(long))
+            if (type == typeof(int)|| type == typeof(long))
             {
                 return long.TryParse(str, out var lv) ? lv.ToString(CultureInfo.InvariantCulture) : str;
             }

@@ -40,7 +40,6 @@ public class ComboBox(IFormLogicHelper formLogicHelper, InputFieldDefinition fie
         {
             result.Append("<option value=\"\"></option>");
         }
-
         foreach (FormDataRow item in dataRows)
         {
             result.Append("<option");
