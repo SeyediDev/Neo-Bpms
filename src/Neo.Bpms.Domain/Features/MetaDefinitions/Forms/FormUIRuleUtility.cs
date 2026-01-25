@@ -91,7 +91,7 @@ public abstract partial class FormDefinition
         }
     }
     
-    public void FilterFormula(List<string> userChangeFieldIds, List<string> controlledParams, string filter)
+    public void SetFilterFormula(List<string> userChangeFieldIds, List<string> controlledParams, string filter)
     {
         var id = $"FilterFormula_On_{string.Join(',', controlledParams)}";
         if (AddUIRule(id, id) == null) return;
