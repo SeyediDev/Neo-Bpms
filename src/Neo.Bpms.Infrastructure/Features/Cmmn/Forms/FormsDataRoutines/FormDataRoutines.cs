@@ -74,7 +74,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return result;
     }
 
-    public IndexFormData GetRecords(CommonFormStructure structure, Entity entity, Form form, string culture,
+    public static IndexFormData GetRecords(CommonFormStructure structure, Entity entity, Form form, string culture,
         ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp,
         IList<string> filterList, IdentityUser user, bool setAssociationDisplay, string parentFieldId,
         int? recordCount, CancellationToken cancellationToken)
@@ -205,9 +205,10 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             if (value != null)
             {
                 var enumType = field.Field.CSharpType;
-                if (Nullable.GetUnderlyingType(field.Field.CSharpType) != null)
+                var nullableType = Nullable.GetUnderlyingType(field.Field.CSharpType);
+                if (nullableType != null)
                 {
-                    enumType = Nullable.GetUnderlyingType(field.Field.CSharpType);
+                    enumType = nullableType;
                 }
                 record[field.Id] = GetEnumText(enumType, value, culture);
             }
@@ -417,7 +418,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
 
     #region private
 
-    private long GetRecordCount(CommonFormStructure structure, Entity entity, Form form,
+    private static long GetRecordCount(CommonFormStructure structure, Entity entity, Form form,
         ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp, IEnumerable<string> filterList,
         CancellationToken cancellationToken)
     {
@@ -427,9 +428,6 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         JoinQueriesData joinQueries = new();
         lp.AddOrUpdate("q", filterValues);
         formQuery.EstablishEntityQuery(filterValues, filterList, true, joinQueries);
-        //			q.AddPkFields();
-        //			if (!(entity.KeyFields?.Any() ?? false) && (bool)entity.entityFields?.Any())
-        //				q.SelectField(entity.entityFields.FirstOrDefault().Value);
         long recordCount = q.GetRecordCount(filterValues, lp);
         q.ReleaseQuery();
         queryInfo?.AddByQueryUtility(q);
@@ -505,7 +503,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return indexData.Rows;
     }
 
-    private string TableAssociationFilter(TableDefinition table, List<string> ids)
+    private static string TableAssociationFilter(TableDefinition table, List<string> ids)
     {
         if (table.TableDef.TableAssociation.Maps?.Count == 1)
         {
@@ -516,7 +514,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return null;
     }
 
-    private string TableAssociationFilter(TableDefinition table, string ids)
+    private static string TableAssociationFilter(TableDefinition table, string ids)
     {
         if (table.TableDef.TableAssociation.Maps?.Count == 1)
             return table.TableDef.TableAssociation.Maps[0].SourceField + "=='" + ids + "'";

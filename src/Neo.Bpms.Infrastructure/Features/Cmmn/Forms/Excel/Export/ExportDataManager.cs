@@ -65,7 +65,7 @@ public class ExportDataManager(ElasticObject filterValues, IdentityUser user,
 
     private IndexFormData GetMainFormData(FormDataRoutines formDataRoutines, LocalParameters lp)
     {
-        IndexFormData records = formDataRoutines.GetRecords(Structure, Form.entity, Form, culture, filterValues,
+        IndexFormData records = FormDataRoutines.GetRecords(Structure, Form.entity, Form, culture, filterValues,
             null, lp, null, user, true, null, null, cancellationToken);
         FormExportData mainForm = Data.Values.FirstOrDefault(d => d.IsMainForm) ?? throw new Exception();
         mainForm.Result = records;

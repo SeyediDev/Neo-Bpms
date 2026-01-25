@@ -90,6 +90,28 @@ public abstract partial class FormDefinition
             SetTask_SetProperty_ToField(controlledParam);
         }
     }
+    
+    public void FilterFormula(List<string> userChangeFieldIds, List<string> controlledParams, string filter)
+    {
+        var id = $"FilterFormula_On_{string.Join(',', controlledParams)}";
+        if (AddUIRule(id, id) == null) return;
+        AddUIRuleEvent(UIRuleEvent.eEventType.onPageLoad);
+        foreach (var userChangeFieldId in userChangeFieldIds)
+        {
+            if (!string.IsNullOrEmpty(userChangeFieldId))
+                AddUIRuleEvent(UIRuleEvent.eEventType.onUserChange, userChangeFieldId);
+        }
+        AddUIRuleTask(UIRuleTask.eTaskType.SetProperty);
+        {
+            SetTask_SetProperty(eControlPropertyId.FilterFormula, UIRuleTask.eCalcLocation.Server, filter);
+            foreach (var controlledParam in controlledParams)
+            {
+                if (!string.IsNullOrEmpty(controlledParam))
+                    SetTask_SetProperty_ToField(controlledParam);
+            }
+        }
+    }
+
     public void FilterFormulaWithCondition(string userChangeFieldId, string controlledParam, string filter, string condition)
     {
         var id = $"FilterFormula_On_{controlledParam}";

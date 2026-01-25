@@ -87,15 +87,15 @@ public abstract partial class FormDefinition
     }
 
     public bool SetTask_SetControlPartProperty(eControlPropertyId controlPropertyId, eControlPropertyTarget target,
-        UIRuleTask.eCalcLocation calcLocation, string FormulaStr)
+        UIRuleTask.eCalcLocation calcLocation, string formulaStr)
     {
-        return uiRuleDefinition.SetTask_SetControlPartProperty(controlPropertyId, target, calcLocation, FormulaStr);
+        return uiRuleDefinition.SetTask_SetControlPartProperty(controlPropertyId, target, calcLocation, formulaStr);
     }
 
     public bool SetTask_SetProperty(eControlPropertyId controlPropertyId, UIRuleTask.eCalcLocation calcLocation,
-        string FormulaStr)
+        string formulaStr)
     {
-        return uiRuleDefinition.SetTask_SetProperty(controlPropertyId, calcLocation, FormulaStr);
+        return uiRuleDefinition.SetTask_SetProperty(controlPropertyId, calcLocation, formulaStr);
     }
 
     public bool SetTask_SetProperty_ToField(string fieldId)
