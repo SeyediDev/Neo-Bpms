@@ -22,9 +22,10 @@
     var hasProcess = ViewBag.HasProcess ?? false;
     var pageName = ViewBag.PagePackId as string;
     var pageIcon = PageIconHelper.GetPageMenuIcon(pageName);
-    var elModel = Model;
+    var record = Model;
+    var displayString = record.GetString("__DisplayString__");
     var options = new RendererOptions();
-    ControlsRendererData controlsRendererData = new(structure, elModel, options, ViewBag.user, Url);
+    ControlsRendererData controlsRendererData = new(structure, record, options, ViewBag.user, Url);
     var recordNotFound = ViewBag.RecordNotFound ?? false;
 }
 
@@ -249,7 +250,7 @@
     var versionId = ViewBag.VersionId;
     var wid = ViewBag.wid;
     object recordId;
-    elModel.GetField("Ids", out recordId);
+    record.GetField("Ids", out recordId);
 
     HiddenInputs(structure, options.CalendarType, taskId, processId, wid, recordId);
 
@@ -266,7 +267,11 @@
                     <i class="fa fa-edit" style="margin-left: 8px; color: #3b82f6;"></i>
                     @structure.Name
                     @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
-                </h2>
+					@if(!string.IsNullOrEmpty(structure.FormSubjectId) && !string.IsNullOrEmpty(displayString))
+					{
+						@(" : "+displayString)
+					}
+				</h2>
             </div>
         </div>
     </div>

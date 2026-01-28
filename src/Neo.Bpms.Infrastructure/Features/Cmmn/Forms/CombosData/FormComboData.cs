@@ -1,7 +1,6 @@
 ﻿using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions.Extensions;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
-using Neo.Common.Extensions;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Forms.CombosData;
 
@@ -29,6 +28,7 @@ public static class FormComboData
         foreach (TableDefinition table in structure.Tables)
             table.CombosData = combosData;
     }
+
     private static void SetFormCombosData(Form form, ConcurrentDictionary<string, ComboData> combosData,
         string culture, ElasticObject record, bool isSubTable, bool subIsEditable,
         LocalParameters localParameters)

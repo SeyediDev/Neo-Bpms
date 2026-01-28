@@ -261,7 +261,7 @@ public class WorkItemManager
                 joinQueries = new JoinQueriesData(Guid.NewGuid().ToString());
                 FormQuery formQ = new(entityFilter.Form, entityFilter.Structure,
                     new CancellationToken(false) /*todo*/)
-                { q = qEntity };
+                { Q = qEntity };
                 referFormFields = formQ.EstablishEntityQueryForIndex(entityFilter.FilterValues,
                     entityFilter.SortFields, null, forCount, joinQueries, true, true);
             }

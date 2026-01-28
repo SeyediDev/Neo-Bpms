@@ -141,19 +141,20 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         Dictionary<string, FormField> referFormFields = [];
         FormQuery formQuery = new(form, structure, cancellationToken);
         QueryUtility q = formQuery.EstablishQuery();
-        formQuery.SetQueryByForm(ids, lp, referFormFields, joinQueries);
+        formQuery.SetQueryByForm(ids, lp, referFormFields, joinQueries, culture);
         q.SetPage(1, 1);
         if (!q.GetDocuments(lp))
         {
-            logger.LogError($"Can Not Get Record\r\n In command {q.CommandTxt}");
+            logger.LogError("Can Not Get Record\r\n In command {CommandTxt}", q.CommandTxt);
             return null;
         }
 
         ElasticObject record = q.GetRecord();
+        record.SetField("__DisplayString__", q.GetBasicFieldsData(record, culture));
         q.ReleaseQuery();
         if (record == null)
         {
-            logger.LogInformation($"Can Not Find Record \r\n In command {q.CommandTxt}");
+            logger.LogInformation("Can Not Find Record \r\n In command {CommandTxt}", q.CommandTxt);
             return null;
         }
 

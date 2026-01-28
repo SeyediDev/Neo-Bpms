@@ -287,12 +287,12 @@ public abstract partial class FormDefinition
         }
     }
     
-    public FormField AddSubjectColumn<TForm>()
+    public FormField AddSubjectColumn<TForm>(string? name=null)
         where TForm : FormDefinition, ISubjectFormDefinition, new()
     {
-        var name = typeof(TForm).Name;
-        var subjectForm = entity.GetEntityForm(name);
-        return AddSubjectColumn(subjectForm?.Name??name, true, false, name, subjectForm?.EnName??name);
+        var formId = typeof(TForm).Name;
+        var subjectForm = entity.GetEntityForm(formId);
+        return AddSubjectColumn(name??subjectForm?.Name??formId, true, false, formId, subjectForm?.EnName??name);
     }
     /// <summary>
     /// Adds the subject column.
