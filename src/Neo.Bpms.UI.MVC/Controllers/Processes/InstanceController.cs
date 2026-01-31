@@ -185,7 +185,7 @@ public partial class ProcessController
             ElasticObject keyRecord = FormDataRoutines.GetKeyRecord(form.entity, entityPkv);
             formData.Merge(keyRecord);
             b = await applyFormData.UpdateRecord(auditTrail, form.entity.NamespaceId, form.entity.Id,
-                form, formData, keyRecord, null, postEditForm.errors);
+                form, formData, keyRecord, null, postEditForm.Errors);
         }
         if (b && completeTask && aid != null)
             b = ((BpmsEngine)bpmsEngine).CompleteTaskByUser(auditTrail, processId, processVersion, taskId, aid.Value, postEditForm.WorkDescription);

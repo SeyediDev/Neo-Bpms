@@ -49,7 +49,7 @@ public partial class FormController
         ElasticObject clonedRecord = record.Clone();
         PostFormData result = await SubmitForm(form, ids, record, user, ProcessId, TaskId, wid,
             form.FormType == Form.eFormType.ProcessCreate, structure, cancellationToken);
-        ExceptionInfos errors = result.errors;
+        ExceptionInfos errors = result.Errors;
         if (errors != null)
         {
             foreach (ExceptionInfo error in errors)

@@ -19,7 +19,7 @@ public partial class UserTaskRuntime
         }
 
         UserSelections users = [];
-        List<PotentialOwner> potentialOwners = UserTask.ActivityAndLaneResources.OfType<PotentialOwner>().ToList();
+        List<PotentialOwner> potentialOwners = [.. UserTask.ActivityAndLaneResources.OfType<PotentialOwner>()];
         foreach (PotentialOwner resourceRole in potentialOwners.Where(r => r.ParentElement?.Id == UserTask.Id))
         {
             DistributeWorkToResource(wi, users, resourceRole);

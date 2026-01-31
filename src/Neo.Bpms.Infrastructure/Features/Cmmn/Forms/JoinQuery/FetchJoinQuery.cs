@@ -9,14 +9,13 @@ public static class FetchJoinQuery
         LocalParameters lp, JoinQueriesData joinQueries,
         QueryInfo queryInfo = null)
     {
-        List<FetchJoinQueryData> queries = joinQueries.List.Select(joinQuery =>
+        List<FetchJoinQueryData> queries = [.. joinQueries.List.Select(joinQuery =>
                 new FetchJoinQueryData
                 {
                     Culture = culture,
                     LocalParameters = lp?.Clone(),
                     JoinQueryData = joinQuery
-                })
-            .ToList();
+                })];
         Parallel.ForEach(queries, fetchJoinQueryData => fetchJoinQueryData.Fetch(queryInfo));
         foreach (FetchJoinQueryData fetchJoinQueryData in queries)
         {

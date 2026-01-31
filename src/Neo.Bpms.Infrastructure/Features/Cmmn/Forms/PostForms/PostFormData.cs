@@ -8,31 +8,32 @@ public class PostFormData(string culture, Form inputForm, ElasticObject formData
     public ElasticObject FormData { get; set; } = formData;
     public string Culture { get; set; } = culture;
     public LocalParameters InputData => FormData?.ToLocalParameters();
-    public Form form { get; set; } = inputForm;
-    public CommonFormStructure structure { get; set; }
-    public ExceptionInfos errors { get; set; } = [];
-    public bool IsValid => errors == null || !errors.Any();
+    public Form Form { get; set; } = inputForm;
+    public CommonFormStructure Structure { get; set; }
+    public ExceptionInfos Errors { get; set; } = [];
+    public bool IsValid => Errors == null || !Errors.Any();
     public bool RedirectToWorkItems { get; set; }
-    public string parentNamespaceId { get; set; }
-    public string parentEntityId { get; set; }
-    public string parentFormSubjectId { get; set; }
-    public string subTableAssociationFeildId { get; set; }
-    public string parentIds { get; set; }
+    public string ParentNamespaceId { get; set; }
+    public string ParentEntityId { get; set; }
+    public string ParentFormSubjectId { get; set; }
+    public string SubTableAssociationFeildId { get; set; }
+    public string ParentIds { get; set; }
     public long? WorkItemId { get; set; }
     public string EntityPkv { get; set; }
     public string WorkDescription { get; set; } = formData?.GetString(RenderingForm.WorkDescription);
+    
     public void AddError(Exception exception)
     {
-        errors ??= [];
-        errors.Add(new ExceptionInfo { Exception = exception });
+        Errors ??= [];
+        Errors.Add(new ExceptionInfo { Exception = exception });
     }
 
     public void FetchParentParams(ElasticObject record)
     {
-        parentNamespaceId = record.GetString("__parentNamespaceId");
-        parentEntityId = record.GetString("__parentEntityId");
-        parentFormSubjectId = record.GetString("__parentFormSubjectId");
-        subTableAssociationFeildId = record.GetString("__subTableAssociationFieldId");
-        parentIds = record.GetString("__parentIds");
+        ParentNamespaceId = record.GetString("__parentNamespaceId");
+        ParentEntityId = record.GetString("__parentEntityId");
+        ParentFormSubjectId = record.GetString("__parentFormSubjectId");
+        SubTableAssociationFeildId = record.GetString("__subTableAssociationFieldId");
+        ParentIds = record.GetString("__parentIds");
     }
 }

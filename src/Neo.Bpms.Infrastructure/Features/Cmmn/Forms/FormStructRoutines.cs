@@ -422,7 +422,7 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
         if (form != null)
         {
             structure.PassingParameters = form.PassingParameters;
-            List<Form> forms = form.entity.getForms().ToList();
+            List<Form> forms = [.. form.entity.getForms()];
             structure.BulkEdits =
                 [.. forms.Where(f => f.FormType == Form.eFormType.BulkEdit &&
                                  CompareValue(f.FormSubjectId, structure.FormSubjectId)).Select(f =>

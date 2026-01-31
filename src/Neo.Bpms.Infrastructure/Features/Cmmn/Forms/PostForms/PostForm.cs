@@ -33,26 +33,25 @@ public partial class PostForm(IApplyFormData applyFormData, IBpmsEngine bpmsEngi
     
     protected Task<ExceptionInfos> CallApplyServiceOperation(PostFormData postFormData, IdentityUser user)
     {
-        if (postFormData.structure.Tables.Count != 0)
+        if (postFormData.Structure.Tables.Count != 0)
         {
-            foreach (TableDefinition table in postFormData.structure.Tables)
+            foreach (TableDefinition table in postFormData.Structure.Tables)
             {
-                if (table.ControlType == eControlTypeId.MultipleSelectableCombo) { }
-                else if (table.ControlType == eControlTypeId.IndexTable)
+                if (table.ControlType == eControlTypeId.IndexTable)
                 {
-                    List<ElasticObject> tableRecords = ApplyFormData.FindTableRecords(postFormData.FormData, table).Values.ToList();
+                    List<ElasticObject> tableRecords = [.. ApplyFormData.FindTableRecords(postFormData.FormData, table).Values];
                     postFormData.FormData.SetField(table.FieldName, tableRecords);
                 }
             }
         }
         ServiceOperationFormData result = new(postFormData.FormData);
         AuditTrail auditTrail = new(TriggerTypeId.Business,
-            $"{postFormData.form.ApplyServiceOperation} Form {postFormData.form.Id} in entity {postFormData.form.entity.Id}", user, 0)
+            $"{postFormData.Form.ApplyServiceOperation} Form {postFormData.Form.Id} in entity {postFormData.Form.entity.Id}", user, 0)
         {
-            MetaEntityId = postFormData.form.entity.DbId,
-            MetaFormId = postFormData.form.DbId,
-            FormId = postFormData.form.Id
+            MetaEntityId = postFormData.Form.entity.DbId,
+            MetaFormId = postFormData.Form.DbId,
+            FormId = postFormData.Form.Id
         };
-        return formServiceOperation.CallApplyServiceOperation(result, postFormData.form, auditTrail);
+        return formServiceOperation.CallApplyServiceOperation(result, postFormData.Form, auditTrail);
     }
 }

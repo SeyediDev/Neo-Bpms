@@ -15,19 +15,19 @@ public partial class PostForm
             return;
         }
 
-        if (!string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) && 
-            postFormData.form.ApplyFormOperationType == FormOperationType.Apply)
+        if (!string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) && 
+            postFormData.Form.ApplyFormOperationType == FormOperationType.Apply)
         {
-            postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+            postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
         }
         else
         {
-            await ApplyEdit(postFormData, postFormData.form.NamespaceId, postFormData.form.EntityId, 
-                postFormData.form.FormSubjectId, postFormData.EntityPkv, wid, taskId, processId, user, isApply, userGroupId, cancellationToken);
-            if (!string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) && 
-                postFormData.form.ApplyFormOperationType == FormOperationType.AfterApply)
+            await ApplyEdit(postFormData, postFormData.Form.NamespaceId, postFormData.Form.EntityId, 
+                postFormData.Form.FormSubjectId, postFormData.EntityPkv, wid, taskId, processId, user, isApply, userGroupId, cancellationToken);
+            if (!string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) && 
+                postFormData.Form.ApplyFormOperationType == FormOperationType.AfterApply)
             {
-                postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+                postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
             }
         }
     }
@@ -47,13 +47,13 @@ public partial class PostForm
         }
 
         postFormData.EntityPkv = postFormData.EntityPkv;
-        TriggerTypeId triggerTypeId = postFormData.form.TriggerTypeId(isApply);
+        TriggerTypeId triggerTypeId = postFormData.Form.TriggerTypeId(isApply);
         AuditTrail auditTrail =
-            new(triggerTypeId, $"{triggerTypeId}postFormData.form {postFormData.form.Id} in entity {entityId}", user, userGroupId)
+            new(triggerTypeId, $"{triggerTypeId}postFormData.form {postFormData.Form.Id} in entity {entityId}", user, userGroupId)
             {
-                MetaEntityId = postFormData.form.entity.DbId,
-                MetaFormId = postFormData.form.DbId,
-                FormId = postFormData.form.Id,
+                MetaEntityId = postFormData.Form.entity.DbId,
+                MetaFormId = postFormData.Form.DbId,
+                FormId = postFormData.Form.Id,
                 FlowNodeInstanceId = wid,
                 TraceCode = taskId,
                 EntityPkv = postFormData.EntityPkv
@@ -69,15 +69,15 @@ public partial class PostForm
 
     private bool LoadForm(PostFormData postFormData, IdentityUser user)
     {
-        postFormData.structure = formStructRoutines.GetEditStructure(postFormData.Culture, postFormData.form?.NamespaceId,
-            postFormData.form?.EntityId, postFormData.form?.FormSubjectId, postFormData.form?.Id, postFormData.form, user);
-        if (postFormData.structure == null || postFormData.form == null)
+        postFormData.Structure = formStructRoutines.GetEditStructure(postFormData.Culture, postFormData.Form?.NamespaceId,
+            postFormData.Form?.EntityId, postFormData.Form?.FormSubjectId, postFormData.Form?.Id, postFormData.Form, user);
+        if (postFormData.Structure == null || postFormData.Form == null)
         {
-            _ = postFormData.errors.Add("", Messages.PageNotFound);
+            _ = postFormData.Errors.Add("", Messages.PageNotFound);
             return false;
         }
 
-        postFormData.structure.FormType = postFormData.form?.FormType ?? Form.eFormType.Edit;
+        postFormData.Structure.FormType = postFormData.Form?.FormType ?? Form.eFormType.Edit;
         return true;
     }
 
@@ -88,9 +88,9 @@ public partial class PostForm
         if (!string.IsNullOrEmpty(taskId) && string.IsNullOrEmpty(postFormData.EntityPkv))
         {
             updateRecord = await applyFormData.CreateRecord(auditTrail, 
-                namespaceId, entityId, postFormData.form, postFormData.FormData, null, 
-                postFormData.errors, null, null, cancellationToken);
-            EntityField keyField = postFormData.form.Entity.KeyFields.FirstOrDefault();
+                namespaceId, entityId, postFormData.Form, postFormData.FormData, null, 
+                postFormData.Errors, null, null, cancellationToken);
+            EntityField keyField = postFormData.Form.Entity.KeyFields.FirstOrDefault();
             postFormData.EntityPkv = keyField != null
                 ? postFormData.FormData.GetString(keyField.Id)
                 : postFormData.FormData.GetString("Id") ?? postFormData.FormData.GetString("Ids"); //todo
@@ -98,17 +98,17 @@ public partial class PostForm
         else
         {
             updateRecord = await applyFormData.UpdateRecord(auditTrail, namespaceId, entityId, 
-                postFormData.form, postFormData.FormData, 
-                FormDataRoutines.GetKeyRecord(postFormData.form.entity, postFormData.EntityPkv), 
-                null, postFormData.errors, cancellationToken: cancellationToken);
+                postFormData.Form, postFormData.FormData, 
+                FormDataRoutines.GetKeyRecord(postFormData.Form.entity, postFormData.EntityPkv), 
+                null, postFormData.Errors, cancellationToken: cancellationToken);
         }
 
         auditTrail.EntityPkv = postFormData.EntityPkv;
-        if (updateRecord && !(postFormData.errors?.Any() ?? false))
+        if (updateRecord && !(postFormData.Errors?.Any() ?? false))
         {
             await applyFormData.UpdateTables(auditTrail, namespaceId, entityId, formSubjectId, 
                 postFormData.FormData, postFormData.EntityPkv, postFormData.Culture, 
-                postFormData.structure.Tables, postFormData.errors, cancellationToken);
+                postFormData.Structure.Tables, postFormData.Errors, cancellationToken);
         }
     }
 
@@ -120,7 +120,7 @@ public partial class PostForm
             ai.userTaskStateId > UserTaskInstanceStateId.Completed ||
             ai.StateId >= (long)ActivityInstanceStateId.Completed)
         {
-            postFormData.errors.Add(null, Messages.WorkAlreadyDone);
+            postFormData.Errors.Add(null, Messages.WorkAlreadyDone);
             return false;
         }
 
@@ -128,8 +128,8 @@ public partial class PostForm
         postFormData.EntityPkv = pi?.EntityPKV;
         if (string.IsNullOrEmpty(postFormData.EntityPkv))
         {
-            logger.LogCritical("edit get 200 {0} {1} {2} {3}", ids, postFormData.EntityPkv, taskId, wid);
-            postFormData.errors.Add(null, "این پرونده در این فرآیند قابل اجرا نیست.");
+            logger.LogCritical("Edit get 208 {ids} {EntityPkv} {taskId} {wid}", ids, postFormData.EntityPkv, taskId, wid);
+            postFormData.Errors.Add(null, "این پرونده در این فرآیند قابل اجرا نیست.");
             return false;
         }
 
@@ -139,8 +139,8 @@ public partial class PostForm
         }
         else if (ids != postFormData.EntityPkv)
         {
-            logger.LogCritical("edit get 208 {0} {1} {2} {3}", ids, postFormData.EntityPkv, taskId, wid);
-            postFormData.errors.Add(null, "این کار برای این پرونده نیست.");
+            logger.LogCritical("Edit get 208 {ids} {EntityPkv} {taskId} {wid}", ids, postFormData.EntityPkv, taskId, wid);
+            postFormData.Errors.Add(null, "این کار برای این پرونده نیست.");
             return false;
         }
         return true;
@@ -148,10 +148,9 @@ public partial class PostForm
 
     private void RunBpmnEngineOnEdit(PostFormData postFormData, AuditTrail auditTrail, string taskId, string processId, bool isApply)
     {
-        switch (postFormData.structure.FormType)
+        switch (postFormData.Structure.FormType)
         {
             case Form.eFormType.ProcessCreate when isApply:
-                {
                     if (postFormData.WorkItemId != null)
                     {
                         try
@@ -176,8 +175,6 @@ public partial class PostForm
                         }
                     }
                     break;
-                }
-
             case Form.eFormType.ProcessCreate when postFormData.WorkItemId != null:
                 BpmsEngine.ChangeStateByUser(auditTrail, processId, null, taskId, postFormData.WorkItemId.Value,
                     postFormData.WorkDescription, UserTaskInstanceStateId.AllocatedToASingleResource);
@@ -219,7 +216,7 @@ public partial class PostForm
 
             default:
                 {
-                    if (postFormData.form.FormType == Form.eFormType.WorkItem && postFormData.WorkItemId != null)
+                    if (postFormData.Form.FormType == Form.eFormType.WorkItem && postFormData.WorkItemId != null)
                     {
                         if (isApply)
                         {

@@ -43,12 +43,12 @@ public static partial class DataStorage
         if (filterExp != null)
         {
             Dictionary<string, List<ExpressionNode>> fetchNodes = filterExp.FetchNodes<IndexExpressionNode>();
-            List<string> paramList = fetchNodes.Where(itm => itm.Key.StartsWith("q["))
+            List<string> paramList = [.. fetchNodes.Where(itm => itm.Key.StartsWith("q["))
                 .Select(nodes =>
                 {
                     VariableNameExpressionNode l = (VariableNameExpressionNode)nodes.Value.OfType<IndexExpressionNode>().FirstOrDefault().IndexExpression;
                     return l?.Name;
-                }).ToList();
+                })];
             foreach (string paramId in paramList)
             {
                 _ = pi.GetData(paramId, out object value);

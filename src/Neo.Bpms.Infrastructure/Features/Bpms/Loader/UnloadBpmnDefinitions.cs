@@ -112,7 +112,7 @@ public partial class Repository
     {
         foreach (KeyValuePair<string, MessageCatches> messageCatch in MessagesCatches)
         {
-            List<MessageCatchRuntimeLink> messageCatchesItems = messageCatch.Value.Catches.ToList();
+            List<MessageCatchRuntimeLink> messageCatchesItems = [.. messageCatch.Value.Catches];
             foreach (MessageCatchRuntimeLink item in messageCatchesItems)
             {
                 if (item.MessageCatchRuntime.ProcessVersion == processVersion)
@@ -123,7 +123,7 @@ public partial class Repository
         }
 
         processVersion.UserTasks.Clear();
-        List<KeyValuePair<string, List<SignalCatchRuntime>>> signalCatchesItems = signalCatches.ToList();
+        List<KeyValuePair<string, List<SignalCatchRuntime>>> signalCatchesItems = [.. signalCatches];
         foreach (KeyValuePair<string, List<SignalCatchRuntime>> item in signalCatchesItems)
         {
             _ = item.Value.RemoveAll(c => c.ProcessVersion == processVersion);

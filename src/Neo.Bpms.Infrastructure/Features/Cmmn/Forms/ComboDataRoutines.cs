@@ -343,7 +343,7 @@ public static class ComboDataRoutines
         Entity entity, ElasticObject record, List<UIComponentProperty> propertiesDefinitions)
     {
         List<object> dvs = [];
-        List<object> ids = entity.KeyFields.Select(field => record.GetField(field.Id, out object obj) ? obj : null).ToList();
+        List<object> ids = [.. entity.KeyFields.Select(field => record.GetField(field.Id, out object obj) ? obj : null)];
         if (!string.IsNullOrEmpty(displayFields))
         {
             GetDataRowFromDisplayFields(displayFields, entity, record, dvs);

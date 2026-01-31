@@ -122,11 +122,11 @@ public partial class FormController
             if (!result)
                 return Error(message, "Create");
         }
-        PostFormData postResult = new(culture, form, r.record) { structure = structure };
+        PostFormData postResult = new(culture, form, r.record) { Structure = structure };
         await postForm.PostDeleteForm(postResult, wid, user, ids, userGroupId, cancellationToken);
         if (!postResult.IsValid)
         {
-            foreach (ExceptionInfo error in postResult.errors)
+            foreach (ExceptionInfo error in postResult.Errors)
             {
                 ModelState.AddModelError(error.ForField, error.Exception.Message);
             }
@@ -140,8 +140,8 @@ public partial class FormController
         eDeleteType deleteType = (eDeleteType)Enum.Parse(typeof(eDeleteType), DeleteType);
         if (ModelState.IsValid)
         {
-            string prevIds = GetPrevId(postResult.form.entity, ids);
-            string nextIds = GetNextId(postResult.form.entity, ids);
+            string prevIds = GetPrevId(postResult.Form.entity, ids);
+            string nextIds = GetNextId(postResult.Form.entity, ids);
             //				ViewBag.HasPrev = !string.IsNullOrEmpty(prevIds);
             //				ViewBag.HasNext = !string.IsNullOrEmpty(nextIds);
             if (ModelState.IsValid)
@@ -173,12 +173,12 @@ public partial class FormController
                 }
             }
         }
-        ElasticObject record = (await GetRecord(ids, postResult.form, user, postResult.Culture, postResult.structure, null, cancellationToken)).record;
-        FormComboData.SetCombosData(postResult.form, postResult.structure, postResult.Culture, record, GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(postResult.structure, record, false);
+        ElasticObject record = (await GetRecord(ids, postResult.Form, user, postResult.Culture, postResult.Structure, null, cancellationToken)).record;
+        FormComboData.SetCombosData(postResult.Form, postResult.Structure, postResult.Culture, record, GetLocalParameters(user, record));
+        ComboDataRoutines.SetComboDataSelectedId(postResult.Structure, record, false);
         SetCommonDeleteViewBags(__parentNamespaceId, __parentEntityId, __parentFormSubjectId, __subTableAssociationFieldId,
-            __parentIds, postResult.structure, user);
-        SetPagePackId(postResult.form);
+            __parentIds, postResult.Structure, user);
+        SetPagePackId(postResult.Form);
         return !string.IsNullOrEmpty(form.SpecificViewPage) ? View(form.GetSpecificViewPage(), record) : View(record);
     }
 

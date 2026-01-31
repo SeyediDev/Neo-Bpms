@@ -67,7 +67,7 @@ public partial class FormController
                     ElasticObject record = bodyDictionary?.ToElastic();
                     PostFormData submitResult = await SubmitForm(form, Id, record, user, null, null, null,
                         false, structure, cancellationToken);
-                    ExceptionInfos errors = submitResult.errors;
+                    ExceptionInfos errors = submitResult.Errors;
                     if (errors != null)
                     {
                         foreach (ExceptionInfo error in errors)
@@ -131,7 +131,7 @@ public partial class FormController
         {
             Form.eFormType.VirtualDelete => NoContent(),
             Form.eFormType.Create => Created(
-                                $"{Request.GetBaseUrl()}/api/{submitResult.structure.NamespaceId}/{submitResult.structure.EntityId}/{submitResult.EntityPkv}", null),
+                                $"{Request.GetBaseUrl()}/api/{submitResult.Structure.NamespaceId}/{submitResult.Structure.EntityId}/{submitResult.EntityPkv}", null),
             Form.eFormType.Edit => Ok(),
             _ => throw new ArgumentOutOfRangeException($"{requiredFormType} is not supported "),
         };

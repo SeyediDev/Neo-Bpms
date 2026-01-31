@@ -38,7 +38,7 @@ public class ClubRolesService : IClubRolesService
                 DisplayName = "مدیر سیستم"
             });
 
-            return roles.OrderBy(r => r.DisplayName).ToList();
+            return [.. roles.OrderBy(r => r.DisplayName)];
         }
         catch
         {

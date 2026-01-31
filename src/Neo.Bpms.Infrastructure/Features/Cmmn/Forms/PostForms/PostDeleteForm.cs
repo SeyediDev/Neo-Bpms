@@ -8,28 +8,28 @@ public partial class PostForm
         long? wid, IdentityUser user, string ids, long userGroupId, CancellationToken cancellationToken = default)
     {
         postFormData.WorkItemId = wid;
-        postFormData.structure = formStructRoutines.GetDeleteStructure(postFormData.Culture, 
-            postFormData.form.NamespaceId, postFormData.form.EntityId, postFormData.form.FormSubjectId,
-            postFormData.form.Id, postFormData.form, user);
-        if (postFormData.structure == null || postFormData.form == null)
+        postFormData.Structure = formStructRoutines.GetDeleteStructure(postFormData.Culture, 
+            postFormData.Form.NamespaceId, postFormData.Form.EntityId, postFormData.Form.FormSubjectId,
+            postFormData.Form.Id, postFormData.Form, user);
+        if (postFormData.Structure == null || postFormData.Form == null)
         {
-            postFormData.errors.Add("", Messages.PageNotFound);
+            postFormData.Errors.Add("", Messages.PageNotFound);
             return false;
         }
-        if (!string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) && 
-            postFormData.form.ApplyFormOperationType == FormOperationType.Apply)
+        if (!string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) && 
+            postFormData.Form.ApplyFormOperationType == FormOperationType.Apply)
         {
-            postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+            postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
         }
         else
         {
-            await ApplyDelete(postFormData, postFormData.form.NamespaceId, postFormData.form.EntityId, postFormData.form.FormSubjectId, postFormData.form.Id, user, userGroupId, ids, cancellationToken);
-            if (!string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) && postFormData.form.ApplyFormOperationType == FormOperationType.AfterApply)
+            await ApplyDelete(postFormData, postFormData.Form.NamespaceId, postFormData.Form.EntityId, postFormData.Form.FormSubjectId, postFormData.Form.Id, user, userGroupId, ids, cancellationToken);
+            if (!string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) && postFormData.Form.ApplyFormOperationType == FormOperationType.AfterApply)
             {
-                postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+                postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
             }
         }
-        return postFormData.errors==null || postFormData.errors.Count == 0;
+        return postFormData.Errors==null || postFormData.Errors.Count == 0;
     }
 
     private async Task ApplyDelete(PostFormData postFormData,
@@ -39,22 +39,22 @@ public partial class PostForm
         ElasticObject record = postFormData.FormData;
         if (record == null)
         {
-            postFormData.errors.Add("", Messages.RecordNotFound);
+            postFormData.Errors.Add("", Messages.RecordNotFound);
             return;
         }
 
         AuditTrail auditTrail = new(TriggerTypeId.DeleteForm, TriggerTypeId.DeleteForm.ToString(),
             user, userGroupId)
         {
-            FormId = postFormData.form.Id
+            FormId = postFormData.Form.Id
         };
-        bool success = await applyFormData.Delete(auditTrail, postFormData.form.NamespaceId,
-            postFormData.form.EntityId, postFormData.form, record, postFormData.errors, cancellationToken);
+        bool success = await applyFormData.Delete(auditTrail, postFormData.Form.NamespaceId,
+            postFormData.Form.EntityId, postFormData.Form, record, postFormData.Errors, cancellationToken);
         if (success)
             DataStorage.SaveAudit(auditTrail);
         else
         {
-            postFormData.errors ??= new ExceptionInfos().Add("", Messages.DeleteFailed);
+            postFormData.Errors ??= new ExceptionInfos().Add("", Messages.DeleteFailed);
         }
     }
 }

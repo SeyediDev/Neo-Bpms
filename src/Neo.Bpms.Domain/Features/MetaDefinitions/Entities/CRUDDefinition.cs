@@ -218,6 +218,10 @@ public abstract class CRUDDefinition : EntityDefinition
             return DefineForm(Form.eFormType.CommandForm, SubjectId);
         }
     }
+    public class CreateSubjectForm<TForm> : CreateForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
+    }
     public class CreateForm : CUDForm
     {
         protected override Form Identify()
@@ -240,6 +244,11 @@ public abstract class CRUDDefinition : EntityDefinition
         {
             CrudDefinition.CreateFormUIRules(this);
         }
+    }
+
+    public class SubjectEditForm<TForm> : EditForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
     }
 
     public class EditForm : CUDForm
@@ -296,6 +305,10 @@ public abstract class CRUDDefinition : EntityDefinition
         }
     }
 
+    public class SubjectDetailForm<TForm> : DetailForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
+    }
     public class DetailForm : CUDForm
     {
         protected override Form Identify()
@@ -304,6 +317,10 @@ public abstract class CRUDDefinition : EntityDefinition
         }
     }
 
+    public class SubjectDeleteForm<TForm> : DeleteForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
+    }
     public class DeleteForm : CUDForm
     {
         protected override Form Identify()
@@ -317,6 +334,10 @@ public abstract class CRUDDefinition : EntityDefinition
     }
     protected virtual string IndexName { get; set; }
 
+    public class SubjectIndexForm<TForm> : IndexForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
+    }
     public class IndexForm : CUDForm
     {
         protected override Form Identify()

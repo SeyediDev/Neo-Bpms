@@ -9,29 +9,29 @@ public partial class PostForm
         IdentityUser user, eCreateType createType, long userGroupId, CancellationToken cancellationToken = default)
     {
         postFormData.WorkItemId = wid;
-        postFormData.structure = formStructRoutines.GetCreateStructure(postFormData.Culture, postFormData.form.NamespaceId,
-            postFormData.form.EntityId, postFormData.form.FormSubjectId, postFormData.form.Id, postFormData.form, user);
-        if (postFormData.structure == null || postFormData.form == null)
+        postFormData.Structure = formStructRoutines.GetCreateStructure(postFormData.Culture, postFormData.Form.NamespaceId,
+            postFormData.Form.EntityId, postFormData.Form.FormSubjectId, postFormData.Form.Id, postFormData.Form, user);
+        if (postFormData.Structure == null || postFormData.Form == null)
         {
-            _ = postFormData.errors.Add("", Messages.PageNotFound);
+            _ = postFormData.Errors.Add("", Messages.PageNotFound);
             return;
         }
 
-        if (!string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) &&
-            postFormData.form.ApplyFormOperationType == FormOperationType.Apply)
+        if (!string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) &&
+            postFormData.Form.ApplyFormOperationType == FormOperationType.Apply)
         {
-            postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+            postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
         }
         else
         {
-            bool saved = await ApplyCreate(postFormData, postFormData.form.NamespaceId, postFormData.form.EntityId,
-                postFormData.form.FormSubjectId, wid, taskId, processId, user, createType,
-                postFormData.form.FormType, userGroupId, cancellationToken);
-            if (saved && !postFormData.errors.Any() &&
-                !string.IsNullOrEmpty(postFormData.form.ApplyServiceOperation) &&
-                postFormData.form.ApplyFormOperationType == FormOperationType.AfterApply)
+            bool saved = await ApplyCreate(postFormData, postFormData.Form.NamespaceId, postFormData.Form.EntityId,
+                postFormData.Form.FormSubjectId, wid, taskId, processId, user, createType,
+                postFormData.Form.FormType, userGroupId, cancellationToken);
+            if (saved && !postFormData.Errors.Any() &&
+                !string.IsNullOrEmpty(postFormData.Form.ApplyServiceOperation) &&
+                postFormData.Form.ApplyFormOperationType == FormOperationType.AfterApply)
             {
-                postFormData.errors = await CallApplyServiceOperation(postFormData, user);
+                postFormData.Errors = await CallApplyServiceOperation(postFormData, user);
             }
         }
     }
@@ -40,16 +40,16 @@ public partial class PostForm
         string taskId, string processId, IdentityUser user, eCreateType createType, Form.eFormType formType,
         long userGroupId, CancellationToken cancellationToken=default)
     {
-        postFormData.structure.FormType = formType;
+        postFormData.Structure.FormType = formType;
 
         bool saved;
-        TriggerTypeId triggerTypeId = postFormData.form.TriggerTypeId(createType == eCreateType.Apply);
-        AuditTrail auditTrail = new(triggerTypeId, $"{triggerTypeId} Form {postFormData.form.Id} in entity {entityId}",
+        TriggerTypeId triggerTypeId = postFormData.Form.TriggerTypeId(createType == eCreateType.Apply);
+        AuditTrail auditTrail = new(triggerTypeId, $"{triggerTypeId} Form {postFormData.Form.Id} in entity {entityId}",
             user, userGroupId)
         {
-            MetaEntityId = postFormData.form.entity.DbId,
-            MetaFormId = postFormData.form.DbId,
-            FormId = postFormData.form.Id,
+            MetaEntityId = postFormData.Form.entity.DbId,
+            MetaFormId = postFormData.Form.DbId,
+            FormId = postFormData.Form.Id,
             FlowNodeInstanceId = wid,
         };
         if (wid != null)
@@ -57,23 +57,23 @@ public partial class PostForm
             string ids = GetEntityPkvFromActivityInstance(wid);
             _ = postFormData.FormData.SetField("Id", ids ?? postFormData.FormData.GetString("Id"));
             _ = postFormData.FormData.SetField("Ids", ids ?? postFormData.FormData.GetString("Ids"));
-            saved = await applyFormData.UpdateRecord(auditTrail, namespaceId, entityId, postFormData.form, postFormData.FormData, postFormData.FormData, null, postFormData.errors, cancellationToken: cancellationToken);
+            saved = await applyFormData.UpdateRecord(auditTrail, namespaceId, entityId, postFormData.Form, postFormData.FormData, postFormData.FormData, null, postFormData.Errors, cancellationToken: cancellationToken);
             postFormData.EntityPkv = ids;
         }
         else
         {
-            saved = await applyFormData.CreateRecord(auditTrail, namespaceId, entityId, postFormData.form, postFormData.FormData, null, postFormData.errors, cancellationToken: cancellationToken);
+            saved = await applyFormData.CreateRecord(auditTrail, namespaceId, entityId, postFormData.Form, postFormData.FormData, null, postFormData.Errors, cancellationToken: cancellationToken);
         }
         if (saved)
         {
             auditTrail.EntityPkv = postFormData.FormData.GetString("Id") ?? postFormData.FormData.GetString("Ids"); //todo pk
             postFormData.EntityPkv = auditTrail.EntityPkv;
             await applyFormData.UpdateTables(auditTrail, namespaceId, entityId, formSubjectId, postFormData.FormData,
-                postFormData.EntityPkv, postFormData.Culture, postFormData.structure.Tables,
-                postFormData.errors, cancellationToken);
+                postFormData.EntityPkv, postFormData.Culture, postFormData.Structure.Tables,
+                postFormData.Errors, cancellationToken);
         }
 
-        if (postFormData.IsValid && postFormData.structure.FormType == Form.eFormType.ProcessCreate)
+        if (postFormData.IsValid && postFormData.Structure.FormType == Form.eFormType.ProcessCreate)
         {
             RunBpmnEngineOnCreate(postFormData, wid, taskId, processId, createType, auditTrail);
         }

@@ -99,7 +99,7 @@ public abstract partial class DDLManager
         RenameDbTable(entity, dbTable, $"[{dbTable.Schema}].[{tempName}]", tempName);
         string dbTableFullName = EntityDbNameManager.GetTableDbFullName(entity);
         _ = CreateDbTable(entity);
-        List<EntityField> fields = entity.MappedEntityFields.ToList();
+        List<EntityField> fields = [.. entity.MappedEntityFields];
         string newFields = string.Join(",", fields.Select(f => f.DbFieldName));
         string oldFields = string.Join(",", fields.Select(f => dbTable.Fields.ContainsKey(f.DbFieldName)
             ? f.DbFieldName : dbTable.Fields.ContainsKey(f?.OldDbFieldName ?? "") ? f.OldDbFieldName : null)

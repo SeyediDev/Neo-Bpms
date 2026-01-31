@@ -132,9 +132,7 @@ public abstract partial class StorageInterfaceBase<TEntity, TLogicModel, TKey, T
 
         foreach (var requester in Requesters)
         {
-            List<KeyValuePair<string, IDataSynchronizerRequester<TKey>>> listOfTimeout = requester.Value
-                .Where(r => r.Value.RequesterLifecycle == RequesterLifecycle.DueTime && r.Value.RequestTime + r.Value.Timeout < DateTime.UtcNow)
-                .ToList();
+            List<KeyValuePair<string, IDataSynchronizerRequester<TKey>>> listOfTimeout = [.. requester.Value.Where(r => r.Value.RequesterLifecycle == RequesterLifecycle.DueTime && r.Value.RequestTime + r.Value.Timeout < DateTime.UtcNow)];
             //foreach (KeyValuePair<string, IDataSynchronizerRequester<TKey>> to in listOfTimeout)
             //{
             //    _ = requester.Value.TryRemove(to);

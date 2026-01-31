@@ -105,7 +105,7 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
     private static void NormalizeFormValues(ElasticObject filterValues, UiEntity entity)
     {
         if (filterValues == null) return;
-        List<KeyValuePair<string, ElasticObject>> attributes = filterValues.Attributes.ToList();
+        List<KeyValuePair<string, ElasticObject>> attributes = [.. filterValues.Attributes];
         foreach (KeyValuePair<string, ElasticObject> filterValue in attributes)
         {
             EntityField field = entity.GetField(filterValue.Key);

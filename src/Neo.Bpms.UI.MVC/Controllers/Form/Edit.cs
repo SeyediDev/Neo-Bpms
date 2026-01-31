@@ -205,9 +205,9 @@ public partial class FormController
             await postForm.PostEditForm(postFormData, ids, wid, TaskId, ProcessId, isApply == "1", user, userGroupId, cancellationToken);
             wid = postFormData.WorkItemId;
             ViewBag.Ids = postFormData.EntityPkv;
-            if (postFormData.errors != null)
+            if (postFormData.Errors != null)
             {
-                foreach (ExceptionInfo error in postFormData.errors)
+                foreach (ExceptionInfo error in postFormData.Errors)
                 {
                     ModelState.AddModelError(error.ForField ?? "", error.Exception.Message);
                 }
@@ -231,8 +231,8 @@ public partial class FormController
 
         if (!string.IsNullOrEmpty(ids) && ModelState.IsValid)
         {
-            (ElasticObject e, string s) = await GetRecord(ids, postFormData.form, user, postFormData.Culture, 
-                postFormData.structure, null, cancellationToken);
+            (ElasticObject e, string s) = await GetRecord(ids, postFormData.Form, user, postFormData.Culture, 
+                postFormData.Structure, null, cancellationToken);
             ids = s;
             record = e;
         }
@@ -244,18 +244,18 @@ public partial class FormController
                 ModelState.AddModelError(string.Empty, Messages.SaveWasNotSuccessful);
             }
 
-            (ElasticObject record, string ids) r = await MergeSavedAndPosted(ids, clonedRecord, postFormData.form, postFormData.structure, postFormData.Culture, user, cancellationToken);
+            (ElasticObject record, string ids) r = await MergeSavedAndPosted(ids, clonedRecord, postFormData.Form, postFormData.Structure, postFormData.Culture, user, cancellationToken);
             record = r.record;
             ids = r.ids;
         }
 
-        FormComboData.SetCombosData(postFormData.form, postFormData.structure, postFormData.Culture, record,
-            GetLocalParameters(user, record));
-        ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false);
+        //FormComboData.SetCombosData(postFormData.Form, postFormData.Structure, postFormData.Culture, record,
+        //    GetLocalParameters(user, record));
+        //ComboDataRoutines.SetComboDataSelectedId(postFormData.Structure, record, false);
         SetCommonEditViewBags(ids, __parentNamespaceId, __parentEntityId, __parentFormSubjectId, __subTableAssociationFieldId,
             __parentIds, wid, TaskId, ProcessId, "", Caller, callerPage,
-            bSubTable == "1", postFormData.structure, user, postFormData.form.entity);
-        SetPagePackId(postFormData.form);
+            bSubTable == "1", postFormData.Structure, user, postFormData.Form.entity);
+        SetPagePackId(postFormData.Form);
         return !string.IsNullOrEmpty(form.SpecificViewPage) ? View(form.GetSpecificViewPage(), record) : View(record);
     }
 
@@ -286,21 +286,21 @@ public partial class FormController
         string bSubTable, string calendar, string returnUrl, EditTypeId eType,
         PostFormData postFormData)
     {
-        string prevIds = GetPrevId(postFormData.form.entity, ids);
-        string nextIds = GetNextId(postFormData.form.entity, ids);
+        string prevIds = GetPrevId(postFormData.Form.entity, ids);
+        string nextIds = GetNextId(postFormData.Form.entity, ids);
         switch (eType)
         {
             case EditTypeId.Save:
                 return RedirectToEdit(formSubjectId, formId, wid, taskId, processId, caller, bSubTable, calendar,
-                     postFormData.structure, ids);
+                     postFormData.Structure, ids);
             case EditTypeId.SaveAndNext:
                 return RedirectToEdit(formSubjectId, formId, wid, taskId, processId, caller, bSubTable, calendar,
-                    postFormData.structure, nextIds);
+                    postFormData.Structure, nextIds);
             case EditTypeId.SaveAndPrev:
                 return RedirectToEdit(formSubjectId, formId, wid, taskId, processId, caller, bSubTable, calendar,
-                    postFormData.structure, prevIds);
+                    postFormData.Structure, prevIds);
             case EditTypeId.SaveAndDetails:
-                return RedirectToDetail(formSubjectId, ids, wid, caller, calendar, postFormData.structure);
+                return RedirectToDetail(formSubjectId, ids, wid, caller, calendar, postFormData.Structure);
             case EditTypeId.SaveAndReturn:
                 {
                     return !string.IsNullOrEmpty(returnUrl)
@@ -317,9 +317,9 @@ public partial class FormController
 
             default:
                 postFormData.FetchParentParams(record);
-                if (!string.IsNullOrEmpty(postFormData.parentNamespaceId) &&
-                    !string.IsNullOrEmpty(postFormData.parentEntityId) &&
-                    !string.IsNullOrEmpty(postFormData.parentIds))
+                if (!string.IsNullOrEmpty(postFormData.ParentNamespaceId) &&
+                    !string.IsNullOrEmpty(postFormData.ParentEntityId) &&
+                    !string.IsNullOrEmpty(postFormData.ParentIds))
                 {
                     return RedirectToParent(wid, taskId, processId, caller, bSubTable, calendar, postFormData);
                 }
@@ -349,11 +349,11 @@ public partial class FormController
     {
         return RedirectToAction("Edit", new
         {
-            NamespaceId = postFormData.parentNamespaceId,
-            EntityId = postFormData.parentEntityId,
-            FormSubjectId = postFormData.parentFormSubjectId,
-            SubTableAssociationFeildId = postFormData.subTableAssociationFeildId,
-            ids = postFormData.parentIds,
+            NamespaceId = postFormData.ParentNamespaceId,
+            EntityId = postFormData.ParentEntityId,
+            FormSubjectId = postFormData.ParentFormSubjectId,
+            SubTableAssociationFeildId = postFormData.SubTableAssociationFeildId,
+            ids = postFormData.ParentIds,
             wid,
             TaskId,
             calendar,

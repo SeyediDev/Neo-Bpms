@@ -85,20 +85,20 @@ public partial class FormController
             case Form.eFormType.VirtualDelete:
                 {
                     (ElasticObject record, string ids) r = await GetRecord(ids, form, user, culture, structure, null, cancellationToken);
-                    PostFormData postFormData = new(culture, form, r.record) { structure = structure, EntityPkv=ids, WorkItemId=wid };
+                    PostFormData postFormData = new(culture, form, r.record) { Structure = structure, EntityPkv=ids, WorkItemId=wid };
                     _ = await postForm.PostDeleteForm(postFormData, wid, user, ids, 0, cancellationToken);
                     return postFormData;
                 }
             case Form.eFormType.Edit:
             case Form.eFormType.ProcessCreate:
                 {
-                    PostFormData postFormData = new(culture, form, record) { structure = structure, EntityPkv = ids, WorkItemId = wid };
+                    PostFormData postFormData = new(culture, form, record) { Structure = structure, EntityPkv = ids, WorkItemId = wid };
                     await postForm.PostEditForm(postFormData, ids, wid, taskId, processId, isApply, user, 0, cancellationToken);
                     return postFormData;
                 }
             case Form.eFormType.Create:
                 {
-                    PostFormData postFormData = new(culture, form, record) { structure = structure, EntityPkv = ids, WorkItemId = wid };
+                    PostFormData postFormData = new(culture, form, record) { Structure = structure, EntityPkv = ids, WorkItemId = wid };
                     await postForm.PostCreateForm(postFormData, null, null, null, user, eCreateType.Save, 0, cancellationToken);
                     return postFormData;
                 }

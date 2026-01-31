@@ -96,11 +96,11 @@ public abstract partial class AdoDotNetDatabaseDataSource
 
     private IEnumerable<ReferenceField> Parents(Entity entity)
     {
-        List<ReferenceField> r = entity.entityFields.Values.Where(f => f.ReferenceFields != null)
+        List<ReferenceField> r = [.. entity.entityFields.Values.Where(f => f.ReferenceFields != null)
             .Where(f => f.IsForParentEntity(entity)).SelectMany(f =>
                 f.ReferenceFields.Where(rf => rf.Relationship is ParentEntity)
                     ).GroupBy(g => $"{g.Relationship.DestEntity.NamespaceId}.{g.Relationship.DestEntity.Id}")
-            .Select(parent => parent.First()).ToList();
+            .Select(parent => parent.First())];
         return r;
     }
 

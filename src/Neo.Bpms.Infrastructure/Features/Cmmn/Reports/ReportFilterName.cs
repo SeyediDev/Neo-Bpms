@@ -264,7 +264,7 @@ public class ReportFilterName(ReportConfigManager reportConfigManager)
     private FormDataRow GetNewValueRecord(Entity entity, EntityField fld, string fvItem)
     {
         string pkFilter = "";
-        List<EntityField> keys = fld.AssociationEntity.Entity().KeyFields.ToList();
+        List<EntityField> keys = [.. fld.AssociationEntity.Entity().KeyFields];
         if (keys.Count == 1)
             pkFilter += "(" + fld.AssociationEntity.Entity().KeyFields.FirstOrDefault()?.Id + "='" +
                         fvItem + "'" + ")";

@@ -95,7 +95,7 @@ public class JobUtility : IDisposable
             StartRunDate = startRunDate
         };
         DataTable history = job.EnumHistory(filter);
-        return history.AsEnumerable().Select(row => row["JobName"].ToString()).ToList();
+        return [.. history.AsEnumerable().Select(row => row["JobName"].ToString())];
     }
 
     /// <returns>Returns weather or not the job was started</returns>

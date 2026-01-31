@@ -23,7 +23,7 @@ public class BpmsSubjectSettingRepository(
         List<SubjectSetting> list = [.. await queryRepo.GetAllAsync(cancellationToken, x =>
             x.SubjectTitle == subjectTitle &&
             x.SubjectId == subjectId)];
-        List<TConfig> configs = list.Select(x => Extract(extraction, x)).ToList();
+        List<TConfig> configs = [.. list.Select(x => Extract(extraction, x))];
         return configs;
     }
 

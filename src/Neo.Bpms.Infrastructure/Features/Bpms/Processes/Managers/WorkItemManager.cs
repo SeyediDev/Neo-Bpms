@@ -98,7 +98,7 @@ public class WorkItemManager
                 if (string.IsNullOrEmpty(entities.Key.EntityId)) return;
                 Entity entity = ProjectDefinition.Project.GetEntity(entities.Key.NamespaceId, entities.Key.EntityId);
                 if (entity == null) return;
-                List<string> pkvList = entities.GroupBy(g => g.EntityPkv).Select(e => e.Key).ToList();
+                List<string> pkvList = [.. entities.GroupBy(g => g.EntityPkv).Select(e => e.Key)];
                 string filter = $"Id In ({string.Join(",", pkvList)})";
                 ComboData comboData = ComboDataRoutines.GetRecords(entity, entity, "", filter, 1, "", entities.Key.DisplayFields,
                      null, "", pkvList.Count, false);

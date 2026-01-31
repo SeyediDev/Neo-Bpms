@@ -111,9 +111,9 @@ public partial class FormController
                     return Error(message, "Create");
             }
             await postForm.PostCreateForm(postFormData, wid, TaskId, ProcessId, user, createType, userGroupId);
-            if (postFormData.errors != null)
+            if (postFormData.Errors != null)
             {
-                foreach (ExceptionInfo error in postFormData.errors)
+                foreach (ExceptionInfo error in postFormData.Errors)
                 {
                     ModelState.AddModelError(error.ForField ?? "", error.Exception.Message);
                 }
@@ -132,15 +132,15 @@ public partial class FormController
         {
             if (postFormData.RedirectToWorkItems)
                 return RedirectToWorkItems(Caller, ProcessId, callerPage);
-            if (postFormData.structure.FormType != Form.eFormType.ProcessCreate)
+            if (postFormData.Structure.FormType != Form.eFormType.ProcessCreate)
             {
                 if (addAgain)
                 {
-                    SetCommonCreateViewBags(postFormData.parentNamespaceId, postFormData.parentEntityId,
-                        postFormData.parentFormSubjectId, postFormData.subTableAssociationFeildId, postFormData.parentIds, workItemFormId, wid, TaskId,
-                        ProcessId, Caller, callerPage, user, postFormData.structure);
-                    ComboDataRoutines.SetComboDataSelectedId(postFormData.structure, record, false);
-                    FormComboData.SetCombosData(postFormData.form, postFormData.structure, postFormData.Culture, null, GetLocalParameters(user, record));
+                    SetCommonCreateViewBags(postFormData.ParentNamespaceId, postFormData.ParentEntityId,
+                        postFormData.ParentFormSubjectId, postFormData.SubTableAssociationFeildId, postFormData.ParentIds, workItemFormId, wid, TaskId,
+                        ProcessId, Caller, callerPage, user, postFormData.Structure);
+                    ComboDataRoutines.SetComboDataSelectedId(postFormData.Structure, record, false);
+                    FormComboData.SetCombosData(postFormData.Form, postFormData.Structure, postFormData.Culture, null, GetLocalParameters(user, record));
                     return View(new ElasticObject());
                 }
 
@@ -149,15 +149,15 @@ public partial class FormController
                     return Redirect(returnUrl);
                 }
 
-                return !string.IsNullOrEmpty(postFormData.parentNamespaceId) && !string.IsNullOrEmpty(postFormData.parentEntityId) &&
-                     !string.IsNullOrEmpty(postFormData.parentIds)
+                return !string.IsNullOrEmpty(postFormData.ParentNamespaceId) && !string.IsNullOrEmpty(postFormData.ParentEntityId) &&
+                     !string.IsNullOrEmpty(postFormData.ParentIds)
                     ? RedirectToAction("Edit", "Form", new
                     {
-                        NamespaceId = postFormData.parentNamespaceId,
-                        EntityId = postFormData.parentEntityId,
-                        FormSubjectId = postFormData.parentFormSubjectId,
-                        SubTableAssociationFeildId = postFormData.subTableAssociationFeildId,
-                        ids = postFormData.parentIds,
+                        NamespaceId = postFormData.ParentNamespaceId,
+                        EntityId = postFormData.ParentEntityId,
+                        FormSubjectId = postFormData.ParentFormSubjectId,
+                        SubTableAssociationFeildId = postFormData.SubTableAssociationFeildId,
+                        ids = postFormData.ParentIds,
                         FormId = workItemFormId,
                         TaskId,
                         calendar,
@@ -168,12 +168,12 @@ public partial class FormController
                     : RedirectToAction("Index", new { NamespaceId, EntityId, calendar });
             }
         }
-        SetCommonCreateViewBags(postFormData.parentNamespaceId, postFormData.parentEntityId, postFormData.parentFormSubjectId,
-            postFormData.subTableAssociationFeildId, postFormData.parentIds, workItemFormId, wid, TaskId,
-            ProcessId, Caller, callerPage, user, postFormData.structure);
-        SetPagePackId(postFormData.form);
-        ViewBag.structure = postFormData.structure;
-        FormComboData.SetCombosData(postFormData.form, postFormData.structure, postFormData.Culture, null, GetLocalParameters(user, record));
+        SetCommonCreateViewBags(postFormData.ParentNamespaceId, postFormData.ParentEntityId, postFormData.ParentFormSubjectId,
+            postFormData.SubTableAssociationFeildId, postFormData.ParentIds, workItemFormId, wid, TaskId,
+            ProcessId, Caller, callerPage, user, postFormData.Structure);
+        SetPagePackId(postFormData.Form);
+        ViewBag.structure = postFormData.Structure;
+        FormComboData.SetCombosData(postFormData.Form, postFormData.Structure, postFormData.Culture, null, GetLocalParameters(user, record));
         return !string.IsNullOrEmpty(form.SpecificViewPage) ? View(form.GetSpecificViewPage(), record) : View(record);
     }
 

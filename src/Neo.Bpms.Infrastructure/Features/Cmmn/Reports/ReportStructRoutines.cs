@@ -192,10 +192,10 @@ public class ReportStructRoutines(FormStructRoutines formStructRoutines,
             string sortFieldFormula = "";
             if (!string.IsNullOrEmpty(sortFieldItems[0]) && sortFieldItems[0].Contains('$'))
                 sortFieldFormula = sortFieldItems[0].Split('$')[1];
-            List<ColumnFieldDefinition> cells = structure.SelectedColumns.Where(
-                c => c.aggrType != eAggregationFunctions.GroupByItem).ToList();
-            List<ColumnFieldDefinition> cols = structure.ColumnInfos.Where(
-                c => c.aggrType != eAggregationFunctions.GroupByItem).ToList();
+            List<ColumnFieldDefinition> cells = [.. structure.SelectedColumns.Where(
+                c => c.aggrType != eAggregationFunctions.GroupByItem)];
+            List<ColumnFieldDefinition> cols = [.. structure.ColumnInfos.Where(
+                c => c.aggrType != eAggregationFunctions.GroupByItem)];
             ColumnFieldDefinition col =
                 cells.FirstOrDefault(
                     c => c.entityId + "." + c.GetColumnOrderName() ==

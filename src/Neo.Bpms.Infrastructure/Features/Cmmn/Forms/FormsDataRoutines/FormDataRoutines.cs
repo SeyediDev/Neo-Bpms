@@ -255,7 +255,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
     {
         ElasticObject r = new();
         if (string.IsNullOrEmpty(ids)) return r;
-        List<EntityField> keys = entity.KeyFields.ToList();
+        List<EntityField> keys = [.. entity.KeyFields];
         if (keys.Count == 1)
             r.SetField(keys.FirstOrDefault()?.Id, ids);
         else
