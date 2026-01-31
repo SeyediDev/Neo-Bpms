@@ -178,7 +178,8 @@ public class ReportDataRoutines(ReportStructRoutines reportStructRoutines, SubRe
     private static void SetReferFieldsPerRecord(QueryUtility q, ReferFields referFields,
         JoinQueriesData joinQueries, ElasticObject r, string culture)
     {
-        if (referFields?.Values != null) {
+        if (referFields?.Values != null) 
+        {
             foreach (ReferField referField in referFields?.Values)
             {
                 EntityField rField = referField.Field;
