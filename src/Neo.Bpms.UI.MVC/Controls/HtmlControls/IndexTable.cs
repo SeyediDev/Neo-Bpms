@@ -38,10 +38,9 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
         string tableColInfo = columns.Aggregate("",
             (current, item) =>
                 current + ((!string.IsNullOrEmpty(current) ? "|" : "") + item.ColumnName + ',' + item.FieldType));
-        result.Append("<div class=\"w-100\"></div>"); // Force new line
+        //result.Append("<div class=\"w-100\"></div>"); // Force new line
         result.Append(
-            $"<div class=\"{CommonProperties.WideColumnClasses}\">" +
-            $"<div class=\"row \" data-id=\"{Field.FieldName}\">");
+            $"<div class=\"w-100 row \" data-id=\"{Field.FieldName} {CommonProperties.WideColumnClasses}\">");
         result.Append("<div class=\"col-md-12\">");
         RenderDesignIcons(result);
         result.Append(TitleMessage(ControlsRendererData.Options.IsReadOnly, table));
@@ -154,7 +153,7 @@ public class IndexTable(IFormLogicHelper formLogicHelper,
             result.Append("</tr>");
         }
 
-        result.Append("</tbody></table></div></div></div></div>");
+        result.Append("</tbody></table></div></div></div>");
         
         // Add TableModalLinks script include if modal links are enabled
         if (ShouldOpenInModal(table))

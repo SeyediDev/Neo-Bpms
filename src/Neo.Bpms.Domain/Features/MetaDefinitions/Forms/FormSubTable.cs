@@ -78,10 +78,13 @@ public abstract partial class FormDefinition
     /// <param name="containerControl"></param>
     /// <param name="enLabelName"></param>
     /// <returns></returns>
-    public FormField AddSubTable<TTableEntity>(string tableAssociation,
-        string tableIndexFormSubjectId, string labelName, string association = null,
-        bool editable = false, ContainerControl containerControl = ContainerControl.None,
-        string enLabelName = null, string filter = null, int? recordCount = null)
+    public FormField AddSubTable<TTableEntity>(
+        string tableAssociation, string labelName,
+        ContainerControl containerControl = ContainerControl.MultiTab, 
+        string filter = null, int? recordCount = null,
+        string tableIndexFormSubjectId = null, string association = null, bool editable = false,
+        string enLabelName = null)
+        where TTableEntity : IEntity
     {
         return AddSubTable(typeof(TTableEntity).Name, tableAssociation,
             tableIndexFormSubjectId, labelName, association, editable, containerControl, enLabelName, null, filter, recordCount);

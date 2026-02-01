@@ -54,9 +54,8 @@ public class ContainersControls(
     public NeoStringBuilder RenderMultiTab()
     {
         NeoStringBuilder stringBuilder = new();
-        stringBuilder.Append("<div class=\"w-100\"></div>"); // Force new line
         stringBuilder.Append(
-            $"<div data-id=\"{Field.FieldName}\" class=\"{ControlsClassString} {CommonProperties.WideColumnClasses}\" >");
+            $"<div data-id=\"{Field.FieldName}\" class=\"w-100 {ControlsClassString} {CommonProperties.WideColumnClasses}\" >");
         RenderDesignIcons(stringBuilder);
         stringBuilder.Append("<div class=\"row\"><div class=\"col-lg-12\">");
         IEnumerable<InputFieldDefinition> data = Structure.Fields.Where(f => f.parentControlId == Field.FieldName &&
@@ -98,6 +97,7 @@ public class ContainersControls(
         stringBuilder.Append("</div>");
         return stringBuilder;
     }
+    
     public NeoStringBuilder RenderFieldSet()
     {
         NeoStringBuilder stringBuilder = new();
@@ -105,12 +105,12 @@ public class ContainersControls(
         stringBuilder +=
             $"<div id=\"{Field.FieldName}\" " +
             $"class=\"{ControlsClassString} {CommonProperties.WideColumnClasses} teta-fieldSet\"";
-        stringBuilder = AddPropertiesEfect(stringBuilder, CommonProperties);
+        stringBuilder.Append(AddPropertiesEfect(CommonProperties));
         stringBuilder += $">";
         RenderDesignIcons(stringBuilder);
 
         stringBuilder += $"<fieldset class=\"sortable-container row m-0\" id=\"{Field.FieldName}\" ";
-        stringBuilder = AddPropertiesEfect(stringBuilder, CommonProperties);
+        stringBuilder.Append(AddPropertiesEfect(CommonProperties));
         stringBuilder += $">";
         string legend = Field.PropertyValue(eControlPropertyId.LabelName);
         if (!string.IsNullOrEmpty(legend))
@@ -122,15 +122,16 @@ public class ContainersControls(
         stringBuilder += "</fieldset></div>";
         return stringBuilder;
     }
-    private static NeoStringBuilder AddPropertiesEfect(NeoStringBuilder result, CommonProperties properties)
-    {
-        if (!string.IsNullOrEmpty(properties.Color))
-            result += $" style=\"color:{properties.Color}\"";
-        if (!string.IsNullOrEmpty(properties.BackgroundColor))
-            result += $" style=\"background-color:{properties.BackgroundColor}\"";
-        return result;
-    }
     
+    private static string AddPropertiesEfect(CommonProperties properties)
+    {
+        return !string.IsNullOrEmpty(properties.Color)
+            ? $" style=\"color:{properties.Color}\""
+            : !string.IsNullOrEmpty(properties.BackgroundColor) 
+            ? $" style=\"background-color:{properties.BackgroundColor}\"" 
+            : "";
+    }
+
     /// <summary>
     /// Get entity icon from the entity definition.
     /// This is the primary source of icon for entities.
