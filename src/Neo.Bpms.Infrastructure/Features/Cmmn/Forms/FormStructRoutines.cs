@@ -40,6 +40,7 @@ public class FormStructRoutines(ILogger<FormStructRoutines> logger,
 
         structure.NamespaceId = entity.model.Id;
         structure.EntityId = entity.Id;
+        structure.EntityName = culture == "en" ? entity.EnName : entity.Name;
         structure.Name = culture == "en" ? form.EnName : form.Name;
         structure.Form_ReportId = form.Id;
         structure.FormType = form.FormType;

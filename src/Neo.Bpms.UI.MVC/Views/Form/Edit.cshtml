@@ -269,7 +269,7 @@
                     @Html.Raw(sbvrRenderer.RenderEntitySBVR(structure.EntityId, structure.Name))
 					@if(!string.IsNullOrEmpty(structure.FormSubjectId) && !string.IsNullOrEmpty(displayString))
 					{
-						@(" : "+displayString)
+						@(" - "+structure.EntityName+" : " +displayString)
 					}
 				</h2>
             </div>

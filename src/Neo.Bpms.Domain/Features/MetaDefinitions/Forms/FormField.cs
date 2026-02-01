@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
-
-namespace Neo.Bpms.Domain.Features.Definitions.Entities;
+﻿namespace Neo.Bpms.Domain.Features.Definitions.Entities;
 
 /// <summary>
 /// Base class to define forms and their details. All form definitions in the business and meta models are sub classes of this object.
@@ -85,6 +83,16 @@ public abstract partial class FormDefinition
         }
 
         return AddField(ff);
+    }
+    
+    public FormField AddHiddenField(string fieldName)
+    {
+        var f = AddField(fieldName);
+        if (f != null)
+        {
+            AddProperty(eControlPropertyId.ShowHide, false);
+        }
+        return f;
     }
 
     public FormField AddListTable(string fieldName, string subFormSubjectId = null)
@@ -235,7 +243,7 @@ public abstract partial class FormDefinition
     /// <param name="fieldId">Name of the field.</param>
     /// <param name="controlTypeId"></param>
     /// <returns></returns>
-    public FormField AddColumn(string fieldId, eControlTypeId controlTypeId= eControlTypeId.None)
+    public FormField AddColumn(string fieldId, eControlTypeId controlTypeId = eControlTypeId.None)
     {
         _currentFormField = null;
         if (form.formFields.Any(f => f.Id == fieldId && f.FieldOrControlType == FormField.Type.ColumnField))
@@ -286,13 +294,13 @@ public abstract partial class FormDefinition
             _parentControlId = parent?.ParentControlId;
         }
     }
-    
-    public FormField AddSubjectColumn<TForm>(string? name=null)
+
+    public FormField AddSubjectColumn<TForm>(string? name = null)
         where TForm : FormDefinition, ISubjectFormDefinition, new()
     {
         var formId = typeof(TForm).Name;
         var subjectForm = entity.GetEntityForm(formId);
-        return AddSubjectColumn(name??subjectForm?.Name??formId, true, false, formId, subjectForm?.EnName??name);
+        return AddSubjectColumn(name ?? subjectForm?.Name ?? formId, true, false, formId, subjectForm?.EnName ?? name);
     }
     /// <summary>
     /// Adds the subject column.
@@ -450,7 +458,7 @@ public abstract partial class FormDefinition
         Dictionary<string, string> mapFields = entity.GetAssociationMapFields();
         foreach (EntityField field in entity.entityFields.Values.OrderBy(f => f.Order))
         {
-            if (field.FieldType!= TVariableTypes.File)
+            if (field.FieldType != TVariableTypes.File)
             {
                 AddOneField(formFieldType, showParentAssociation, dontAddEntityPkv, mapFields, field);
             }
@@ -468,7 +476,7 @@ public abstract partial class FormDefinition
             return field.Id.In("Description", "EnDescription", "Text"); //todo
         }
 
-        void AddOneField(FormField.Type formFieldType, bool showParentAssociation, bool dontAddEntityPkv, 
+        void AddOneField(FormField.Type formFieldType, bool showParentAssociation, bool dontAddEntityPkv,
             Dictionary<string, string> mapFields, EntityField field)
         {
             if (field.AuditField)
@@ -486,7 +494,7 @@ public abstract partial class FormDefinition
                 return;
             }
 
-            if (formFieldType == FormField.Type.ColumnField && IdInDescription(field) )
+            if (formFieldType == FormField.Type.ColumnField && IdInDescription(field))
             {
                 return;
             }
@@ -527,7 +535,7 @@ public abstract partial class FormDefinition
             {
                 return;
             }
-            
+
             if (entity.EntityType.IsInBaseInterface<ISoftDelete>())
             {
                 if (field.Id == nameof(ISoftDelete.ExpireDate) || field.Id == nameof(ISoftDelete.IsDeleted))
@@ -535,7 +543,7 @@ public abstract partial class FormDefinition
                     return;
                 }
             }
- 
+
             eControlTypeId control = eControlTypeId.None;
             if (field.FieldType == TVariableTypes.File)
             {

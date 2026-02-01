@@ -54,8 +54,9 @@ public class ContainersControls(
     public NeoStringBuilder RenderMultiTab()
     {
         NeoStringBuilder stringBuilder = new();
+        stringBuilder.Append("<div class=\"w-100\"></div>"); // Force new line
         stringBuilder.Append(
-            $"<div data-id=\"{Field.FieldName}\" class=\"w-100 {ControlsClassString} {CommonProperties.WideColumnClasses}\" >");
+            $"<div data-id=\"{Field.FieldName}\" class=\"{ControlsClassString} {CommonProperties.WideColumnClasses}\" >");
         RenderDesignIcons(stringBuilder);
         stringBuilder.Append("<div class=\"row\"><div class=\"col-lg-12\">");
         IEnumerable<InputFieldDefinition> data = Structure.Fields.Where(f => f.parentControlId == Field.FieldName &&

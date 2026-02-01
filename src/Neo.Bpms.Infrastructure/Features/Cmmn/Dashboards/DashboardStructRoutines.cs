@@ -52,6 +52,7 @@ public class DashboardStructRoutines(
         if (entity == null) return null;
         structure.NamespaceId = entity.model.Id;
         structure.EntityId = entity.Id;
+        structure.EntityName = culture == "en" ? entity.EnName : entity.Name;
         structure.Name = dashboard.Name;
         structure.Form_ReportId = dashboard.Id;
         if (dashboard.formFields != null)

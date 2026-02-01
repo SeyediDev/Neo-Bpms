@@ -12,6 +12,7 @@ public class CommonFormStructure
     }
     public string NamespaceId { get; set; }
     public string EntityId { get; set; }
+    public string EntityName { get; set; }
     public string FormSubjectId { get; set; }
     public string Form_ReportId { get; set; }
     public string Name { get; set; }

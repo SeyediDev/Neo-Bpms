@@ -246,9 +246,15 @@ public abstract class CRUDDefinition : EntityDefinition
         }
     }
 
-    public class SubjectEditForm<TForm> : EditForm, ISubjectFormDefinition
+    public class SubjectEditForm2<TForm> : EditForm, ISubjectFormDefinition
     {
         public override string SubjectId => typeof(TForm).Name;
+    }
+    
+    public class SubjectEditForm<TForm>(string name) : EditForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => typeof(TForm).Name;
+        public override string Name => name;
     }
 
     public class EditForm : CUDForm
