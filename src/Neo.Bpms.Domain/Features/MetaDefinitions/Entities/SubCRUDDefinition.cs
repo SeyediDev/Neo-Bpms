@@ -14,8 +14,8 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         DefineForm<SubDetail>();
         DefineForm<SubDelete>();
     }
-    public abstract void SubIndexViewModel(FormDefinition form);
-    public abstract void SubViewModel(FormDefinition form);
+    public abstract void SubIndexViewModel();
+    public abstract void SubViewModel();
     public virtual string SubjectId => "Sub";
 
     protected class SubIndex : SubIndexForm
@@ -24,7 +24,7 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         public override string SubjectId => SubDefinition.SubjectId;
         protected override void ViewModel()
         {
-            SubDefinition.SubIndexViewModel(this);
+            SubDefinition.SubIndexViewModel();
         }
     }
     protected class SubCreate : SubCreateForm
@@ -33,7 +33,7 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         public override string SubjectId => SubDefinition.SubjectId;
         protected override void ViewModel()
         {
-            SubDefinition.SubViewModel(this);
+            SubDefinition.SubViewModel();
         }
 
     }
@@ -43,7 +43,7 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         public override string SubjectId => SubDefinition.SubjectId;
         protected override void ViewModel()
         {
-            SubDefinition.SubViewModel(this);
+            SubDefinition.SubViewModel();
         }
     }
     protected class SubDetail : SubDetailForm
@@ -52,7 +52,7 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         public override string SubjectId => SubDefinition.SubjectId;
         protected override void ViewModel()
         {
-            SubDefinition.SubViewModel(this);
+            SubDefinition.SubViewModel();
         }
     }
     protected class SubDelete : SubDeleteForm
@@ -61,7 +61,7 @@ public abstract class SubCRUDDefinition : CRUDDefinition
         public override string SubjectId => SubDefinition.SubjectId;
         protected override void ViewModel()
         {
-            SubDefinition.SubViewModel(this);
+            SubDefinition.SubViewModel();
         }
     }
     protected override void UIRules(FormDefinition form)

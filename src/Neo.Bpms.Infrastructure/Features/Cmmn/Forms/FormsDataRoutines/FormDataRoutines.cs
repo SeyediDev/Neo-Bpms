@@ -74,57 +74,6 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return result;
     }
 
-    public static IndexFormData GetRecords(CommonFormStructure structure, Entity entity, Form form, string culture,
-        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp,
-        IList<string> filterList, IdentityUser user, bool setAssociationDisplay, string parentFieldId,
-        int? recordCount, CancellationToken cancellationToken)
-    {
-        JoinQueriesData joinQueries = new();
-        IndexFormData result = new(filterValues);
-        if (form == null)
-            return result;
-        lp ??= new LocalParameters(user);
-        if (user != null)
-            lp.AddOrUpdate("user", user);
-        if (filterValues != null && filterValues["user"] == null)
-            filterValues["user"] = user;
-        long count = GetRecordCount(structure, entity, form, filterValues, queryInfo, lp, filterList, cancellationToken);
-        if (count <= 0) return result;
-        result.recordCount = count;
-        FormQuery formQuery = new(form, structure, cancellationToken);
-        QueryUtility q = formQuery.EstablishQuery();
-        Dictionary<string, FormField> referFormFields = formQuery.EstablishEntityQuery(filterValues,
-            filterList, false, joinQueries);
-        if (!string.IsNullOrEmpty(parentFieldId))
-            q.SelectField(parentFieldId);
-        if (recordCount != null)
-            q.SetPage(1, recordCount.Int());
-        if (!q.GetDocuments(filterValues, lp))
-            return result;
-        queryInfo?.AddByQueryUtility(q);
-        List<ElasticObject> records = [.. GetRecordsRows(q, result)];
-        Parallel.ForEach(records, record =>
-        {
-            FetchJoinQuery.SetJoinQueryReference(culture, joinQueries, q, referFormFields, record, setAssociationDisplay, user);
-            SetEnumValues(culture, form, record);
-        });
-        q.ReleaseQuery();
-        if (setAssociationDisplay)
-        {
-            FetchJoinQuery.FetchJoinQueriesData(culture, lp, joinQueries, queryInfo);
-        }
-        return result;
-    }
-
-    private static IEnumerable<ElasticObject> GetRecordsRows(QueryUtility q, IndexFormData result)
-    {
-        foreach (ElasticObject record in q.GetRecords())
-        {
-            result.Rows.Add(record);
-            yield return record;
-        }
-    }
-
     public async Task<ElasticObject> GetRecord(Entity entity, string ids,
         CommonFormStructure structure, string culture, Form form,
         IdentityUser user, CancellationToken cancellationToken)
@@ -188,6 +137,76 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return record;
     }
 
+    #region private
+    internal async Task<List<ElasticObject>> GetTableRecords(string ids, string culture,
+        LocalParameters lp, TableDefinition table, IdentityUser user,
+        ElasticObject parentRecord, bool setAssociationDisplay, CancellationToken cancellationToken)
+    {
+        UiEntity entity = table.TableDef.TableEntity;
+        Form form = table.TableDef.TableEntity.GetEntityForm(null, Form.eFormType.Index, table.FormSubjectId);
+        string sortFields = "";
+        ElasticObject filterValues = parentRecord?.Clone();
+        CommonFormStructure structure = await formStructRoutines.GetIndexStructure(culture,
+            entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, sortFields, form, user);
+        List<string> filterList = [];
+        if (ids != null)
+        {
+            filterList.Add(TableAssociationFilter(table, ids));
+        }
+        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
+        if (!string.IsNullOrEmpty(filterProperty))
+        {
+            filterList.Add(filterProperty);
+        }
+        var recordCountProperty = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
+
+        IndexFormData indexData = await GetRecordsWithoutJoin(structure, entity, form, culture, filterValues,
+            sortFields, 1, recordCountProperty==null?100: recordCountProperty.Int(), null, lp, filterList, user,
+            false, setAssociationDisplay, cancellationToken);
+        var docFields = structure.ColumnInfos.Where(f => f.ControlType == eControlTypeId.File || f.ControlType == eControlTypeId.AdvancedUpload);
+        if (docFields.Any())
+        {
+            foreach (var row in indexData.Rows)
+            {
+                await LoadDocuments(entity, form, row, cancellationToken);
+            }
+        }
+        return indexData.Rows;
+    }
+
+    internal List<ElasticObject> GetSubTableRecords(List<string> ids, string culture,
+        LocalParameters lp, TableDefinition table, IdentityUser user, bool setAssociationDisplay,
+        bool getTableParentFieldId, CancellationToken cancellationToken)
+    {
+        UiEntity entity = table.TableDef.TableEntity;
+        Form form = table.TableDef.TableEntity.GetEntityForm(null, Form.eFormType.Edit, table.FormSubjectId);
+        if (form is null) return null;
+        CommonFormStructure structure = formStructRoutines.GetEditStructure(culture,
+            entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, form, user);
+        List<string> filterList = [];
+        if (ids != null)
+        {
+            filterList.Add(TableAssociationFilter(table, ids));
+        }
+        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
+        if (!string.IsNullOrEmpty(filterProperty))
+        {
+            filterList.Add(filterProperty);
+        }
+        var recordCount = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
+
+        string parentFieldId = "";
+        if (getTableParentFieldId)
+        {
+            parentFieldId = table.TableDef.TableAssociation.Maps.FirstOrDefault()?.SourceField;
+        }
+
+        IndexFormData indexData = GetRecords(structure, entity, form, culture, null,
+            null, lp, filterList, user, setAssociationDisplay, parentFieldId,
+            recordCount?.Int(), cancellationToken);
+        return indexData.Rows;
+    }
+
     private async Task LoadDocuments(Entity entity, Form form, ElasticObject record, CancellationToken cancellationToken)
     {
         foreach (var docField in form.formFields.Where(f => f.Field?.FieldType == TVariableTypes.File))
@@ -197,7 +216,107 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             record[docField.Id] = documents;
         }
     }
+    #endregion
+    #region static methods
+    public static IndexFormData GetRecords(CommonFormStructure structure, Entity entity, Form form, string culture,
+        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp,
+        IList<string> filterList, IdentityUser user, bool setAssociationDisplay, string parentFieldId,
+        int? recordCount, CancellationToken cancellationToken)
+    {
+        JoinQueriesData joinQueries = new();
+        IndexFormData result = new(filterValues);
+        if (form == null)
+            return result;
+        lp ??= new LocalParameters(user);
+        if (user != null)
+            lp.AddOrUpdate("user", user);
+        if (filterValues != null && filterValues["user"] == null)
+            filterValues["user"] = user;
+        long count = GetRecordCount(structure, entity, form, filterValues, queryInfo, lp, filterList, cancellationToken);
+        if (count <= 0) return result;
+        result.recordCount = count;
+        FormQuery formQuery = new(form, structure, cancellationToken);
+        QueryUtility q = formQuery.EstablishQuery();
+        Dictionary<string, FormField> referFormFields = formQuery.EstablishEntityQuery(filterValues,
+            filterList, false, joinQueries);
+        if (!string.IsNullOrEmpty(parentFieldId))
+            q.SelectField(parentFieldId);
+        if (recordCount != null)
+            q.SetPage(1, recordCount.Int());
+        if (!q.GetDocuments(filterValues, lp))
+            return result;
+        queryInfo?.AddByQueryUtility(q);
+        List<ElasticObject> records = [.. GetRecordsRows(q, result)];
+        Parallel.ForEach(records, record =>
+        {
+            FetchJoinQuery.SetJoinQueryReference(culture, joinQueries, q, referFormFields, record, setAssociationDisplay, user);
+            SetEnumValues(culture, form, record);
+        });
+        q.ReleaseQuery();
+        if (setAssociationDisplay)
+        {
+            FetchJoinQuery.FetchJoinQueriesData(culture, lp, joinQueries, queryInfo);
+        }
+        return result;
+    }
+    public static string GetEnumText(Type enumType, object value, string culture)
+    {
+        // Handle nullable enums
+        Type underlyingType = Nullable.GetUnderlyingType(enumType);
+        if (underlyingType != null && underlyingType.IsEnum)
+        {
+            enumType = underlyingType;
+        }
 
+        if (!enumType.IsEnum)
+        {
+            throw new ArgumentException("Type must be an enum or nullable enum", nameof(enumType));
+        }
+
+        // Convert the value to the underlying enum type
+        object enumValue;
+        try
+        {
+            enumValue = Enum.ToObject(enumType, value);
+        }
+        catch
+        {
+            return value.ToString();
+        }
+
+        // Get the enum name
+        string name = Enum.GetName(enumType, value);
+        if (name == null)
+        {
+            return value.ToString();
+        }
+        if (culture == "fa")
+        {
+            // Get the field info for the enum value
+            var fieldInfo = enumType.GetField(name);
+            if (fieldInfo == null)
+            {
+                return name;
+            }
+
+            // Prefer Display attribute (supports resource-based localization)
+            var displayAttribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
+            if (displayAttribute?.GetName() is { } displayName && !string.IsNullOrWhiteSpace(displayName))
+            {
+                return displayName;
+            }
+
+            // Fallback to Description attribute if available
+            var descriptionAttribute = fieldInfo.GetCustomAttribute<DescriptionAttribute>();
+            if (descriptionAttribute != null && !string.IsNullOrWhiteSpace(descriptionAttribute.Description))
+            {
+                return descriptionAttribute.Description;
+            }
+        }
+
+        // Fall back to the enum member name
+        return name;
+    }
     public static void SetEnumValues(string culture, Form form, ElasticObject record)
     {
         foreach (var field in form.formFields.Where(f => f.Field?.IsEnum ?? false))
@@ -215,6 +334,7 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
             }
         }
     }
+
     public static void SetEnumValues(string culture, ElasticObject record, Entity entity)
     {
         foreach (var field in entity.entityFields.Values.Where(f => f.IsEnum))
@@ -417,104 +537,6 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
         return str?.ToString();
     }
 
-    #region private
-
-    private static long GetRecordCount(CommonFormStructure structure, Entity entity, Form form,
-        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp, IEnumerable<string> filterList,
-        CancellationToken cancellationToken)
-    {
-        if (entity.entityFields == null) return 0;
-        FormQuery formQuery = new(form, structure, cancellationToken);
-        QueryUtility q = formQuery.EstablishQuery();
-        JoinQueriesData joinQueries = new();
-        lp.AddOrUpdate("q", filterValues);
-        formQuery.EstablishEntityQuery(filterValues, filterList, true, joinQueries);
-        long recordCount = q.GetRecordCount(filterValues, lp);
-        q.ReleaseQuery();
-        queryInfo?.AddByQueryUtility(q);
-        return recordCount;
-    }
-
-    internal async Task<List<ElasticObject>> GetTableRecords(string ids, string culture,
-        LocalParameters lp, TableDefinition table, IdentityUser user,
-        ElasticObject parentRecord, bool setAssociationDisplay, CancellationToken cancellationToken)
-    {
-        UiEntity entity = table.TableDef.TableEntity;
-        Form form = table.TableDef.TableEntity.GetEntityForm(null, Form.eFormType.Index, table.FormSubjectId);
-        string sortFields = "";
-        ElasticObject filterValues = parentRecord?.Clone();
-        CommonFormStructure structure = await formStructRoutines.GetIndexStructure(culture,
-            entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, sortFields, form, user);
-        List<string> filterList = [];
-        if (ids != null)
-        {
-            filterList.Add(TableAssociationFilter(table, ids));
-        }
-        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
-        if (!string.IsNullOrEmpty(filterProperty))
-        {
-            filterList.Add(filterProperty);
-        }
-        var recordCountProperty = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
-
-        IndexFormData indexData = await GetRecordsWithoutJoin(structure, entity, form, culture, filterValues,
-            sortFields, 1, recordCountProperty==null?100: recordCountProperty.Int(), null, lp, filterList, user,
-            false, setAssociationDisplay, cancellationToken);
-        var docFields = structure.ColumnInfos.Where(f => f.ControlType == eControlTypeId.File || f.ControlType == eControlTypeId.AdvancedUpload);
-        if (docFields.Any())
-        {
-            foreach (var row in indexData.Rows)
-            {
-                await LoadDocuments(entity, form, row, cancellationToken);
-            }
-        }
-        return indexData.Rows;
-    }
-
-    internal List<ElasticObject> GetSubTableRecords(List<string> ids, string culture,
-        LocalParameters lp, TableDefinition table, IdentityUser user, bool setAssociationDisplay,
-        bool getTableParentFieldId, CancellationToken cancellationToken)
-    {
-        UiEntity entity = table.TableDef.TableEntity;
-        Form form = table.TableDef.TableEntity.GetEntityForm(null, Form.eFormType.Edit, table.FormSubjectId);
-        if (form is null) return null;
-        CommonFormStructure structure = formStructRoutines.GetEditStructure(culture,
-            entity.NamespaceId, entity.Id, form.FormSubjectId, form.Id, form, user);
-        List<string> filterList = [];
-        if (ids != null)
-        {
-            filterList.Add(TableAssociationFilter(table, ids));
-        }
-        var filterProperty = table.GetProperty(eControlPropertyId.FilterFormula)?.Value?.ToString();
-        if (!string.IsNullOrEmpty(filterProperty))
-        {
-            filterList.Add(filterProperty);
-        }
-        var recordCount = table.GetProperty(eControlPropertyId.MaxRecordCount)?.Value;
-
-        string parentFieldId = "";
-        if (getTableParentFieldId)
-        {
-            parentFieldId = table.TableDef.TableAssociation.Maps.FirstOrDefault()?.SourceField;
-        }
-
-        IndexFormData indexData = GetRecords(structure, entity, form, culture, null,
-            null, lp, filterList, user, setAssociationDisplay, parentFieldId,
-            recordCount?.Int(), cancellationToken);
-        return indexData.Rows;
-    }
-
-    private static string TableAssociationFilter(TableDefinition table, List<string> ids)
-    {
-        if (table.TableDef.TableAssociation.Maps?.Count == 1)
-        {
-            ids = [.. ids.Select(id => $"'{id}'")];
-            return table.TableDef.TableAssociation.Maps[0].SourceField + " IN (" + string.Join(',', ids) + ") ";
-        }
-
-        return null;
-    }
-
     private static string TableAssociationFilter(TableDefinition table, string ids)
     {
         if (table.TableDef.TableAssociation.Maps?.Count == 1)
@@ -532,64 +554,42 @@ public class FormDataRoutines(FormStructRoutines formStructRoutines,
 
         return string.Join(" And ", associationFilters);
     }
-
-    public static string GetEnumText(Type enumType, object value, string culture)
+    
+    private static long GetRecordCount(CommonFormStructure structure, Entity entity, Form form,
+        ElasticObject filterValues, QueryInfo queryInfo, LocalParameters lp, IEnumerable<string> filterList,
+        CancellationToken cancellationToken)
     {
-        // Handle nullable enums
-        Type underlyingType = Nullable.GetUnderlyingType(enumType);
-        if (underlyingType != null && underlyingType.IsEnum)
-        {
-            enumType = underlyingType;
-        }
-
-        if (!enumType.IsEnum)
-        {
-            throw new ArgumentException("Type must be an enum or nullable enum", nameof(enumType));
-        }
-
-        // Convert the value to the underlying enum type
-        object enumValue;
-        try
-        {
-            enumValue = Enum.ToObject(enumType, value);
-        }
-        catch
-        {
-            return value.ToString();
-        }
-
-        // Get the enum name
-        string name = Enum.GetName(enumType, enumValue);
-        if (name == null)
-        {
-            return value.ToString();
-        }
-        if (culture == "fa")
-        {
-            // Get the field info for the enum value
-            var fieldInfo = enumType.GetField(name);
-            if (fieldInfo == null)
-            {
-                return name;
-            }
-
-            // Prefer Display attribute (supports resource-based localization)
-            var displayAttribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
-            if (displayAttribute?.GetName() is { } displayName && !string.IsNullOrWhiteSpace(displayName))
-            {
-                return displayName;
-            }
-
-            // Fallback to Description attribute if available
-            var descriptionAttribute = fieldInfo.GetCustomAttribute<DescriptionAttribute>();
-            if (descriptionAttribute != null && !string.IsNullOrWhiteSpace(descriptionAttribute.Description))
-            {
-                return descriptionAttribute.Description;
-            }
-        }
-
-        // Fall back to the enum member name
-        return name;
+        if (entity.entityFields == null) return 0;
+        FormQuery formQuery = new(form, structure, cancellationToken);
+        QueryUtility q = formQuery.EstablishQuery();
+        JoinQueriesData joinQueries = new();
+        lp.AddOrUpdate("q", filterValues);
+        formQuery.EstablishEntityQuery(filterValues, filterList, true, joinQueries);
+        long recordCount = q.GetRecordCount(filterValues, lp);
+        q.ReleaseQuery();
+        queryInfo?.AddByQueryUtility(q);
+        return recordCount;
     }
+
+    private static IEnumerable<ElasticObject> GetRecordsRows(QueryUtility q, IndexFormData result)
+    {
+        foreach (ElasticObject record in q.GetRecords())
+        {
+            result.Rows.Add(record);
+            yield return record;
+        }
+    }
+
+    private static string TableAssociationFilter(TableDefinition table, List<string> ids)
+    {
+        if (table.TableDef.TableAssociation.Maps?.Count == 1)
+        {
+            ids = [.. ids.Select(id => $"'{id}'")];
+            return table.TableDef.TableAssociation.Maps[0].SourceField + " IN (" + string.Join(',', ids) + ") ";
+        }
+
+        return null;
+    }
+
     #endregion
 }

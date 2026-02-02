@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
+﻿using Castle.Components.DictionaryAdapter;
+
+namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
 
 public interface IEntityDefinition 
 { 
@@ -270,7 +272,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
 
     #region form
 
-    private Form _form;
+    protected FormDefinition form { get; set; }
 
     /// <summary>
     /// Defines the form.
@@ -310,10 +312,10 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
             {
                 throw new Exception("This Form Does not Exist" + formType);
             }
-
-            _form = formDef.DefineForm(Entity, this);
-            _form.Roles ??= Roles;
-            Entity.AddForm(_form);
+            form = formDef;
+            var entityForm = formDef.DefineForm(Entity, this);
+            entityForm.Roles ??= Roles;
+            Entity.AddForm(entityForm);
         }
 
         return true;
@@ -896,20 +898,20 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
 
     protected void DefineSubjectsForms()
     {
-        foreach (FormDefinition form in ExtractSubsInstances<FormDefinition>())
+        foreach (FormDefinition formDef in ExtractSubsInstances<FormDefinition>())
         {
-            if (form is ReportDefinition or null)
+            if (formDef is ReportDefinition or null)
             {
                 continue;
             }
-            if(form is not ISubjectFormDefinition)
+            if(formDef is not ISubjectFormDefinition)
             {
                 continue;
             }
-
-            _form = form.DefineForm(Entity, this);
-            _form.Roles ??= Roles;
-            Entity.AddForm(_form);
+            form = formDef;
+            var entityForm = formDef.DefineForm(Entity, this);
+            entityForm.Roles ??= Roles;
+            Entity.AddForm(entityForm);
         }
     }
 
@@ -926,4 +928,33 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
             typeEntity.Namespace?[Math.Max(0, typeEntity.Namespace.LastIndexOf('.', typeEntity.Namespace.Length - 1) + 1)..];
         return reportNamespaceId;
     }
+    #region Form
+    protected bool IsCreateForm => form.form.FormType == Form.eFormType.Create;
+    protected void AddColumns(params string[] fieldIdList)
+        => form.AddColumns(fieldIdList);
+    protected void AddField(string fieldName, eControlTypeId controlTypeId, params eControlPropertyId[] controlProperties)
+        => form.AddField(fieldName, controlTypeId, controlProperties);
+    protected void AddField(string fieldName, params eControlPropertyId[] controlProperties)
+        => form.AddField(fieldName, controlProperties);
+    protected void AddFields(params string[] fieldNames)
+        => form.AddFields(fieldNames);
+    protected void AddHiddenField(string fieldName)
+        => form.AddHiddenField(fieldName);
+    protected void AddSubjectColumn<TForm>(string? name = null)
+        where TForm : FormDefinition, ISubjectFormDefinition, new()
+        => form.AddSubjectColumn<TForm>(name);
+    protected void AddOrderBy(string fieldId, SortType sortType = SortType.Ascending, bool byId = false)
+        => form.AddOrderBy(fieldId, sortType, byId);
+    protected void AddGroup(string id, string name, string enName = null)
+        => form.AddGroup(id, name, enName);
+    protected void EndGroup() 
+        => form.EndGroup();
+    protected void ShowHide(string userChangeFieldId, string condition, params string[] controlledParams)
+        => form.ShowHide(userChangeFieldId, condition, controlledParams);
+    protected void FilterFormula(string userChangeFieldId, string controlledParam, string filter)
+        => form.FilterFormula(userChangeFieldId, controlledParam, filter);
+    protected void SetFilterFormula(List<string> userChangeFieldIds, List<string> controlledParams, string filter)
+        => form.SetFilterFormula(userChangeFieldIds, controlledParams, filter);
+    #endregion
 }
+

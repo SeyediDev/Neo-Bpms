@@ -54,42 +54,43 @@ public abstract class CRUDDefinition : EntityDefinition
         return DefineForm<T>();
     }
 
-    protected virtual void CUDFormsViewModel(CUDForm form)
+    protected virtual void CUDFormsViewModel()
     {
         form.AddAllFields(FormField.Type.Field, false, false);
     }
 
-    protected virtual void CUDFormsSubTables(CUDForm form)
+    protected virtual void CUDFormsSubTables()
     {
     }
 
-    protected virtual void CreateFormViewModel(CUDForm form)
+    protected virtual void CreateFormViewModel()
     {
-        CUDFormsViewModel(form);
+        CUDFormsViewModel();
     }
-    protected virtual void CreateFormOperation(CreateForm createForm)
+    protected virtual void CreateFormOperation()
     {
-    }
-
-    protected virtual void EditFormViewModel(CUDForm form)
-    {
-        CUDFormsViewModel(form);
     }
 
-    protected virtual void CreateFormSubTables(CUDForm form)
+    protected virtual void EditFormViewModel()
     {
-        CUDFormsSubTables(form);
+        CUDFormsViewModel();
     }
 
-    protected virtual void EditFormSubTables(CUDForm form)
+    protected virtual void CreateFormSubTables()
     {
-        CUDFormsSubTables(form);
+        CUDFormsSubTables();
     }
 
-    protected virtual void IndexFormSubTables(CUDForm form)
+    protected virtual void EditFormSubTables()
     {
-        CUDFormsSubTables(form);
+        CUDFormsSubTables();
     }
+
+    protected virtual void IndexFormSubTables()
+    {
+        CUDFormsSubTables();
+    }
+    
     /// <summary>
     /// Defines UI Rules
     /// </summary>
@@ -97,26 +98,48 @@ public abstract class CRUDDefinition : EntityDefinition
     protected virtual void UIRules(FormDefinition form)
     {
     }
+    
+    protected virtual void UIRules()
+    {
+        UIRules(form);
+    }
 
     protected virtual void CreateFormUIRules(FormDefinition form)
     {
-        UIRules(form);
+    }
+
+    protected virtual void CreateFormUIRules()
+    {
+        UIRules();
+        CreateFormUIRules(form);
     }
 
     protected virtual void EditFormUIRules(FormDefinition form)
     {
-        UIRules(form);
+    }
+    protected virtual void EditFormUIRules()
+    {
+        UIRules();
+        EditFormUIRules(form);
     }
     protected virtual void DeleteFormUIRules(FormDefinition form)
     {
-        UIRules(form);
+    }
+    protected virtual void DeleteFormUIRules()
+    {
+        UIRules();
+        DeleteFormUIRules(form);
     }
     protected virtual void IndexFormUIRules(FormDefinition form)
     {
-        UIRules(form);
+    }
+    protected virtual void IndexFormUIRules()
+    {
+        UIRules();
+        IndexFormUIRules(form); ;
     }
 
-    protected virtual void CUDFormsDataOperations(CUDForm form)
+    protected virtual void CUDFormsDataOperations()
     {
         if (!Entity.IsStateBase)
         {
@@ -148,14 +171,26 @@ public abstract class CRUDDefinition : EntityDefinition
     {
         form.AddAllFields(FormField.Type.FilterField, false, true);
     }
+    protected virtual void IndexFormFilters()
+    {
+        IndexFormFilters(form);
+    }
 
     protected virtual void IndexFormViewModel(FormDefinition form)
     {
         form.AddAllFields(FormField.Type.ColumnField, false, true);
     }
+    protected virtual void IndexFormViewModel()
+    {
+        IndexFormViewModel(form);
+    }
 
     protected virtual void IndexFormOrderBy(FormDefinition form)
     {
+    }
+    protected virtual void IndexFormOrderBy()
+    {
+        IndexFormOrderBy(form);
     }
 
     protected virtual void ReportFilters(ReportDefinition report)
@@ -190,8 +225,8 @@ public abstract class CRUDDefinition : EntityDefinition
         /// </summary>
         protected override void ViewModel()
         {
-            CrudDefinition.CUDFormsViewModel(this);
-            CrudDefinition.CUDFormsSubTables(this);
+            CrudDefinition.CUDFormsViewModel();
+            CrudDefinition.CUDFormsSubTables();
         }
 
         /// <summary>
@@ -199,7 +234,7 @@ public abstract class CRUDDefinition : EntityDefinition
         /// </summary>
         protected override void DataOperations()
         {
-            CrudDefinition.CUDFormsDataOperations(this);
+            CrudDefinition.CUDFormsDataOperations();
         }
 
         /// <summary>
@@ -207,7 +242,7 @@ public abstract class CRUDDefinition : EntityDefinition
         /// </summary>
         protected override void UIRules()
         {
-            CrudDefinition.UIRules(this);
+            CrudDefinition.UIRules();
         }
     }
 
@@ -231,18 +266,18 @@ public abstract class CRUDDefinition : EntityDefinition
 
         protected override void FormOperation()
         {
-            CrudDefinition.CreateFormOperation(this);
+            CrudDefinition.CreateFormOperation();
         }
 
         protected override void ViewModel()
         {
-            CrudDefinition.CreateFormViewModel(this);
-            CrudDefinition.CreateFormSubTables(this);
+            CrudDefinition.CreateFormViewModel();
+            CrudDefinition.CreateFormSubTables();
         }
 
         protected override void UIRules()
         {
-            CrudDefinition.CreateFormUIRules(this);
+            CrudDefinition.CreateFormUIRules();
         }
     }
 
@@ -266,13 +301,13 @@ public abstract class CRUDDefinition : EntityDefinition
 
         protected override void ViewModel()
         {
-            CrudDefinition.EditFormViewModel(this);
-            CrudDefinition.EditFormSubTables(this);
+            CrudDefinition.EditFormViewModel();
+            CrudDefinition.EditFormSubTables();
         }
 
         protected override void UIRules()
         {
-            CrudDefinition.EditFormUIRules(this);
+            CrudDefinition.EditFormUIRules();
         }
     }
     
@@ -285,13 +320,13 @@ public abstract class CRUDDefinition : EntityDefinition
 
         protected override void ViewModel()
         {
-            CrudDefinition.EditFormViewModel(this);
-            CrudDefinition.EditFormSubTables(this);
+            CrudDefinition.EditFormViewModel();
+            CrudDefinition.EditFormSubTables();
         }
 
         protected override void UIRules()
         {
-            CrudDefinition.EditFormUIRules(this);
+            CrudDefinition.EditFormUIRules();
         }
     }
 
@@ -335,7 +370,7 @@ public abstract class CRUDDefinition : EntityDefinition
         }
         protected override void UIRules()
         {
-            CrudDefinition.DeleteFormUIRules(this);
+            CrudDefinition.DeleteFormUIRules();
         }
     }
     protected virtual string IndexName { get; set; }
@@ -355,17 +390,17 @@ public abstract class CRUDDefinition : EntityDefinition
 
         protected override void Filters()
         {
-            CrudDefinition.IndexFormFilters(this);
+            CrudDefinition.IndexFormFilters();
         }
 
         protected override void ViewModel()
         {
-            CrudDefinition.IndexFormViewModel(this);
-            CrudDefinition.IndexFormOrderBy(this);
+            CrudDefinition.IndexFormViewModel();
+            CrudDefinition.IndexFormOrderBy();
         }
         protected override void UIRules()
         {
-            CrudDefinition.IndexFormUIRules(this);
+            CrudDefinition.IndexFormUIRules();
         }
     }
     #region SubForm

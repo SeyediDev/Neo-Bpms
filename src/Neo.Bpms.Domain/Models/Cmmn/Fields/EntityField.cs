@@ -198,7 +198,7 @@ public class EntityField : BaseModelClass, ISBVRContainer
         get => NotMap ? "" : !string.IsNullOrEmpty(DBFieldNameMap) ? DBFieldNameMap : Id;
         set => DBFieldNameMap = value;
     }
-
+    public string GetSetDBFieldNameMap() => DBFieldNameMap;
     public string OldDbFieldName
     {
         get => NotMap ? "" : _oldDbFieldNameMap;

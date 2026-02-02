@@ -443,7 +443,7 @@ public class Entity : BaseModelClass, IModelEntity, ISBVRContainer
 
     #region auto calcs
 
-    public AutoCalcList AutoCalcs { get; set; }
+    public AutoCalcList AutoCalcs { get; set; } = new AutoCalcList();
 
     public void InitAutoCalcs()
     {

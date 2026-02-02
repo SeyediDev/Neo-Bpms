@@ -223,6 +223,17 @@ public abstract partial class FormDefinition
 
         return f;
     }
+    
+    public void AddGroup(string id, string name, string enName = null)
+    {
+        AddControl(eControlTypeId.Group, id, name, enName);
+        StartSubControls();
+    }
+    
+    public void EndGroup()
+    {
+        EndSubControls();
+    }
 
     /// <summary>
     /// Adds the field column.

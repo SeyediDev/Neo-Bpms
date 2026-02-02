@@ -7,7 +7,7 @@ public class BusinessRuleVersionDefinitions : CRUDDefinition
         DefineCRUDForms("U");
         AdditionalForms();
     }
-    protected override void CUDFormsSubTables(CUDForm form)
+    protected override void CUDFormsSubTables()
     {
         _ = form.AddSubTable(nameof(BusinessRuleLogics), nameof(BusinessRuleLogics.BusinessRuleVersion),
             "BusinessRuleVersion", "منطق های قوانین کسبو کار");
