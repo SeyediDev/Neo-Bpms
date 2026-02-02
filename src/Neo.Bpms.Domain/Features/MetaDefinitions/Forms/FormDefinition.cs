@@ -263,6 +263,14 @@ public abstract partial class FormDefinition : BaseModelingDefinition, IUIRuleDe
     {
         form.AddOrderBy(fieldId, sortType, byId);
     }
+    
+    public void AddOrderBy(params string[] fieldNames)
+    {
+        foreach (string fieldName in fieldNames ?? Enumerable.Empty<string>())
+        {
+            AddOrderBy(fieldName);
+        }
+    }
 
     protected void SetServiceInterfaceProtocol(ServiceInterfaceProtocol p)
     {

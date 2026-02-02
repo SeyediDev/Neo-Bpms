@@ -945,6 +945,8 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
         => form.AddSubjectColumn<TForm>(name);
     protected void AddOrderBy(string fieldId, SortType sortType = SortType.Ascending, bool byId = false)
         => form.AddOrderBy(fieldId, sortType, byId);
+    protected void AddOrderBy(params string[] fieldNames)
+        => form.AddOrderBy(fieldNames);
     protected void AddGroup(string id, string name, string enName = null)
         => form.AddGroup(id, name, enName);
     protected void EndGroup() 

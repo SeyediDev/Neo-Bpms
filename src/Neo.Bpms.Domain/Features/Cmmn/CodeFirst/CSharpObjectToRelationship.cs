@@ -48,7 +48,7 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
 
         RelationDeleteUpdateBehavior deleteBehavior = RelationDeleteUpdateBehavior.Error;
         RelationDeleteUpdateBehavior updateBehavior = RelationDeleteUpdateBehavior.Error;
-
+        string? constraint = null;
 
         Association association = null;
         foreach (object attr in attributes ?? Enumerable.Empty<object>())
@@ -71,7 +71,7 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
                 case WeakEntityAssociationAttribute weakEntityAssociationAttribute:
                     association = field.AssociationEntity =
                         new WeakEntityAssociation(entity, id, name, enName,
-                            relatedEntity, weakEntityAssociationAttribute.Constraint,
+                            relatedEntity, weakEntityAssociationAttribute.Constraint ?? constraint,
                             weakEntityAssociationAttribute.ConstraintDbName, fieldFlags);
                     deleteBehavior = RelationDeleteUpdateBehavior.Cascade;
                     updateBehavior = RelationDeleteUpdateBehavior.Cascade;
@@ -79,18 +79,21 @@ internal class CSharpObjectToRelationship : CSharpObjectToModel
                 case OAttr_Association associationAttribute:
                     association = field.AssociationEntity =
                         new Association(entity, id, name, enName,
-                            relatedEntity, associationAttribute.Constraint,
+                            relatedEntity, associationAttribute.Constraint?? constraint,
                             associationAttribute.ConstraintDbName, associationAttribute.OnDeleteBehaviour,
                             associationAttribute.OnUpdateBehaviour, fieldFlags)
                         {
                             Hidden = associationAttribute.Hidden,
                         };
                     break;
+                case RelationshipConstraintAttribute attribute:
+                    constraint = attribute.Constraint;
+                    break;
             }
         }
         
         association ??= field.AssociationEntity =
-                new Association(entity, id, name, enName, relatedEntity, null, null, deleteBehavior, updateBehavior, fieldFlags);
+                new Association(entity, id, name, enName, relatedEntity, constraint, null, deleteBehavior, updateBehavior, fieldFlags);
 
         foreach (object attr in attributes ?? Enumerable.Empty<object>())
         {
