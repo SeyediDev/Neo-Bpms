@@ -16,7 +16,6 @@
     height: 100px; 
     width: 100px;
     border: 2px solid;
-    border-color: transparent;
     border-color: coral;
 }
 
@@ -81,14 +80,14 @@
 /* Name Display Enhancement */
 .top-bar-title {
     font-weight: 500;
-    color: #1f2937;
+    color: var(--neo-dashboard-primary) !important;
     font-size: 14px;
     transition: color 0.2s ease;
 }
 
-.top-bar-title:hover {
-    color: #0077b6;
-}
+    .top-bar-title:hover {
+        color: var(--neo-dashboard-primary) !important;
+    }
 
 .user-menu-footer {
     padding: 10px;
@@ -168,13 +167,13 @@
     .userMenu > .user-image-wrapper {
         background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
     }
-    
+
     .top-bar-title {
-        color: #f9fafb;
+        color: var(--neo-dashboard-primary) !important;
     }
-    
+
     .top-bar-title:hover {
-        color: #60a5fa;
+        color: var(--neo-dashboard-primary) !important;
     }
     
     .user-info-list > .list-group-item:first-child {

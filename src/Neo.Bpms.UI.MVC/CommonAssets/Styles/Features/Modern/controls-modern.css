@@ -2468,7 +2468,7 @@ th .dWrapper {
 .modern-sort-button .sort-button-text {
   color: #374151;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
   text-transform: none;
   letter-spacing: normal;
   flex: 1;
@@ -2544,7 +2544,7 @@ th .dWrapper {
   padding: 0.75rem 1rem !important;
   text-align: right !important;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 1.0rem;
   border-bottom: 2px solid #e5e7eb;
   position: relative;
   vertical-align: middle;
