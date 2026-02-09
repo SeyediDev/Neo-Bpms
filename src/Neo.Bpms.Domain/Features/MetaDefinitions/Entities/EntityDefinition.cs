@@ -1,9 +1,7 @@
-﻿using Castle.Components.DictionaryAdapter;
+﻿namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
 
-namespace Neo.Bpms.Domain.Features.MetaDefinitions.Entities;
-
-public interface IEntityDefinition 
-{ 
+public interface IEntityDefinition
+{
 }
 /// <summary>
 /// Base class to define entities and their details. All entity definitions in the business and meta models are sub classes of this object.
@@ -14,7 +12,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     public ModelNamespace Model { get; set; }
     public UiEntity Entity { get; set; }
     public virtual Type DefinitionEntity { get; }
-    
+
     /// <summary>
     /// Icon class for the entity (e.g., "fa fa-users", "flaticon bpms-flaticon-campaign")
     /// Override this property in derived UIDefinitions to set the entity's icon.
@@ -33,7 +31,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
         }
         Entity.Defined = true;
         _order = 0;
-        
+
         // Set the entity icon from the definition
         if (!string.IsNullOrEmpty(Icon))
         {
@@ -41,7 +39,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
         }
         foreach (DocumentControlDefinitions documentControl in ExtractSubsInstances<DocumentControlDefinitions>())
         {
-            var field = AddField(documentControl.GetType().Name, documentControl.Name, 
+            var field = AddField(documentControl.GetType().Name, documentControl.Name,
                 documentControl.GetType().Name, TVariableTypes.File, documentControl.GetType(), EntityFieldFlags.NotMap);
             if (field != null)
             {
@@ -105,7 +103,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     protected virtual void RefineEntity()
     {
     }
-    
+
     protected EntityField? RenameField(string fieldName, string name, string enName)
     {
         var field = Entity.GetField(fieldName);
@@ -165,7 +163,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     protected EntityField AddField(string id, string name, string enName, TVariableTypes fieldType, Type cSharpType,
         EntityFieldFlags flags = EntityFieldFlags.None)
     {
-        currentField = new EntityField(Entity, id, name, enName, cSharpType??EntityField.GetFieldType(fieldType), fieldType,
+        currentField = new EntityField(Entity, id, name, enName, cSharpType ?? EntityField.GetFieldType(fieldType), fieldType,
             flags)
         {
             Order = _order++
@@ -904,7 +902,7 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
             {
                 continue;
             }
-            if(formDef is not ISubjectFormDefinition)
+            if (formDef is not ISubjectFormDefinition)
             {
                 continue;
             }
@@ -943,13 +941,22 @@ public abstract class EntityDefinition : BaseModelingDefinition, IEntityDefiniti
     protected void AddSubjectColumn<TForm>(string? name = null)
         where TForm : FormDefinition, ISubjectFormDefinition, new()
         => form.AddSubjectColumn<TForm>(name);
+    protected void AddSubTable<TTableEntity>(
+        string tableAssociation, string labelName,
+        ContainerControl containerControl = ContainerControl.MultiTab,
+        string filter = null, int? recordCount = null,
+        string tableIndexFormSubjectId = null, string association = null, bool editable = false,
+        string enLabelName = null)
+        where TTableEntity : IEntity
+        => form.AddSubTable<TTableEntity>(tableAssociation, labelName, containerControl,
+            filter, recordCount, tableIndexFormSubjectId, association, editable, enLabelName);
     protected void AddOrderBy(string fieldId, SortType sortType = SortType.Ascending, bool byId = false)
         => form.AddOrderBy(fieldId, sortType, byId);
     protected void AddOrderBy(params string[] fieldNames)
         => form.AddOrderBy(fieldNames);
     protected void AddGroup(string id, string name, string enName = null)
         => form.AddGroup(id, name, enName);
-    protected void EndGroup() 
+    protected void EndGroup()
         => form.EndGroup();
     protected void ShowHide(string userChangeFieldId, string condition, params string[] controlledParams)
         => form.ShowHide(userChangeFieldId, condition, controlledParams);
