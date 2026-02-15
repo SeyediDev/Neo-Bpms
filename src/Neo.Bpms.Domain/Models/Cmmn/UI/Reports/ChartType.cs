@@ -1,4 +1,4 @@
-﻿namespace Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
+namespace Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
 
 public enum ChartType
 {
@@ -21,5 +21,6 @@ public enum ChartType
     MetricBox,
     IranMap,
 
-    BpmnDiagram
+    BpmnDiagram,
+    Calendar
 }
