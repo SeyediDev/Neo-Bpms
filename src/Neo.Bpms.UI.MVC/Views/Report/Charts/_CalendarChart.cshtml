@@ -19,29 +19,28 @@
     var renderer = new CalendarRenderer(reportInfo, calendar);
     var (defaultYear, defaultMonth) = renderer.GetLastMonthWithData();
     
-    // Get these from query string if available
     var currentYear = Context.Request.Query["calendarYear"].FirstOrDefault()?.ToInt() ?? defaultYear;
     var currentMonth = Context.Request.Query["calendarMonth"].FirstOrDefault()?.ToInt() ?? defaultMonth;
     var currentCalendar = Context.Request.Query["calendarType"].FirstOrDefault() ?? calendar;
     
     var calendarData = renderer.GetCalendarData(currentYear, currentMonth);
     var monthSummary = renderer.GetMonthSummary(currentYear, currentMonth);
-    
-    // Theme colors
-    var themeColor = "#2563eb";
-    var secondaryColor = "#6366f1";
-    var successColor = "#22c55e";
-    var warningColor = "#f59e0b";
-    var dangerColor = "#ef4444";
-    
-    var encodedTitle = JavaScriptEncoder.Default.Encode(chartTitle ?? string.Empty);
 }
 
+<script>
+    window.calendarChartConfig = window.calendarChartConfig || {};
+    window.calendarChartConfig['@idx'] = {
+        year: @currentYear.ToString(),
+		month: @currentMonth.ToString(),
+        calendarType: '@currentCalendar',
+        baseUrl: '@Url.Action("Index", "Report")'
+    };
+</script>
+
 <div class="calendar-chart-container" id="calendar_container_@idx">
-    <!-- Calendar Header with Navigation and Summary -->
     <div class="calendar-header-modern">
         <div class="calendar-nav-section">
-            <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth_@idx(-1)" title="ماه قبل">
+            <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth('@idx', -1)">
                 <i class="fas fa-chevron-right"></i>
             </button>
             
@@ -53,25 +52,23 @@
                 }
             </div>
             
-            <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth_@idx(1)" title="ماه بعد">
+            <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth('@idx', 1)">
                 <i class="fas fa-chevron-left"></i>
             </button>
         </div>
         
-        <!-- Calendar Type Switcher -->
         <div class="calendar-type-switcher">
-            <button type="button" class="calendar-type-btn @(currentCalendar == "shamsi" ? "active" : "")" onclick="switchCalendarType_@idx('shamsi')">
+            <button type="button" class="calendar-type-btn @(currentCalendar == "shamsi" ? "active" : "")" onclick="switchCalendarType('@idx', 'shamsi')">
                 <i class="fas fa-moon"></i>
                 <span>شمسی</span>
             </button>
-            <button type="button" class="calendar-type-btn @(currentCalendar == "gregorian" ? "active" : "")" onclick="switchCalendarType_@idx('gregorian')">
+            <button type="button" class="calendar-type-btn @(currentCalendar == "gregorian" ? "active" : "")" onclick="switchCalendarType('@idx', 'gregorian')">
                 <i class="fas fa-sun"></i>
                 <span>میلادی</span>
             </button>
         </div>
     </div>
     
-    <!-- Month Summary Cards -->
     <div class="calendar-summary-section">
         <div class="summary-card primary">
             <div class="summary-icon">
@@ -117,9 +114,7 @@
         }
     </div>
     
-    <!-- Calendar Grid -->
     <div class="calendar-grid-modern">
-        <!-- Weekday Headers -->
         <div class="calendar-weekdays">
             @{
                 var weekdays = currentCalendar == "shamsi"
@@ -132,7 +127,6 @@
             }
         </div>
         
-        <!-- Calendar Days -->
         <div class="calendar-days">
             @{
                 var pc = new System.Globalization.PersianCalendar();
@@ -149,13 +143,11 @@
                 
                 var startingDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
                 
-                // Empty cells for days before the start of month
                 for (int i = 0; i < startingDayOfWeek; i++)
                 {
                     <div class="calendar-day empty"></div>
                 }
                 
-                // Days of the month
                 foreach (var day in calendarData)
                 {
                     var isWeekend = day.Date.DayOfWeek == DayOfWeek.Friday;
@@ -168,13 +160,7 @@
                         if (range > 0)
                         {
                             var ratio = (day.PrimaryValue.Value - monthSummary.MinValue.Value) / range;
-                            intensityClass = ratio switch
-                            {
-                                > 0.8 => "intensity-high",
-                                > 0.5 => "intensity-medium",
-                                > 0.2 => "intensity-low",
-                                _ => "intensity-minimal"
-                            };
+                            intensityClass = ratio > 0.8 ? "intensity-high" : ratio > 0.5 ? "intensity-medium" : ratio > 0.2 ? "intensity-low" : "intensity-minimal";
                         }
                     }
                     
@@ -211,56 +197,42 @@
 </div>
 
 <script>
-    (function() {
-        // Store current state
-        window.calendarState_@idx = {
-            year: @currentYear,
-            month: @currentMonth,
-            calendarType: '@currentCalendar'
-        };
+    function changeCalendarMonth(chartId, direction) {
+        var config = window.calendarChartConfig[chartId];
+        if (!config) return;
         
-        // Change month function
-        window.changeCalendarMonth_@idx = function(direction) {
-            var state = window.calendarState_@idx;
-            state.month += direction;
-            
-            if (state.month > 12) {
-                state.month = 1;
-                state.year++;
-            } else if (state.month < 1) {
-                state.month = 12;
-                state.year--;
-            }
-            
-            reloadCalendar_@idx();
-        };
+        config.month += direction;
         
-        // Switch calendar type function
-        window.switchCalendarType_@idx = function(type) {
-            window.calendarState_@idx.calendarType = type;
-            
-            // Convert date if needed
-            if (type === 'shamsi' && window.calendarState_@idx.calendarType !== 'shamsi') {
-                // Convert from Gregorian to Shamsi
-                // This is handled server-side on reload
-            } else if (type === 'gregorian' && window.calendarState_@idx.calendarType !== 'gregorian') {
-                // Convert from Shamsi to Gregorian
-                // This is handled server-side on reload
-            }
-            
-            reloadCalendar_@idx();
-        };
+        if (config.month > 12) {
+            config.month = 1;
+            config.year++;
+        } else if (config.month < 1) {
+            config.month = 12;
+            config.year--;
+        }
         
-        // Reload calendar with new parameters
-        window.reloadCalendar_@idx = function() {
-            var state = window.calendarState_@idx;
-            var url = new URL(window.location.href);
-            url.searchParams.set('calendarYear', state.year);
-            url.searchParams.set('calendarMonth', state.month);
-            url.searchParams.set('calendarType', state.calendarType);
-            window.location.href = url.toString();
-        };
-    })();
+        reloadCalendar(chartId);
+    }
+    
+    function switchCalendarType(chartId, type) {
+        var config = window.calendarChartConfig[chartId];
+        if (!config) return;
+        
+        config.calendarType = type;
+        reloadCalendar(chartId);
+    }
+    
+    function reloadCalendar(chartId) {
+        var config = window.calendarChartConfig[chartId];
+        if (!config || !config.baseUrl) return;
+        
+        var url = new URL(config.baseUrl, window.location.origin);
+        url.searchParams.set('calendarYear', config.year);
+        url.searchParams.set('calendarMonth', config.month);
+        url.searchParams.set('calendarType', config.calendarType);
+        
+        window.location.href = url.toString();
+    }
 </script>
 
 <style>
@@ -272,7 +244,6 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     
-    /* Header Styles */
     .calendar-header-modern {
         display: flex;
         justify-content: space-between;
@@ -328,7 +299,6 @@
         margin-top: 4px;
     }
     
-    /* Calendar Type Switcher */
     .calendar-type-switcher {
         display: flex;
         gap: 8px;
@@ -358,7 +328,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
-    /* Summary Section */
     .calendar-summary-section {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -382,21 +351,10 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     
-    .summary-card.primary {
-        border-right: 4px solid #2563eb;
-    }
-    
-    .summary-card.success {
-        border-right: 4px solid #22c55e;
-    }
-    
-    .summary-card.info {
-        border-right: 4px solid #06b6d4;
-    }
-    
-    .summary-card.warning {
-        border-right: 4px solid #f59e0b;
-    }
+    .summary-card.primary { border-right: 4px solid #2563eb; }
+    .summary-card.success { border-right: 4px solid #22c55e; }
+    .summary-card.info { border-right: 4px solid #06b6d4; }
+    .summary-card.warning { border-right: 4px solid #f59e0b; }
     
     .summary-icon {
         width: 48px;
@@ -408,43 +366,15 @@
         font-size: 20px;
     }
     
-    .summary-card.primary .summary-icon {
-        background: rgba(37, 99, 235, 0.1);
-        color: #2563eb;
-    }
+    .summary-card.primary .summary-icon { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+    .summary-card.success .summary-icon { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+    .summary-card.info .summary-icon { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+    .summary-card.warning .summary-icon { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
     
-    .summary-card.success .summary-icon {
-        background: rgba(34, 197, 94, 0.1);
-        color: #22c55e;
-    }
+    .summary-content { display: flex; flex-direction: column; }
+    .summary-value { font-size: 20px; font-weight: 700; color: #1e293b; }
+    .summary-label { font-size: 12px; color: #64748b; }
     
-    .summary-card.info .summary-icon {
-        background: rgba(6, 182, 212, 0.1);
-        color: #06b6d4;
-    }
-    
-    .summary-card.warning .summary-icon {
-        background: rgba(245, 158, 11, 0.1);
-        color: #f59e0b;
-    }
-    
-    .summary-content {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .summary-value {
-        font-size: 20px;
-        font-weight: 700;
-        color: #1e293b;
-    }
-    
-    .summary-label {
-        font-size: 12px;
-        color: #64748b;
-    }
-    
-    /* Calendar Grid */
     .calendar-grid-modern {
         background: white;
         border-radius: 12px;
@@ -467,9 +397,7 @@
         color: #475569;
     }
     
-    .weekday-header.weekend {
-        color: #ef4444;
-    }
+    .weekday-header.weekend { color: #ef4444; }
     
     .calendar-days {
         display: grid;
@@ -486,9 +414,7 @@
         transition: all 0.2s ease;
     }
     
-    .calendar-day.empty {
-        background: #f8fafc;
-    }
+    .calendar-day.empty { background: #f8fafc; }
     
     .calendar-day:hover:not(.empty) {
         background: #f1f5f9;
@@ -497,13 +423,8 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
-    .calendar-day.weekend {
-        background: #fef2f2;
-    }
-    
-    .calendar-day.weekend:hover {
-        background: #fee2e2;
-    }
+    .calendar-day.weekend { background: #fef2f2; }
+    .calendar-day.weekend:hover { background: #fee2e2; }
     
     .day-header {
         display: flex;
@@ -524,9 +445,7 @@
         border-radius: 50%;
     }
     
-    .calendar-day.weekend .day-number {
-        color: #ef4444;
-    }
+    .calendar-day.weekend .day-number { color: #ef4444; }
     
     .day-primary-value {
         font-size: 11px;
@@ -537,30 +456,13 @@
         border-radius: 10px;
     }
     
-    .day-content {
-        font-size: 11px;
-    }
+    .day-content { font-size: 11px; }
     
     .day-item {
         display: flex;
         justify-content: space-between;
         padding: 2px 0;
         border-bottom: 1px dashed #e2e8f0;
-    }
-    
-    .day-item:last-child {
-        border-bottom: none;
-    }
-    
-    .item-label {
-        color: #64748b;
-        font-size: 10px;
-    }
-    
-    .item-value {
-        color: #1e293b;
-        font-weight: 600;
-        font-size: 10px;
     }
     
     .more-items {
@@ -571,7 +473,6 @@
         font-weight: 500;
     }
     
-    /* Intensity colors for data visualization */
     .calendar-day.intensity-high {
         background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%);
         border-left: 3px solid #2563eb;
@@ -592,110 +493,36 @@
         border-left: 3px solid #22c55e;
     }
     
-    /* Responsive */
-    @@media (max-width: 1024px) {
-        .calendar-day {
-            min-height: 100px;
-        }
-    }
-    
     @@media (max-width: 768px) {
         .calendar-header-modern {
             flex-direction: column;
             align-items: stretch;
         }
         
-        .calendar-nav-section {
+        .calendar-nav-section, .calendar-type-switcher {
             justify-content: center;
         }
         
-        .calendar-type-switcher {
-            justify-content: center;
-        }
-        
-        .calendar-day {
-            min-height: 80px;
-            padding: 4px;
-        }
-        
-        .day-number {
-            font-size: 12px;
-            width: 24px;
-            height: 24px;
-        }
-        
-        .day-content {
-            font-size: 9px;
-        }
+        .calendar-day { min-height: 80px; padding: 4px; }
+        .day-number { font-size: 12px; width: 24px; height: 24px; }
+        .day-content { font-size: 9px; }
     }
     
-    @@media (max-width: 480px) {
-        .calendar-chart-container {
-            padding: 12px;
-        }
-        
-        .calendar-summary-section {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .calendar-day {
-            min-height: 60px;
-        }
-        
-        .weekday-header {
-            font-size: 11px;
-            padding: 8px 4px;
-        }
-    }
-    
-    /* Dark mode support */
     @@media (prefers-color-scheme: dark) {
         .calendar-chart-container {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         }
         
-        .calendar-month-title {
-            color: #f1f5f9;
-        }
-        
-        .calendar-grid-modern {
-            background: #1e293b;
-        }
-        
-        .calendar-weekdays {
-            background: #334155;
-        }
-        
-        .weekday-header {
-            color: #cbd5e1;
-        }
-        
-        .calendar-day {
-            background: #1e293b;
-        }
-        
-        .calendar-day.empty {
-            background: #0f172a;
-        }
-        
-        .calendar-day:hover:not(.empty) {
-            background: #334155;
-        }
-        
-        .day-number {
-            color: #f1f5f9;
-        }
-        
-        .summary-card {
-            background: #334155;
-        }
-        
-        .summary-value {
-            color: #f1f5f9;
-        }
-        
-        .item-value {
-            color: #e2e8f0;
-        }
+        .calendar-month-title { color: #f1f5f9; }
+        .calendar-grid-modern { background: #1e293b; }
+        .calendar-weekdays { background: #334155; }
+        .weekday-header { color: #cbd5e1; }
+        .calendar-day { background: #1e293b; }
+        .calendar-day.empty { background: #0f172a; }
+        .calendar-day:hover:not(.empty) { background: #334155; }
+        .day-number { color: #f1f5f9; }
+        .summary-card { background: #334155; }
+        .summary-value { color: #f1f5f9; }
+        .item-value { color: #e2e8f0; }
     }
 </style>

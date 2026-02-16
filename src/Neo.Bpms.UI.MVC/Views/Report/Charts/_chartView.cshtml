@@ -314,6 +314,10 @@ else
     {
         <partial name="~/Views/Report/Charts/_PieChart.cshtml" model="chartScriptModel" />
     }
+    else if (reportInfo.Structure.ChartType == ChartType.Calendar)
+    {
+        <partial name="~/Views/Report/Charts/_CalendarChart.cshtml" model="chartScriptModel" />
+    }
     else
     {
         <partial name="~/Views/Report/Charts/_CartesianChart.cshtml" model="chartScriptModel" />

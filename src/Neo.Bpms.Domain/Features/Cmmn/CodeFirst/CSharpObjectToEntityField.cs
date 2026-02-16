@@ -71,10 +71,7 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
             void SetAuditField(string fieldId) 
             { 
                 var idField = entity.GetField(fieldId);
-                if (idField != null)
-                {
-                    idField.Flags |= EntityFieldFlags.AuditField;
-                }
+                idField?.Flags |= EntityFieldFlags.AuditField;
             }
         }
     }
