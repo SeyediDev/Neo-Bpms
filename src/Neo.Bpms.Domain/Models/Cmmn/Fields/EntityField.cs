@@ -311,13 +311,21 @@ public class EntityField : BaseModelClass, ISBVRContainer
         if (underlyingType != null)
             reflectionType = underlyingType;
         if (reflectionType.IsEnum)
+        {
             typ = TVariableTypes.StringListItem;
+        }
         else if (reflectionType == typeof(bool) || reflectionType == typeof(bool?))
+        {
             typ = TVariableTypes.BOOL;
+        }
         else if (reflectionType == typeof(double) || reflectionType == typeof(double?))
+        {
             typ = TVariableTypes.Double;
+        }
         else if (reflectionType == typeof(byte) || reflectionType == typeof(byte?))
+        {
             typ = TVariableTypes.Short;
+        }
         else if (reflectionType == typeof(char) || reflectionType == typeof(char?) ||
                  reflectionType == typeof(ushort) || reflectionType == typeof(ushort?) ||
                  reflectionType == typeof(short) || reflectionType == typeof(short?) ||
@@ -545,8 +553,8 @@ public class EntityField : BaseModelClass, ISBVRContainer
     public bool IsForParentField(EntityField parentEntityField, Entity parentEntity) =>
         ReferenceFields != null && ReferenceFields.Any(r =>
             r.Relationship is ParentEntity &&
-                                                            r.ParentAssociationField.Id == parentEntityField.Id &&
-                                                            r.Relationship.DestEntity.Equals(parentEntity));
+            r.ParentAssociationField.Id == parentEntityField.Id &&
+            r.Relationship.DestEntity.Equals(parentEntity));
 
     public bool IsForParentEntity(Entity childEntity) =>
         ReferenceFields != null &&
