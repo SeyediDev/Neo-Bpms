@@ -177,20 +177,20 @@ public class EntityField : BaseModelClass, ISBVRContainer
     public bool AuditField => CheckFlag(EntityFieldFlags.AuditField);
 
     //public bool Required => NotNull;
-    public bool Required 
+    public bool Required
     {
         get
         {
             return CheckFlag(EntityFieldFlags.NotNull | EntityFieldFlags.IncludeInPKV) ||
                 (AssociationEntity?.Maps?.Any(m => Entity.GetField(m.SourceField)?.Required ?? false) ?? false);
         }
-        set 
-        { 
-            if(value)
+        set
+        {
+            if (value)
                 Flags = EntityFieldFlags.NotNull;
             else
                 Flags &= ~EntityFieldFlags.NotNull;
-        } 
+        }
     }
 
     public string DbFieldName
@@ -243,7 +243,7 @@ public class EntityField : BaseModelClass, ISBVRContainer
     {
         return FieldType switch
         {
-            TVariableTypes.Char or TVariableTypes.UChar or TVariableTypes.Short or TVariableTypes.UShort or 
+            TVariableTypes.Char or TVariableTypes.UChar or TVariableTypes.Short or TVariableTypes.UShort or
             TVariableTypes.Int or TVariableTypes.Long or TVariableTypes.ULong or TVariableTypes.Decimal => true,
             _ => false,
         };
@@ -253,7 +253,7 @@ public class EntityField : BaseModelClass, ISBVRContainer
     {
         return FieldType switch
         {
-            TVariableTypes.DurHourMinute or TVariableTypes.DayHourMinute or 
+            TVariableTypes.DurHourMinute or TVariableTypes.DayHourMinute or
             TVariableTypes.DoubleMinuteSecond or TVariableTypes.HourMinute => true,
             _ => false,
         };
@@ -322,31 +322,67 @@ public class EntityField : BaseModelClass, ISBVRContainer
                  reflectionType == typeof(ushort) || reflectionType == typeof(ushort?) ||
                  reflectionType == typeof(short) || reflectionType == typeof(short?) ||
                  reflectionType == typeof(int) || reflectionType == typeof(int?) ||
-                 reflectionType == typeof(uint) || reflectionType == typeof(uint?))
+                 reflectionType == typeof(uint) || reflectionType == typeof(uint?) ||
+                 reflectionType == typeof(IStronglyTypedId<int>)
+                 )
+        {
             typ = TVariableTypes.Int;
+        }
         else if (reflectionType == typeof(byte[]) || reflectionType == typeof(byte?[]))
+        {
             typ = TVariableTypes.ByteArray;
+        }
         else if (reflectionType == typeof(long) || reflectionType == typeof(long?) ||
             reflectionType == typeof(ulong) || reflectionType == typeof(ulong?))
+        {
             typ = TVariableTypes.Long;
+        }
         else if (reflectionType == typeof(ulong) || reflectionType == typeof(ulong?))
+        {
             typ = TVariableTypes.ULong;
+        }
         else if (reflectionType == typeof(decimal) || reflectionType == typeof(decimal?))
+        {
             typ = TVariableTypes.Decimal;
+        }
         else if (reflectionType == typeof(DateTime) || reflectionType == typeof(DateTime?) ||
                 reflectionType == typeof(DateOnly) || reflectionType == typeof(DateOnly?))
+        {
             typ = TVariableTypes.Date;
+        }
         else if (reflectionType == typeof(TimeSpan) || reflectionType == typeof(TimeSpan?) ||
             reflectionType == typeof(TimeOnly) || reflectionType == typeof(TimeOnly?))//TODO declare new var type
+        {
             typ = TVariableTypes.DayHourMinute;
+        }
         else if (ReflectionTools.IsGenericList(reflectionType))
+        {
             typ = TVariableTypes.List;
+        }
         else if (reflectionType.IsClass && reflectionType != typeof(string) && reflectionType != typeof(object))
         {
             typ = reflectionType.IsInBaseInterface<IDocument>() ? TVariableTypes.File : TVariableTypes.Association;
         }
         else if (reflectionType.IsClass && (reflectionType == typeof(string) || reflectionType == typeof(object)))
+        {
             typ = TVariableTypes.String;
+        }
+        else if (reflectionType == typeof(Guid))
+        {
+            typ = TVariableTypes.String;
+        }
+        else if (reflectionType.IsInBaseInterface<IStronglyTypedId<int>>())
+        {
+            typ = TVariableTypes.Int;
+        }
+        else if (reflectionType.IsInBaseInterface<IStronglyTypedId<long>>())
+        {
+            typ = TVariableTypes.Long;
+        }
+        else if (reflectionType.IsInBaseInterface<IStronglyTypedId<Guid>>())
+        {
+            typ = TVariableTypes.String;
+        }
         else
         {
             typ = TVariableTypes.String;
@@ -516,11 +552,11 @@ public class EntityField : BaseModelClass, ISBVRContainer
         ReferenceFields != null &&
         ReferenceFields.Any(r => r.Relationship is ParentEntity p && Equals(p.SourceEntity, childEntity));
 
-    public bool IsEnum 
-    { 
-        get 
+    public bool IsEnum
+    {
+        get
         {
-            return CSharpType.IsEnum || 
+            return CSharpType.IsEnum ||
                 (Nullable.GetUnderlyingType(CSharpType)?.IsEnum ?? FieldType is TVariableTypes.StringListItem or TVariableTypes.StringListBitMask);
         }
     }
