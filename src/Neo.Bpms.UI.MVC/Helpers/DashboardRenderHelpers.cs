@@ -4,29 +4,6 @@ namespace Neo.Bpms.UI.MVC.Helpers
 {
     public static class DashboardRenderHelpers
     {
-        public static string ResolveDashboardIcon(ConfiguredDashboard config)
-        {
-            if (config == null)
-            {
-                return "home-dashboard";
-            }
-
-            if (!string.IsNullOrWhiteSpace(config.Icon))
-            {
-                return config.Icon;
-            }
-
-            return config.ConfigId switch
-            {
-                "ManagementOverviewDashboard" => "home-dashboard",
-                "CustomerJourneyDashboard" => "users-analysis",
-                "MarketingAndEngagementDashboard" => "gift-present",
-                "OperationsHealthDashboard" => "cog-wheel",
-                "LoyaltyAndValueDashboard" => "star-badge",
-                _ => "home-dashboard"
-            };
-        }
-
         public static ConfiguredDashboard.ConfigWidget ResolveWidget(DashboardData dashboardData, ConfiguredDashboard.ConfigDiv divConfig)
         {
             if (divConfig == null)
@@ -44,12 +21,7 @@ namespace Neo.Bpms.UI.MVC.Helpers
 
         public static int ResolveWidth(ConfiguredDashboard.ConfigDiv divConfig)
         {
-            if (divConfig?.Width is >= 1 and <= 12)
-            {
-                return (int)divConfig.Width;
-            }
-
-            return 12;
+            return divConfig?.Width is >= 1 and <= 12 ? (int)divConfig.Width : 12;
         }
 
         public static int GetWidgetHeight(ConfiguredDashboard.ConfigWidget widget)
@@ -85,41 +57,6 @@ namespace Neo.Bpms.UI.MVC.Helpers
                     rd.Structure?.ConfigId == widget.ReportConfigId);
 
             return reportData;
-        }
-
-        public static string ResolveWidgetIcon(string widgetId)
-        {
-            if (string.IsNullOrWhiteSpace(widgetId))
-            {
-                return "chart-bar";
-            }
-
-            return widgetId switch
-            {
-                "TotalCustomersWidget" or "JourneyTotalCustomersWidget" => "users-group",
-                "ActiveCustomersWidget" or "JourneyActiveCustomersWidget" => "users-analysis",
-                "NewCustomersWidget" or "JourneyNewCustomersWidget" => "users-network",
-                "JourneyAverageSatisfactionWidget" => "star-badge",
-                "RfmSegmentOverviewWidget" or "AverageClvByRfmWidget" or "ClvDistributionWidget" => "users-analysis",
-                "CustomerGrowthByMonthWidget" or "RetentionRateWidget" or "RevenueTrendWidget" or "CampaignRoiWidget" or "ConversionRateWidget" => "chart-bar",
-                "TotalRevenueWidget" or "MarketingTotalRevenueWidget" => "coins-money",
-                "RevenueOverallRoiWidget" or "MarketingOverallRoiWidget" => "chart-bar",
-                "MarketingTotalMarketingCostsWidget" or "LoyaltyTotalPointsBalanceWidget" or "CustomerPointsBalanceWidget" => "wallet-money",
-                "MarketingActiveCampaignsKpiWidget" => "rss-signal",
-                "MessageFunnelWidget" => "list-checklist",
-                "EngagementDistributionWidget" => "users-analysis",
-                "OperationsPointsIssuedWidget" or "OperationsPointsRedeemedWidget" or "OperationsAverageTransactionWidget" or "LoyaltyAverageTransactionValueWidget" => "coins-money",
-                "OperationsTotalEventsWidget" or "EventLogByEventTypeWidget" => "calendar-event",
-                "TransactionsByMonthWidget" => "chart-bar",
-                "TransactionsByTypeWidget" => "grid-layout",
-                "DailyActiveUsersWidget" => "users-group",
-                "LoyaltyPointsIssuedWidget" => "star-badge",
-                "LoyaltyPointsRedeemedWidget" => "gift-present",
-                "PointsByTypeWidget" => "star-badge",
-                "PopularProductsWidget" => "box-package",
-                "ProductRepeatPurchaseWidget" => "store-shop",
-                _ => "chart-bar"
-            };
         }
     }
 }

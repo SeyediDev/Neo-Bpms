@@ -58,7 +58,7 @@
         IsActive = config.ConfigId == selectedConfigId,
         IsDefault = config.IsDefault,
         IsMeta = config.IsMeta,
-        Icon = DashboardRenderHelpers.ResolveDashboardIcon(config),
+		Icon = config.Icon,
         Order = index,
         IsClientOnly = false
     }).ToList();

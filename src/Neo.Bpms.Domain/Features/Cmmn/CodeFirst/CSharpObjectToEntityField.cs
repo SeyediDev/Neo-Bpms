@@ -14,7 +14,7 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
     public void DefineEntityFields()
     {
         int order = 1;
-        List<MemberItem> members = [];
+        var members = new List<MemberItem>();
         foreach (MemberInfo member in ReflectionField.Members(type))
         {
             Type itemType = ReflectionField.FetchMemberType(member);
@@ -68,10 +68,11 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
             //SetAuditField(nameof(IBaseAuditableEntity.IsDeleted));
             SetAuditField(nameof(IBaseAuditableEntity.LastModified));
             SetAuditField(nameof(IBaseAuditableEntity.LastModifiedById));
-            void SetAuditField(string fieldId) 
-            { 
+            void SetAuditField(string fieldId)
+            {
                 var idField = entity.GetField(fieldId);
-                idField?.Flags |= EntityFieldFlags.AuditField;
+                if (idField != null)
+                    idField.Flags |= EntityFieldFlags.AuditField;
             }
         }
     }

@@ -9,7 +9,7 @@
     var widget = Model.Widget;
     var reportData = Model.ReportData;
     var divTitle = divConfig.Title ?? reportData?.Structure?.Name ?? divConfig.Id;
-    var widgetIcon = !string.IsNullOrWhiteSpace(widget?.Icon) ? widget.Icon : DashboardRenderHelpers.ResolveWidgetIcon(widget?.Id);
+	var widgetIcon = !string.IsNullOrWhiteSpace(widget?.Icon) ? widget.Icon : "chart-bar";
     var fallbackIconClass = widget?.GetPropertyValue(eControlPropertyId.IconClass);
 }
 
