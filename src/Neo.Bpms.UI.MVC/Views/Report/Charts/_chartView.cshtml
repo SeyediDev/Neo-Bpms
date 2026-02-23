@@ -152,7 +152,7 @@ var widgetHeight = ViewBag.widgetHeight ?? 450;
 var selectedColumns = structure.SelectedColumns.Where(sel => sel.aggrType != eAggregationFunctions.GroupByItem).ToList();
 var canDesign = ViewBag.CanDesign ?? false;
 string idx = reportInfo.Structure.ConfigId + "CNT" + (ViewBag.Counter ?? '0');
-var calendar = ProjectDefinition.Project.DefaultCalendar;
+var calendar = ViewBag.calendarType ?? ViewBag.calendar ?? ProjectDefinition.Project.DefaultCalendar;
 
 var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type == Report.SubReportType.DrillDown).ToList();
 }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Neo.Bpms.Domain.Features.Security;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
 
@@ -36,6 +36,7 @@ public partial class ReportController
         string NamespaceId, string EntityId, string ReportId,
         string ConfigId, int? Page, string newPage,
         long? FilterId, string ParentReportIds, string ParentFilterValues, int? DrillDown,
+        int? calendarYear, int? calendarMonth, string calendarType,
         [ModelBinder(typeof(DynamicActionGetBinder))]
         ElasticObject re)
     {
@@ -77,7 +78,7 @@ public partial class ReportController
         
         await SetReportViewBag(user, ParentReportIds, po?.SortFields,
             filters, DrillDown == 1, pageNo,
-            po == null, result, configuredFilter);
+            po == null, result, configuredFilter, calendarYear, calendarMonth, calendarType);
         ViewBag.ParentFilterValues = ParentFilterValues; //todo
         if (config.Parent == null)
             SetPagePackId(report);
@@ -131,7 +132,8 @@ public partial class ReportController
         string newPage, string ParentReportIds, string sortFields,
         string SelectedChartType, [ModelBinder(typeof(DynamicActionBinder))]
         ElasticObject FilterValues,
-        int DrillDown = 0, int Page = 1, string calendar = "shamsi")
+        int DrillDown = 0, int Page = 1, string calendar = "shamsi",
+        int? calendarYear = null, int? calendarMonth = null, string calendarType = null)
     {
         IdentityUser user = GetUser();
         InitPostReportConfigResult initPostReportConfigResult = new() { Page = Page };
@@ -154,7 +156,8 @@ public partial class ReportController
             result.Structure.ChartType = initPostReportConfigResult.config.ChartType;
         }
 
-        await SetReportViewBag(user, ParentReportIds, sortFields, FilterValues, DrillDown == 1, Page, false, result, null);
+        await SetReportViewBag(user, ParentReportIds, sortFields, FilterValues, DrillDown == 1, Page, false, result, null,
+            calendarYear, calendarMonth, calendarType ?? calendar);
         return DrillDown == 1
             ? PartialView(initPostReportConfigResult.config.ViewType == ReportViewType.Chart
                 ? (initPostReportConfigResult.config.ChartType == ChartType.IranMap
@@ -256,7 +259,7 @@ public partial class ReportController
 
     private async Task SetReportViewBag(IdentityUser user, string parentReportIds, string sortFields,
         ElasticObject filterValues, bool isDrillDown, int page, bool persistentIsNull, ReportData result,
-        ConfiguredFilter configuredFilter)
+        ConfiguredFilter configuredFilter, int? calendarYear = null, int? calendarMonth = null, string calendarType = null)
     {
         foreach (ErrorInformation error in result.Errors)
         {
@@ -281,6 +284,9 @@ public partial class ReportController
         ViewBag.PersistentIsNull = persistentIsNull;
         ViewBag.FilterId = configuredFilter?.Id;
         ViewBag.FilterName = configuredFilter?.Name;
+        ViewBag.calendarYear = calendarYear;
+        ViewBag.calendarMonth = calendarMonth;
+        ViewBag.calendarType = calendarType;
         if (!isDrillDown && result.Structure.ChartType == ChartType.WorldMap)
         {
             ViewBag.ContainerClass = "container-fluid";

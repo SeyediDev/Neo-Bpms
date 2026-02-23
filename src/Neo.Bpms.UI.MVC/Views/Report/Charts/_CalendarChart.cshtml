@@ -17,11 +17,11 @@
     var showTitle = Model.ShouldShowTitle;
     
     var renderer = new CalendarRenderer(reportInfo, calendar);
-    var (defaultYear, defaultMonth) = renderer.GetLastMonthWithData();
+    var (defaultYear, defaultMonth) = renderer.GetCurrentMonth();
     
-    var currentYear = Context.Request.Query["calendarYear"].FirstOrDefault()?.ToInt() ?? defaultYear;
-    var currentMonth = Context.Request.Query["calendarMonth"].FirstOrDefault()?.ToInt() ?? defaultMonth;
-    var currentCalendar = Context.Request.Query["calendarType"].FirstOrDefault() ?? calendar;
+    var currentYear = ViewBag.calendarYear ?? Context.Request.Query["calendarYear"].FirstOrDefault()?.ToInt() ?? defaultYear;
+    var currentMonth = ViewBag.calendarMonth ?? Context.Request.Query["calendarMonth"].FirstOrDefault()?.ToInt() ?? defaultMonth;
+    var currentCalendar = ViewBag.calendarType ?? Context.Request.Query["calendarType"].FirstOrDefault() ?? calendar;
     
     var calendarData = renderer.GetCalendarData(currentYear, currentMonth);
     var monthSummary = renderer.GetMonthSummary(currentYear, currentMonth, calendarData);
@@ -44,7 +44,19 @@
             </button>
             
             <div class="calendar-title-section">
-                <h3 class="calendar-month-title">@monthSummary.MonthName @monthSummary.Year</h3>
+                <div class="calendar-month-picker-wrapper">
+                    <h3 class="calendar-month-title calendar-month-picker-trigger" id="calendar_picker_@idx" data-idx="@idx" title="انتخاب ماه و سال">
+                        @monthSummary.MonthName @monthSummary.Year
+                        <i class="fas fa-chevron-down calendar-picker-icon"></i>
+                    </h3>
+                    <div class="calendar-month-picker-dropdown" id="calendar_picker_dropdown_@idx" onclick="event.stopPropagation()">
+                        <div class="calendar-picker-row">
+                            <select class="calendar-picker-year" id="calendar_year_@idx"></select>
+                            <select class="calendar-picker-month" id="calendar_month_@idx"></select>
+                        </div>
+                        <button type="button" class="calendar-picker-apply" onclick="applyCalendarPicker('@idx')">اعمال</button>
+                    </div>
+                </div>
                 @if (showTitle && !string.IsNullOrEmpty(chartTitle))
                 {
                     <span class="calendar-report-title">@chartTitle</span>
@@ -57,12 +69,12 @@
         </div>
         
         <div class="calendar-type-switcher">
-            <button type="button" class="calendar-type-btn @(currentCalendar == "shamsi" ? "active" : "")" onclick="switchCalendarType('@idx', 'shamsi')">
-                <i class="fas fa-moon"></i>
+            <button type="button" class="calendar-type-btn @(currentCalendar == "shamsi" ? "active" : "")" onclick="switchCalendarType('@idx', 'shamsi')" title="تقویم شمسی">
+                <i class="fas fa-calendar-alt"></i>
                 <span>شمسی</span>
             </button>
-            <button type="button" class="calendar-type-btn @(currentCalendar == "gregorian" ? "active" : "")" onclick="switchCalendarType('@idx', 'gregorian')">
-                <i class="fas fa-sun"></i>
+            <button type="button" class="calendar-type-btn @(currentCalendar == "gregorian" || currentCalendar == "miladi" ? "active" : "")" onclick="switchCalendarType('@idx', 'miladi')" title="تقویم میلادی">
+                <i class="fas fa-globe"></i>
                 <span>میلادی</span>
             </button>
         </div>
@@ -133,15 +145,18 @@
                 
                 if (currentCalendar == "shamsi")
                 {
-                    firstDayOfMonth = pc.ToDateTime(currentYear, currentMonth, 1, 0, 0, 0, 1);
-					firstDayOfMonth = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day);
-				}
+                    firstDayOfMonth = pc.ToDateTime(currentYear, currentMonth, 1, 0, 0, 0, 0, pc.PersianEra);
+                    firstDayOfMonth = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day);
+                }
                 else
                 {
                     firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
                 }
                 
-                var startingDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+                // Persian: week starts Saturday; Gregorian: week starts Sunday
+                var startingDayOfWeek = currentCalendar == "shamsi"
+                    ? ((int)firstDayOfMonth.DayOfWeek + 1) % 7
+                    : (int)firstDayOfMonth.DayOfWeek;
                 
                 for (int i = 0; i < startingDayOfWeek; i++)
                 {
@@ -176,16 +191,13 @@
                         @if (hasData)
                         {
                             <div class="day-content">
-                                @foreach (var item in day.Items.Take(3))
+                                @foreach (var item in day.Items.Where(i => i.Type != "aggregation").Take(3))
                                 {
-                                    <div class="day-item @item.Type">
-                                        <span class="item-label">@item.Label:</span>
-                                        <span class="item-value">@item.Value</span>
-                                    </div>
+                                    <div class="day-item"><span class="item-value">@item.Value</span></div>
                                 }
                                 @if (day.Items.Count > 3)
                                 {
-                                    <div class="more-items">+@(day.Items.Count - 3) مورد دیگر</div>
+                                    <div class="more-items">+@(day.Items.Count - 3)</div>
                                 }
                             </div>
                         }
@@ -197,6 +209,60 @@
 </div>
 
 <script>
+    (function initCalendarPickers() {
+        document.querySelectorAll('.calendar-month-picker-trigger').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var idx = this.getAttribute('data-idx');
+                var config = window.calendarChartConfig && window.calendarChartConfig[idx];
+                if (!config) return;
+                var dd = document.getElementById('calendar_picker_dropdown_' + idx);
+                if (!dd) return;
+                var isShamsi = (config.calendarType || 'shamsi') === 'shamsi';
+                var yearSel = document.getElementById('calendar_year_' + idx);
+                var monthSel = document.getElementById('calendar_month_' + idx);
+                if (yearSel && monthSel) {
+                    yearSel.innerHTML = '';
+                    var minY = isShamsi ? 1350 : 2020;
+                    var maxY = isShamsi ? 1460 : 2035;
+                    for (var y = maxY; y >= minY; y--) {
+                        var opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        if (y == config.year) opt.selected = true;
+                        yearSel.appendChild(opt);
+                    }
+                    monthSel.innerHTML = '';
+                    var months = isShamsi ? ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'] : ['ژانویه','فوریه','مارس','آوریل','می','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
+                    for (var m = 1; m <= 12; m++) {
+                        var opt = document.createElement('option');
+                        opt.value = m;
+                        opt.textContent = months[m-1];
+                        if (m == config.month) opt.selected = true;
+                        monthSel.appendChild(opt);
+                    }
+                }
+                dd.classList.toggle('open');
+            });
+        });
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.calendar-month-picker-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+        });
+    })();
+
+    function applyCalendarPicker(chartId) {
+        var config = window.calendarChartConfig[chartId];
+        if (!config) return;
+        var yearSel = document.getElementById('calendar_year_' + chartId);
+        var monthSel = document.getElementById('calendar_month_' + chartId);
+        if (yearSel && monthSel) {
+            config.year = parseInt(yearSel.value, 10);
+            config.month = parseInt(monthSel.value, 10);
+            document.getElementById('calendar_picker_dropdown_' + chartId).classList.remove('open');
+            reloadCalendar(chartId);
+        }
+    }
+
     function changeCalendarMonth(chartId, direction) {
         var config = window.calendarChartConfig[chartId];
         if (!config) return;
@@ -218,20 +284,48 @@
         var config = window.calendarChartConfig[chartId];
         if (!config) return;
         
-        config.calendarType = type;
+        config.calendarType = type === 'miladi' ? 'miladi' : 'shamsi';
         reloadCalendar(chartId);
     }
     
     function reloadCalendar(chartId) {
         var config = window.calendarChartConfig[chartId];
-        if (!config || !config.baseUrl) return;
+        if (!config) return;
         
-        var url = new URL(config.baseUrl, window.location.origin);
-        url.searchParams.set('calendarYear', config.year);
-        url.searchParams.set('calendarMonth', config.month);
-        url.searchParams.set('calendarType', config.calendarType);
+        var form = document.getElementById('filter-form');
+        if (form) {
+            setFormInput(form, 'calendarYear', config.year);
+            setFormInput(form, 'calendarMonth', config.month);
+            setFormInput(form, 'calendar', config.calendarType);
+            form.submit();
+            return;
+        }
         
-        window.location.href = url.toString();
+        if (config.baseUrl) {
+            var url = new URL(config.baseUrl, window.location.origin);
+            var currentUrl = new URL(window.location.href);
+            ['NamespaceId','EntityId','ReportId','ConfigId'].forEach(function(name) {
+                var v = currentUrl.searchParams.get(name);
+                if (v) url.searchParams.set(name, v);
+            });
+            url.searchParams.set('calendarYear', config.year);
+            url.searchParams.set('calendarMonth', config.month);
+            url.searchParams.set('calendarType', config.calendarType);
+            window.location.href = url.toString();
+        }
+    }
+    
+    function setFormInput(form, name, value) {
+        var input = form.querySelector('input[name="' + name + '"]');
+        if (input) {
+            input.value = value;
+        } else {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        }
     }
 </script>
 
@@ -285,6 +379,55 @@
         text-align: center;
     }
     
+    .calendar-month-picker-wrapper { position: relative; }
+    .calendar-month-title.calendar-month-picker-trigger {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+    .calendar-month-picker-trigger:hover { background: rgba(37, 99, 235, 0.08); }
+    .calendar-picker-icon { font-size: 12px; opacity: 0.7; }
+    .calendar-month-picker-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 8px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        padding: 16px;
+        z-index: 1000;
+        min-width: 200px;
+        border: 1px solid #e2e8f0;
+    }
+    .calendar-month-picker-dropdown.open { display: block; }
+    .calendar-picker-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .calendar-picker-year, .calendar-picker-month {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #f8fafc;
+    }
+    .calendar-picker-apply {
+        width: 100%;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .calendar-picker-apply:hover { opacity: 0.9; }
     .calendar-month-title {
         font-size: 24px;
         font-weight: 700;

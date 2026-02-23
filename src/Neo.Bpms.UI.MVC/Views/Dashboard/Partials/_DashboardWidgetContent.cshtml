@@ -205,6 +205,20 @@ else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
             }
         </style>
     }
+    else if (reportData.Structure.ChartType == ChartType.Calendar)
+    {
+        <div class="neo-dashboard-calendar-widget" style="overflow-y: auto; overflow-x: hidden; height: 100%; padding: 8px;">
+            <partial name="~/Views/Report/Charts/_chartView.cshtml" model="reportData" />
+        </div>
+        <style>
+            .neo-dashboard-calendar-widget .calendar-chart-container { padding: 12px !important; }
+            .neo-dashboard-calendar-widget .calendar-day { min-height: 60px !important; }
+            .neo-dashboard-calendar-widget .calendar-header-modern { flex-wrap: wrap; }
+            .neo-dashboard-calendar-widget .calendar-summary-section { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+            .neo-dashboard-calendar-widget .summary-card { padding: 8px !important; }
+            .neo-dashboard-calendar-widget .summary-value { font-size: 14px !important; }
+        </style>
+    }
     else
     {
         <partial name="~/Views/Report/Charts/_chartView.cshtml" model="reportData" />

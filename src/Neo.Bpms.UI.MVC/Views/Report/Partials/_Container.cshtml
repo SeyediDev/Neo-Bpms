@@ -9,7 +9,7 @@
 @{
     var structure = Model?.Structure;
     var canDesign = ViewBag.CanDesign ?? false;
-    var calendar = ProjectDefinition.Project.DefaultCalendar;
+    var calendar = ViewBag.calendarType ?? ViewBag.calendar ?? ProjectDefinition.Project.DefaultCalendar;
     var refreshTime = structure?.FilterValues?.GetLong("__RefreshTime") ?? 0;
     
     var options = new RendererOptions
@@ -34,6 +34,8 @@
     {
         @Html.Hidden("ParentReportIds", structure.ParentReportIds)
         @Html.Hidden("calendar", calendar)
+        @Html.Hidden("calendarYear", ViewBag.calendarYear)
+        @Html.Hidden("calendarMonth", ViewBag.calendarMonth)
         <input type="hidden" name="newPage" value="1" />
         <input type="hidden" name="Page" value="@ViewBag.Page" />
         <input type="hidden" id="soValues" name="sortFields" value="@ViewBag.SortFields" />

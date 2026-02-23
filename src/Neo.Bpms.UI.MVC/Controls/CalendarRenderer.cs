@@ -5,7 +5,16 @@ namespace Neo.Bpms.UI.MVC.Controls;
 
 public class CalendarRenderer(ReportData reportInfo, string calendar)
 {
-    private readonly string _calendar = calendar ?? "shamsi";
+    /// <summary>
+    /// Normalized calendar: "shamsi" or "gregorian" (miladi is mapped to gregorian).
+    /// </summary>
+    private readonly string _calendar = NormalizeCalendar(calendar ?? "shamsi");
+
+    private static string NormalizeCalendar(string calendar)
+    {
+        if (string.IsNullOrEmpty(calendar)) return "shamsi";
+        return calendar.Equals("miladi", StringComparison.OrdinalIgnoreCase) ? "gregorian" : calendar.ToLowerInvariant();
+    }
     
     public class CalendarDayData
     {
@@ -52,9 +61,9 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
         
         if (_calendar == "shamsi")
         {
-            startDate = pc.ToDateTime(year, month, 1, 0, 0, 0, 0);
+            startDate = pc.ToDateTime(year, month, 1, 0, 0, 0, 0, pc.PersianEra);
             int daysInMonth = pc.GetDaysInMonth(year, month);
-            endDate = pc.ToDateTime(year, month, daysInMonth, 23, 59, 59, 0);
+            endDate = pc.ToDateTime(year, month, daysInMonth, 23, 59, 59, 0, pc.PersianEra);
         }
         else
         {
@@ -222,57 +231,21 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
         return summary;
     }
 
-    public (int Year, int Month) GetLastMonthWithData()
+    /// <summary>
+    /// Returns current month (year, month) in the active calendar type.
+    /// Used as default when no date is specified.
+    /// </summary>
+    public (int Year, int Month) GetCurrentMonth()
     {
         var pc = new PersianCalendar();
-        
-        // Get date column
-        var dateColumn = reportInfo.Structure.SelectedColumns
-            .FirstOrDefault(c => c.aggrType == eAggregationFunctions.GroupByItem && 
-                                (c.FieldType == TVariableTypes.Date || c.FieldType == TVariableTypes.DateTime));
-
-        if (dateColumn == null)
+        var now = DateTime.Now;
+        if (_calendar == "shamsi" || _calendar == "gregorian" || _calendar == "miladi")
         {
-            dateColumn = reportInfo.Structure.SelectedColumns
-                .FirstOrDefault(c => c.FieldType == TVariableTypes.Date || c.FieldType == TVariableTypes.DateTime);
+            return _calendar == "shamsi"
+                ? (pc.GetYear(now), pc.GetMonth(now))
+                : (now.Year, now.Month);
         }
-
-        if (dateColumn == null)
-        {
-            // Return current month
-            var now = DateTime.Now;
-            if (_calendar == "shamsi")
-            {
-                return (pc.GetYear(now), pc.GetMonth(now));
-            }
-            return (now.Year, now.Month);
-        }
-
-        DateTime? maxDate = null;
-        foreach (var row in reportInfo.Rows)
-        {
-            var dateValue = row.Data.GetNullableDateTime(dateColumn.ColumnTypeName);
-            if (dateValue.HasValue && (!maxDate.HasValue || dateValue.Value > maxDate.Value))
-            {
-                maxDate = dateValue.Value;
-            }
-        }
-
-        if (!maxDate.HasValue)
-        {
-            var now = DateTime.Now;
-            if (_calendar == "shamsi")
-            {
-                return (pc.GetYear(now), pc.GetMonth(now));
-            }
-            return (now.Year, now.Month);
-        }
-
-        if (_calendar == "shamsi")
-        {
-            return (pc.GetYear(maxDate.Value), pc.GetMonth(maxDate.Value));
-        }
-        return (maxDate.Value.Year, maxDate.Value.Month);
+        return (pc.GetYear(now), pc.GetMonth(now));
     }
 
     private string GetDayOfWeekName(DateTime date)
@@ -289,13 +262,10 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
         if (_calendar == "shamsi")
         {
             var persianMonths = new[] { "", "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
-            return persianMonths[month];
+            return month >= 1 && month <= 12 ? persianMonths[month] : "";
         }
-        else
-        {
-            var gregorianMonths = new[] { "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-            return gregorianMonths[month];
-        }
+        var gregorianMonths = new[] { "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        return month >= 1 && month <= 12 ? gregorianMonths[month] : "";
     }
 
     private string FormatNumber(double value)
