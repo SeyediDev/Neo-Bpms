@@ -24,7 +24,7 @@
     var currentCalendar = Context.Request.Query["calendarType"].FirstOrDefault() ?? calendar;
     
     var calendarData = renderer.GetCalendarData(currentYear, currentMonth);
-    var monthSummary = renderer.GetMonthSummary(currentYear, currentMonth);
+    var monthSummary = renderer.GetMonthSummary(currentYear, currentMonth, calendarData);
 }
 
 <script>
@@ -36,7 +36,6 @@
         baseUrl: '@Url.Action("Index", "Report")'
     };
 </script>
-
 <div class="calendar-chart-container" id="calendar_container_@idx">
     <div class="calendar-header-modern">
         <div class="calendar-nav-section">
@@ -134,8 +133,9 @@
                 
                 if (currentCalendar == "shamsi")
                 {
-                    firstDayOfMonth = pc.ToDateTime(currentYear, currentMonth, 1, 0, 0, 0, 0);
-                }
+                    firstDayOfMonth = pc.ToDateTime(currentYear, currentMonth, 1, 0, 0, 0, 1);
+					firstDayOfMonth = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day);
+				}
                 else
                 {
                     firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);

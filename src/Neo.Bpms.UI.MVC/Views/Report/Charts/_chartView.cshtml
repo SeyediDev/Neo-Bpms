@@ -50,7 +50,7 @@
         {
             ChartType.Areaspline => "Area Spline",
             ChartType.MetricBox => "Metric",
-            ChartType.Calendar => "تقویم",
+            ChartType.Calendar => "Calendar",
             _ => chartType.ToString()
         };
     }
@@ -71,7 +71,7 @@
             ChartType.Treemap => "Treemap Chart",
             ChartType.Gauge => "Gauge Chart",
             ChartType.MetricBox => "Metric Box",
-            ChartType.Calendar => "نمایش تقویمی",
+            ChartType.Calendar => "Calendar",
             _ => chartType.ToString()
         };
     }
@@ -286,8 +286,13 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
         </table>
         <br />
     }
-    @{ var containerHeight = isIframeReport ? "100vh" : ((bFromDashboard ? widgetHeight : "600") + "px"); }
-    <div id="container_@idx" class="report-main-box report-ovh" style="width: 100%; height: @containerHeight;"></div>
+	@{
+		var containerHeight = isIframeReport ? "100vh" : ((bFromDashboard ? widgetHeight : "600") + "px");
+	}
+	@if (reportInfo.Structure.ChartType != ChartType.Calendar)
+	{
+		<div id="container_@idx" class="report-main-box report-ovh" style="width: 100%; height: @containerHeight;"></div>
+	}
 </div>
 @{
     var shouldShowChartTitle = !isIframeReport && !bFromDashboard;

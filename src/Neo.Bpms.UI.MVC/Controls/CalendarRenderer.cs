@@ -128,6 +128,7 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
                 // Add dimension values
                 foreach (var dimCol in dimensionColumns)
                 {
+                    if (dimCol.ColumnName == dateColumn.ColumnName) continue;
                     foreach (var row in rows)
                     {
                         var value = ReportRenderer.GetCelValue(dimCol, row);
@@ -190,9 +191,8 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
         return result;
     }
 
-    public MonthSummary GetMonthSummary(int year, int month)
+    public MonthSummary GetMonthSummary(int year, int month, List<CalendarDayData> data)
     {
-        var data = GetCalendarData(year, month);
         var daysWithData = data.Where(d => d.HasData).ToList();
         
         var summary = new MonthSummary
