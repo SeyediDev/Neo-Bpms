@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Forms;
@@ -110,6 +110,25 @@ public static class EstablishReportQuery
             lp.AddOrUpdate("q", result.Structure.FilterValues);
         result.Structure.FilterValues?.AddIfNot("user", lp["user"]);
         FormDataFilter.AddFilters(qd, report, result.Structure.FilterValues, out _);
+
+        // Calendar fixed date filter: only query data for the selected month (from first to last day)
+        if (config.ChartType == ChartType.Calendar &&
+            result.Structure.FilterValues?.GetField("__CalendarDateFrom", out var fromVal) == true && fromVal != null &&
+            result.Structure.FilterValues?.GetField("__CalendarDateTo", out var toVal) == true && toVal != null)
+        {
+            var dateCol = result.Structure.SelectedColumns?
+                .FirstOrDefault(c => c.aggrType == eAggregationFunctions.GroupByItem &&
+                    (c.FieldType == TVariableTypes.Date || c.FieldType == TVariableTypes.DateTime))
+                ?? result.Structure.SelectedColumns?.FirstOrDefault(c => c.FieldType == TVariableTypes.Date || c.FieldType == TVariableTypes.DateTime);
+            if (dateCol != null)
+            {
+                var colId = (dateCol.ColumnTypeName ?? dateCol.ColumnName)?.Replace("'", "''") ?? "";
+                var fromStr = fromVal.ToString()?.Replace("'", "''") ?? "";
+                var toStr = toVal.ToString()?.Replace("'", "''") ?? "";
+                if (!string.IsNullOrEmpty(colId) && !string.IsNullOrEmpty(fromStr) && !string.IsNullOrEmpty(toStr))
+                    qd.Where($"({colId}>='{fromStr}' AND {colId}<='{toStr}')");
+            }
+        }
 
         if (!string.IsNullOrEmpty(config.WhereCondition))
             qd.Where(config.WhereCondition);

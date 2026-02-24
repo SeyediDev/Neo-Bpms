@@ -305,7 +305,10 @@ var drillDownSubReports = reportInfo.Structure.SubReports.Where(sr => sr.Type ==
 }
 else
 {
-    <partial name="~/Views/Report/Charts/_ReportDataTooltips.cshtml" model="chartScriptModel" />
+    @if (reportInfo.Structure.ChartType != ChartType.Calendar)
+    {
+        <partial name="~/Views/Report/Charts/_ReportDataTooltips.cshtml" model="chartScriptModel" />
+    }
 
     if (reportInfo.Structure.ChartType == ChartType.Gauge)
     {

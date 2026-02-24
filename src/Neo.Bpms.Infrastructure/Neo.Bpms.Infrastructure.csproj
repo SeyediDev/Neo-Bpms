@@ -21,6 +21,7 @@
     
     <!-- Local project references -->
     <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />
+    <ProjectReference Include="..\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
     <ProjectReference Include="..\Neo.Bpms.UI.Resources\Neo.Bpms.UI.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>

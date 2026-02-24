@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI;
+using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
@@ -33,6 +33,12 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
             ConfiguredReport reportConfig = await reportConfigBackupRestore.GetConfig(report, widget.ReportConfigId);
             if (reportConfig == null) continue;
             int maxRecord = GetWidgetMaxRecord(widget, reportConfig.ViewType);
+            // Calendar widget: inject month range filter for current month
+            if (reportConfig.ChartType == ChartType.Calendar && dashboardData.Structure.FilterValues != null)
+            {
+                var (y, m) = CalendarFilterHelper.GetCurrentMonth("shamsi");
+                CalendarFilterHelper.InjectMonthRange(dashboardData.Structure.FilterValues, y, m, "shamsi");
+            }
             ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => rd.Structure.ConfigId == reportConfig.ConfigId);
             if (reportData != null)
                 continue;

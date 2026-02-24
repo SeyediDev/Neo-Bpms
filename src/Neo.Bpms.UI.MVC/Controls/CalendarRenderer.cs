@@ -1,5 +1,4 @@
-using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using System.Globalization;
+using DNTPersianUtils.Core;
 
 namespace Neo.Bpms.UI.MVC.Controls;
 
@@ -18,7 +17,7 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
     
     public class CalendarDayData
     {
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public string PersianDate { get; set; }
         public string GregorianDate { get; set; }
         public int DayOfMonth { get; set; }
@@ -55,19 +54,22 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
     public List<CalendarDayData> GetCalendarData(int year, int month)
     {
         var result = new List<CalendarDayData>();
+        if (reportInfo?.Structure?.SelectedColumns == null)
+            return result;
+
         var pc = new PersianCalendar();
         
-        DateTime startDate, endDate;
+        DateOnly startDate, endDate;
         
         if (_calendar == "shamsi")
         {
-            startDate = pc.ToDateTime(year, month, 1, 0, 0, 0, 0, pc.PersianEra);
+            startDate = pc.ToDateTime(year, month, 1, 0, 0, 0, 0, PersianCalendar.PersianEra).ToDateOnly();
             int daysInMonth = pc.GetDaysInMonth(year, month);
-            endDate = pc.ToDateTime(year, month, daysInMonth, 23, 59, 59, 0, pc.PersianEra);
+            endDate = pc.ToDateTime(year, month, daysInMonth, 23, 59, 59, 0, PersianCalendar.PersianEra).ToDateOnly();
         }
         else
         {
-            startDate = new DateTime(year, month, 1);
+            startDate = new DateOnly(year, month, 1);
             endDate = startDate.AddMonths(1).AddDays(-1);
         }
 
@@ -101,14 +103,15 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
             .ToList();
 
         // Group data by date
-        var groupedByDate = new Dictionary<DateTime, List<ReportRowInfo>>();
-        
-        foreach (var row in reportInfo.Rows)
+        var groupedByDate = new Dictionary<string, List<ReportRowInfo>>();
+        var reportRows = reportInfo.Rows ?? [];
+
+        foreach (var row in reportRows)
         {
             var dateValue = row.Data.GetNullableDateTime(dateColumn.ColumnTypeName);
-            if (dateValue.HasValue)
+            if (dateValue is not null )
             {
-                var dateKey = dateValue.Value.Date;
+                var dateKey = dateValue.Value.Date.ToDateOnly().ToString("YY-MM-DD");
                 if (!groupedByDate.ContainsKey(dateKey))
                     groupedByDate[dateKey] = [];
                 groupedByDate[dateKey].Add(row);
@@ -124,13 +127,13 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
                 Date = currentDate,
                 GregorianDate = currentDate.ToString("yyyy-MM-dd"),
                 PersianDate = _calendar == "shamsi" 
-                    ? $"{pc.GetYear(currentDate)}/{pc.GetMonth(currentDate):D2}/{pc.GetDayOfMonth(currentDate):D2}"
+                    ? $"{pc.GetYear(currentDate.ToDateTime())}/{pc.GetMonth(currentDate.ToDateTime()):D2}/{pc.GetDayOfMonth(currentDate.ToDateTime()):D2}"
                     : currentDate.ToString("yyyy/MM/dd"),
-                DayOfMonth = _calendar == "shamsi" ? pc.GetDayOfMonth(currentDate) : currentDate.Day,
-                DayOfWeek = GetDayOfWeekName(currentDate)
+                DayOfMonth = _calendar == "shamsi" ? pc.GetDayOfMonth(currentDate.ToDateTime()) : currentDate.Day,
+                DayOfWeek = GetDayOfWeekName(currentDate.ToDateTime())
             };
 
-            if (groupedByDate.TryGetValue(currentDate, out var rows))
+            if (groupedByDate.TryGetValue(currentDate.ToString("YY-MM-DD"), out var rows))
             {
                 int order = 0;
                 
@@ -200,6 +203,19 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
         return result;
     }
 
+    /// <summary>
+    /// Returns the alias of the primary aggregation column (displayed in cells) for tooltip.
+    /// </summary>
+    public string GetPrimaryColumnAlias()
+    {
+        if (reportInfo?.Structure?.SelectedColumns == null) return "";
+        var primary = reportInfo.Structure.SelectedColumns
+            .Where(c => c.aggrType != eAggregationFunctions.GroupByItem &&
+                        c.aggrType != eAggregationFunctions.InColumn && !c.IsTooltip)
+            .FirstOrDefault();
+        return primary?.Alias ?? "";
+    }
+
     public MonthSummary GetMonthSummary(int year, int month, List<CalendarDayData> data)
     {
         var daysWithData = data.Where(d => d.HasData).ToList();
@@ -211,9 +227,9 @@ public class CalendarRenderer(ReportData reportInfo, string calendar)
             TotalDaysWithData = daysWithData.Count
         };
 
-        if (daysWithData.Any(d => d.PrimaryValue.HasValue))
+        if (daysWithData.Any(d => d.PrimaryValue is not null))
         {
-            var values = daysWithData.Where(d => d.PrimaryValue.HasValue).Select(d => d.PrimaryValue.Value).ToList();
+            var values = daysWithData.Where(d => d.PrimaryValue is not null).Select(d => d.PrimaryValue.Value).ToList();
             
             summary.TotalPrimaryValue = values.Sum();
             summary.TotalPrimaryValueFormatted = FormatNumber(values.Sum());

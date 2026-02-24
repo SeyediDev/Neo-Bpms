@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Neo.Bpms.Domain.Features.Security;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems.ScheduledReport;
+using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 
 namespace Neo.Bpms.UI.MVC.Controllers;
 
@@ -54,6 +55,16 @@ public partial class ReportController
         int pageNo = Page ?? (po?.Page ?? 1);
         if (!string.IsNullOrEmpty(newPage) && newPage == "1")
             pageNo = 1;
+        // Calendar: inject date filter for selected month (default: current month)
+        int? calY = calendarYear, calM = calendarMonth;
+        if (config.ChartType == ChartType.Calendar)
+        {
+            var (y, m) = calendarYear.HasValue && calendarMonth.HasValue
+                ? (calendarYear.Value, calendarMonth.Value)
+                : CalendarFilterHelper.GetCurrentMonth(calendarType ?? "shamsi");
+            calY = y; calM = m;
+            await InjectCalendarDateFilterAsync(filters, config, y, m, calendarType ?? "shamsi", culture, user, cancellationToken);
+        }
         List<object> listIds = ParentReportIds != null ? [.. ParentReportIds.Split(',')] : null;
         ReportData result = await reportDataRoutines.GetReportData(config, true, filters,
             pageNo, po?.SortFields, null, null, listIds,
@@ -78,7 +89,7 @@ public partial class ReportController
         
         await SetReportViewBag(user, ParentReportIds, po?.SortFields,
             filters, DrillDown == 1, pageNo,
-            po == null, result, configuredFilter, calendarYear, calendarMonth, calendarType);
+            po == null, result, configuredFilter, calY ?? calendarYear, calM ?? calendarMonth, calendarType);
         ViewBag.ParentFilterValues = ParentFilterValues; //todo
         if (config.Parent == null)
             SetPagePackId(report);
@@ -140,6 +151,11 @@ public partial class ReportController
         await InitPostReportConfig(user, NamespaceId, EntityId, ReportId, ConfigId, newPage, sortFields,
             FilterValues, initPostReportConfigResult);
         string culture = CultureHelper.GetCurrentNeutralCulture();
+        // Calendar: inject date filter for selected month
+        if (initPostReportConfigResult.config.ChartType == ChartType.Calendar && calendarYear.HasValue && calendarMonth.HasValue)
+        {
+            await InjectCalendarDateFilterAsync(FilterValues, initPostReportConfigResult.config, calendarYear.Value, calendarMonth.Value, calendarType ?? calendar ?? "shamsi", culture, user, default);
+        }
         List<object> arr = ParentReportIds != null ? [.. ParentReportIds.Split(',')] : null;
         ReportData result = await reportDataRoutines.GetReportData(initPostReportConfigResult.config, true, FilterValues, Page,
             sortFields, null, null, arr,

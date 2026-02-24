@@ -751,6 +751,7 @@
     }
 
 /* ===== WIDGET TITLE BAR (Always Visible) ===== */
+/* تضمین کنتراست متن روی بک‌گراند: متن تیره روی بک‌گراند روشن */
 .neo-dashboard-widget-title-bar {
     background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #f1f5f9) 30%, #fff 70%) !important;
     display: flex;
@@ -762,8 +763,8 @@
 }
 
 [data-theme="dark"] .neo-dashboard-widget-title-bar {
-    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #f1f5f9) 30%, #fff 70%) !important;
-    border-bottom-color: var(--neo-dashboard-border-light, #334155);
+    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #334155) 30%, var(--neo-dashboard-bg-secondary, #1e293b) 70%) !important;
+    border-bottom-color: var(--neo-dashboard-border-light, #475569);
 }
 
 .neo-dashboard-widget-title-content {
@@ -772,18 +773,58 @@
     gap: var(--neo-dashboard-spacing-sm);
 }
 
+/* کنتراست تضمین‌شده: متن تیره روی بک‌گراند روشن در تم لایت و حالت پیش‌فرض */
 .neo-dashboard-widget-title-icon {
     width: 24px;
     height: 24px;
-    color: var(--neo-dashboard-text-primary);
+    color: #1e293b !important;
     flex-shrink: 0;
+}
+
+.neo-dashboard-widget-title-bar .neo-dashboard-widget-title-fa {
+    color: #1e293b !important;
 }
 
 .neo-dashboard-widget-title-text {
     font-size: var(--neo-dashboard-font-size-base);
     font-weight: var(--neo-dashboard-font-weight-semibold);
-    color: var(--neo-dashboard-text-primary);
+    color: #1e293b !important;
     margin: 0;
+}
+
+/* تم لایت: تضمین متن تیره (در صورت override از والد) */
+[data-theme="light"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-icon,
+[data-theme="light"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-text,
+[data-theme="light"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-fa {
+    color: #1e293b !important;
+}
+
+/* تم تاریک: متن روشن روی بک‌گراند تاریک */
+[data-theme="dark"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-icon,
+[data-theme="dark"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-text,
+[data-theme="dark"] .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-fa {
+    color: #f1f5f9 !important;
+}
+
+/* prefers-color-scheme: light - تضمین متن تیره */
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-icon,
+    :root:not([data-theme="dark"]) .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-text,
+    :root:not([data-theme="dark"]) .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-fa {
+        color: #1e293b !important;
+    }
+}
+
+/* prefers-color-scheme: dark وقتی data-theme تنظیم نشده */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .neo-dashboard-widget-title-bar {
+        background: linear-gradient(45deg, #334155 30%, #1e293b 70%) !important;
+        border-bottom-color: #475569;
+    }
+    :root:not([data-theme="light"]) .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-icon,
+    :root:not([data-theme="light"]) .neo-dashboard-widget-title-bar .neo-dashboard-widget-title-text {
+        color: #f1f5f9 !important;
+    }
 }
 
 .neo-dashboard-widget-title-actions {
@@ -826,6 +867,7 @@
 }
 
 /* ===== WIDGET HEADER ===== */
+/* تضمین کنتراست: متن تیره روی بک‌گراند روشن در تم لایت */
 .neo-dashboard-widget-header {
     background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
     border-bottom: 1px solid var(--neo-dashboard-border-light, #e2e8f0);
@@ -837,8 +879,8 @@
 }
 
 [data-theme="dark"] .neo-dashboard-widget-header {
-    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #f1f5f9) 30%, #fff 70%) !important;
-    border-bottom-color: var(--neo-dashboard-border-light, #334155);
+    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #334155) 30%, var(--neo-dashboard-bg-secondary, #1e293b) 70%) !important;
+    border-bottom-color: var(--neo-dashboard-border-light, #475569);
 }
 
 .neo-dashboard-widget-title {
@@ -847,7 +889,7 @@
     gap: var(--neo-dashboard-spacing-sm);
     font-size: var(--neo-dashboard-font-size-sm);
     font-weight: var(--neo-dashboard-font-weight-semibold);
-    color: var(--neo-dashboard-secondary);
+    color: #1e293b;
     margin: 0;
 }
 
@@ -856,6 +898,22 @@
     height: 20px;
     color: var(--neo-dashboard-primary);
     flex-shrink: 0;
+}
+
+[data-theme="dark"] .neo-dashboard-widget-header .neo-dashboard-widget-title,
+[data-theme="dark"] .neo-dashboard-widget-header .neo-dashboard-widget-icon {
+    color: #f1f5f9 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .neo-dashboard-widget-header {
+        background: linear-gradient(45deg, #334155 30%, #1e293b 70%) !important;
+        border-bottom-color: #475569;
+    }
+    :root:not([data-theme="light"]) .neo-dashboard-widget-header .neo-dashboard-widget-title,
+    :root:not([data-theme="light"]) .neo-dashboard-widget-header .neo-dashboard-widget-icon {
+        color: #f1f5f9 !important;
+    }
 }
 
 .neo-dashboard-widget-actions {
@@ -1758,19 +1816,23 @@
     background: var(--neo-dashboard-bg-tertiary, #f1f5f9);
 }
 
-[data-theme="dark"] .neo-dashboard-widget-header {
-    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #f1f5f9) 30%, #fff 70%) !important;
-    border-bottom-color: var(--neo-dashboard-border-light, #334155);
+[data-theme="dark"] .neo-dashboard-widget .neo-dashboard-widget-header {
+    background: linear-gradient(45deg, var(--neo-dashboard-bg-tertiary, #334155) 30%, var(--neo-dashboard-bg-secondary, #1e293b) 70%) !important;
+    border-bottom-color: var(--neo-dashboard-border-light, #475569);
 }
 
-.neo-dashboard-widget-title {
+.neo-dashboard-widget .neo-dashboard-widget-title {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--neo-dashboard-secondary);
+    color: #1e293b;
     margin: 0;
     display: flex;
     align-items: center;
     gap: var(--neo-dashboard-spacing-sm);
+}
+
+[data-theme="dark"] .neo-dashboard-widget .neo-dashboard-widget-header .neo-dashboard-widget-title {
+    color: #f1f5f9 !important;
 }
 
 .neo-dashboard-widget-icon {
