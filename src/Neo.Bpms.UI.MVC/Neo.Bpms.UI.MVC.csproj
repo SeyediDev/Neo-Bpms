@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
-    <PackageReference Include="AutoMapper" />
+    <!--<PackageReference Include="AutoMapper" />-->
     <PackageReference Include="Ardalis.GuardClauses" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
@@ -74,5 +74,10 @@
     <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />
     <ProjectReference Include="..\Neo.Bpms.Infrastructure\Neo.Bpms.Infrastructure.csproj" />
     <ProjectReference Include="..\Neo.Bpms.UI.Resources\Neo.Bpms.UI.Resources.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\..\NuGetPackages\AutoMapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
