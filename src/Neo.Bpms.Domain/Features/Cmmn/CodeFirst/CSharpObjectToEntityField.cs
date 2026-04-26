@@ -1,4 +1,5 @@
-﻿using static Neo.Bpms.Domain.Models.Cmmn.AutoCalc;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using static Neo.Bpms.Domain.Models.Cmmn.AutoCalc;
 
 namespace Neo.Bpms.Domain.Features.Cmmn.CodeFirst;
 
@@ -184,30 +185,26 @@ public class CSharpObjectToEntityField(INameSpaceRepository nameSpaceRepository,
                         };
                         break;
                     }
-                case System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute _:
+                case NotMappedAttribute :
                     field.Flags |= EntityFieldFlags.NotMap;
-                    break;
-
-                case FAttr_IsFormulaAttribute formula:
-                    {
-                        FAttr_IsFormulaAttribute at = formula;
+                    if(attr is FAttr_IsFormulaAttribute formula)
+                    { 
                         field.Formula = new EntityFieldFormula
                         {
-                            UsedForAggregationOnly = at.UsedForAggregationOnly,
-                            FormulaText = at.Formula
+                            UsedForAggregationOnly = formula.UsedForAggregationOnly,
+                            FormulaText = formula.Formula
                         };
-                        if (string.IsNullOrEmpty(at.FormulaId))
+                        if (string.IsNullOrEmpty(formula.FormulaId))
                         {
-                            field.Formula.FormulaBody = Parser.Parse(at.Formula);
+                            field.Formula.FormulaBody = Parser.Parse(formula.Formula);
                         }
                         else
                         {
-                            field.Formula.FormulaMethodId = at.FormulaId;
+                            field.Formula.FormulaMethodId = formula.FormulaId;
                         }
-
-                        field.Flags |= EntityFieldFlags.NotMap;
                         break;
                     }
+                    break;
                 case DbMapAttribute at:
                     field.DbFieldName = at.DBName;
                     field.OldDbFieldName = at.OldDbName;

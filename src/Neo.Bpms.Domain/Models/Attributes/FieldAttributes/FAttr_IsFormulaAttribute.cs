@@ -1,4 +1,6 @@
-﻿namespace Neo.Bpms.Domain.Models.Attributes.FieldAttributes;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Neo.Bpms.Domain.Models.Attributes.FieldAttributes;
 
 /// <summary>
 /// Is Formula Attribute
@@ -6,7 +8,7 @@
 /// This attribute is for formula fields
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class FAttr_IsFormulaAttribute : Attribute
+public class FAttr_IsFormulaAttribute : NotMappedAttribute
 {
     /// <summary>
     /// تعریف فیلد فرمولی
