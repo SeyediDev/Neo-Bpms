@@ -11,6 +11,7 @@ internal interface IApplicationSetup
 }
 internal class ApplicationSetup(IHostApplicationLifetime lifetime) : IApplicationSetup
 {
+    [Obsolete]
     public void Setup(IApplicationBuilder app)
     {
         lifetime.ApplicationStopping.Register(() => Shutdown(app));

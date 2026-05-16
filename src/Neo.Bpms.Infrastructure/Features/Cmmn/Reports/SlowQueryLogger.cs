@@ -3,27 +3,13 @@ namespace Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
 /// <summary>
 /// سرویس لاگ‌گیری برای پرس‌وجوهای کند در داشبوردها
 /// </summary>
-public class SlowQueryLogger
+public class SlowQueryLogger(ILogger<SlowQueryLogger> logger)
 {
-    private readonly ILogger<SlowQueryLogger> _logger;
-    private readonly IConfiguration _configuration;
-    private readonly bool _isDevelopment;
-
-    public SlowQueryLogger(ILogger<SlowQueryLogger> logger, IConfiguration configuration)
-    {
-        _logger = logger;
-        _configuration = configuration;
-        
-        // بررسی اینکه آیا در حالت توسعه هستیم یا نه
-        var environment = _configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT") 
-            ?? _configuration.GetValue<string>("Environment", "Production");
-        _isDevelopment = environment.Equals("Development", StringComparison.OrdinalIgnoreCase);
-    }
 
     /// <summary>
     /// لاگ کردن پرس‌وجوی کند
     /// </summary>
-    public void LogSlowQuery(string widgetId, string reportConfigId, string reportName, 
+    public void LogSlowQuery(bool isDevelopment, string widgetId, string reportConfigId, string reportName, 
         string queryText, long elapsedMilliseconds, long threshold, string? userId = null, string? userName = null)
     {
         if (elapsedMilliseconds < threshold)
@@ -45,15 +31,15 @@ public class SlowQueryLogger
 {queryText}
 ╚═══════════════════════════════════════════════════════════════════════════════╝";
 
-        if (_isDevelopment)
+        if (isDevelopment)
         {
             // در حالت توسعه، همیشه لاگ می‌کنیم
-            _logger.LogWarning(logMessage);
+            logger.LogWarning(logMessage);
         }
         else
         {
             // در حالت production، فقط پرس‌وجوهای کند را لاگ می‌کنیم
-            _logger.LogWarning(
+            logger.LogWarning(
                 "Slow query detected - Widget: {WidgetId}, Report: {ReportName}, " +
                 "Time: {ElapsedMs}ms, User: {UserId}",
                 widgetId, reportName, elapsedMilliseconds, userId ?? "Unknown");
@@ -77,7 +63,7 @@ public class SlowQueryLogger
 ║ User: {userName ?? userId ?? "Unknown",-60} ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝";
 
-        _logger.LogError(logMessage);
+        logger.LogError(logMessage);
     }
 }
 

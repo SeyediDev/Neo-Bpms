@@ -831,6 +831,7 @@ public partial class EditableGridService : IEditableGridService
         return rows;
     }
 
+    [Obsolete]
     public async Task<byte[]> ExportToExcelAsync(string endpoint, ExcelExportRequest request)
     {
         _logger.LogInformation("Exporting Excel for endpoint: {Endpoint}", endpoint);
@@ -939,6 +940,7 @@ public partial class EditableGridService : IEditableGridService
         return await Task.FromResult(package.GetAsByteArray());
     }
 
+    [Obsolete]
     public async Task<ExcelImportResponse> ImportFromExcelAsync(string endpoint, IFormFile file)
     {
         _logger.LogInformation("Importing Excel for endpoint: {Endpoint}", endpoint);

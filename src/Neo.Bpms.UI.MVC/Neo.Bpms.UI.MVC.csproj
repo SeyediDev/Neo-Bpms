@@ -8,6 +8,7 @@
     <UpgradeBackupLocation>D:\Projects\Club\Backend\Backup\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <ProjectGuid>{DB8B2D82-D591-40A6-AF2E-AC1DC043CBB1}</ProjectGuid>
+    <Version>10.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -19,6 +20,7 @@
     </PackageReference>-->
     <!--<PackageReference Include="AutoMapper" />-->
     <PackageReference Include="Ardalis.GuardClauses" />
+    <PackageReference Include="DNTPersianUtils.Core" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Captcha" />
@@ -74,10 +76,5 @@
     <ProjectReference Include="..\Neo.Bpms.Application\Neo.Bpms.Application.csproj" />
     <ProjectReference Include="..\Neo.Bpms.Infrastructure\Neo.Bpms.Infrastructure.csproj" />
     <ProjectReference Include="..\Neo.Bpms.UI.Resources\Neo.Bpms.UI.Resources.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\..\..\NuGetPackages\AutoMapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

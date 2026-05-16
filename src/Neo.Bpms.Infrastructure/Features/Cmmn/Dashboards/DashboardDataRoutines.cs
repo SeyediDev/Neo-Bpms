@@ -90,7 +90,7 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
                     if (queryTexts.Count > 0)
                     {
                         var queryText = string.Join("\n", queryTexts);
-                        slowQueryLogger.LogSlowQuery(
+                        slowQueryLogger.LogSlowQuery(true,
                             widget.Id,
                             reportConfig.ConfigId,
                             reportConfig.Name ?? report.Name,

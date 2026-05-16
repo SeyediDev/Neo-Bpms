@@ -1,4 +1,5 @@
-﻿using Neo.Bpms.Domain.Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using Neo.Bpms.Domain.Repository;
 using Neo.Bpms.Domain.Repository.Entities;
 using Neo.Domain.Entities.Common;
 
@@ -116,7 +117,7 @@ public class BpmsSubjectSettingRepository(
 
     public async Task RemoveAsync(long id, CancellationToken cancellationToken = default)
     {
-        int result = await commandRepo.ExecuteUpdateAsync(x => x.Id == id,
+        int result = await commandRepo.Query().Where(x => x.Id == id).ExecuteUpdateAsync(
             x => x.SetProperty(p => p.ExpireDate, DateTime.UtcNow)
                   .SetProperty(p => p.IsDeleted, true), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -124,10 +125,12 @@ public class BpmsSubjectSettingRepository(
 
     public async Task RemoveAsync(string subjectTitle, string subjectId, string key, CancellationToken cancellationToken = default)
     {
-        int result = await commandRepo.ExecuteUpdateAsync(x =>
+        int result = await commandRepo.Query().Where(
+            x =>
             x.SubjectTitle == subjectTitle &&
             x.SubjectId == subjectId &&
-            x.Key == key,
+            x.Key == key
+            ).ExecuteUpdateAsync(
             x => x.SetProperty(p => p.ExpireDate, DateTime.UtcNow)
                   .SetProperty(p => p.IsDeleted, true), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -135,7 +138,7 @@ public class BpmsSubjectSettingRepository(
 
     public async Task UpdateAsync(long id, string value, CancellationToken cancellationToken = default)
     {
-        int result = await commandRepo.ExecuteUpdateAsync(x => x.Id == id,
+        int result = await commandRepo.Query().Where(x => x.Id == id).ExecuteUpdateAsync(
             x => x.SetProperty(p => p.Value, value), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -144,17 +147,18 @@ public class BpmsSubjectSettingRepository(
         where TConfig : IConfig
     {
         string value = config.ToJson();
-        int result = await commandRepo.ExecuteUpdateAsync(x => x.Id == id,
+        int result = await commandRepo.Query().Where(x => x.Id == id).ExecuteUpdateAsync(
             x => x.SetProperty(p => p.Value, value), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateAsync(string subjectTitle, string subjectId, string key, string value, CancellationToken cancellationToken = default)
     {
-        int result = await commandRepo.ExecuteUpdateAsync(x =>
+        int result = await commandRepo.Query().Where(
+            x =>
             x.SubjectTitle == subjectTitle &&
             x.SubjectId == subjectId &&
-            x.Key == key,
+            x.Key == key).ExecuteUpdateAsync(
             x => x.SetProperty(p => p.Value, value), cancellationToken);
         _ = await commandRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

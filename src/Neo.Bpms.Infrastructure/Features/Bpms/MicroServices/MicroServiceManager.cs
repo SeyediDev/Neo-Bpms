@@ -2,7 +2,6 @@
 global using Neo.Bpms.Infrastructure.Features.Bpms.MicroServices.MonitoringInfo;
 using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces;
 using Neo.Bpms.Infrastructure.Features.Bpms.Interfaces.Operation;
-using Newtonsoft.Json;
 using RestSharp;
 
 namespace Neo.Bpms.Infrastructure.Features.Bpms.MicroServices;
@@ -253,7 +252,7 @@ public class MicroServiceManager : InterfaceRuntime
 
         if (Params != null)
         {
-            request.AddParameter("application/json", JsonConvert.SerializeObject(Params), ParameterType.RequestBody);
+            request.AddParameter("application/json", Params.ToJson(), ParameterType.RequestBody);
         }
         //			    request.AddJsonBody(Params);							
         try
