@@ -1,62 +1,66 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1902;NU1903;NU1510</NoWarn>
+  </PropertyGroup>
+  <!-- .NET 10 Versions -->
+  <PropertyGroup>
+    <DotNetVersion>10.0.0</DotNetVersion>
+  </PropertyGroup>
   <ItemGroup>
     <!-- Neo Framework - from NuGet.org -->
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
     <PackageVersion Include="Neo.Common" Version="1.0.0" />
     <PackageVersion Include="Neo.Domain" Version="1.0.0" />
     <PackageVersion Include="Neo.Application" Version="1.0.0" />
     <PackageVersion Include="Neo.Infrastructure" Version="1.0.0" />
     <PackageVersion Include="Neo.Endpoint" Version="1.0.0" />
-    
     <!-- Infrastructure packages -->
-    <PackageVersion Include="EPPlus" Version="7.5.2" />
-    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.22" />
-    <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
-    <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
-    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.0" />
-    <PackageVersion Include="System.Data.OracleClient" Version="1.0.8" />
+    <PackageVersion Include="EPPlus" Version="8.5.4" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="3.5.3" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.8" />
+    <PackageVersion Include="System.Formats.Asn1" Version="10.0.8" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.8" />
+    <PackageVersion Include="RestSharp" Version="114.0.0" />
     <PackageVersion Include="SharpZipLib" Version="1.4.2" />
-    <PackageVersion Include="Microsoft.SqlServer.SqlManagementObjects" Version="171.30.0" />
-    <PackageVersion Include="RestSharp" Version="112.1.0" />
-    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
-    
-    <!-- UI.MVC packages - matched with Neo Framework -->
+    <PackageVersion Include="Microsoft.SqlServer.SqlManagementObjects" Version="181.19.0" />
+    <!-- ⚠️ System.Data.OracleClient is deprecated, consider Oracle.ManagedDataAccess.Core -->
+    <PackageVersion Include="System.Data.OracleClient" Version="1.0.8" />
+    <!-- UI.MVC / Web packages - Updated to .NET 10 -->
     <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="BuildBundlerMinifier2022" Version="2.9.10" />
-    <PackageVersion Include="Captcha" Version="3.0.14.6" />
-    <PackageVersion Include="Markdig" Version="0.38.0" />
-    <PackageVersion Include="MediatR" Version="12.5.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.15" />
+    <PackageVersion Include="Captcha" Version="4.4.2" />
+    <PackageVersion Include="Markdig" Version="1.2.0" />
+    <PackageVersion Include="MediatR" Version="14.1.0" />
     <PackageVersion Include="NWebsec.AspNetCore.Middleware" Version="3.0.0" />
-    <PackageVersion Include="System.Diagnostics.PerformanceCounter" Version="9.0.0" />
-    
-    <!-- Api packages -->
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.15" />
-    <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
-    
+    <!-- .NET 10 ASP.NET Core -->
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
+    <!-- System packages - .NET 10 -->
+    <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="10.0.8" />
+    <PackageVersion Include="System.Diagnostics.PerformanceCounter" Version="10.0.8" />
+    <PackageVersion Include="System.Text.RegularExpressions" Version="10.0.0" />
     <!-- Logging - Serilog -->
-    <PackageVersion Include="Serilog" Version="4.2.0" />
-    <PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.4" />
-    
-    <!-- Versioning -->
-    <PackageVersion Include="MinVer" Version="5.0.0" />
-    
-    <!-- SourceLink -->
+    <PackageVersion Include="Serilog" Version="4.3.1" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <!-- Versioning & Build -->
+    <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    
     <!-- Test packages -->
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
-    <PackageVersion Include="Moq" Version="4.20.70" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="FluentAssertions" Version="8.10.0" />
   </ItemGroup>
 </Project>
-
