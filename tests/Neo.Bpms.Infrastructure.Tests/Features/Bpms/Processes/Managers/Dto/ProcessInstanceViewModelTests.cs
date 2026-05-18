@@ -8,7 +8,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class ProcessInstanceViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -22,7 +22,7 @@ public class ProcessInstanceViewModelTests
         viewModel.EntityPkv.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithProcessInstance_ShouldMapProperties()
     {
         // Arrange
@@ -45,7 +45,7 @@ public class ProcessInstanceViewModelTests
         viewModel.EntityPkv.Should().Be("PKV123");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithProcessInstanceWithNullCloseTime_ShouldSetEmptyString()
     {
         // Arrange

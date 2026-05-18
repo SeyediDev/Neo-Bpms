@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class WorkItemsPageTypeTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemsPageType_ShouldHaveCorrectValues()
     {
         // Assert

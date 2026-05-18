@@ -6,7 +6,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Instances;
 
 public class GatewaySyncWaitingInstanceDeserializeTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Deserialize_WithValidString_ShouldReturnDictionary()
     {
         // Arrange
@@ -23,7 +23,7 @@ public class GatewaySyncWaitingInstanceDeserializeTests
         result["path3"].receiveTokenCount.Should().Be(3L);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Deserialize_WithNull_ShouldReturnEmptyDictionary()
     {
         // Arrange
@@ -37,7 +37,7 @@ public class GatewaySyncWaitingInstanceDeserializeTests
         result.Should().BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Deserialize_WithEmptyString_ShouldReturnEmptyDictionary()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class GatewaySyncWaitingInstanceDeserializeTests
         result.Should().BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Deserialize_WithInvalidFormat_ShouldSkipInvalidEntries()
     {
         // Arrange
@@ -67,7 +67,7 @@ public class GatewaySyncWaitingInstanceDeserializeTests
         result["path2"].receiveTokenCount.Should().Be(10L);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Deserialize_WithNonNumericCount_ShouldSkipInvalidEntries()
     {
         // Arrange

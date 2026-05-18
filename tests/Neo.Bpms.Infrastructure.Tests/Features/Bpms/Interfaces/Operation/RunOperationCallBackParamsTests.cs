@@ -7,7 +7,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Interfaces.Operation;
 
 public class RunOperationCallBackParamsTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeAllProperties()
     {
         // Arrange
@@ -26,7 +26,7 @@ public class RunOperationCallBackParamsTests
         paramsObj.AuditTrail.Should().Be(auditTrail);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void ToString_ShouldReturnFormattedString()
     {
         // Arrange
@@ -43,7 +43,7 @@ public class RunOperationCallBackParamsTests
         result.Should().Be($"Operation {operationImplementationRef}, Id {id}");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void ShouldImplementIOperationUserParams()
     {
         // Arrange

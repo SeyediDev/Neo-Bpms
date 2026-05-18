@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.MicroServices.MonitoringIn
 
 public class SingleResourceInfoTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void DefaultConstructor_ShouldCreateEmptyInstance()
     {
         // Act
@@ -22,7 +22,7 @@ public class SingleResourceInfoTests
     // Note: Parameterized constructor is internal, so we can't test it directly
     // It's tested indirectly through the classes that use it (e.g., GetResourcesInfo)
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeSettable()
     {
         // Arrange

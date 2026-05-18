@@ -25,7 +25,7 @@ public class FilterManagerTests
         _filterManager = new FilterManager(_filterConfigBackupRestore);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithFilterId_ShouldReturnFilterValues()
     {
         // Arrange
@@ -62,7 +62,7 @@ public class FilterManagerTests
         result.GetString("Field2").Should().Be("Value2");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithFilterIdAndExistingValues_ShouldMergeValues()
     {
         // Arrange
@@ -99,7 +99,7 @@ public class FilterManagerTests
         result.GetString("Field3").Should().Be("ExistingValue3");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithoutFilterId_ShouldReturnDefaultFilter()
     {
         // Arrange
@@ -128,7 +128,7 @@ public class FilterManagerTests
         result.GetString("Field1").Should().Be("DefaultValue1");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithPersistenceObject_ShouldUsePersistenceValues()
     {
         // Arrange
@@ -151,7 +151,7 @@ public class FilterManagerTests
         result.GetString("Field1").Should().Be("PersistenceValue1");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithMultipleValueSources_ShouldMergeCorrectly()
     {
         // Arrange
@@ -197,7 +197,7 @@ public class FilterManagerTests
         result.GetString("Field4").Should().Be("ExistingValue4");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithNullFilterIdAndNoDefault_ShouldReturnEmptyValues()
     {
         // Arrange
@@ -216,7 +216,7 @@ public class FilterManagerTests
         result.GetString("Field1").Should().Be("ExistingValue1");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithFilterIdZero_ShouldReturnDefaultFilter()
     {
         // Arrange
@@ -245,7 +245,7 @@ public class FilterManagerTests
         result.GetString("Field1").Should().Be("DefaultValue1");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithFilterIdAndNullValues_ShouldHandleNullGracefully()
     {
         // Arrange
@@ -277,7 +277,7 @@ public class FilterManagerTests
         result.GetString("Field1").Should().Be("ExistingValue1");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task GetConfiguredFilterValues_WithPersistenceObjectAndFilterId_ShouldPreferFilterValues()
     {
         // Arrange

@@ -6,7 +6,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.FilterModels;
 
 public class WorkItemsFilterTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -19,7 +19,7 @@ public class WorkItemsFilterTests
         filter.__PageType.Should().Be(WorkItemsPageType.MyWorkItems);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void SetDefaultValues_ShouldSetOfferedAllocatedAndSuspendedToTrue()
     {
         // Arrange
@@ -39,7 +39,7 @@ public class WorkItemsFilterTests
         filter.__Suspended.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetDefaultWorkItemsFilter_ShouldCreateFilterWithCorrectValues()
     {
         // Arrange
@@ -64,7 +64,7 @@ public class WorkItemsFilterTests
         filter.__Created.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldReturnCorrectValues()
     {
         // Arrange

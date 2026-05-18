@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Instances;
 
 public class ReceiveTokenInfoTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -15,7 +15,7 @@ public class ReceiveTokenInfoTests
         receiveTokenInfo.receiveTokenCount.Should().Be(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void ReceiveTokenCount_ShouldBeSettable()
     {
         // Arrange

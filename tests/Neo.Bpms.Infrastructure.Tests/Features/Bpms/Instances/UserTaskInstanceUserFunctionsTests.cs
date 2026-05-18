@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Instances;
 
 public class UserTaskInstanceUserFunctionsTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void EUserFunctions_ShouldHaveCorrectValues()
     {
         // Assert - System functions

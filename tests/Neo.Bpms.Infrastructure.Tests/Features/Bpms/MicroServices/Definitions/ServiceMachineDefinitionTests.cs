@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.MicroServices.Definitions;
 
 public class ServiceMachineDefinitionTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithMachineId_ShouldSetMachineId()
     {
         // Act
@@ -16,7 +16,7 @@ public class ServiceMachineDefinitionTests
         machine.Functions.Should().NotBeNull().And.BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void UpdateAlivedTime_ShouldUpdateLatestAliveTime()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class ServiceMachineDefinitionTests
         machine.IsAlive().Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void YouAreConnected_ShouldResetUnsuccessfulConnection()
     {
         // Arrange
@@ -49,7 +49,7 @@ public class ServiceMachineDefinitionTests
         machine.IsAlive().Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void HadUnsuccessfulConnection_ShouldMarkAsUnsuccessful()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class ServiceMachineDefinitionTests
         machine.IsAlive().Should().BeFalse();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetFunction_WithExistingFunction_ShouldReturnFunction()
     {
         // Arrange
@@ -78,7 +78,7 @@ public class ServiceMachineDefinitionTests
         result.Should().Be(function);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetFunction_WithNonExistingFunction_ShouldReturnNull()
     {
         // Arrange
@@ -91,7 +91,7 @@ public class ServiceMachineDefinitionTests
         result.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void IsAlive_WithinTimeout_ShouldReturnTrue()
     {
         // Arrange
@@ -105,7 +105,7 @@ public class ServiceMachineDefinitionTests
         isAlive.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void IsAlive_AfterTimeout_ShouldReturnFalse()
     {
         // Arrange

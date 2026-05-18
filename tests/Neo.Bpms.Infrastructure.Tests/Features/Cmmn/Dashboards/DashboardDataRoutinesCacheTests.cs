@@ -24,7 +24,7 @@ public class DashboardDataRoutinesCacheTests
         _mockConfiguration = new Mock<IConfiguration>();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetWidgetCacheTimeMinutes_ShouldReturnDefaultValue_WhenNoPropertySet()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class DashboardDataRoutinesCacheTests
     {
         var mockReportDataRoutines = new Mock<ReportDataRoutines>(MockBehavior.Loose);
         var mockLogger = new Mock<ILogger<SlowQueryLogger>>();
-        var slowQueryLogger = new SlowQueryLogger(mockLogger.Object, _mockConfiguration.Object);
+        var slowQueryLogger = new SlowQueryLogger(mockLogger.Object);
         
         return new DashboardDataRoutines(
             mockReportDataRoutines.Object,
@@ -59,7 +59,7 @@ public class DashboardDataRoutinesCacheTests
             _memoryCache);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetWidgetCacheTimeMinutes_ShouldReturnPropertyValue_WhenPropertySet()
     {
         // Arrange
@@ -82,7 +82,7 @@ public class DashboardDataRoutinesCacheTests
         result.Should().Be(15);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetWidgetCacheTimeMinutes_ShouldReturnAppSettingsValue_WhenPropertyNotSet()
     {
         // Arrange
@@ -109,7 +109,7 @@ public class DashboardDataRoutinesCacheTests
         result.Should().Be(20);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void InvalidateWidgetCache_ShouldRemoveCacheEntry_WhenCalled()
     {
         // Arrange
@@ -137,7 +137,7 @@ public class DashboardDataRoutinesCacheTests
         _memoryCache.TryGetValue(cacheKey, out _).Should().BeFalse();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void InvalidateWidgetCache_ShouldNotThrow_WhenWidgetIsNull()
     {
         // Arrange
@@ -153,7 +153,7 @@ public class DashboardDataRoutinesCacheTests
         act.Should().NotThrow();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void InvalidateWidgetCache_ShouldNotThrow_WhenReportConfigIsNull()
     {
         // Arrange
@@ -169,7 +169,7 @@ public class DashboardDataRoutinesCacheTests
         act.Should().NotThrow();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GenerateCacheKey_ShouldIncludeAllParameters()
     {
         // Arrange
@@ -199,7 +199,7 @@ public class DashboardDataRoutinesCacheTests
         cacheKey.Should().Contain("Filters:");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GenerateCacheKey_ShouldGenerateDifferentKeys_ForDifferentUsers()
     {
         // Arrange
@@ -217,7 +217,7 @@ public class DashboardDataRoutinesCacheTests
         key1.Should().NotBe(key2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GenerateCacheKey_ShouldGenerateDifferentKeys_ForDifferentFilters()
     {
         // Arrange
@@ -237,7 +237,7 @@ public class DashboardDataRoutinesCacheTests
         key1.Should().NotBe(key2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GenerateCacheKey_ShouldNotIncludeFilters_WhenFilterValuesIsNull()
     {
         // Arrange
@@ -252,7 +252,7 @@ public class DashboardDataRoutinesCacheTests
         cacheKey.Should().NotContain("Filters:");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GenerateCacheKey_ShouldNotIncludeFilters_WhenFilterValuesIsEmpty()
     {
         // Arrange

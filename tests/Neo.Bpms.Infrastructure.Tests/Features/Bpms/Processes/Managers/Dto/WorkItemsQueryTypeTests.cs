@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class WorkItemsQueryTypeTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemsQueryType_ShouldHaveCorrectValues()
     {
         // Assert

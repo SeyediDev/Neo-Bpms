@@ -9,7 +9,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class WorkItemViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -44,7 +44,7 @@ public class WorkItemViewModelTests
         viewModel.Record.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithElasticObject_ShouldMapProperties()
     {
         // Arrange
@@ -92,7 +92,7 @@ public class WorkItemViewModelTests
         viewModel.Forms.Should().NotBeNull().And.BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithNoneStateAndNoEventType_ShouldReturnDanger()
     {
         // Arrange
@@ -110,7 +110,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("danger");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithNoneStateAndEventType_ShouldReturnEmpty()
     {
         // Arrange
@@ -127,7 +127,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithNoneStateAndParallelGateway_ShouldReturnEmpty()
     {
         // Arrange
@@ -144,7 +144,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithCreatedStateAndCallActivitySubProcess_ShouldReturnInfo()
     {
         // Arrange
@@ -161,7 +161,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("info");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithCreatedStateAndUserTask_ShouldReturnWarning()
     {
         // Arrange
@@ -178,7 +178,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("warning");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithStartedState_ShouldReturnInfo()
     {
         // Arrange
@@ -194,7 +194,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("info");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithSuspendedState_ShouldReturnWarning()
     {
         // Arrange
@@ -210,7 +210,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("warning");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithCompletedState_ShouldReturnSuccess()
     {
         // Arrange
@@ -226,7 +226,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("success");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void WorkItemClass_WithFailedState_ShouldReturnDanger()
     {
         // Arrange
@@ -242,7 +242,7 @@ public class WorkItemViewModelTests
         workItemClass.Should().Be("danger");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetAttributes_ShouldReturnCorrectHtmlAttributes()
     {
         // Arrange

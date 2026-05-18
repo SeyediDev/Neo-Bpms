@@ -8,7 +8,7 @@ namespace Neo.Bpms.UI.MVC.Tests;
 
 public class AggregationCalculatorTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_EmptyRows_ReturnsZero()
     {
         // Arrange
@@ -22,7 +22,7 @@ public class AggregationCalculatorTests
         Assert.Equal(0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_NullRows_ReturnsZero()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class AggregationCalculatorTests
         Assert.Equal(0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_SingleRow_ReturnsRowValue()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class AggregationCalculatorTests
         Assert.Equal(5.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Count_ReturnsSumOfAllValues()
     {
         // Arrange
@@ -69,7 +69,7 @@ public class AggregationCalculatorTests
         Assert.Equal(60.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Sum_ReturnsSumOfAllValues()
     {
         // Arrange
@@ -88,7 +88,7 @@ public class AggregationCalculatorTests
         Assert.Equal(61.0, result, 1); // Allow small floating point differences
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Average_ReturnsAverageOfAllValues()
     {
         // Arrange
@@ -107,7 +107,7 @@ public class AggregationCalculatorTests
         Assert.Equal(20.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Average_WithDecimalValues_ReturnsCorrectAverage()
     {
         // Arrange
@@ -126,7 +126,7 @@ public class AggregationCalculatorTests
         Assert.Equal(20.333333333333332, result, 10); // 61.0 / 3 = 20.333...
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Max_ReturnsMaximumValue()
     {
         // Arrange
@@ -145,7 +145,7 @@ public class AggregationCalculatorTests
         Assert.Equal(30.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Min_ReturnsMinimumValue()
     {
         // Arrange
@@ -164,7 +164,7 @@ public class AggregationCalculatorTests
         Assert.Equal(10.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Count_WithMultipleRows_SimulatesRangeGrouping()
     {
         // Arrange - Simulate CLV distribution where multiple rows are grouped into ranges
@@ -185,7 +185,7 @@ public class AggregationCalculatorTests
         Assert.Equal(5.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Average_WithRealWorldCLVScenario()
     {
         // Arrange - Simulate average CLV calculation for a range
@@ -205,7 +205,7 @@ public class AggregationCalculatorTests
         Assert.Equal(expected, result, 1);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_Sum_WithLargeNumbers()
     {
         // Arrange
@@ -224,7 +224,7 @@ public class AggregationCalculatorTests
         Assert.Equal(6000000.0, result);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Calculate_DefaultAggregationType_ReturnsFirstRowValue()
     {
         // Arrange

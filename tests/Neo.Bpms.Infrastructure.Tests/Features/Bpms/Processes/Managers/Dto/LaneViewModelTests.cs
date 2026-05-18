@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class LaneViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -19,7 +19,7 @@ public class LaneViewModelTests
         lane.Elements.Should().NotBeNull().And.BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithNoElements_ShouldReturnZero()
     {
         // Arrange
@@ -32,7 +32,7 @@ public class LaneViewModelTests
         colspan.Should().Be(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithSingleElement_ShouldReturnOnePlusElementColspan()
     {
         // Arrange
@@ -54,7 +54,7 @@ public class LaneViewModelTests
         colspan.Should().Be(3);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithMultipleElements_ShouldReturnSumOfOnePlusEachElementColspan()
     {
         // Arrange

@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-namespace Neo.Bpms.Domain;
+﻿namespace Neo.Bpms.Domain;
 /// <summary>
 /// for old injection
 /// </summary>

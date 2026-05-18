@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.MicroServices.Definitions;
 
 public class ServiceFunctionDefinitionTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithFunctionName_ShouldSetFuncName()
     {
         // Act
@@ -16,7 +16,7 @@ public class ServiceFunctionDefinitionTests
         function.ProviderMachines.Should().NotBeNull().And.BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void UpdateOrAddProviderMachineFunction_WithNewMachine_ShouldAdd()
     {
         // Arrange
@@ -31,7 +31,7 @@ public class ServiceFunctionDefinitionTests
         function.ProviderMachines["Machine1"].Should().Be(machineFunction);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void UpdateOrAddProviderMachineFunction_WithExistingMachine_ShouldUpdate()
     {
         // Arrange
@@ -49,7 +49,7 @@ public class ServiceFunctionDefinitionTests
         function.ProviderMachines["Machine1"].Url.Should().Be("Url2");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void UpdateOrAddProviderMachineFunction_WithMultipleMachines_ShouldAddAll()
     {
         // Arrange

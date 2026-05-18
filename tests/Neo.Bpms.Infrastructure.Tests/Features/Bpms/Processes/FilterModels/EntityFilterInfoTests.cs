@@ -9,7 +9,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.FilterModels;
 
 public class EntityFilterInfoTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeAllProperties()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class EntityFilterInfoTests
         filterInfo.SortFields.Should().Be(sortFields);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeReadOnly()
     {
         // Arrange

@@ -5,7 +5,7 @@ namespace Neo.Bpms.UI.MVC.Tests.Extensions;
 
 public class NumberUtillTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void StrToByteArray_ShouldConvertStringToByteArray()
     {
         // Arrange
@@ -101,7 +101,7 @@ public class NumberUtillTests
         result.Should().Be(expected);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Reverse_ShouldReverseString()
     {
         // Arrange
@@ -139,7 +139,7 @@ public class NumberUtillTests
         result.Should().Be(expected);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Max_ShouldReturnMaximumValue()
     {
         // Act

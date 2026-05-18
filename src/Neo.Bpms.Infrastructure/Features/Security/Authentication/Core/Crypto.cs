@@ -1,6 +1,5 @@
 ﻿#pragma warning disable SYSLIB0014 // WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.
 #pragma warning disable SYSLIB0041
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
 namespace Neo.Bpms.Infrastructure.Features.Security.Authentication.Core;

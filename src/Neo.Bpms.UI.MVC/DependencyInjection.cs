@@ -26,7 +26,6 @@ public static class DependencyInjection
         _ = services.AddScoped<IControlsRenderer, ControlsRenderer>();
         _ = services.AddScoped<FormDesignHelper>();
         _ = services.AddScoped<FilterManager>();
-        _ = services.AddScoped<IApplicationSetup, ApplicationSetup>();
         _ = services.AddScoped<IFormLogicHelper, FormLogicHelper>();
         _ = services.AddScoped<ISBVRRenderer, SBVRRenderer>();
         
@@ -185,7 +184,6 @@ public static class DependencyInjection
         ServiceProviderAccessor.ServiceProvider = app.ApplicationServices;
         
         app.Inject<IBuiltInFunctionFinder>().AddAssembly(typeof(UserBuiltInFunctions).Assembly);
-        app.Inject<IApplicationSetup>().Setup(app);
         Task.Run(() =>
         {
             app.Inject<IProjectMetaLoader>().Load(true, true, true, false);

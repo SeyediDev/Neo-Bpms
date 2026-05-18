@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class FlowElementViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -17,7 +17,7 @@ public class FlowElementViewModelTests
         flowElement.StateId.Should().Be(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeSettable()
     {
         // Arrange

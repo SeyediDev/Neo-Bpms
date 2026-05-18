@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class ResourceViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -18,7 +18,7 @@ public class ResourceViewModelTests
         resource.Claim.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeSettable()
     {
         // Arrange

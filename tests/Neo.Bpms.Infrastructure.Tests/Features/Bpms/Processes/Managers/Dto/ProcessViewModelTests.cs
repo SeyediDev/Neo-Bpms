@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class ProcessViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -22,7 +22,7 @@ public class ProcessViewModelTests
         process.Lanes.Should().NotBeNull().And.BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetElement_WithExistingElementId_ShouldReturnElement()
     {
         // Arrange
@@ -43,7 +43,7 @@ public class ProcessViewModelTests
         result.Should().Be(element);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetElement_WithNonExistingElementId_ShouldReturnNull()
     {
         // Arrange
@@ -64,7 +64,7 @@ public class ProcessViewModelTests
         result.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetElement_WithMultipleLanes_ShouldFindElementInAnyLane()
     {
         // Arrange
@@ -92,7 +92,7 @@ public class ProcessViewModelTests
         result2.Should().Be(element2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetElement_WithEmptyLanes_ShouldReturnNull()
     {
         // Arrange

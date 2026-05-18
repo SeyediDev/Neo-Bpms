@@ -6,7 +6,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class WorkItemFormInfoTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -22,7 +22,7 @@ public class WorkItemFormInfoTests
         formInfo.TaskId.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeSettable()
     {
         // Arrange

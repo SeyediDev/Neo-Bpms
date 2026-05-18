@@ -6,7 +6,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class ProcessItemsViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithElasticObject_ShouldMapProperties()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class ProcessItemsViewModelTests
         viewModel.ProcessName.Should().NotBeNull(); // May be null if process not found
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_WithEmptyElasticObject_ShouldSetDefaultValues()
     {
         // Arrange

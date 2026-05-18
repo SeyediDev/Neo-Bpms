@@ -24,7 +24,7 @@ public class StateNotifyStatusTests
         value.Should().BeGreaterThanOrEqualTo(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Enum_ShouldHaveAllExpectedMembers()
     {
         // Act

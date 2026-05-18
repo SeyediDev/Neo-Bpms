@@ -5,7 +5,7 @@ namespace Neo.Bpms.UI.MVC.Tests.Extensions;
 
 public class StringUtilsTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void NormalizeFarsi_WithArabicCharacters_ShouldConvertToPersian()
     {
         // Arrange
@@ -18,7 +18,7 @@ public class StringUtilsTests
         result.Should().Be("ی ک");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void NormalizeFarsi_WithPersianCharacters_ShouldNotChange()
     {
         // Arrange
@@ -31,7 +31,7 @@ public class StringUtilsTests
         result.Should().Be("ی ک");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void NormalizeFarsi_WithWhitespace_ShouldTrim()
     {
         // Arrange
@@ -44,7 +44,7 @@ public class StringUtilsTests
         result.Should().Be("test");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void NormalizeFarsi_WithNull_ShouldReturnNull()
     {
         // Arrange
@@ -57,7 +57,7 @@ public class StringUtilsTests
         result.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void NormalizeFarsi_WithEmptyString_ShouldReturnEmpty()
     {
         // Arrange

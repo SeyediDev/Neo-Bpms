@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class UserViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -19,7 +19,7 @@ public class UserViewModelTests
         user.AvatarId.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithSameId_ShouldReturnTrue()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class UserViewModelTests
         result.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithDifferentId_ShouldReturnFalse()
     {
         // Arrange
@@ -47,7 +47,7 @@ public class UserViewModelTests
         result.Should().BeFalse();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithNull_ShouldReturnFalse()
     {
         // Arrange
@@ -60,7 +60,7 @@ public class UserViewModelTests
         result.Should().BeFalse();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithSameReference_ShouldReturnTrue()
     {
         // Arrange
@@ -73,7 +73,7 @@ public class UserViewModelTests
         result.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithObjectParameter_ShouldReturnTrueForSameId()
     {
         // Arrange
@@ -87,7 +87,7 @@ public class UserViewModelTests
         result.Should().BeTrue();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Equals_WithObjectParameter_ShouldReturnFalseForDifferentType()
     {
         // Arrange
@@ -101,7 +101,7 @@ public class UserViewModelTests
         result.Should().BeFalse();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetHashCode_WithSameId_ShouldReturnSameHashCode()
     {
         // Arrange
@@ -116,7 +116,7 @@ public class UserViewModelTests
         hashCode1.Should().Be(hashCode2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetHashCode_WithNullId_ShouldReturnZero()
     {
         // Arrange

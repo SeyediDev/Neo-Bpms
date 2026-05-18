@@ -7,7 +7,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Jobs.JobScheduler;
 
 public class JobTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeSettable()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class JobTests
         job.JobItem.Should().Be(jobItem);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Properties_ShouldBeGettable()
     {
         // Arrange

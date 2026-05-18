@@ -47,7 +47,7 @@ public class FilterControllerTests
         await Task.CompletedTask;
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task SaveFilterValues_ValidFilterId_ShouldUpdateValues()
     {
         // Arrange
@@ -110,7 +110,7 @@ public class FilterControllerTests
         savedFilter!.Values.Should().HaveCount(2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task SaveFilterValues_InvalidFilterId_ShouldReturnError()
     {
         // Arrange
@@ -138,7 +138,7 @@ public class FilterControllerTests
         value.Should().NotBeNull().And.Contain("خطا");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task DeleteFilterConfig_ValidFilterId_ShouldDelete()
     {
         // Arrange
@@ -173,7 +173,7 @@ public class FilterControllerTests
             Times.Once);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task DeleteFilterConfig_InvalidFilterId_ShouldReturnError()
     {
         // Arrange
@@ -195,7 +195,7 @@ public class FilterControllerTests
         value.Should().NotBeNull().And.Contain("خطا");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task DeleteFilterConfig_PublicFilterWithoutPermission_ShouldReturnError()
     {
         // Arrange
@@ -226,7 +226,7 @@ public class FilterControllerTests
         value.Should().NotBeNull().And.Contain("خطا");
     }
 
-    [Fact]
+    [Xunit.Fact]
     public async Task ChangeParent_WithFilterId_ShouldUpdateFolderId()
     {
         // Arrange

@@ -5,7 +5,7 @@ namespace Neo.Bpms.Infrastructure.Tests.Features.Bpms.Processes.Managers.Dto;
 
 public class ElementViewModelTests
 {
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -21,7 +21,7 @@ public class ElementViewModelTests
         element.ColorIndex.Should().Be(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithNoInputsOrOutputs_ShouldReturnZero()
     {
         // Arrange
@@ -34,7 +34,7 @@ public class ElementViewModelTests
         colspan.Should().Be(0);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithMoreInputsThanOutputs_ShouldReturnInputsCount()
     {
         // Arrange
@@ -59,7 +59,7 @@ public class ElementViewModelTests
         colspan.Should().Be(3);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithMoreOutputsThanInputs_ShouldReturnOutputsCount()
     {
         // Arrange
@@ -85,7 +85,7 @@ public class ElementViewModelTests
         colspan.Should().Be(4);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void Colspan_WithEqualInputsAndOutputs_ShouldReturnThatCount()
     {
         // Arrange

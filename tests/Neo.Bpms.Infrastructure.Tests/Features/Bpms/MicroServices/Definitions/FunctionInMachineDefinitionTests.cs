@@ -12,7 +12,7 @@ public class FunctionInMachineDefinitionTests
         var field = typeof(ServiceResource).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance);
         field?.SetValue(resource, state);
     }
-    [Fact]
+    [Xunit.Fact]
     public void Constructor_ShouldInitializeWithDefaultValues()
     {
         // Act
@@ -29,7 +29,7 @@ public class FunctionInMachineDefinitionTests
         // Machine is internal, cannot test directly
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void InstantiateStateForEachResource_WithResourceCount_ShouldCreateResources()
     {
         // Arrange
@@ -48,7 +48,7 @@ public class FunctionInMachineDefinitionTests
         function.Resources[2].ResourceIndex.Should().Be(2);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void InstantiateStateForEachResource_WithZeroResourceCount_ShouldNotCreateResources()
     {
         // Arrange
@@ -64,7 +64,7 @@ public class FunctionInMachineDefinitionTests
         function.Resources.Should().BeEmpty();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetResource_WithValidIndex_ShouldReturnResource()
     {
         // Arrange
@@ -85,7 +85,7 @@ public class FunctionInMachineDefinitionTests
         resource3.Should().Be(function.Resources[2]);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetResource_WithInvalidIndex_ShouldReturnNull()
     {
         // Arrange
@@ -104,7 +104,7 @@ public class FunctionInMachineDefinitionTests
         resource4.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetFirstReadyResource_WithIdleResource_ShouldReturnFirstIdle()
     {
         // Arrange
@@ -124,7 +124,7 @@ public class FunctionInMachineDefinitionTests
         readyResource.Should().Be(function.Resources[0]);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetFirstReadyResource_WithNoIdleResource_ShouldReturnNull()
     {
         // Arrange
@@ -143,7 +143,7 @@ public class FunctionInMachineDefinitionTests
         readyResource.Should().BeNull();
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void GetWorkingResources_ShouldReturnOnlyWorkingResources()
     {
         // Arrange
@@ -166,7 +166,7 @@ public class FunctionInMachineDefinitionTests
         workingResources.Should().NotContain(function.Resources[0]);
     }
 
-    [Fact]
+    [Xunit.Fact]
     public void IdleResourcesCount_ShouldReturnCountOfNonWorkingResources()
     {
         // Arrange
