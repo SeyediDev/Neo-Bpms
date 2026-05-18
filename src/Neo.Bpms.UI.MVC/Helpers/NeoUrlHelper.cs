@@ -1,6 +1,6 @@
 ﻿namespace Neo.Bpms.UI.MVC.Helpers;
 
-public static class TetaUrlHelper
+public static class NeoUrlHelper
 {
     public static string GetBaseUrl(this HttpRequest request)
     {
