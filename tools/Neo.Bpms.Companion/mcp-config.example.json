@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "neo-bpms": {
+      "command": "python",
+      "args": [
+        "-B",
+        "E:/SJVS/Projects/Neo-Bpms/tools/Neo.Bpms.Companion/neo_bpms_mcp.py",
+        "--project-root",
+        "E:/SJVS/Projects/Neo-Bpms"
+      ]
+    }
+  }
+}

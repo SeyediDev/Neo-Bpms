@@ -1,0 +1,18 @@
+/* Shared TopBar only. Preserve inherited colors, fonts, floats and control sizes. */
+.neo-ux-toolbar {
+    border-radius: .625rem;
+    box-shadow: 0 2px 8px rgb(15 23 42 / 8%);
+}
+
+.neo-ux-toolbar .neo-ux-heading {
+    padding-block-start: 10px;
+}
+
+.neo-ux-toolbar .neo-ux-title {
+    margin-inline-start: 8px;
+}
+
+.neo-ux-toolbar :is(a, button, [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}

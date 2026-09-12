@@ -1,0 +1,33 @@
+name: Companion checks
+
+on:
+  push:
+    branches: [develop, main, master]
+    paths:
+      - 'tools/Neo.Bpms.Companion/**'
+      - 'src/**'
+      - '.agents/skills/neo-bpms/**'
+      - '.github/workflows/companion.yml'
+  pull_request:
+    paths:
+      - 'tools/Neo.Bpms.Companion/**'
+      - 'src/**'
+      - '.agents/skills/neo-bpms/**'
+      - '.github/workflows/companion.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  companion:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Behavioral and stdio tests
+        run: python -B -m unittest discover -s tools/Neo.Bpms.Companion -p test_companion.py -v

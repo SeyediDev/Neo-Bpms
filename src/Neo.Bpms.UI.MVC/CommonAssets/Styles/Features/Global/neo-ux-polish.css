@@ -1,9 +1,0 @@
-/* Additive, behavior-preserving shared UI layer for Neo.Bpms. */
-:root{--bpms-radius:.625rem;--bpms-border:#e2e8f0;--bpms-ink:#172033;--bpms-brand:#2563eb}
-body{color:var(--bpms-ink);text-rendering:optimizeLegibility}
-:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid color-mix(in srgb,var(--bpms-brand) 35%,transparent);outline-offset:2px}
-:where(.btn,button.btn,input[type=submit],input[type=button]){min-height:2.5rem;border-radius:var(--bpms-radius);transition:transform .15s ease,box-shadow .15s ease}
-:where(.btn,button.btn,input[type=submit],input[type=button]):hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 12px rgb(15 23 42 / 12%)}
-:where(input,select,textarea){border-color:var(--bpms-border);border-radius:.5rem}
-@media(max-width:768px){.modern-main-container{padding:.75rem}.modern-title-box{margin:.75rem;width:calc(100% - 1.5rem);padding:1rem}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}

@@ -1,0 +1,87 @@
+{
+  "baseline": "5833ec8de4ecf9030934fd038c834399d8bb7706",
+  "recipes": {
+    "new-process": {
+      "steps": [
+        "Process / فرآیند: inspect ProjectBpmn.Load and ProjectProcess.LoadBpmn before changing import/version behavior.",
+        "ProjectBpmn reads Bpmn/bpmn.xml and merges root elements by identifier; keep identifiers and versions deliberate.",
+        "Do not call Load/Save as validation: they touch project metadata and the filesystem. Use BPMN structural checks then an isolated runtime fixture."
+      ],
+      "evidence": [
+        {
+          "path": "src/Neo.Bpms.Infrastructure/Features/MetaLoader/MetaProcess/ProjectBpmn.cs",
+          "line": 16,
+          "sha256": "59fa7cb5e18653a71608685c22af7c5dc7967ea7aafe172a10ab67c673f601c5"
+        },
+        {
+          "path": "src/Neo.Bpms.Infrastructure/Features/MetaLoader/MetaProcess/ProjectProcess.cs",
+          "line": 14,
+          "sha256": "5d960de81ae6cacd626f3c9a93192be7e7ff03f01bee0f9093aa8f4375a52070"
+        }
+      ]
+    },
+    "dynamic-form": {
+      "steps": [
+        "Form / فرم: inspect FormStructures and FormStructRoutines for the actual field model and rendering path.",
+        "Keep FormItemPropertiesViewModel identifiers, parent-control links, labels and properties aligned with existing metadata.",
+        "Preserve EditTypeId and eCreateType save/navigation behavior; exercise the existing form render and validation flow with synthetic data."
+      ],
+      "evidence": [
+        {
+          "path": "src/Neo.Bpms.Infrastructure/Features/Cmmn/Forms/FormStructures/FormStructures.cs",
+          "line": 35,
+          "sha256": "84c4d1a703f17ecebd247853ba3b6213e7b5aebe394468b903713e5788708272"
+        },
+        {
+          "path": "src/Neo.Bpms.Infrastructure/DependencyInjection.cs",
+          "line": 72,
+          "sha256": "972a42c82a49cb63f1b03de7802a1e8406f03e5dc8bebcee38292eb01ebf29fe"
+        }
+      ]
+    },
+    "human-task": {
+      "steps": [
+        "Task / کارتابل: WorkItemManager.GetWorkItems receives user, culture and filter, then counts and pages the query.",
+        "Preserve user/owner restrictions, paging, totals and QueryUtility resource release; a displayed row is not authorization to complete a task.",
+        "Trace the existing completion handler and state checks before changing transitions; test two different users and an already-completed task."
+      ],
+      "evidence": [
+        {
+          "path": "src/Neo.Bpms.Infrastructure/Features/Bpms/Processes/Managers/WorkItemManager.cs",
+          "line": 14,
+          "sha256": "6d9484c1084dbfdf36165927bd54d8e26466aec22653985cd82fe63a9d36b3a3"
+        },
+        {
+          "path": "src/Neo.Bpms.UI.MVC/Views/Process/MyWorkItems.cshtml",
+          "line": 48,
+          "sha256": "61a422148baee30fbdc3a7c5c889670345f3f16df9c18fb9a9c35e84855d9d77"
+        }
+      ]
+    },
+    "integration": {
+      "steps": [
+        "Integration / اتصال: ISendFormCommand.Send accepts an ElasticObject and command Type and returns a boolean/message tuple.",
+        "In this baseline SendFormCommand does not dispatch MediatR: dispatch code is commented and the implementation returns false.",
+        "Do not present it as a working command integration. Implement and test the requested dispatch separately before using it in a real workflow.",
+        "AddNeoBpmsInfrastructure registers ISendFormCommand scoped, while IBpmsEngine and several metadata loaders are singleton; inspect lifetimes before adding dependencies."
+      ],
+      "evidence": [
+        {
+          "path": "src/Neo.Bpms.Application/Features/ISendFormCommand.cs",
+          "line": 4,
+          "sha256": "70074a73be758a0cb3fd1113d3e9cf32c928ecc40cd6b5ce19525811dedb7166"
+        },
+        {
+          "path": "src/Neo.Bpms.Infrastructure/Features/SendFormCommand.cs",
+          "line": 11,
+          "sha256": "38fa815a5f14662b622c1dad0235ef968182cb12698dbc6e7e9e0ba5f9398a5a"
+        },
+        {
+          "path": "src/Neo.Bpms.Infrastructure/DependencyInjection.cs",
+          "line": 29,
+          "sha256": "972a42c82a49cb63f1b03de7802a1e8406f03e5dc8bebcee38292eb01ebf29fe"
+        }
+      ]
+    }
+  }
+}
