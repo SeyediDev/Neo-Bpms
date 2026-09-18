@@ -39,7 +39,15 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
                 var (y, m) = CalendarFilterHelper.GetCurrentMonth("shamsi");
                 CalendarFilterHelper.InjectMonthRange(dashboardData.Structure.FilterValues, y, m, "shamsi");
             }
-            ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => rd.Structure.ConfigId == reportConfig.ConfigId);
+            ReportData reportData = dashboardData.ReportsData.FirstOrDefault(rd => 
+                rd.Structure.ConfigId == reportConfig.ConfigId
+                &&
+                rd.Structure.Form_ReportId == report.Id
+                &&
+                rd.Structure.EntityId == entity.Id
+                &&
+                rd.Structure.NamespaceId == widget.ReportNamespaceId
+                );
             if (reportData != null)
                 continue;
 
