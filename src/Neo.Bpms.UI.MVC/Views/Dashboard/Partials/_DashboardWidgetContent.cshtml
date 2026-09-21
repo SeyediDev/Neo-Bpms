@@ -124,7 +124,16 @@
 }
 else if (reportData.Structure.ReportViewType == ReportViewType.Chart)
 {
-    if (reportData.Structure.ChartType == ChartType.IranMap)
+    if (reportData.Structure.ChartType != ChartType.MetricBox && (reportData.Rows == null || reportData.Rows.Count == 0))
+    {
+        <div class="neo-dashboard-widget-no-data" style="display:flex;align-items:center;justify-content:center;height:100%;min-height:160px;text-align:center;color:#64748b;direction:rtl;">
+            <div>
+                <strong>داده‌ای برای نمایش وجود ندارد</strong>
+                <div style="margin-top:6px;font-size:13px;">پرس‌وجو با موفقیت اجرا شد، اما در محدوده انتخاب‌شده رکوردی برنگرداند.</div>
+            </div>
+        </div>
+    }
+    else if (reportData.Structure.ChartType == ChartType.IranMap)
     {
         <partial name="~/Views/Report/Map/_IranMap.cshtml" model="reportData" />
     }
