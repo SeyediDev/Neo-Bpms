@@ -44,6 +44,16 @@ namespace Neo.Bpms.UI.MVC.Helpers
 
             var reportsData = dashboardData.ReportsData;
 
+            // Older saved dashboard configurations can omit ReportNamespaceId. In that
+            // case the entity id/report/config tuple is still sufficient to select data.
+            if (string.IsNullOrWhiteSpace(widget.ReportNamespaceId))
+            {
+                return reportsData.FirstOrDefault(rd =>
+                    rd.Structure?.EntityId == widget.ReportEntityId &&
+                    rd.Structure?.Form_ReportId == widget.ReportId &&
+                    rd.Structure?.ConfigId == widget.ReportConfigId);
+            }
+
             var reportData = reportsData.FirstOrDefault(rd =>
                     rd.Structure?.NamespaceId == widget.ReportNamespaceId &&
                     rd.Structure?.EntityId == widget.ReportEntityId &&

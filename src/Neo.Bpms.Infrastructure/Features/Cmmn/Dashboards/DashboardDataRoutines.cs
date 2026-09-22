@@ -1,8 +1,8 @@
+using Microsoft.Extensions.Caching.Memory;
 using Neo.Bpms.Domain.Entities.Cmmn.UI;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Components;
 using Neo.Bpms.Domain.Models.Cmmn.UI.ConfiguredItems;
 using Neo.Bpms.Domain.Models.Cmmn.UI.Reports;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 
@@ -27,9 +27,13 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
             if (div == null)
                 continue;
 
-            UiEntity entity = ProjectDefinition.Project.GetEntity(widget.ReportNamespaceId, widget.ReportEntityId) as UiEntity;
+            // Legacy persisted dashboards may have an empty namespace id. Resolve by entity id
+            // and use the entity's canonical namespace for report execution and matching.
+            UiEntity entity = ProjectDefinition.Project.GetEntity(widget.ReportNamespaceId, widget.ReportEntityId) as UiEntity
+                              ?? ProjectDefinition.Project.GetEntityByEntityId(widget.ReportEntityId) as UiEntity;
             Report report = entity?.GetReport(widget.ReportId);
             if (report == null) continue;
+            var reportNamespaceId = entity.NamespaceId;
             ConfiguredReport reportConfig = await reportConfigBackupRestore.GetConfig(report, widget.ReportConfigId);
             if (reportConfig == null) continue;
             int maxRecord = GetWidgetMaxRecord(widget, reportConfig.ViewType);
@@ -46,7 +50,7 @@ public class DashboardDataRoutines(ReportDataRoutines reportDataRoutines,
                 &&
                 rd.Structure.EntityId == entity.Id
                 &&
-                rd.Structure.NamespaceId == widget.ReportNamespaceId
+                rd.Structure.NamespaceId == reportNamespaceId
                 );
             if (reportData != null)
                 continue;
