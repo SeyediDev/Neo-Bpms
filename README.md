@@ -94,6 +94,37 @@ declarations and preserves JavaScript handlers and form behavior. The stylesheet
 is shipped through the Razor library's `wwwroot` assets. See the
 [UI review](docs/UI-REVIEW.fa.md) for scope and remaining issues.
 
+## Column-header filters
+
+The header funnel opens and focuses the existing generated filter control. It
+does not submit the form or introduce a separate query. Hidden advanced controls
+and their containing tabs are revealed first. Repeated activation keeps the panel
+and combo open; columns without a matching filter are disabled until a control is
+available. Enter and Space activate the native header button.
+
+Run the browser regression suite (Node.js 20+):
+
+```powershell
+Set-Location tests/Neo.Bpms.UI.MVC.Tests/Frontend
+npm ci
+npx playwright install chromium
+npm run test:column-filters
+```
+
+To use an installed Microsoft Edge instead, set `$env:NEO_TEST_BROWSER = 'msedge'`
+before running the test command; downloading Chromium is then unnecessary.
+
+The suite loads the actual ColumnFilter script, report toggle/outside-click
+handlers, both multi-select implementations, Bootstrap and Persian datepicker
+into representative generated markup. It checks click/keyboard behavior, hidden
+filters, tabs, repeated refresh, dynamic controls, selection preservation and
+the absence of unintended sorting/submission. These are browser regression tests,
+not authenticated application or database end-to-end tests.
+
+The host must serve the updated ColumnFilter.js and filter CSS through its existing
+`/Content/common-assets-includes/` mapping. The test fixture reads files directly
+and cannot certify that deployment mapping or browser cache invalidation.
+
 ## Maintenance rule
 
 When code changes affect Skills, MCP contracts, recipes or usage, update them in the

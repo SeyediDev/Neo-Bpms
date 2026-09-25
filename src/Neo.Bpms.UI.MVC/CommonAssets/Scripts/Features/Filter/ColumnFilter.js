@@ -20,7 +20,9 @@
     }
 
     function roots() {
-        return Array.prototype.slice.call(document.querySelectorAll(rootSelector));
+        return Array.prototype.slice.call(document.querySelectorAll(rootSelector)).filter(function (root) {
+            return !root.parentElement || !root.parentElement.closest(rootSelector);
+        });
     }
 
     function groups(root) {
@@ -44,7 +46,7 @@
 
     function isIgnoredInput(input) {
         var name = (input.getAttribute('name') || '').toLowerCase();
-        return name.indexOf('filterparameter') !== -1 || input.disabled || input.closest('.neo-filter-toolbar');
+        return name.indexOf('filterparameter') !== -1 || input.classList.contains('modern-multi-select-search') || input.disabled || input.closest('.neo-filter-toolbar');
     }
 
     function hasValue(control) {
@@ -81,7 +83,7 @@
     }
 
     function createToolbar(root) {
-        var toolbar = root.querySelector(':scope > .neo-filter-toolbar');
+        var toolbar = root.querySelector('.neo-filter-toolbar');
         if (toolbar) return toolbar;
         toolbar = document.createElement('div');
         toolbar.className = 'neo-filter-toolbar';
@@ -133,6 +135,10 @@
     function updateHeaderButtons() {
         Array.prototype.slice.call(document.querySelectorAll('.neo-column-filter')).forEach(function (button) {
             var control = findControl(button.getAttribute('data-filter-column'));
+            button.disabled = !control;
+            button.setAttribute('aria-disabled', control ? 'false' : 'true');
+            if (control) button.setAttribute('aria-controls', control.closest(rootSelector).id);
+            else button.removeAttribute('aria-controls');
             button.classList.toggle('is-active', !!control && hasValue(control));
             button.setAttribute('aria-pressed', !!control && hasValue(control) ? 'true' : 'false');
         });
@@ -171,11 +177,14 @@
         updateHeaderButtons();
     }
 
-    function findControl(name) {
+    function findControl(name, scope) {
         if (!name) return null;
         var requested = String(name).replace(/\[\]$/, '').replace(/__FilterParameter$/i, '').trim();
         var requestedLower = requested.toLowerCase();
-        var found = document.querySelectorAll(rootSelector + ' [data-id], ' + rootSelector + ' [name], ' + rootSelector + ' [id]');
+        var found = [];
+        (scope ? [scope] : roots()).forEach(function (root) {
+            found = found.concat(Array.prototype.slice.call(root.querySelectorAll('[data-id], [name], [id]')));
+        });
         for (var i = 0; i < found.length; i++) {
             var candidate = found[i];
             var dataId = (candidate.getAttribute('data-id') || '').trim();
@@ -191,39 +200,88 @@
         return null;
     }
 
-    function openPanel() {
-        var reportPanel = document.getElementById('filterTooltipPanel');
-        if (reportPanel && typeof window.toggleFilterTooltip === 'function' && !reportPanel.classList.contains('show')) {
-            var reportToggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
-            window.toggleFilterTooltip(null, reportToggle);
-        } else if (typeof window.toggleFilter === 'function') {
-            var filter = document.getElementById('filterDiv');
-            if (filter && (filter.style.display === 'none' || !filter.classList.contains('show'))) window.toggleFilter();
-        } else {
-            var button = document.getElementById('showFilter');
-            if (button && button.getAttribute('aria-expanded') !== 'true') button.click();
+    function openPanel(control) {
+        var panel = control && control.closest(rootSelector);
+        if (!panel) return;
+        if (panel.id === 'filterTooltipPanel') {
+            if (!panel.classList.contains('show') && typeof window.toggleFilterTooltip === 'function') {
+                window.toggleFilterTooltip(null, document.querySelector('[data-action="toggle-filter-tooltip"]'));
+            }
+        } else if (panel.id === 'filterDiv' && window.getComputedStyle(panel).display === 'none') {
+            if (typeof window.toggleFilter === 'function') window.toggleFilter();
+            else {
+                var button = document.getElementById('showFilter');
+                if (button) button.click();
+            }
         }
     }
 
+    function revealControl(control) {
+        var root = control.closest(rootSelector);
+        if (!root) return;
+        if (control.classList.contains('neo-filter-advanced')) {
+            root.classList.add('neo-filter-expanded');
+            collapseRoot(root);
+        }
+        var panes = [];
+        for (var pane = control.closest('.tab-pane'); pane && root.contains(pane);
+            pane = pane.parentElement && pane.parentElement.closest('.tab-pane')) {
+            panes.unshift(pane);
+        }
+        panes.forEach(function (pane) {
+            if (pane.classList.contains('active')) return;
+            var link = Array.prototype.find.call(root.querySelectorAll('[data-toggle="tab"], [data-bs-toggle="tab"]'), function (item) {
+                return item.getAttribute('href') === '#' + pane.id ||
+                    item.getAttribute('data-target') === '#' + pane.id ||
+                    item.getAttribute('data-bs-target') === '#' + pane.id;
+            });
+            if (!link) return;
+            if (window.bootstrap && window.bootstrap.Tab && window.bootstrap.Tab.getOrCreateInstance) {
+                window.bootstrap.Tab.getOrCreateInstance(link).show();
+            } else if (window.jQuery && window.jQuery.fn.tab) {
+                window.jQuery(link).tab('show');
+            } else link.click();
+        });
+    }
+
     function focusControl(control) {
-        if (!control) return;
+        if (!control || !control.isConnected) return;
+        revealControl(control);
         control.classList.add('neo-filter-focus');
         setTimeout(function () { control.classList.remove('neo-filter-focus'); }, 1400);
-        var custom = control.querySelector('.modern-multi-select-input');
-        var select = control.querySelector('select:not(.modern-multi-select-hidden)');
-        var target = custom || select || control.querySelector('input:not([type="hidden"]), textarea');
+        // Position first: widgets calculate their popup coordinates when opening.
+        control.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+        var available = function (element) {
+            return !element.disabled && element.getAttribute('aria-disabled') !== 'true' &&
+                element.getClientRects().length > 0 && window.getComputedStyle(element).visibility !== 'hidden';
+        };
+        var custom = Array.prototype.find.call(control.querySelectorAll('.modern-multi-select-input'), available);
+        var select = control.querySelector('select:not([disabled]):not(.modern-multi-select-hidden)');
+        var target = Array.prototype.find.call(control.querySelectorAll('input:not([type="hidden"]), select, textarea'), available);
         if (custom) {
+            if (!custom.hasAttribute('tabindex')) custom.setAttribute('tabindex', '-1');
             custom.focus();
-            if (custom.click) custom.click();
+            var widget = custom.closest('.modern-multi-select, .modern-multi-select-control');
+            var instance = widget && widget._modernMultiSelectInstance;
+            if (instance && typeof instance.open === 'function') instance.open();
+            else if (!widget || !widget.classList.contains('open')) custom.click();
         } else if (select && window.jQuery && window.jQuery.fn.select2 && window.jQuery(select).data('select2')) {
             window.jQuery(select).select2('open');
         } else if (target) {
             target.focus();
-            if (target.type === 'text' && target.classList.contains('dateField') && window.jQuery && window.jQuery.fn.pDatepicker) {
-                try { window.jQuery(target).pDatepicker('show'); } catch (ignore) { /* focus is enough */ }
-            }
+            // Existing datepicker click handlers open the initialized calendar.
+            // Calling pDatepicker with a string can reinitialize it and reset values.
+            if (target.classList.contains('dateField')) target.click();
         }
-        try { control.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (ignore) { control.scrollIntoView(); }
+    }
+
+    function showControl(control) {
+        if (!control) return;
+        openPanel(control);
+        var panel = control.closest(rootSelector);
+        if (window.jQuery && panel) {
+            window.jQuery(panel).promise().done(function () { focusControl(control); });
+        } else focusControl(control);
     }
 
     function clearControl(control) {
@@ -246,21 +304,22 @@
                 if (hidden) hidden.value = '';
             }
         });
-        updateSummary(control.closest(rootSelector));
+        var root = control.closest(rootSelector);
+        if (root) updateSummary(root);
     }
 
     function bind() {
         if (window.NeoFilterUxInitialized) return;
         window.NeoFilterUxInitialized = true;
+        // Capture before table sorting and document outside-click handlers.
         document.addEventListener('click', function (event) {
             var header = event.target.closest && event.target.closest('.neo-column-filter');
-            if (header) {
-                event.preventDefault();
-                event.stopPropagation();
-                openPanel();
-                setTimeout(function () { focusControl(findControl(header.getAttribute('data-filter-column'))); }, 80);
-                return;
-            }
+            if (!header) return;
+            event.preventDefault();
+            event.stopPropagation();
+            if (!header.disabled) showControl(findControl(header.getAttribute('data-filter-column')));
+        }, true);
+        document.addEventListener('click', function (event) {
             var toggle = event.target.closest && event.target.closest('.neo-filter-more-toggle');
             if (toggle) {
                 var root = toggle.closest(rootSelector);
@@ -271,9 +330,9 @@
             var chip = event.target.closest && event.target.closest('.neo-filter-chip');
             if (chip) {
                 event.preventDefault();
-                var control = findControl(chip.getAttribute('data-filter-chip'));
+                var control = findControl(chip.getAttribute('data-filter-chip'), chip.closest(rootSelector));
                 if (event.target.closest('.neo-filter-chip-clear')) clearControl(control);
-                else { openPanel(); setTimeout(function () { focusControl(control); }, 80); }
+                else showControl(control);
             }
         });
         document.addEventListener('input', scheduleRefresh, true);

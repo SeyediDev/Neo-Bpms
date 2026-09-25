@@ -5,11 +5,13 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:column-filters": "node --test ColumnFilter.browser.test.cjs"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "playwright": "1.62.1"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -23,4 +25,3 @@
     }
   }
 }
-
