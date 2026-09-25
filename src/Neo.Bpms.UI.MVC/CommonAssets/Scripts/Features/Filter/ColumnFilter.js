@@ -173,13 +173,17 @@
 
     function findControl(name) {
         if (!name) return null;
+        var requested = String(name).replace(/\[\]$/, '').replace(/__FilterParameter$/i, '').trim();
+        var requestedLower = requested.toLowerCase();
         var found = document.querySelectorAll(rootSelector + ' [data-id], ' + rootSelector + ' [name], ' + rootSelector + ' [id]');
         for (var i = 0; i < found.length; i++) {
             var candidate = found[i];
-            var matches = candidate.getAttribute('data-id') === name ||
-                candidate.getAttribute('name') === name ||
-                candidate.getAttribute('name') === name + '[]' ||
-                candidate.id === 'field-' + name || candidate.id === name;
+            var dataId = (candidate.getAttribute('data-id') || '').trim();
+            var fieldName = (candidate.getAttribute('name') || '').replace(/\[\]$/, '').replace(/__FilterParameter$/i, '').trim();
+            var id = (candidate.id || '').replace(/^field-/i, '').trim();
+            var matches = dataId.toLowerCase() === requestedLower ||
+                fieldName.toLowerCase() === requestedLower ||
+                id.toLowerCase() === requestedLower;
             if (!matches) continue;
             var container = candidate.classList.contains('neo-control') ? candidate : candidate.closest('.neo-control');
             if (container && !container.classList.contains('neo-filter-toolbar')) return container;
@@ -190,7 +194,8 @@
     function openPanel() {
         var reportPanel = document.getElementById('filterTooltipPanel');
         if (reportPanel && typeof window.toggleFilterTooltip === 'function' && !reportPanel.classList.contains('show')) {
-            window.toggleFilterTooltip();
+            var reportToggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
+            window.toggleFilterTooltip(null, reportToggle);
         } else if (typeof window.toggleFilter === 'function') {
             var filter = document.getElementById('filterDiv');
             if (filter && (filter.style.display === 'none' || !filter.classList.contains('show'))) window.toggleFilter();
