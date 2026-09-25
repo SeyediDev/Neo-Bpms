@@ -8,6 +8,11 @@
 @using Neo.Bpms.UI.MVC.PartialModels.Report
 
 @model ReportData
+@if (ViewBag.NeoColumnFilterAssetIncluded != true)
+{
+	ViewBag.NeoColumnFilterAssetIncluded = true;
+	<script src="~/Content/common-assets-includes/features/filter/ColumnFilter.js" asp-append-version="true"></script>
+}
 @{
 	Layout = null;
 	var calendar = ProjectDefinition.Project.DefaultCalendar;
@@ -375,28 +380,36 @@
 
 @functions{
 
-	void RenderSortableTh(ColumnFieldDefinition colth, bool isInlineSubTable)
+	void RenderSortableTh(ReportData reportInfo, ColumnFieldDefinition colth, bool isInlineSubTable)
 	{
+		var hasFilter = !isInlineSubTable && reportInfo.Structure.Fields.Any(f => f.FormFieldType == FormField.Type.FilterField && f.FieldName == colth.ColumnName);
 		<th data-colname="@colth.ColumnName" style="text-align: center; min-width: 40px; direction: rtl;" class="cColumn">
-			@if (!isInlineSubTable)
-			{
-				<button style="background: none; border: none; color: inherit;"
-				        data-refer="@colth.ColumnTypeName" data-entity-id="@colth.entityId"
-				        type="button"
-				        data-sort="@(colth.IsSorted ? (colth.Descending ? "DESC" : "ASC") : "noSort")"
-				        onclick="SortingManager.changeSort(event, this)">
-					<span>
-						@colth.Alias @(colth.IsSorted
-							             ? string.Format("({0} {1})", (colth.Descending ? ViewTexts.Descending : ViewTexts.Ascending),
-								             ((colth.SortOrder != 1) ? Convert.ToString(colth.SortOrder) : ""))
-							             : "")
-					</span>
-				</button>
-			}
-			else
-			{
-				@colth.Alias
-			}
+			<div class="neo-column-header-actions">
+				@if (!isInlineSubTable)
+				{
+					<button class="modern-sort-button" data-refer="@colth.ColumnTypeName" data-entity-id="@colth.entityId"
+					        type="button" data-sort="@(colth.IsSorted ? (colth.Descending ? "DESC" : "ASC") : "noSort")"
+					        onclick="SortingManager.changeSort(event, this)" title="کلیک برای مرتب‌سازی">
+						<span class="sort-button-content">
+							<span class="sort-button-text">@colth.Alias @(colth.IsSorted ? string.Format("({0} {1})", (colth.Descending ? ViewTexts.Descending : ViewTexts.Ascending), ((colth.SortOrder != 1) ? Convert.ToString(colth.SortOrder) : "")) : "")</span>
+							<span class="sort-button-icons"><span class="sort-icon @(colth.IsSorted ? "sort-icon-active" : "sort-icon-inactive")" aria-hidden="true">↕</span></span>
+						</span>
+					</button>
+				}
+				else
+				{
+					<span class="sort-button-text">@colth.Alias</span>
+				}
+				@if (hasFilter)
+				{
+					<button type="button" class="neo-column-filter" data-filter-column="@colth.ColumnName"
+					        aria-label="فیلتر @colth.Alias" aria-pressed="false" title="فیلتر @colth.Alias">
+						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+							<path d="M3 5h18l-7 8v5l-4 2v-7L3 5z" />
+						</svg>
+					</button>
+				}
+			</div>
 		</th>
 	}
 
@@ -411,7 +424,7 @@
 			{
 				if (colth.aggrType != eAggregationFunctions.GroupByItem)
 				{
-					RenderSortableTh(colth, reportInfo.Config.IsInlineSubReport);
+					RenderSortableTh(reportInfo, colth, reportInfo.Config.IsInlineSubReport);
 				}
 			}
 

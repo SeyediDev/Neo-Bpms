@@ -564,6 +564,7 @@ new
 <script src="@CommonBundles.JsTreeJsBundle" asp-append-version="true"></script>
 <script src="@CommonBundles.IndexFormJsBundle" asp-append-version="true"></script>
 <script src="~/Content/common-assets-includes/features/filter/boolean-button-group.js" asp-append-version="true"></script>
+<script src="~/Content/common-assets-includes/features/filter/ColumnFilter.js" asp-append-version="true"></script>
 <script src="~/Content/common-assets-includes/features/sbvr/sbvr-init.js" asp-append-version="true"></script>
 <script src="~/Content/common-assets-includes/features/combo/combo-clear.js" asp-append-version="true"></script>
 
@@ -768,7 +769,9 @@ new
                             @foreach (var item in visibleColumns)
                             {
                                 var shouldShowNumbers = visibleColumns.Count(ci => ci.IsSorted) > 1;
+                                var hasFilter = structure.Fields.Any(f => f.FormFieldType == FormField.Type.FilterField && f.FieldName == item.ColumnName);
                                 <th class="cColumn" data-column-name="@item.ColumnName" @SummationAttributes(item)>
+                                    <div class="neo-column-header-actions">
                                     @if (structure.FormSortType == FormSortType.DoNotSort)
                                     {
                                         <span style="color: #0e71b9;">
@@ -824,6 +827,16 @@ new
                                             </span>
                                         </button>
                                     }
+                                    @if (hasFilter)
+                                    {
+                                        <button type="button" class="neo-column-filter" data-filter-column="@item.ColumnName"
+                                                aria-label="فیلتر @item.Alias" aria-pressed="false" title="فیلتر @item.Alias">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path d="M3 5h18l-7 8v5l-4 2v-7L3 5z" />
+                                            </svg>
+                                        </button>
+                                    }
+                                    </div>
                                 </th>
                             }
                             

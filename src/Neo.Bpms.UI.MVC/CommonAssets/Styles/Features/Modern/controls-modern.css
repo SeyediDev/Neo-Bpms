@@ -4482,3 +4482,97 @@ th .dWrapper {
     grid-column: auto;
   }
 }
+
+/* ===== Unified filter UX ===== */
+.neo-filter-toolbar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin: 0 0 .85rem;
+  min-height: 2rem;
+}
+.neo-filter-active-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.neo-filter-active-count {
+  color: #475569;
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.neo-filter-chip,
+.neo-filter-more-toggle {
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-size: .76rem;
+  line-height: 1.4;
+  padding: .25rem .55rem;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.neo-filter-chip:hover,
+.neo-filter-more-toggle:hover {
+  background: #eff6ff;
+  border-color: #60a5fa;
+  color: #1d4ed8;
+}
+.neo-filter-chip-clear {
+  display: inline-block;
+  font-size: 1rem;
+  line-height: .8;
+  margin-inline-start: .3rem;
+}
+.neo-filter-advanced { display: none !important; }
+.neo-filter-expanded .neo-filter-advanced { display: block !important; }
+.neo-filter-focus {
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .25);
+  transition: box-shadow .2s ease;
+}
+.neo-column-header-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: .2rem;
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
+}
+.neo-column-header-actions .modern-sort-button { flex: 1 1 auto; min-width: 0; }
+.neo-column-filter {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  min-height: 1.8rem;
+  min-width: 1.8rem;
+  padding: .2rem;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.neo-column-filter svg { fill: currentColor; height: 1rem; width: 1rem; }
+.neo-column-filter:hover,
+.neo-column-filter:focus-visible,
+.neo-column-filter.is-active {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+  outline: none;
+}
+.neo-column-filter.is-active svg { fill: #2563eb; }
+@media (max-width: 767.98px) {
+  .neo-filter-toolbar { align-items: flex-start; }
+  .neo-filter-active-summary { width: 100%; }
+  .neo-column-filter { min-height: 1.55rem; min-width: 1.55rem; }
+  .neo-column-filter svg { height: .85rem; width: .85rem; }
+}

@@ -6,23 +6,23 @@
 	var shouldShowNumbers = Model.ColumnInfos.Count(ci => ci.IsSorted) > 1;
 	foreach (var item in Model.ColumnInfos)
 	{
+		var hasFilter = Model.Fields.Any(f => f.FormFieldType == FormField.Type.FilterField && f.FieldName == item.ColumnName);
 		<th class="cColumn" data-column-name="@item.ColumnName" @SummationAttributes(item)>
-			@if (Model.FormSortType == FormSortType.DoNotSort)
-			{
-				<span style="color: #0e71b9;">
-					@item.Alias
-				</span>
-			}
-			else
-			{
-				<button class="modern-sort-button" 
-				        data-refer="@item.ColumnName" type="button"
-				        data-sort="@(item.IsSorted ? (item.Descending ? "DESC" : "ASC") : "noSort")"
-				        onclick="SortingManager.changeSort(event, this)"
-				        title="@(item.IsSorted ? (item.Descending ? ViewTexts.Descending : ViewTexts.Ascending) : "کلیک برای مرتب‌سازی")">
-					<span class="sort-button-content">
-						<span class="sort-button-text">@item.Alias</span>
-						<span class="sort-button-icons">
+			<div class="neo-column-header-actions">
+				@if (Model.FormSortType == FormSortType.DoNotSort)
+				{
+					<span class="sort-button-text">@item.Alias</span>
+				}
+				else
+				{
+					<button class="modern-sort-button"
+					        data-refer="@item.ColumnName" type="button"
+					        data-sort="@(item.IsSorted ? (item.Descending ? "DESC" : "ASC") : "noSort")"
+					        onclick="SortingManager.changeSort(event, this)"
+					        title="@(item.IsSorted ? (item.Descending ? ViewTexts.Descending : ViewTexts.Ascending) : "کلیک برای مرتب‌سازی")">
+						<span class="sort-button-content">
+							<span class="sort-button-text">@item.Alias</span>
+							<span class="sort-button-icons">
 							@if (item.IsSorted)
 							{
 								if (item.Descending)
@@ -58,10 +58,20 @@
 									<path d="M10 18h4"/>
 								</svg>
 							}
+							</span>
 						</span>
-					</span>
-				</button>
-			}
+					</button>
+				}
+				@if (hasFilter)
+				{
+					<button type="button" class="neo-column-filter" data-filter-column="@item.ColumnName"
+					        aria-label="فیلتر @item.Alias" aria-pressed="false" title="فیلتر @item.Alias">
+						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+							<path d="M3 5h18l-7 8v5l-4 2v-7L3 5z" />
+						</svg>
+					</button>
+				}
+			</div>
 		</th>
 	}
 
