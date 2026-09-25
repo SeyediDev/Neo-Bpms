@@ -86,7 +86,14 @@
 
     var initializeSelectBoxes = function () {
         if (!$('select').select2) return;
-        $('select').select2();
+        $('select').each(function () {
+            var $select = $(this);
+            var $filter = $select.closest('.modern-filter-wrapper, .filterDiv, [data-filter-container]');
+            $select.select2({
+                dropdownParent: $filter.length ? $filter : $(document.body),
+                dropdownCssClass: $filter.length ? 'neo-filter-popup' : ''
+            });
+        });
     };
 
     var initialize = function () {

@@ -1055,6 +1055,13 @@ var Select2Beneficiary = function() {
 		return data.text;
 	};
 
+	// Keep generated filter popups inside the visible filter stacking context.
+	// Non-filter controls continue to use body so modals and editable tables are unaffected.
+	var getDropdownParent = function($element) {
+		var $filter = $element.closest('.modern-filter-wrapper, .filterDiv, [data-filter-container]');
+		return $filter.length ? $filter : $(document.body);
+	};
+
 	var getAjaxObject = function(namespaceId, entityId, fieldId, formId, isMandatory, remoteUrl, filterFormula) {
 		var ret = {
 			url: remoteUrl || (window.top.rootUrl + 'form/GetComboData'),
@@ -1180,7 +1187,9 @@ var Select2Beneficiary = function() {
 					$thisRemoteSelect.data("remote-url"),
 					$thisRemoteSelect.attr('filter-formula')),
 				templateResult: templateResult,
-				templateSelection: templateSelection
+				templateSelection: templateSelection,
+				dropdownParent: getDropdownParent($thisRemoteSelect),
+				dropdownCssClass: $thisRemoteSelect.closest('.modern-filter-wrapper, .filterDiv').length ? 'neo-filter-popup' : ''
 			});
 
 		var initialValuesOfSelect = $thisRemoteSelect.attr('initvalue');
@@ -1206,8 +1215,13 @@ var Select2Beneficiary = function() {
 		$('select[data-isremote]')
 			.each(instantiateRemoteDataSelect);
 
-		$('select:not([data-isremote])')
-			.select2();
+		$('select:not([data-isremote])').each(function() {
+			var $select = $(this);
+			$select.select2({
+				dropdownParent: getDropdownParent($select),
+				dropdownCssClass: $select.closest('.modern-filter-wrapper, .filterDiv').length ? 'neo-filter-popup' : ''
+			});
+		});
 	};
 
 	//	var getMissingOptions = function(idsArray, $remoteSelect) {
@@ -1246,6 +1260,7 @@ var Select2Beneficiary = function() {
 		fetchInitValues: fetchInitValues,
 		templateResult: templateResult,
 		templateSelection: templateSelection,
+		dropdownParent: getDropdownParent,
 
 		setRemoteValues: setRemoteValues
 	};

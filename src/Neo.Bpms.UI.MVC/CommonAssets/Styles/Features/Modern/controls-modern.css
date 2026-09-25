@@ -4421,3 +4421,64 @@ th .dWrapper {
 .neo-group-card .row > [class*="col"] {
   padding: 0 0.375rem;
 }
+
+/* ===== Generated filter layout and popup stacking =====
+   The renderer emits one #main-part row inside the filter content. Make that
+   row the responsive layout container so a large filter stays scannable. */
+.modern-filter-wrapper,
+.modern-filter-wrapper .modern-filter-content {
+  position: relative;
+  overflow: visible;
+}
+
+.modern-filter-wrapper #main-part {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  align-items: start;
+  width: 100%;
+  margin: 0 !important;
+}
+
+.modern-filter-wrapper #main-part > .neo-control {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: none !important;
+  margin: 0 !important;
+  padding-inline: 0.5rem !important;
+  position: relative !important;
+}
+
+.modern-filter-wrapper #main-part > :is(.col-12, .col-md-12, .col-lg-12, .col-xl-12) {
+  grid-column: 1 / -1;
+}
+
+.modern-filter-wrapper #main-part > :is(.col-md-6, .col-lg-6, .col-xl-6) {
+  grid-column: span 2;
+}
+
+/* Select2 is mounted in the filter wrapper by Logic.js. Keep its popup above
+   every generated control, table row and filter-parameter menu. */
+.neo-filter-popup,
+.modern-filter-wrapper .neo-filter-popup,
+.filterDiv .neo-filter-popup {
+  z-index: 100001 !important;
+}
+
+@media (max-width: 1199.98px) {
+  .modern-filter-wrapper #main-part {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modern-filter-wrapper #main-part {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .modern-filter-wrapper #main-part > :is(.col-md-6, .col-lg-6, .col-xl-6) {
+    grid-column: auto;
+  }
+}
