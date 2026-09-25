@@ -94,6 +94,11 @@ declarations and preserves JavaScript handlers and form behavior. The stylesheet
 is shipped through the Razor library's `wwwroot` assets. See the
 [UI review](docs/UI-REVIEW.fa.md) for scope and remaining issues.
 
+The [UI and active-theme roadmap](docs/UI-THEME-PLAN.fa.md) records the source
+audit, shared theme contract proposal, phased rollout and acceptance checks across
+MVC, React, generated controls, overlays, charts and iframes. This is a plan;
+full theme alignment has not yet been implemented.
+
 ## Column-header filters
 
 The header funnel opens and focuses the existing generated filter control. It
