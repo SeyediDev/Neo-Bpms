@@ -8,7 +8,8 @@
     "test:coverage": "jest --coverage",
     "test:column-filters": "node --test ColumnFilter.browser.test.cjs",
     "test:theme": "node --test Theme.browser.test.cjs",
-    "test:theme-apps": "node --test Theme.apps.browser.test.cjs"
+    "test:theme-apps": "node --test Theme.apps.browser.test.cjs",
+    "test:hyper-theme": "node --test Hyper.theme.browser.test.cjs"
   },
   "devDependencies": {
     "jest": "^29.7.0",

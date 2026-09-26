@@ -81,8 +81,8 @@ direction، inherited، host و appearance هستند. پارامتر دوم set
 - انتخابگر تم Hyper هنوز `window.location.reload()` اجرا می‌کند؛ حذف reload
   مستلزم تغییر و آزمون جداگانه در ریپازیتوری میزبان است.
 - همگامی iframe بین مبدأهای متفاوت پیاده‌سازی نشده است.
-- مسیر واقعی asset، ترتیب CSS میزبان، cache، CSP و اولین نمایش React
-  باید در Hyper بررسی شوند. typecheck جای build یا بررسی hydration نیست.
+- مسیر سه asset مشترک در Hyper با پاسخ ۲۰۰ و تطابق محتوای سورس بررسی شد.
+  سیاست cache/CSP انتشار و همهٔ نماهای احراز هویت‌شده هنوز پذیرش جامع ندارند.
 - همهٔ رنگ‌های ثابت، تمام ابزارهای طراحی، چاپ و خروجی‌ها هنوز ممیزی نشده‌اند.
 - رفع کامل clipping و stacking popupها از روی این تغییر رنگ اثبات نمی‌شود.
 - معیارهای پذیرش برنامه، تصاویر و آزمون سامانهٔ واقعی همچنان باز هستند.
@@ -96,14 +96,14 @@ direction، inherited، host و appearance هستند. پارامتر دوم set
 | ساخت CSS با Tailwind در Monitoring و EditableGrid | موفق؛ هر دو فرمان با کد صفر پایان یافتند |
 | نصب وابستگی AdminPanel | موفق؛ با lockfile موجود |
 | build کامل Monitoring، EditableGrid و AdminPanel | موفق؛ خروجی Production و declarationهای AdminPanel تولید شدند |
-| build و اجرای میزبان MVC در Hyper | پذیرش نهایی هنوز ثبت نشده است |
+| build و اجرای میزبان MVC در Hyper | موفق؛ میزبان Development روی localhost:5000 اجرا شد |
 | اعتبارسنج خودکار Skill | موفق؛ quick_validate.py |
 | مرورگر Edge؛ فیلتر سرستون و تم | ۱۴ آزمون فیلتر و ۱۲ آزمون تم موفق؛ CSS واقعی Bootstrap و کمبوی گزارش بارگذاری شدند |
 | مرورگر روی خروجی Production | دو آزمون Monitoring و EditableGrid موفق؛ asset و hydration بدون خطا و تغییر تم iframe بدون reload |
 | انتقال سورس به ریپازیتوری | انجام شد؛ مانع دسترسی قبلی رفع شد |
-| آزمون واقعی Hyper | انجام نشده |
+| آزمون واقعی Hyper | سه آزمون مرورگر پیش‌نمایش Development موفق؛ ورود کاربر و نمایش داشبورد واقعی نیز مشاهده شد |
 
-برای اجرای آزمون‌ها پس از رفع مانع:
+برای اجرای آزمون‌های مستقل:
 
 ```powershell
 Set-Location tests/Neo.Bpms.UI.MVC.Tests/Frontend
@@ -145,3 +145,33 @@ npm run test:theme-apps
 MVC باید مسیر API و سیاست‌های پاسخ را فراهم کند. هشدار فعلی build دربارهٔ
 همین محدودیت export است. دادهٔ قدیمی Browserslist و هم‌زمانی import ایستا
 و پویا در AdminPanel نیز هشدار دادند ولی مانع build نشدند.
+
+### اجرای Hyper و آزمون پوستهٔ میزبان — ۲۰۲۶-۰۹-۲۶
+
+میزبان `Hyper.AdminPanel.Web` در Development با `HyperLocalSql__Enabled=true`
+روی `http://localhost:5000` ساخته و اجرا شد. مشکل اولیهٔ TypeLoad از اسمبلی‌های
+قدیمی/ناهمسان و قفل فایل بود؛ پس از build هماهنگ رفع شد و تغییر backend لازم نبود.
+صفحهٔ ورود و سه asset مشترک تم پاسخ ۲۰۰ داشتند؛ محتوای asset با سورس برابر بود.
+
+در ریپازیتوری Hyper دو مسیر مستقل باید متصل باشند: override میزبان در
+`Views/Shared/Layout/CommonIncludes.cshtml` برای داشبورد و گزارش‌های Neo، و
+`Views/Shared/_HyperAdminLayout.cshtml` برای پوستهٔ ادمین اختصاصی. پوستهٔ دوم
+پالت نشست را از `_ThemeVariables` و استایل سازگار را از `Content/hyper-admin-theme.css`
+می‌گیرد. پیش‌نمایش از پالت نمونه استفاده می‌کند و فراخوانی دادهٔ واقعی اضافه نمی‌کند.
+
+```powershell
+# Hyper باید قبلاً در Development اجرا شده باشد.
+$env:NEO_HYPER_URL = 'http://localhost:5000'
+$env:NEO_TEST_BROWSER = 'msedge'
+npm run test:hyper-theme
+```
+
+سه آزمون روی `/AdminDashboard/Preview` موفق شدند: تغییر روشن/تیره و کنتراست
+متن حداقل ۴٫۵، حفظ رنگ سری و راهنمای نمودار، منوی موبایل با Escape و بازگشت
+فوکوس، اسکرول مستقل جدول بدون گسترش صفحه، و بازهٔ ۳۰روزه با ۳۰ ردیف نمونه.
+آزمون موبایل ابتدا شکست خورد؛ `min-width: 0` روی کارت‌های grid مشکل واقعی
+عرض جدول را رفع کرد. متن جدول و آمار صف نیز از رنگ ثابت به توکن معنایی منتقل شد.
+تصاویر روشن/تیره و موبایل محلی هستند و اطلاعات حساب در Git ثبت نمی‌شود.
+
+این سه آزمون دادهٔ نمونه دارند. ورود کاربر و مشاهدهٔ داشبورد واقعی جداگانه انجام
+شد؛ موفقیت آن به معنی تأیید عملیات نوشتن، تمام گزارش‌ها یا تمام تم‌های میزبان نیست.

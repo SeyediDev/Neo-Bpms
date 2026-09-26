@@ -71,3 +71,13 @@ explicit `NEO_MONITORING_DIST` and `NEO_GRID_DIST` directories for asset/hydrati
 and iframe checks. These tests simulate unavailable APIs. Distinguish type checks, CSS compilation, production
 builds and browser tests in the validation record. Never count a blocked run as
 passing. Current MCP tool schemas are unaffected by theme changes.
+
+Host overrides can shadow the shared Razor includes. Inspect the rendered document,
+not only the library source: verify canonical theme CSS/JS in every host layout.
+Hyper has both `Layout/CommonIncludes.cshtml` and `_HyperAdminLayout.cshtml`;
+the latter uses its own scoped `hyper-admin-theme.css` adapter. Native host variables
+must remain authoritative. Run `test:hyper-theme` only against a local Development
+host (`NEO_HYPER_URL`, default `http://localhost:5000`): it validates the existing
+sample preview, text contrast, chart colors, mobile table scrolling/menu and period
+links. Keep authenticated checks separate and never store cookies or real screenshots
+in source control. The preview must remain unavailable outside Development.

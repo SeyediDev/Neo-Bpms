@@ -118,6 +118,10 @@ including the shipped Bootstrap CSS. Two additional production-output tests
 validate asset loading, hydration and live iframe theme inheritance. These
 fixtures are not evidence of
 authenticated Hyper acceptance.
+The local Hyper Development host also has three passing preview tests for light/dark
+contrast, mobile menu/scroll behavior and period navigation (`npm run test:hyper-theme`).
+They use the existing sample-data preview, never an authentication bypass. Host layouts
+that override `CommonIncludes` must explicitly include the canonical theme assets.
 The five Companion MCP tools retain their current contracts.
 
 ## Column-header filters
