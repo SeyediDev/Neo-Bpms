@@ -17,8 +17,8 @@ interface LogEntry {
 }
 
 const LOG_LEVELS: Record<number, { label: string; color: string; bg: string }> = {
-  0: { label: 'Trace', color: 'text-slate-400', bg: 'bg-slate-800' },
-  1: { label: 'Debug', color: 'text-slate-400', bg: 'bg-slate-800' },
+  0: { label: 'Trace', color: 'text-muted', bg: 'bg-elevated' },
+  1: { label: 'Debug', color: 'text-muted', bg: 'bg-elevated' },
   2: { label: 'Info', color: 'text-neo-400', bg: 'bg-neo-900/30' },
   3: { label: 'Warn', color: 'text-status-warning', bg: 'bg-yellow-900/30' },
   4: { label: 'Error', color: 'text-status-critical', bg: 'bg-red-900/30' },
@@ -157,7 +157,7 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
             onClick={() => setFilter(null)}
             className={clsx(
               'px-3 py-1.5 rounded-lg text-sm transition-colors',
-              filter === null ? 'bg-neo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+              filter === null ? 'bg-accent text-on-accent' : 'bg-elevated text-muted hover:text-text'
             )}
           >
             همه
@@ -170,7 +170,7 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
                 'px-3 py-1.5 rounded-lg text-sm transition-colors',
                 filter === parseInt(level)
                   ? `${info.bg} ${info.color}`
-                  : 'bg-slate-800 text-slate-400 hover:text-white'
+                  : 'bg-elevated text-muted hover:text-text'
               )}
             >
               {info.label}
@@ -183,19 +183,19 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
           placeholder="جستجو در لاگ‌ها..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-neo-500"
+          className="flex-1 px-4 py-2 bg-elevated border border-border rounded-lg text-text placeholder-muted focus:outline-none focus:border-neo-500"
         />
 
         <button
           onClick={fetchLogs}
-          className="px-4 py-2 bg-neo-600 hover:bg-neo-700 text-white rounded-lg transition-colors"
+          className="px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent rounded-lg transition-colors"
         >
           بروزرسانی
         </button>
         <button
           onClick={deleteAllLogs}
           disabled={deleting || logs.length === 0}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-elevated disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
         >
           {deleting ? (
             <>
@@ -216,14 +216,14 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
       </div>
 
       {/* Logs List */}
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl overflow-hidden">
+      <div className="bg-surface backdrop-blur-sm border border-border rounded-xl overflow-hidden">
         <div className="max-h-[600px] overflow-y-auto">
           {loading ? (
-            <div className="p-8 text-center text-slate-400">
+            <div className="p-8 text-center text-muted">
               در حال بارگذاری...
             </div>
           ) : filteredLogs.length === 0 ? (
-            <div className="p-8 text-center text-slate-400">
+            <div className="p-8 text-center text-muted">
               لاگی یافت نشد
             </div>
           ) : (
@@ -238,7 +238,7 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.02 }}
                     className={clsx(
-                      'p-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors',
+                      'p-4 border-b border-border hover:bg-hover transition-colors',
                       log.exceptionType && 'bg-red-900/10'
                     )}
                   >
@@ -249,8 +249,8 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1 min-w-0">
-                            <p className="text-white font-mono text-sm break-all">{log.message}</p>
-                            <div className="flex flex-wrap gap-4 mt-2 text-xs text-slate-500">
+                            <p className="text-text font-mono text-sm break-all">{log.message}</p>
+                            <div className="flex flex-wrap gap-4 mt-2 text-xs text-muted">
                               <span dir="ltr">{new Date(log.timestamp).toLocaleString('fa-IR')}</span>
                               {log.sourceContext && (
                                 <span className="font-mono">{log.sourceContext}</span>
@@ -274,8 +274,8 @@ export function LogsPanel({ onShowToast, onShowErrorToast }: LogsPanelProps = {}
                             className={clsx(
                               'flex-shrink-0 p-2 rounded-lg transition-colors',
                               copiedId === log.id
-                                ? 'bg-neo-600 text-white'
-                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
+                                ? 'bg-accent text-on-accent'
+                                : 'bg-elevated text-muted hover:bg-hover hover:text-text'
                             )}
                             title="کپی به کلیپ‌برد"
                           >

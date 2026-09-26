@@ -125,7 +125,7 @@ export function Modal({
         className={clsx(
           'relative w-full',
           sizeClasses[size],
-          'bg-white dark:bg-gray-800',
+          'bg-surface dark:bg-elevated',
           'rounded-2xl shadow-2xl',
           'transform transition-all duration-200',
           'animate-in fade-in zoom-in-95',
@@ -139,13 +139,13 @@ export function Modal({
               {title && (
                 <h2
                   id="modal-title"
-                  className="text-xl font-semibold text-gray-900 dark:text-white"
+                  className="text-xl font-semibold text-text dark:text-text"
                 >
                   {title}
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-sm text-muted dark:text-muted">
                   {description}
                 </p>
               )}
@@ -156,8 +156,8 @@ export function Modal({
                 onClick={onClose}
                 className={clsx(
                   'p-2 rounded-lg -mt-1 -ml-1',
-                  'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
-                  'hover:bg-gray-100 dark:hover:bg-gray-700',
+                  'text-muted hover:text-muted dark:hover:text-subtle',
+                  'hover:bg-hover dark:hover:bg-hover',
                   'transition-colors duration-200'
                 )}
                 aria-label="بستن"
@@ -175,7 +175,7 @@ export function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 p-6 pt-0 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-end gap-3 p-6 pt-0 border-t border-border dark:border-border">
             {footer}
           </div>
         )}

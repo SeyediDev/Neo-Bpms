@@ -6,7 +6,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:column-filters": "node --test ColumnFilter.browser.test.cjs"
+    "test:column-filters": "node --test ColumnFilter.browser.test.cjs",
+    "test:theme": "node --test Theme.browser.test.cjs",
+    "test:theme-apps": "node --test Theme.apps.browser.test.cjs"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -19,7 +21,9 @@
       "**/Frontend/**/*.test.js",
       "**/Frontend/**/*.spec.js"
     ],
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "moduleNameMapper": {
       "^jquery$": "<rootDir>/jest.jquery.mock.js"
     }

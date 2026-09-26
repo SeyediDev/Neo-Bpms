@@ -51,23 +51,23 @@ export function MetricDrillDown({ metricName, displayName, unit, onClose }: Metr
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+      <div className="bg-surface border border-border rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
+              className="p-2 rounded-lg hover:bg-hover transition-colors text-muted hover:text-text"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
             </button>
             <div>
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-text">
                 {displayName || metricName}
               </h2>
-              <p className="text-sm text-slate-500 font-mono">{metricName}</p>
+              <p className="text-sm text-muted font-mono">{metricName}</p>
             </div>
           </div>
           <TimeRangeSelector value={selectedRange.value} onChange={setSelectedRange} />
@@ -139,24 +139,24 @@ export function MetricDrillDown({ metricName, displayName, unit, onClose }: Metr
           </div>
 
           {/* Additional Info */}
-          <div className="mt-6 bg-slate-800/50 rounded-xl p-4">
-            <h3 className="text-sm font-medium text-slate-400 mb-3">اطلاعات تکمیلی</h3>
+          <div className="mt-6 bg-elevated rounded-xl p-4">
+            <h3 className="text-sm font-medium text-muted mb-3">اطلاعات تکمیلی</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-slate-500">نوع متریک:</span>
-                <span className="text-white mr-2">{data?.metricType || '-'}</span>
+                <span className="text-muted">نوع متریک:</span>
+                <span className="text-text mr-2">{data?.metricType || '-'}</span>
               </div>
               <div>
-                <span className="text-slate-500">تعداد نمونه:</span>
-                <span className="text-white mr-2">{stats?.count?.toLocaleString() || 0}</span>
+                <span className="text-muted">تعداد نمونه:</span>
+                <span className="text-text mr-2">{stats?.count?.toLocaleString() || 0}</span>
               </div>
               <div>
-                <span className="text-slate-500">مجموع:</span>
-                <span className="text-white mr-2">{formatValue(stats?.sumValue || 0)}</span>
+                <span className="text-muted">مجموع:</span>
+                <span className="text-text mr-2">{formatValue(stats?.sumValue || 0)}</span>
               </div>
               <div>
-                <span className="text-slate-500">واحد:</span>
-                <span className="text-white mr-2">{unit || data?.unit || '-'}</span>
+                <span className="text-muted">واحد:</span>
+                <span className="text-text mr-2">{unit || data?.unit || '-'}</span>
               </div>
             </div>
           </div>

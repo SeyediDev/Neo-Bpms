@@ -1,4 +1,4 @@
-﻿@using Neo.Bpms.Domain.Features.Security
+@using Neo.Bpms.Domain.Features.Security
 @using Neo.Bpms.Domain.Models.Security.Authentication
 @using Neo.Bpms.UI.MVC.Controls
 @using Neo.Bpms.UI.MVC.Helpers
@@ -30,7 +30,7 @@
                 "offCanvas": {
                     "position": "right"
                 },
-                "theme": "light",
+                "theme": document.documentElement.getAttribute("data-neo-mode") || "light",
                 "counters": {
                     "add": false  // غیرفعال: آیکن جایگزین اعداد شده
                 },

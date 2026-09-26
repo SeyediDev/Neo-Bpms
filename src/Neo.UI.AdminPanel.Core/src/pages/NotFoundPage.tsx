@@ -41,7 +41,7 @@ export function NotFoundPage({
     <div
       className={clsx(
         'min-h-screen flex items-center justify-center p-4',
-        'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800',
+        'bg-gradient-to-br from-canvas to-hover dark:from-surface dark:to-elevated',
         className
       )}
     >
@@ -49,7 +49,7 @@ export function NotFoundPage({
         {/* Illustration */}
         {illustration || (
           <div className="relative mb-8">
-            <div className="text-[150px] font-black text-gray-200 dark:text-gray-700 leading-none select-none">
+            <div className="text-[150px] font-black text-subtle dark:text-text leading-none select-none">
               404
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -71,12 +71,12 @@ export function NotFoundPage({
         )}
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-3xl font-bold text-text dark:text-text mb-3">
           {title}
         </h1>
 
         {/* Description */}
-        <p className="text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-muted dark:text-muted mb-8">
           {description}
         </p>
 
@@ -87,9 +87,9 @@ export function NotFoundPage({
               onClick={() => navigate(-1)}
               className={clsx(
                 'px-6 py-2.5 rounded-xl font-medium',
-                'border border-gray-300 dark:border-gray-600',
-                'text-gray-700 dark:text-gray-300',
-                'hover:bg-gray-50 dark:hover:bg-gray-800',
+                'border border-border dark:border-border',
+                'text-text dark:text-subtle',
+                'hover:bg-hover dark:hover:bg-hover',
                 'transition-colors duration-200',
                 'flex items-center gap-2'
               )}

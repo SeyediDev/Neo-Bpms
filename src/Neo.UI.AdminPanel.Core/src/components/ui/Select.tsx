@@ -193,10 +193,10 @@ export function Select<T = string>({
         'w-full flex items-center gap-2 px-4 py-2 text-right',
         'transition-colors',
         opt.disabled
-          ? 'text-gray-400 cursor-not-allowed'
+          ? 'text-muted cursor-not-allowed'
           : opt.value === value
           ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+          : 'text-text dark:text-subtle hover:bg-hover dark:hover:bg-hover'
       )}
     >
       {opt.icon && <span className="flex-shrink-0">{opt.icon}</span>}
@@ -213,7 +213,7 @@ export function Select<T = string>({
     <div className={clsx(fullWidth && 'w-full', className)}>
       {/* Label */}
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label className="block text-sm font-medium text-text dark:text-subtle mb-1.5">
           {label}
         </label>
       )}
@@ -224,15 +224,15 @@ export function Select<T = string>({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={clsx(
           'relative flex items-center gap-2 cursor-pointer',
-          'bg-white dark:bg-gray-800 border rounded-xl',
+          'bg-surface dark:bg-elevated border rounded-xl',
           'transition-all duration-200',
           sizeClasses[size],
           error
             ? 'border-red-500 focus-within:ring-2 focus-within:ring-red-500/20'
             : isOpen
             ? 'border-purple-500 ring-2 ring-purple-500/20'
-            : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
-          disabled && 'opacity-60 cursor-not-allowed bg-gray-100 dark:bg-gray-900'
+            : 'border-border dark:border-border hover:border-border dark:hover:border-border',
+          disabled && 'opacity-60 cursor-not-allowed bg-hover dark:bg-surface'
         )}
       >
         {/* Selected value or placeholder */}
@@ -244,8 +244,8 @@ export function Select<T = string>({
             className={clsx(
               'truncate',
               selectedOption
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-400'
+                ? 'text-text dark:text-text'
+                : 'text-muted'
             )}
           >
             {selectedOption?.label || placeholder}
@@ -256,7 +256,7 @@ export function Select<T = string>({
         {clearable && value !== undefined && !disabled && (
           <button
             onClick={handleClear}
-            className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="flex-shrink-0 text-muted hover:text-muted dark:hover:text-subtle"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -267,7 +267,7 @@ export function Select<T = string>({
         {/* Chevron */}
         <svg
           className={clsx(
-            'w-4 h-4 text-gray-400 transition-transform',
+            'w-4 h-4 text-muted transition-transform',
             isOpen && 'rotate-180'
           )}
           fill="none"
@@ -282,7 +282,7 @@ export function Select<T = string>({
       {(helperText || error) && (
         <p className={clsx(
           'text-xs mt-1.5',
-          error ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
+          error ? 'text-red-500' : 'text-muted dark:text-muted'
         )}>
           {error || helperText}
         </p>
@@ -295,8 +295,8 @@ export function Select<T = string>({
             ref={dropdownRef}
             className={clsx(
               'fixed z-50 py-1 max-h-60 overflow-auto',
-              'bg-white dark:bg-gray-800',
-              'border border-gray-200 dark:border-gray-700',
+              'bg-surface dark:bg-elevated',
+              'border border-border dark:border-border',
               'rounded-xl shadow-lg',
               'animate-in fade-in zoom-in-95 duration-150'
             )}
@@ -308,7 +308,7 @@ export function Select<T = string>({
           >
             {/* Search input */}
             {searchable && (
-              <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+              <div className="p-2 border-b border-border dark:border-border">
                 <input
                   ref={inputRef}
                   type="text"
@@ -317,10 +317,10 @@ export function Select<T = string>({
                   placeholder="جستجو..."
                   className={clsx(
                     'w-full px-3 py-2 text-sm rounded-lg',
-                    'bg-gray-100 dark:bg-gray-700',
+                    'bg-hover dark:bg-elevated',
                     'border-0 focus:ring-2 focus:ring-purple-500/20',
-                    'text-gray-900 dark:text-white',
-                    'placeholder-gray-400'
+                    'text-text dark:text-text',
+                    'placeholder-muted'
                   )}
                 />
               </div>
@@ -328,7 +328,7 @@ export function Select<T = string>({
 
             {/* Options */}
             {filteredOptions.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-500 text-center">
+              <div className="px-4 py-3 text-sm text-muted text-center">
                 نتیجه‌ای یافت نشد
               </div>
             ) : (
@@ -339,7 +339,7 @@ export function Select<T = string>({
                 {/* Grouped options */}
                 {Object.entries(groupedOptions.groups).map(([group, opts]) => (
                   <div key={group}>
-                    <div className="px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                    <div className="px-4 py-2 text-xs font-medium text-muted dark:text-muted uppercase">
                       {group}
                     </div>
                     {opts.map(renderOption)}

@@ -88,8 +88,8 @@ function StatCard({ title, value, change, changeLabel, icon, color = 'blue', onC
       )}
     >
       {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2" />
+      <div className="absolute top-0 left-0 w-32 h-32 bg-surface rounded-full -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-24 h-24 bg-surface rounded-full translate-x-1/2 translate-y-1/2" />
 
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
@@ -138,8 +138,8 @@ function QuickAction({ label, icon, onClick, color }: QuickActionProps) {
       onClick={onClick}
       className={clsx(
         'flex flex-col items-center gap-2 p-4 rounded-xl',
-        'bg-white dark:bg-gray-800',
-        'border border-gray-200 dark:border-gray-700',
+        'bg-surface dark:bg-elevated',
+        'border border-border dark:border-border',
         'hover:border-blue-300 dark:hover:border-blue-600',
         'hover:shadow-md',
         'transition-all duration-200',
@@ -156,7 +156,7 @@ function QuickAction({ label, icon, onClick, color }: QuickActionProps) {
       >
         {icon}
       </div>
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
+      <span className="text-sm font-medium text-text dark:text-subtle">{label}</span>
     </button>
   );
 }
@@ -173,7 +173,7 @@ function ActivityItemComponent({ title, description, time, icon, type = 'info' }
   };
 
   return (
-    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-hover dark:hover:bg-hover transition-colors">
       <div className={clsx('w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0', typeColors[type])}>
         {icon || (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,9 +182,9 @@ function ActivityItemComponent({ title, description, time, icon, type = 'info' }
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{title}</p>
-        {description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{time}</p>
+        <p className="text-sm font-medium text-text dark:text-text">{title}</p>
+        {description && <p className="text-xs text-muted dark:text-muted mt-0.5">{description}</p>}
+        <p className="text-xs text-muted dark:text-muted mt-1">{time}</p>
       </div>
     </div>
   );
@@ -196,15 +196,15 @@ function ActivityItemComponent({ title, description, time, icon, type = 'info' }
 function DashboardSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
-      <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded" />
+      <div className="h-8 w-64 bg-selection dark:bg-elevated rounded" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-36 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+          <div key={i} className="h-36 bg-selection dark:bg-elevated rounded-2xl" />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 h-64 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+        <div className="lg:col-span-2 h-64 bg-selection dark:bg-elevated rounded-2xl" />
+        <div className="h-64 bg-selection dark:bg-elevated rounded-2xl" />
       </div>
     </div>
   );
@@ -247,16 +247,16 @@ export function DashboardPage({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h1>
+          <h1 className="text-2xl font-bold text-text dark:text-text">{title}</h1>
           {(welcomeMessage || userName) && (
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-muted dark:text-muted mt-1">
               {welcomeMessage || `${greeting}${userName ? `، ${userName}` : ''}`}
             </p>
           )}
         </div>
 
         {/* Quick Date/Time */}
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-muted dark:text-muted">
           {new Date().toLocaleDateString('fa-IR', {
             weekday: 'long',
             year: 'numeric',
@@ -277,9 +277,9 @@ export function DashboardPage({
 
       {/* Quick Actions */}
       {quickActions.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">دسترسی سریع</h2>
+        <div className="bg-surface dark:bg-elevated rounded-2xl shadow-sm border border-border dark:border-border overflow-hidden">
+          <div className="bg-hover dark:bg-elevated px-6 py-4 border-b border-border dark:border-border">
+            <h2 className="text-lg font-semibold text-text dark:text-text">دسترسی سریع</h2>
           </div>
           <div className="p-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -296,8 +296,8 @@ export function DashboardPage({
         {/* Custom Widgets or Placeholder */}
         <div className="lg:col-span-2">
           {widgets || (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-full min-h-[300px] flex items-center justify-center">
-              <div className="text-center text-gray-400">
+            <div className="bg-surface dark:bg-elevated rounded-2xl p-6 shadow-sm border border-border dark:border-border h-full min-h-[300px] flex items-center justify-center">
+              <div className="text-center text-muted">
                 <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                 </svg>
@@ -308,9 +308,9 @@ export function DashboardPage({
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">فعالیت‌های اخیر</h2>
+        <div className="bg-surface dark:bg-elevated rounded-2xl shadow-sm border border-border dark:border-border overflow-hidden">
+          <div className="bg-hover dark:bg-elevated px-6 py-4 border-b border-border dark:border-border">
+            <h2 className="text-lg font-semibold text-text dark:text-text">فعالیت‌های اخیر</h2>
           </div>
           <div className="p-6">
             {recentActivity.length > 0 ? (
@@ -320,7 +320,7 @@ export function DashboardPage({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-400">
+              <div className="text-center py-8 text-muted">
                 <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>

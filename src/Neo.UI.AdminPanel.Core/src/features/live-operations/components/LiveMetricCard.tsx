@@ -38,7 +38,7 @@ const TrendIndicator: React.FC<{ direction: TrendDirection; percent?: number }> 
   const colors: Record<TrendDirection, string> = {
     up: 'text-emerald-600 dark:text-emerald-400',
     down: 'text-red-600 dark:text-red-400',
-    stable: 'text-gray-600 dark:text-gray-400',
+    stable: 'text-muted dark:text-muted',
   };
 
   const icons: Record<TrendDirection, React.ReactNode> = {
@@ -135,19 +135,19 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
     return (
       <div
         className={clsx(
-          'bg-white dark:bg-gray-800 rounded-2xl p-5',
-          'border border-gray-200 dark:border-gray-700',
+          'bg-surface dark:bg-elevated rounded-2xl p-5',
+          'border border-border dark:border-border',
           'animate-pulse',
           className
         )}
       >
         <div className="flex items-start justify-between">
           <div className="space-y-3 flex-1">
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-32" />
-            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+            <div className="h-4 bg-selection dark:bg-elevated rounded w-24" />
+            <div className="h-8 bg-selection dark:bg-elevated rounded w-32" />
+            <div className="h-3 bg-selection dark:bg-elevated rounded w-16" />
           </div>
-          <div className="w-24 h-10 bg-gray-200 dark:bg-gray-700 rounded" />
+          <div className="w-24 h-10 bg-selection dark:bg-elevated rounded" />
         </div>
       </div>
     );
@@ -157,8 +157,8 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        'bg-white dark:bg-gray-800 rounded-2xl p-5',
-        'border border-gray-200 dark:border-gray-700',
+        'bg-surface dark:bg-elevated rounded-2xl p-5',
+        'border border-border dark:border-border',
         'transition-all duration-200',
         onClick && 'cursor-pointer hover:shadow-lg hover:border-purple-300 dark:hover:border-purple-600',
         className
@@ -183,22 +183,22 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
               )}
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">
+              <h3 className="text-sm font-medium text-text dark:text-subtle">
                 {metric.name}
               </h3>
               {metric.category && (
-                <span className="text-xs text-gray-600 dark:text-gray-400">{metric.category}</span>
+                <span className="text-xs text-muted dark:text-muted">{metric.category}</span>
               )}
             </div>
           </div>
 
           {/* Value */}
           <div className="flex items-end gap-2">
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">
+            <span className="text-2xl font-bold text-text dark:text-text">
               {formatValue(metric.value, metric.format)}
             </span>
             {metric.unit && (
-              <span className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+              <span className="text-sm text-muted dark:text-subtle mb-1">
                 {metric.unit}
               </span>
             )}

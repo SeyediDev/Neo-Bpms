@@ -26,7 +26,7 @@ interface TimeRangeSelectorProps {
 
 export function TimeRangeSelector({ value, onChange, className }: TimeRangeSelectorProps) {
   return (
-    <div className={clsx('inline-flex rounded-lg bg-slate-800/50 p-1', className)}>
+    <div className={clsx('inline-flex rounded-lg bg-elevated p-1', className)}>
       {TIME_RANGES.map((range) => (
         <button
           key={range.value}
@@ -34,8 +34,8 @@ export function TimeRangeSelector({ value, onChange, className }: TimeRangeSelec
           className={clsx(
             'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200',
             value === range.value
-              ? 'bg-neo-500 text-white shadow-lg shadow-neo-500/25'
-              : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+              ? 'bg-accent text-on-accent shadow-sm'
+              : 'text-muted hover:text-text hover:bg-hover'
           )}
         >
           {range.label}

@@ -28,28 +28,28 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: clsx(
-    'bg-gradient-to-r from-purple-600 to-pink-600',
-    'hover:from-purple-500 hover:to-pink-500',
-    'text-white shadow-lg shadow-purple-500/25',
-    'focus:ring-purple-500'
+    'bg-accent',
+    'hover:bg-accent-hover',
+    'text-on-accent shadow-sm',
+    'focus:ring-accent'
   ),
   secondary: clsx(
-    'bg-gray-100 dark:bg-gray-800',
-    'hover:bg-gray-200 dark:hover:bg-gray-700',
-    'text-gray-900 dark:text-white',
-    'focus:ring-gray-500'
+    'bg-hover dark:bg-elevated',
+    'hover:bg-hover dark:hover:bg-hover',
+    'text-text dark:text-text',
+    'focus:ring-accent'
   ),
   outline: clsx(
-    'border-2 border-gray-300 dark:border-gray-600',
-    'hover:border-purple-500 dark:hover:border-purple-400',
-    'hover:bg-purple-50 dark:hover:bg-purple-900/20',
-    'text-gray-700 dark:text-gray-300',
-    'focus:ring-purple-500'
+    'border-2 border-border dark:border-border',
+    'hover:border-accent',
+    'hover:bg-selection',
+    'text-text dark:text-subtle',
+    'focus:ring-accent'
   ),
   ghost: clsx(
-    'hover:bg-gray-100 dark:hover:bg-gray-800',
-    'text-gray-700 dark:text-gray-300',
-    'focus:ring-gray-500'
+    'hover:bg-hover dark:hover:bg-hover',
+    'text-text dark:text-subtle',
+    'focus:ring-accent'
   ),
   danger: clsx(
     'bg-red-600 hover:bg-red-500',

@@ -31,7 +31,7 @@ interface TraceData {
 }
 
 const STATUS_INFO: Record<number, { label: string; color: string }> = {
-  0: { label: 'Unset', color: 'text-slate-400' },
+  0: { label: 'Unset', color: 'text-muted' },
   1: { label: 'Ok', color: 'text-status-healthy' },
   2: { label: 'Error', color: 'text-status-critical' },
 };
@@ -235,18 +235,18 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
         {/* Header */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <span className="text-slate-400">{traces.length} تریس</span>
+          <span className="text-muted">{traces.length} تریس</span>
         </div>
         <button
           onClick={fetchTraces}
-          className="px-4 py-2 bg-neo-600 hover:bg-neo-700 text-white rounded-lg transition-colors"
+          className="px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent rounded-lg transition-colors"
         >
           بروزرسانی
         </button>
         <button
           onClick={deleteAllTraces}
           disabled={deleting || traces.length === 0}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-elevated disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
         >
           {deleting ? (
             <>
@@ -267,17 +267,17 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
       </div>
 
       {/* Traces List */}
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl overflow-hidden">
+      <div className="bg-surface backdrop-blur-sm border border-border rounded-xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-400">
+          <div className="p-8 text-center text-muted">
             در حال بارگذاری...
           </div>
         ) : traces.length === 0 ? (
-          <div className="p-8 text-center text-slate-400">
+          <div className="p-8 text-center text-muted">
             تریسی یافت نشد
           </div>
         ) : (
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-border">
             <AnimatePresence>
               {traces.map((trace, index) => {
                 const statusInfo = STATUS_INFO[trace.status] || STATUS_INFO[0];
@@ -292,8 +292,8 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
                     transition={{ delay: index * 0.02 }}
                     onClick={() => setSelectedTrace(trace.traceId === selectedTrace ? null : trace.traceId)}
                     className={clsx(
-                      'p-4 cursor-pointer hover:bg-slate-800/50 transition-colors',
-                      selectedTrace === trace.traceId && 'bg-slate-800/70',
+                      'p-4 cursor-pointer hover:bg-hover transition-colors',
+                      selectedTrace === trace.traceId && 'bg-elevated',
                       hasError && 'border-l-4 border-l-status-critical'
                     )}
                   >
@@ -301,8 +301,8 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
                       <div className="flex items-center gap-4">
                         <div className={clsx('w-2 h-2 rounded-full', statusInfo.color.replace('text-', 'bg-'))} />
                         <div>
-                          <p className="text-white font-medium">{trace.rootOperationName}</p>
-                          <p className="text-sm text-slate-500 font-mono">{trace.serviceName}</p>
+                          <p className="text-text font-medium">{trace.rootOperationName}</p>
+                          <p className="text-sm text-muted font-mono">{trace.serviceName}</p>
                         </div>
                       </div>
                       
@@ -315,8 +315,8 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
                           className={clsx(
                             'flex-shrink-0 p-2 rounded-lg transition-colors',
                             copiedId === trace.traceId
-                              ? 'bg-neo-600 text-white'
-                              : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
+                              ? 'bg-accent text-on-accent'
+                              : 'bg-elevated text-muted hover:bg-hover hover:text-text'
                           )}
                           title="کپی به کلیپ‌برد"
                         >
@@ -331,15 +331,15 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
                           )}
                         </button>
                         <div className="text-right">
-                          <p className="text-white font-mono">{formatDuration(trace.duration)}</p>
-                          <p className="text-slate-500">{trace.spanCount} spans</p>
+                          <p className="text-text font-mono">{formatDuration(trace.duration)}</p>
+                          <p className="text-muted">{trace.spanCount} spans</p>
                         </div>
                         {hasError && (
                           <span className="px-2 py-1 bg-red-900/30 text-status-critical rounded text-xs">
                             {trace.errorCount} خطا
                           </span>
                         )}
-                        <span className="text-slate-500 text-xs" dir="ltr">
+                        <span className="text-muted text-xs" dir="ltr">
                           {new Date(trace.startTime).toLocaleTimeString('fa-IR')}
                         </span>
                       </div>
@@ -352,23 +352,23 @@ export function TracesPanel({ onShowToast, onShowErrorToast }: TracesPanelProps 
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="mt-4 pt-4 border-t border-slate-700"
+                          className="mt-4 pt-4 border-t border-border"
                         >
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div>
-                              <p className="text-slate-500">Trace ID</p>
-                              <p className="text-white font-mono text-xs break-all">{trace.traceId}</p>
+                              <p className="text-muted">Trace ID</p>
+                              <p className="text-text font-mono text-xs break-all">{trace.traceId}</p>
                             </div>
                             <div>
-                              <p className="text-slate-500">شروع</p>
-                              <p className="text-white" dir="ltr">{new Date(trace.startTime).toLocaleString('fa-IR')}</p>
+                              <p className="text-muted">شروع</p>
+                              <p className="text-text" dir="ltr">{new Date(trace.startTime).toLocaleString('fa-IR')}</p>
                             </div>
                             <div>
-                              <p className="text-slate-500">پایان</p>
-                              <p className="text-white" dir="ltr">{new Date(trace.endTime).toLocaleString('fa-IR')}</p>
+                              <p className="text-muted">پایان</p>
+                              <p className="text-text" dir="ltr">{new Date(trace.endTime).toLocaleString('fa-IR')}</p>
                             </div>
                             <div>
-                              <p className="text-slate-500">وضعیت</p>
+                              <p className="text-muted">وضعیت</p>
                               <p className={statusInfo.color}>{statusInfo.label}</p>
                             </div>
                           </div>

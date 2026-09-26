@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return (
         <div
           key={item.id}
-          className="my-2 mx-4 border-t border-gray-200 dark:border-gray-700"
+          className="my-2 mx-4 border-t border-border dark:border-border"
         />
       );
     }
@@ -119,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300': item.badgeColor === 'warning',
                 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300': item.badgeColor === 'danger',
                 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300': item.badgeColor === 'info',
-                'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300': !item.badgeColor,
+                'bg-hover text-text dark:bg-elevated dark:text-subtle': !item.badgeColor,
               }
             )}
           >
@@ -146,9 +146,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     const itemClasses = clsx(
       'flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200',
-      'hover:bg-gray-100 dark:hover:bg-gray-800',
+      'hover:bg-hover dark:hover:bg-hover',
       active && 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-      !active && 'text-gray-700 dark:text-gray-300',
+      !active && 'text-text dark:text-subtle',
       collapsed && 'justify-center px-2',
       level > 0 && !collapsed && 'mr-4'
     );
@@ -182,14 +182,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={clsx(
-        'flex flex-col h-screen bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700',
+        'flex flex-col h-screen bg-surface dark:bg-surface border-l border-border dark:border-border',
         'transition-all duration-300 ease-in-out',
         collapsed ? 'w-16' : 'w-64',
         className
       )}
     >
       {/* Header / Logo */}
-      <div className="flex items-center justify-between h-16 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between h-16 px-4 bg-canvas dark:bg-elevated border-b border-border dark:border-border">
         {!collapsed && (
           <div className="flex items-center gap-3">
             {typeof logo === 'string' ? (
@@ -197,7 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               logo
             )}
-            <span className="font-bold text-gray-900 dark:text-white">
+            <span className="font-bold text-text dark:text-text">
               {logoText}
             </span>
           </div>
@@ -206,9 +206,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => onCollapsedChange?.(!collapsed)}
           className={clsx(
-            'p-2 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600',
-            'text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100',
-            'transition-colors border border-gray-200 dark:border-gray-600',
+            'p-2 rounded-lg bg-surface dark:bg-elevated hover:bg-hover dark:hover:bg-hover',
+            'text-muted hover:text-text dark:text-subtle dark:hover:text-text',
+            'transition-colors border border-border dark:border-border',
             collapsed && 'mx-auto'
           )}
           title={collapsed ? 'باز کردن منو' : 'بستن منو'}
@@ -230,7 +230,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer */}
       {footer && (
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+        <div className="border-t border-border dark:border-border p-4">
           {footer}
         </div>
       )}

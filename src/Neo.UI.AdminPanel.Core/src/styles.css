@@ -1,0 +1,5 @@
+@import '../../Neo.Bpms.UI.MVC/wwwroot/css/neo-theme.css';
+
+/* Ship the component utilities without resetting the embedding host's elements. */
+@tailwind components;
+@tailwind utilities;

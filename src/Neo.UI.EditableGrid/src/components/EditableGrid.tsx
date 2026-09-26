@@ -459,13 +459,13 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
   return (
     <div className="editable-grid w-full" style={{ height }}>
       {/* Toolbar */}
-      <div className="toolbar bg-white border-b border-gray-200 p-3 flex items-center justify-between">
+      <div className="toolbar bg-surface border-b border-border p-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {pageSections && pageSections.length > 0 && (
             <select
               value={currentSection || ''}
               onChange={(e) => setCurrentSection(e.target.value || undefined)}
-              className="px-3 py-2 border border-gray-300 rounded"
+              className="px-3 py-2 border border-border rounded"
             >
               <option value="">همه بخش‌ها</option>
               {pageSections.map(section => (
@@ -480,8 +480,8 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
               className={clsx(
                 'px-4 py-2 rounded',
                 showFilterBar 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-accent text-on-accent'
+                  : 'bg-selection text-text hover:bg-hover'
               )}
             >
               🔍 فیلترها {filters.length > 0 && `(${filters.length})`}
@@ -498,7 +498,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
           )}
 
           {enableExcelImport && (
-            <label className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
+            <label className="px-4 py-2 bg-accent text-on-accent rounded hover:bg-accent-hover cursor-pointer">
               📤 آپلود اکسل
               <input
                 type="file"
@@ -529,7 +529,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 border border-border rounded disabled:opacity-50 disabled:cursor-not-allowed"
             >
               قبلی
             </button>
@@ -539,7 +539,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 border border-border rounded disabled:opacity-50 disabled:cursor-not-allowed"
             >
               بعدی
             </button>
@@ -558,15 +558,15 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
       )}
 
       {/* Grid */}
-      <div className="grid-container overflow-auto border border-gray-200 rounded-lg" style={{ height: `calc(${height} - 120px)` }}>
+      <div className="grid-container overflow-auto border border-border rounded-lg" style={{ height: `calc(${height} - 120px)` }}>
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="spinner border-4 border-gray-200 border-t-blue-600 rounded-full w-12 h-12 animate-spin"></div>
+            <div className="spinner border-4 border-border border-t-blue-600 rounded-full w-12 h-12 animate-spin"></div>
           </div>
         ) : (
           <table className="w-full border-collapse" style={{ minWidth: '100%' }}>
             {/* Header */}
-            <thead className="sticky top-0 z-10 bg-gray-50">
+            <thead className="sticky top-0 z-10 bg-canvas">
               <tr>
                 {visibleColumns.map(column => {
                   const isSorted = sortBy?.column === column.id;
@@ -575,7 +575,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
                   return (
                     <th
                       key={column.id}
-                      className="px-4 py-3 text-right font-semibold text-sm text-gray-700 border-b border-gray-200 cursor-pointer hover:bg-gray-100 select-none"
+                      className="px-4 py-3 text-right font-semibold text-sm text-text border-b border-border cursor-pointer hover:bg-hover select-none"
                       style={{ width: column.width || 'auto', minWidth: column.width || '150px' }}
                       onClick={() => {
                         if (sortBy?.column === column.id) {
@@ -593,7 +593,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
                         <span>{column.name}</span>
                         {sortDirection === 'asc' && <span className="text-blue-600">▲</span>}
                         {sortDirection === 'desc' && <span className="text-blue-600">▼</span>}
-                        {!sortDirection && <span className="text-gray-400 opacity-0 hover:opacity-100">⇅</span>}
+                        {!sortDirection && <span className="text-muted opacity-0 hover:opacity-100">⇅</span>}
                       </div>
                     </th>
                   );
@@ -601,7 +601,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
                 {/* Actions Column */}
                 {rowActions && (
                   <th
-                    className="px-4 py-3 text-center font-semibold text-sm text-gray-700 border-b border-gray-200 sticky right-0 bg-gray-50"
+                    className="px-4 py-3 text-center font-semibold text-sm text-text border-b border-border sticky right-0 bg-canvas"
                     style={{ width: '80px', minWidth: '80px' }}
                   >
                     عملیات
@@ -617,7 +617,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
               return (
                 <tr 
                   key={row.id} 
-                  className={clsx('hover:bg-gray-50', {
+                  className={clsx('hover:bg-hover', {
                     'bg-green-50': isNewRow,
                     'border-l-4 border-green-500': isNewRow,
                   })}
@@ -670,7 +670,7 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
                   {/* Actions Cell */}
                   {rowActions && (
                     <td
-                      className="px-2 py-2 text-center border-b border-gray-200 sticky right-0 bg-white"
+                      className="px-2 py-2 text-center border-b border-border sticky right-0 bg-surface"
                       style={{ width: '80px', minWidth: '80px' }}
                     >
                       <div className="flex items-center justify-center gap-1 flex-wrap">
@@ -781,14 +781,14 @@ export const EditableGrid: React.FC<EditableGridProps> = ({
 
         )}
         {!loading && paginatedData.length === 0 && (
-          <div className="flex items-center justify-center h-64 text-gray-500">
+          <div className="flex items-center justify-center h-64 text-muted">
             هیچ داده‌ای یافت نشد
           </div>
         )}
       </div>
 
       {/* Queue Status Indicator */}
-      <div className="mt-2 text-xs text-gray-500 flex items-center gap-4">
+      <div className="mt-2 text-xs text-muted flex items-center gap-4">
         <span>
           وضعیت صف: {queueManager.getStatus().pending} در انتظار, {queueManager.getStatus().saving} در حال ذخیره
         </span>

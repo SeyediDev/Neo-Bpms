@@ -17,7 +17,7 @@ export function Toast({ message, show, onClose }: ToastProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="fixed top-4 right-4 z-50 bg-neo-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[200px]"
+          className="fixed top-4 right-4 z-50 bg-accent text-on-accent px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[200px]"
         >
           <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -25,7 +25,7 @@ export function Toast({ message, show, onClose }: ToastProps) {
           <span className="flex-1">{message}</span>
           <button
             onClick={onClose}
-            className="text-white/80 hover:text-white transition-colors"
+            className="opacity-80 hover:opacity-100 transition-opacity"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

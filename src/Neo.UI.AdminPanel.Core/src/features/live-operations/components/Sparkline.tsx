@@ -67,7 +67,7 @@ export const Sparkline: React.FC<SparklineProps> = ({
   if (!data || data.length < 2) {
     return (
       <div
-        className={clsx('flex items-center justify-center text-gray-400 text-xs', className)}
+        className={clsx('flex items-center justify-center text-muted text-xs', className)}
         style={{ width, height }}
       >
         —

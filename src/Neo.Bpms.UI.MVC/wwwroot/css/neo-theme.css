@@ -1,0 +1,58 @@
+/* Semantic defaults; host ThemeService values are resolved by neo-theme.js. */
+:root {
+  --neo-base-canvas: #f8fafc; --neo-base-surface: #ffffff; --neo-base-elevated: #ffffff;
+  --neo-base-input: #ffffff; --neo-base-text: #172033; --neo-base-muted: #475569;
+  --neo-base-subtle: #64748b; --neo-base-border: #cbd5e1; --neo-base-hover: #f1f5f9;
+  --neo-base-accent: #2563eb; --neo-base-accent-hover: #1d4ed8; --neo-base-on-accent: #ffffff;
+  --neo-base-success: #047857; --neo-base-warning: #a16207; --neo-base-danger: #b91c1c;
+  --neo-base-chart-text: #475569; --neo-base-chart-grid: #cbd5e1; --neo-base-chart-surface: #ffffff;
+  --neo-base-report-surface: #ffffff; --neo-base-report-header: #f1f5f9; --neo-base-report-alternate: #f8fafc;
+  --neo-base-header-surface: #ffffff; --neo-base-header-text: #172033; --neo-base-input-text: #172033;
+  --neo-radius: .5rem; --neo-space: .5rem; --neo-control-height: 2.375rem;
+  --neo-shadow: 0 4px 18px rgb(0 0 0 / 12%);
+  --neo-selection: color-mix(in srgb, var(--neo-accent, #2563eb) 14%, var(--neo-surface, white));
+  --neo-focus: color-mix(in srgb, var(--neo-accent, #2563eb) 35%, transparent);
+  --neo-z-modal: 1050; --neo-z-popup: 1060; --neo-z-toast: 1080;
+  --neo-canvas: var(--neo-base-canvas); --neo-surface: var(--neo-base-surface);
+  --neo-elevated: var(--neo-base-elevated); --neo-input: var(--neo-base-input);
+  --neo-text: var(--neo-base-text); --neo-input-text: var(--neo-base-input-text);
+  --neo-muted: var(--neo-base-muted); --neo-subtle: var(--neo-base-subtle);
+  --neo-border: var(--neo-base-border); --neo-hover: var(--neo-base-hover);
+  --neo-accent: var(--neo-base-accent); --neo-accent-hover: var(--neo-base-accent-hover);
+  --neo-on-accent: var(--neo-base-on-accent); --neo-danger: var(--neo-base-danger);
+  --neo-success: var(--neo-base-success); --neo-warning: var(--neo-base-warning);
+}
+:root[data-neo-mode="dark"] {
+  color-scheme: dark;
+  --neo-base-canvas: #0f172a; --neo-base-surface: #1e293b; --neo-base-elevated: #243247;
+  --neo-base-input: #111c2e; --neo-base-text: #f1f5f9; --neo-base-muted: #cbd5e1;
+  --neo-base-subtle: #94a3b8; --neo-base-border: #526176; --neo-base-hover: #334155;
+  --neo-base-accent: #60a5fa; --neo-base-accent-hover: #93c5fd; --neo-base-on-accent: #0f172a;
+  --neo-base-success: #6ee7b7; --neo-base-warning: #fde68a; --neo-base-danger: #fca5a5;
+  --neo-base-chart-text: #cbd5e1; --neo-base-chart-grid: #526176; --neo-base-chart-surface: #1e293b;
+  --neo-base-report-surface: #1e293b; --neo-base-report-header: #243247; --neo-base-report-alternate: #182338;
+  --neo-base-header-surface: #1e293b; --neo-base-header-text: #f1f5f9; --neo-base-input-text: #f1f5f9;
+  --neo-shadow: 0 4px 18px rgb(0 0 0 / 35%);
+}
+:root[data-neo-mode="light"] { color-scheme: light; }
+:root[data-neo-theme] body { background-color: var(--neo-canvas); color: var(--neo-text); }
+:root[data-neo-theme] :is(.neo-ux-toolbar, .neo-control, .neo-theme-scope) :focus-visible {
+  outline: 2px solid var(--neo-accent); outline-offset: 3px;
+}
+:root[data-neo-theme] ::selection { background: var(--neo-selection); color: var(--neo-text); }
+.neo-theme-scope { color: var(--neo-text); font-family: var(--neo-font, inherit); }
+.neo-surface { background: var(--neo-surface); color: var(--neo-text); border-color: var(--neo-border); }
+.neo-elevated { background: var(--neo-elevated); color: var(--neo-text); border-color: var(--neo-border); box-shadow: var(--neo-shadow); }
+.neo-action { background: var(--neo-accent); color: var(--neo-on-accent); }
+.neo-action:hover { background: var(--neo-accent-hover); }
+.neo-muted { color: var(--neo-muted); }
+.neo-input { background: var(--neo-input); color: var(--neo-input-text); border-color: var(--neo-border); }
+.neo-input:focus { border-color: var(--neo-accent); box-shadow: 0 0 0 3px var(--neo-focus); }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-neo-theme] :is(.neo-control, .neo-theme-scope, .neo-ux-toolbar) *,
+  :root[data-neo-theme] .neo-filter-focus { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+@media print {
+  :root[data-neo-theme] body { background: white; color: black; }
+  :root[data-neo-theme] :is(.neo-surface, .neo-elevated) { background: white; color: black; box-shadow: none; }
+}

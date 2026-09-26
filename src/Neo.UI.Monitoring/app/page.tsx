@@ -14,35 +14,35 @@ export default function MonitoringDashboard() {
   const { isConnected, lastUpdate } = useSignalR();
 
   return (
-    <div className="min-h-screen bg-slate-950 animated-gradient">
+    <div className="min-h-screen bg-canvas animated-gradient">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-canvas border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-neo-500 to-neo-700 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center">
+                <svg className="w-6 h-6 text-on-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">مانیتورینگ سیستم</h1>
-                <p className="text-sm text-slate-400">داشبورد نظارت لحظه‌ای</p>
+                <h1 className="text-xl font-bold text-text">مانیتورینگ سیستم</h1>
+                <p className="text-sm text-muted">داشبورد نظارت لحظه‌ای</p>
               </div>
             </div>
 
             {/* Connection Status */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-status-healthy live-indicator' : 'bg-slate-500'}`} />
-                <span className="text-sm text-slate-400">
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-status-healthy live-indicator' : 'bg-subtle'}`} />
+                <span className="text-sm text-muted">
                   {isConnected ? 'متصل' : 'قطع'}
                 </span>
               </div>
               <button
                 onClick={refresh}
                 disabled={loading}
-                className="px-4 py-2 bg-neo-600 hover:bg-neo-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                className="px-4 py-2 bg-accent hover:bg-accent-hover text-on-accent rounded-lg transition-colors disabled:opacity-50"
               >
                 {loading ? 'در حال بروزرسانی...' : 'بروزرسانی'}
               </button>
@@ -61,8 +61,8 @@ export default function MonitoringDashboard() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-neo-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'bg-accent text-on-accent'
+                    : 'text-muted hover:text-text hover:bg-hover'
                 }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,8 +89,8 @@ export default function MonitoringDashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-4 mt-auto">
-        <div className="container mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+      <footer className="border-t border-border py-4 mt-auto">
+        <div className="container mx-auto px-6 flex items-center justify-between text-sm text-muted">
           <span>Neo BPMS Monitoring v1.0.0</span>
           {lastUpdate && (
             <span>آخرین بروزرسانی: {new Date(lastUpdate).toLocaleTimeString('fa-IR')}</span>

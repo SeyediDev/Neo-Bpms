@@ -27,7 +27,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
+  default: 'bg-hover text-text dark:bg-elevated dark:text-subtle',
   primary: 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300',
   success: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
   warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
@@ -36,7 +36,7 @@ const variantClasses: Record<BadgeVariant, string> = {
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-gray-500',
+  default: 'bg-subtle',
   primary: 'bg-purple-500',
   success: 'bg-emerald-500',
   warning: 'bg-amber-500',

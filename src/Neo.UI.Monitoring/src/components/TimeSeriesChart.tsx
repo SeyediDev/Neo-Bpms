@@ -61,11 +61,11 @@ export function TimeSeriesChart({
       const value = payload[0].value;
       const displayValue = formatValue ? formatValue(value) : value.toFixed(2);
       return (
-        <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700 rounded-lg px-3 py-2 shadow-xl">
-          <p className="text-slate-400 text-xs mb-1">
+        <div className="bg-surface backdrop-blur-sm border border-border rounded-lg px-3 py-2 shadow-xl">
+          <p className="text-muted text-xs mb-1">
             {format(new Date(label), 'yyyy/MM/dd HH:mm:ss')}
           </p>
-          <p className="text-white font-semibold">
+          <p className="text-text font-semibold">
             {displayValue} {unit}
           </p>
         </div>
@@ -76,12 +76,12 @@ export function TimeSeriesChart({
 
   if (loading) {
     return (
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-4">
-        <h3 className="text-sm font-medium text-slate-400 mb-3">{title}</h3>
+      <div className="bg-surface backdrop-blur-sm border border-border rounded-xl p-4">
+        <h3 className="text-sm font-medium text-muted mb-3">{title}</h3>
         <div className="flex items-center justify-center" style={{ height }}>
           <div className="animate-pulse flex flex-col items-center gap-2">
             <div className="w-8 h-8 rounded-full border-2 border-neo-500 border-t-transparent animate-spin" />
-            <span className="text-slate-500 text-sm">در حال بارگذاری...</span>
+            <span className="text-muted text-sm">در حال بارگذاری...</span>
           </div>
         </div>
       </div>
@@ -90,9 +90,9 @@ export function TimeSeriesChart({
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-4">
-        <h3 className="text-sm font-medium text-slate-400 mb-3">{title}</h3>
-        <div className="flex items-center justify-center text-slate-500" style={{ height }}>
+      <div className="bg-surface backdrop-blur-sm border border-border rounded-xl p-4">
+        <h3 className="text-sm font-medium text-muted mb-3">{title}</h3>
+        <div className="flex items-center justify-center text-muted" style={{ height }}>
           داده‌ای موجود نیست
         </div>
       </div>
@@ -102,10 +102,10 @@ export function TimeSeriesChart({
   const ChartComponent = showArea ? AreaChart : LineChart;
 
   return (
-    <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-4">
+    <div className="bg-surface backdrop-blur-sm border border-border rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-slate-400">{title}</h3>
-        {unit && <span className="text-xs text-slate-500">{unit}</span>}
+        <h3 className="text-sm font-medium text-muted">{title}</h3>
+        {unit && <span className="text-xs text-muted">{unit}</span>}
       </div>
       <ResponsiveContainer width="100%" height={height}>
         <ChartComponent data={chartData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
@@ -115,16 +115,16 @@ export function TimeSeriesChart({
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--neo-chart-grid)" vertical={false} />
           <XAxis
             dataKey="formattedTime"
-            stroke="#64748b"
+            stroke="var(--neo-chart-text)"
             fontSize={10}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke="#64748b"
+            stroke="var(--neo-chart-text)"
             fontSize={10}
             tickLine={false}
             axisLine={false}

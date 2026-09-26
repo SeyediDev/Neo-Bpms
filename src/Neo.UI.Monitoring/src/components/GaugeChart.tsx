@@ -39,7 +39,7 @@ export function GaugeChart({
     <div 
       className={clsx(
         "metric-card flex flex-col items-center",
-        onClick && "cursor-pointer hover:bg-slate-700/30 transition-colors"
+        onClick && "cursor-pointer hover:bg-hover transition-colors"
       )}
       onClick={onClick}
       role={onClick ? "button" : undefined}
@@ -94,9 +94,9 @@ export function GaugeChart({
         </div>
       </div>
 
-      <h3 className="text-slate-400 mt-4 text-sm">{label}</h3>
+      <h3 className="text-muted mt-4 text-sm">{label}</h3>
       {subtitle && (
-        <p className="text-slate-500 text-xs mt-1 font-mono" dir="ltr">{subtitle}</p>
+        <p className="text-muted text-xs mt-1 font-mono" dir="ltr">{subtitle}</p>
       )}
     </div>
   );

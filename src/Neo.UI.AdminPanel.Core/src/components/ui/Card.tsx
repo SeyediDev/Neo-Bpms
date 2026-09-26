@@ -39,10 +39,10 @@ const paddingClasses = {
 };
 
 const variantClasses = {
-  default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-  bordered: 'bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600',
-  elevated: 'bg-white dark:bg-gray-800 shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50',
-  gradient: 'bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700',
+  default: 'bg-surface dark:bg-elevated border border-border dark:border-border',
+  bordered: 'bg-surface dark:bg-elevated border-2 border-border dark:border-border',
+  elevated: 'bg-surface dark:bg-elevated shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50',
+  gradient: 'bg-gradient-to-br from-white to-canvas dark:from-elevated dark:to-surface border border-border dark:border-border',
 };
 
 /**
@@ -98,12 +98,12 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       >
         <div>
           {title && (
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-text dark:text-text">
               {title}
             </h3>
           )}
           {subtitle && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-sm text-muted dark:text-muted mt-0.5">
               {subtitle}
             </p>
           )}
@@ -148,7 +148,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
       <div
         ref={ref}
         className={clsx(
-          'flex items-center gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700',
+          'flex items-center gap-3 mt-4 pt-4 border-t border-border dark:border-border',
           alignClasses[align],
           className
         )}

@@ -1,3 +1,4 @@
+import { themeScript } from '../../../Neo.Bpms.UI.MVC/wwwroot/js/neo-theme';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -12,8 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa" dir="rtl">
-      <body>{children}</body>
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+      <body className="neo-theme-scope bg-canvas text-text">{children}</body>
     </html>
   );
 }

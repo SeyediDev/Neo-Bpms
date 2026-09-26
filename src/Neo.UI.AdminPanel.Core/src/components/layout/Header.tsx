@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       className={clsx(
-        'h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700',
+        'h-16 bg-surface dark:bg-surface border-b border-border dark:border-border',
         'flex items-center justify-between px-4',
         className
       )}
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
         {showMenuToggle && (
           <button
             onClick={onMenuToggle}
-            className="p-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors border border-gray-200 dark:border-gray-700"
+            className="p-2 rounded-lg bg-surface dark:bg-elevated hover:bg-hover dark:hover:bg-hover text-muted dark:text-muted transition-colors border border-border dark:border-border"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -153,19 +153,19 @@ export const Header: React.FC<HeaderProps> = ({
             {breadcrumbs.map((crumb, index) => (
               <React.Fragment key={index}>
                 {index > 0 && (
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 )}
                 {crumb.path ? (
                   <a
                     href={crumb.path}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="text-muted hover:text-text dark:text-muted dark:hover:text-subtle"
                   >
                     {crumb.label}
                   </a>
                 ) : (
-                  <span className="text-gray-900 dark:text-white font-medium">
+                  <span className="text-text dark:text-text font-medium">
                     {crumb.label}
                   </span>
                 )}
@@ -184,7 +184,7 @@ export const Header: React.FC<HeaderProps> = ({
         {onThemeChange && (
           <button
             onClick={() => onThemeChange(theme === 'light' ? 'dark' : 'light')}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+            className="p-2 rounded-lg hover:bg-hover dark:hover:bg-hover text-muted dark:text-muted"
             title={theme === 'light' ? 'حالت تاریک' : 'حالت روشن'}
           >
             {theme === 'light' ? (
@@ -203,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div ref={notificationsRef} className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 relative"
+            className="p-2 rounded-lg hover:bg-hover dark:hover:bg-hover text-muted dark:text-muted relative"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -217,13 +217,13 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Notifications Dropdown */}
           {showNotifications && (
-            <div className="absolute left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-              <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="font-semibold text-gray-900 dark:text-white">اعلان‌ها</h3>
+            <div className="absolute left-0 mt-2 w-80 bg-surface dark:bg-elevated rounded-lg shadow-lg border border-border dark:border-border z-50">
+              <div className="p-3 border-b border-border dark:border-border">
+                <h3 className="font-semibold text-text dark:text-text">اعلان‌ها</h3>
               </div>
               <div className="max-h-80 overflow-y-auto">
                 {notifications.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                  <div className="p-4 text-center text-muted dark:text-muted">
                     اعلانی وجود ندارد
                   </div>
                 ) : (
@@ -232,19 +232,19 @@ export const Header: React.FC<HeaderProps> = ({
                       key={notification.id}
                       onClick={() => onNotificationClick?.(notification)}
                       className={clsx(
-                        'w-full p-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 text-right',
+                        'w-full p-3 flex items-start gap-3 hover:bg-hover dark:hover:bg-hover text-right',
                         !notification.read && 'bg-blue-50 dark:bg-blue-900/20'
                       )}
                     >
                       {getNotificationIcon(notification.type)}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        <p className="text-sm font-medium text-text dark:text-text truncate">
                           {notification.title}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                        <p className="text-xs text-muted dark:text-muted line-clamp-2">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        <p className="text-xs text-muted dark:text-muted mt-1">
                           {notification.time}
                         </p>
                       </div>
@@ -253,7 +253,7 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </div>
               {notifications.length > 0 && (
-                <div className="p-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="p-2 border-t border-border dark:border-border">
                   <button
                     onClick={onViewAllNotifications}
                     className="w-full py-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
@@ -271,7 +271,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div ref={userMenuRef} className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 p-1.5 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
+              className="flex items-center gap-2 p-1.5 rounded-lg bg-surface dark:bg-elevated hover:bg-hover dark:hover:bg-hover transition-colors border border-border dark:border-border"
             >
               {user.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
@@ -280,18 +280,18 @@ export const Header: React.FC<HeaderProps> = ({
                   {user.name.charAt(0)}
                 </div>
               )}
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
             {/* User Dropdown */}
             {showUserMenu && (
-              <div className="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-                  <p className="font-medium text-gray-900 dark:text-white">{user.name}</p>
+              <div className="absolute left-0 mt-2 w-56 bg-surface dark:bg-elevated rounded-lg shadow-lg border border-border dark:border-border z-50">
+                <div className="p-3 border-b border-border dark:border-border">
+                  <p className="font-medium text-text dark:text-text">{user.name}</p>
                   {user.email && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                    <p className="text-sm text-muted dark:text-muted">{user.email}</p>
                   )}
                   {user.role && (
                     <span className="inline-block mt-1 px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 text-xs rounded">

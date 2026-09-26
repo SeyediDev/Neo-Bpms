@@ -1,3 +1,4 @@
+import './styles.css';
 /**
  * Neo BPMS Admin Panel Core
  * 

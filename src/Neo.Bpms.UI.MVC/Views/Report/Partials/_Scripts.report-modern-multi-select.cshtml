@@ -973,7 +973,7 @@
                                 $dropdown[0].style.setProperty('top', '100%', 'important');
                                 $dropdown[0].style.setProperty('left', '0', 'important');
                                 $dropdown[0].style.setProperty('right', '0', 'important');
-                                $dropdown[0].style.setProperty('background', 'white', 'important');
+                                $dropdown[0].style.setProperty('background', 'var(--neo-elevated, white)', 'important');
                                 $dropdown[0].style.setProperty('border', '1px solid #e2e8f0', 'important');
                                 $dropdown[0].style.setProperty('border-radius', '8px', 'important');
                                 $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
@@ -1470,7 +1470,7 @@
                     $dropdown[0].style.setProperty('top', '100%', 'important');
                     $dropdown[0].style.setProperty('left', '0', 'important');
                     $dropdown[0].style.setProperty('right', '0', 'important');
-                    $dropdown[0].style.setProperty('background', 'white', 'important');
+                    $dropdown[0].style.setProperty('background', 'var(--neo-elevated, white)', 'important');
                     $dropdown[0].style.setProperty('border', '1px solid #e2e8f0', 'important');
                     $dropdown[0].style.setProperty('border-radius', '8px', 'important');
                     $dropdown[0].style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
@@ -1986,7 +1986,7 @@
             
             // Force show wrapper and ensure it's visible with inline styles
             $wrapper.attr('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; position: relative !important; margin-bottom: 12px !important; clear: both !important;');
-            $input.attr('style', 'display: flex !important; align-items: flex-start !important; justify-content: flex-start !important; min-height: 38px !important; height: auto !important; max-height: none !important; padding: 8px 12px !important; border: 1px solid #e2e8f0 !important; border-radius: 6px !important; background: white !important; cursor: pointer !important; flex-wrap: wrap !important; overflow: hidden !important; width: 100% !important; box-sizing: border-box !important; position: relative !important;');
+            $input.attr('style', 'display: flex !important; align-items: flex-start !important; justify-content: flex-start !important; min-height: 38px !important; height: auto !important; max-height: none !important; padding: 8px 12px !important; border: 1px solid var(--neo-border, #e2e8f0) !important; border-radius: 6px !important; background: var(--neo-input, white) !important; color: var(--neo-input-text, inherit) !important; cursor: pointer !important; flex-wrap: wrap !important; overflow: hidden !important; width: 100% !important; box-sizing: border-box !important; position: relative !important;');
             
             // Ensure select is completely hidden
             $select.attr('style', 'display: none !important; position: absolute !important; left: -9999px !important; opacity: 0 !important; visibility: hidden !important; width: 0 !important; height: 0 !important;');

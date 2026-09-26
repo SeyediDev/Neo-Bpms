@@ -147,7 +147,7 @@ export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: 
         <button
           onClick={resetAllMetrics}
           disabled={resetting}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-elevated disabled:cursor-not-allowed text-text rounded-lg transition-colors flex items-center gap-2"
         >
           {resetting ? (
             <>
@@ -169,7 +169,7 @@ export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: 
 
       {/* System Gauges */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
           <svg className="w-5 h-5 text-neo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
           </svg>
@@ -209,7 +209,7 @@ export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: 
 
       {/* Quick Stats */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
           <svg className="w-5 h-5 text-neo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -261,7 +261,7 @@ export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: 
 
       {/* GC Stats */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
           <svg className="w-5 h-5 text-neo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
@@ -294,19 +294,19 @@ export function SystemMetrics({ data, loading, onShowToast, onShowErrorToast }: 
       {/* Top Metrics */}
       {data?.topMetrics && data.topMetrics.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-text mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-neo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             متریک‌های فعال
           </h2>
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-4">
+          <div className="bg-surface backdrop-blur-sm border border-border rounded-xl p-4">
             <div className="flex flex-wrap gap-2">
               {data.topMetrics.map((metric, index) => (
                 <button
                   key={index}
                   onClick={() => openDrillDown(metric, metric)}
-                  className="px-3 py-1 bg-slate-800 text-slate-300 rounded-full text-sm font-mono hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
+                  className="px-3 py-1 bg-elevated text-subtle rounded-full text-sm font-mono hover:bg-hover hover:text-text transition-colors cursor-pointer"
                 >
                   {metric}
                 </button>

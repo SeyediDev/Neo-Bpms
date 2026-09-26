@@ -49,11 +49,11 @@ const RefreshIndicator: React.FC<{
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+      <div className="flex items-center gap-2 text-sm text-muted dark:text-muted">
         <span
           className={clsx(
             'w-2 h-2 rounded-full',
-            isPaused ? 'bg-gray-400' : 'bg-emerald-500 animate-pulse'
+            isPaused ? 'bg-border' : 'bg-emerald-500 animate-pulse'
           )}
         />
         <span>آخرین بروزرسانی: {formatTime(lastUpdated)}</span>
@@ -65,7 +65,7 @@ const RefreshIndicator: React.FC<{
           'transition-colors duration-200',
           isPaused
             ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+            : 'bg-hover text-text hover:bg-hover dark:bg-elevated dark:text-subtle'
         )}
       >
         {isPaused ? (
@@ -137,17 +137,17 @@ export const LiveOperationsDashboard: React.FC<LiveOperationsDashboardProps> = (
 
   if (error) {
     return (
-      <div className={clsx('bg-white dark:bg-gray-800 rounded-2xl p-8', className)}>
+      <div className={clsx('bg-surface dark:bg-elevated rounded-2xl p-8', className)}>
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          <h3 className="text-lg font-medium text-text dark:text-text mb-2">
             خطا در دریافت داده‌ها
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">{error}</p>
+          <p className="text-muted dark:text-muted mb-4">{error}</p>
           <button
             onClick={refresh}
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500 transition-colors"
@@ -164,10 +164,10 @@ export const LiveOperationsDashboard: React.FC<LiveOperationsDashboardProps> = (
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-text dark:text-text">
             {title}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-muted dark:text-muted mt-1">
             {subtitle}
           </p>
         </div>
@@ -194,8 +194,8 @@ export const LiveOperationsDashboard: React.FC<LiveOperationsDashboardProps> = (
           onClick={refresh}
           disabled={isLoading}
           className={clsx(
-            'p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100',
-            'dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700',
+            'p-2 rounded-lg text-muted hover:text-text hover:bg-hover',
+            'dark:text-muted dark:hover:text-subtle dark:hover:bg-hover',
             'transition-colors duration-200',
             isLoading && 'animate-spin'
           )}
@@ -211,7 +211,7 @@ export const LiveOperationsDashboard: React.FC<LiveOperationsDashboardProps> = (
         Object.entries(groupedMetrics).map(([category, metrics]) => (
           <div key={category}>
             {category !== 'ungrouped' && (
-              <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+              <h2 className="text-lg font-semibold text-text dark:text-subtle mb-4">
                 {category}
               </h2>
             )}
@@ -254,16 +254,16 @@ export const LiveOperationsDashboard: React.FC<LiveOperationsDashboardProps> = (
 
       {/* Empty state */}
       {!isLoading && data?.metrics.length === 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center">
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-surface dark:bg-elevated rounded-2xl p-12 text-center">
+          <div className="w-16 h-16 bg-hover dark:bg-elevated rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          <h3 className="text-lg font-medium text-text dark:text-text mb-2">
             داده‌ای یافت نشد
           </h3>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-muted dark:text-muted">
             در این بازه زمانی داده‌ای برای نمایش وجود ندارد
           </p>
         </div>

@@ -59,12 +59,12 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
         {selectedMetric && (
           <div className="space-y-6">
             {/* Current Value */}
-            <div className="text-center py-6 bg-gray-50 dark:bg-gray-900 rounded-xl">
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+            <div className="text-center py-6 bg-canvas dark:bg-surface rounded-xl">
+              <div className="text-4xl font-bold text-text dark:text-text mb-2">
                 {formatValue(selectedMetric.value, selectedMetric.format)}
               </div>
               {selectedMetric.unit && (
-                <div className="text-gray-500">{selectedMetric.unit}</div>
+                <div className="text-muted">{selectedMetric.unit}</div>
               )}
               {selectedMetric.trend && (
                 <div
@@ -73,7 +73,7 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
                       ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
                       : selectedMetric.trend === 'down'
                       ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                      : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                      : 'bg-hover text-muted dark:bg-elevated dark:text-muted'
                   }`}
                 >
                   {selectedMetric.trend === 'up' ? '↑' : selectedMetric.trend === 'down' ? '↓' : '—'}
@@ -90,10 +90,10 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
             {/* Sparkline Chart */}
             {selectedMetric.sparklineData && selectedMetric.sparklineData.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <h4 className="text-sm font-medium text-text dark:text-subtle mb-3">
                   روند تغییرات
                 </h4>
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+                <div className="bg-canvas dark:bg-surface rounded-xl p-4">
                   <Sparkline
                     data={selectedMetric.sparklineData}
                     width={400}
@@ -108,25 +108,25 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
             {/* Statistics */}
             {selectedMetric.sparklineData && selectedMetric.sparklineData.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <h4 className="text-sm font-medium text-text dark:text-subtle mb-3">
                   آمار
                 </h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center">
-                    <div className="text-xs text-gray-500 mb-1">حداقل</div>
-                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="bg-canvas dark:bg-surface rounded-xl p-4 text-center">
+                    <div className="text-xs text-muted mb-1">حداقل</div>
+                    <div className="text-lg font-semibold text-text dark:text-text">
                       {formatValue(Math.min(...selectedMetric.sparklineData), selectedMetric.format)}
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center">
-                    <div className="text-xs text-gray-500 mb-1">حداکثر</div>
-                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="bg-canvas dark:bg-surface rounded-xl p-4 text-center">
+                    <div className="text-xs text-muted mb-1">حداکثر</div>
+                    <div className="text-lg font-semibold text-text dark:text-text">
                       {formatValue(Math.max(...selectedMetric.sparklineData), selectedMetric.format)}
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center">
-                    <div className="text-xs text-gray-500 mb-1">میانگین</div>
-                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="bg-canvas dark:bg-surface rounded-xl p-4 text-center">
+                    <div className="text-xs text-muted mb-1">میانگین</div>
+                    <div className="text-lg font-semibold text-text dark:text-text">
                       {formatValue(
                         selectedMetric.sparklineData.reduce((a, b) => a + b, 0) /
                           selectedMetric.sparklineData.length,
@@ -134,9 +134,9 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
                       )}
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 text-center">
-                    <div className="text-xs text-gray-500 mb-1">آخرین</div>
-                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <div className="bg-canvas dark:bg-surface rounded-xl p-4 text-center">
+                    <div className="text-xs text-muted mb-1">آخرین</div>
+                    <div className="text-lg font-semibold text-text dark:text-text">
                       {formatValue(
                         selectedMetric.sparklineData[selectedMetric.sparklineData.length - 1],
                         selectedMetric.format
@@ -148,18 +148,18 @@ export const LiveOperationsPage: React.FC<LiveOperationsPageProps> = ({
             )}
 
             {/* Metadata */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="border-t border-border dark:border-border pt-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-500">شناسه:</span>
-                  <span className="mr-2 text-gray-900 dark:text-white font-mono">
+                  <span className="text-muted">شناسه:</span>
+                  <span className="mr-2 text-text dark:text-text font-mono">
                     {selectedMetric.id}
                   </span>
                 </div>
                 {selectedMetric.category && (
                   <div>
-                    <span className="text-gray-500">دسته‌بندی:</span>
-                    <span className="mr-2 text-gray-900 dark:text-white">
+                    <span className="text-muted">دسته‌بندی:</span>
+                    <span className="mr-2 text-text dark:text-text">
                       {selectedMetric.category}
                     </span>
                   </div>

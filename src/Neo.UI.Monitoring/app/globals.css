@@ -1,3 +1,4 @@
+@import "../../Neo.Bpms.UI.MVC/wwwroot/css/neo-theme.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,17 +33,17 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: var(--neo-canvas);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.5);
+  background: var(--neo-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.7);
+  background: var(--neo-muted);
 }
 
 /* Glow Effects */
@@ -86,8 +87,8 @@ html {
 
 /* Card Styles */
 .metric-card {
-  @apply bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl p-6;
-  @apply transition-all duration-300 hover:border-slate-700 hover:shadow-lg;
+  @apply bg-surface backdrop-blur-sm border border-border rounded-xl p-6;
+  @apply transition-all duration-300 hover:border-border hover:shadow-lg;
 }
 
 .metric-card-healthy {

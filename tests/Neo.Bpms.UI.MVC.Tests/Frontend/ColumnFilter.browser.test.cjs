@@ -4,7 +4,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { chromium } = require('playwright');
 const mvc = path.resolve(__dirname, '../../../src/Neo.Bpms.UI.MVC');
-const assets = path.join(mvc, 'CommonAssets');
+const assets = process.env.NEO_TEST_VENDOR_ROOT || path.join(mvc, 'CommonAssets');
 let browser;
 let browserServer;
 before(async () => {

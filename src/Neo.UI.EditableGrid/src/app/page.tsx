@@ -76,7 +76,7 @@ export default function EditableGridPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">در حال بارگذاری...</p>
+          <p className="mt-4 text-muted">در حال بارگذاری...</p>
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ export default function EditableGridPage() {
           formSubjectId={formSubjectId}
         />
       ) : (
-        <div className="text-center text-gray-500">
+        <div className="text-center text-muted">
           <p>هیچ ستونی برای نمایش وجود ندارد</p>
         </div>
       )}

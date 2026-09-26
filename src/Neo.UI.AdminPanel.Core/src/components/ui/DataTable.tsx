@@ -88,7 +88,7 @@ function LoadingSkeleton({ columns }: { columns: number }) {
         <tr key={row} className="animate-pulse">
           {Array.from({ length: columns }).map((_, col) => (
             <td key={col} className="px-4 py-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+              <div className="h-4 bg-selection dark:bg-elevated rounded" />
             </td>
           ))}
         </tr>
@@ -101,7 +101,7 @@ function EmptyState({ message }: { message: ReactNode }) {
   return (
     <tr>
       <td colSpan={100} className="px-4 py-12 text-center">
-        <div className="text-gray-400 dark:text-gray-500">
+        <div className="text-muted dark:text-muted">
           <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
@@ -197,7 +197,7 @@ export function DataTable<T>({
   return (
     <div
       className={clsx(
-        'overflow-auto rounded-xl border border-gray-200 dark:border-gray-700',
+        'overflow-auto rounded-xl border border-border dark:border-border',
         className
       )}
       style={maxHeight ? { maxHeight } : undefined}
@@ -206,7 +206,7 @@ export function DataTable<T>({
         {/* Header */}
         <thead
           className={clsx(
-            'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
+            'bg-hover dark:bg-elevated text-text dark:text-subtle',
             stickyHeader && 'sticky top-0 z-10'
           )}
         >
@@ -221,7 +221,7 @@ export function DataTable<T>({
                     if (el) el.indeterminate = someSelected && !allSelected;
                   }}
                   onChange={handleSelectAll}
-                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  className="w-4 h-4 rounded border-border text-purple-600 focus:ring-purple-500"
                 />
               </th>
             )}
@@ -233,8 +233,8 @@ export function DataTable<T>({
                 className={clsx(
                   'px-4 font-medium',
                   compact ? 'py-2' : 'py-3',
-                  bordered && 'border-l border-gray-200 dark:border-gray-700 first:border-l-0',
-                  column.sortable && 'cursor-pointer select-none hover:bg-gray-200 dark:hover:bg-gray-600',
+                  bordered && 'border-l border-border dark:border-border first:border-l-0',
+                  column.sortable && 'cursor-pointer select-none hover:bg-hover dark:hover:bg-hover',
                   column.align === 'center' && 'text-center',
                   column.align === 'right' && 'text-left',
                   !column.align && 'text-right'
@@ -264,7 +264,7 @@ export function DataTable<T>({
         </thead>
 
         {/* Body */}
-        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody className="bg-surface dark:bg-elevated divide-y divide-border dark:divide-border">
           {loading ? (
             <LoadingSkeleton columns={visibleColumns.length + (selectable ? 1 : 0)} />
           ) : sortedData.length === 0 ? (
@@ -280,8 +280,8 @@ export function DataTable<T>({
                   onClick={() => onRowClick?.(row, rowIndex)}
                   className={clsx(
                     'transition-colors',
-                    striped && rowIndex % 2 === 1 && 'bg-gray-50 dark:bg-gray-800/50',
-                    hoverable && 'hover:bg-gray-50 dark:hover:bg-gray-700',
+                    striped && rowIndex % 2 === 1 && 'bg-canvas dark:bg-elevated',
+                    hoverable && 'hover:bg-hover dark:hover:bg-hover',
                     onRowClick && 'cursor-pointer',
                     isSelected && 'bg-purple-50 dark:bg-purple-900/20'
                   )}
@@ -297,7 +297,7 @@ export function DataTable<T>({
                           handleSelectRow(row);
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        className="w-4 h-4 rounded border-border text-purple-600 focus:ring-purple-500"
                       />
                     </td>
                   )}
@@ -313,9 +313,9 @@ export function DataTable<T>({
                       <td
                         key={column.key}
                         className={clsx(
-                          'px-4 text-gray-900 dark:text-gray-100',
+                          'px-4 text-text dark:text-text',
                           compact ? 'py-2' : 'py-3',
-                          bordered && 'border-l border-gray-200 dark:border-gray-700 first:border-l-0',
+                          bordered && 'border-l border-border dark:border-border first:border-l-0',
                           column.align === 'center' && 'text-center',
                           column.align === 'right' && 'text-left',
                           !column.align && 'text-right'

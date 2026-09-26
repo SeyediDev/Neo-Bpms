@@ -81,7 +81,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={clsx(
-              'block font-medium text-gray-700 dark:text-gray-300',
+              'block font-medium text-text dark:text-subtle',
               sizes.label
             )}
           >
@@ -93,7 +93,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {/* Left icon */}
           {leftIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted">
               {leftIcon}
             </div>
           )}
@@ -107,10 +107,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={clsx(
               // Base
               'w-full',
-              'bg-white dark:bg-gray-800',
+              'bg-surface dark:bg-elevated',
               'border transition-all duration-200',
-              'placeholder-gray-400 dark:placeholder-gray-500',
-              'text-gray-900 dark:text-white',
+              'placeholder-muted dark:placeholder-muted',
+              'text-text dark:text-text',
               'focus:outline-none focus:ring-2 focus:ring-offset-0',
               // Size
               sizes.input,
@@ -121,9 +121,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               // State
               error
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                : 'border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:ring-purple-500/20',
+                : 'border-border dark:border-border focus:border-purple-500 focus:ring-purple-500/20',
               // Disabled
-              disabled && 'opacity-60 cursor-not-allowed bg-gray-100 dark:bg-gray-900'
+              disabled && 'opacity-60 cursor-not-allowed bg-hover dark:bg-surface'
             )}
             {...props}
           />
@@ -134,7 +134,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                className="text-muted hover:text-muted dark:hover:text-subtle transition-colors"
                 tabIndex={-1}
               >
                 {showPassword ? (
@@ -149,7 +149,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 )}
               </button>
             )}
-            {rightIcon && <span className="text-gray-400">{rightIcon}</span>}
+            {rightIcon && <span className="text-muted">{rightIcon}</span>}
           </div>
         </div>
 
@@ -158,7 +158,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <p
             className={clsx(
               sizes.helper,
-              error ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
+              error ? 'text-red-500' : 'text-muted dark:text-muted'
             )}
           >
             {error || helperText}

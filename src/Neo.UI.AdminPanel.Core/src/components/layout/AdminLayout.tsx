@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import type { NeoThemeSnapshot } from '../../../../Neo.Bpms.UI.MVC/wwwroot/js/neo-theme';
 import clsx from 'clsx';
 import { Sidebar, MenuItem } from './Sidebar';
 import { Header, Breadcrumb, Notification, UserInfo } from './Header';
@@ -73,6 +74,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(defaultCollapsed);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [activeTheme, setActiveTheme] = useState<NeoThemeSnapshot | null>(null);
+
+  useEffect(() => {
+    const synchronize = () => setActiveTheme(window.NeoTheme?.snapshot() ?? null);
+    synchronize();
+    window.addEventListener('neo:theme-changed', synchronize);
+    return () => window.removeEventListener('neo:theme-changed', synchronize);
+  }, []);
 
   const handleSidebarCollapse = useCallback((collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
@@ -91,8 +100,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   return (
     <div
       className={clsx(
-        'flex h-screen bg-gray-100 dark:bg-gray-950',
-        theme === 'dark' && 'dark',
+        'flex h-screen bg-hover dark:bg-canvas',
+        'neo-theme-scope',
         className
       )}
     >
@@ -136,8 +145,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           breadcrumbs={breadcrumbs}
           notifications={notifications}
           unreadCount={unreadCount}
-          theme={theme}
-          onThemeChange={onThemeChange}
+          theme={activeTheme?.mode ?? theme}
+          onThemeChange={activeTheme?.host || activeTheme?.inherited ? undefined : onThemeChange}
           onLogout={onLogout}
           onMenuToggle={handleMenuToggle}
           onNotificationClick={onNotificationClick}

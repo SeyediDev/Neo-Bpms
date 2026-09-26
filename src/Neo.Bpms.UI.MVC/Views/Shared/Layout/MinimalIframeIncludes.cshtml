@@ -1,4 +1,4 @@
-﻿@using Neo.Bpms.UI.MVC.Helpers
+@using Neo.Bpms.UI.MVC.Helpers
 @{
 	if (CultureHelper.IsRightToLeft())
 	{
@@ -27,3 +27,6 @@
 	<script src="@CommonBundles.IframesJsBundle" asp-append-version="true"></script>
 	<partial name="Utility/I18NAwareBundle" model="CommonBundles.GlobalTextsBundle"/>
 }
+<link href="@Url.Content("~/_content/Neo.Bpms.UI.MVC/css/neo-theme.css")" asp-append-version="true" rel="stylesheet" />
+<link href="@Url.Content("~/_content/Neo.Bpms.UI.MVC/css/neo-theme-mvc.css")" asp-append-version="true" rel="stylesheet" />
+<script src="@Url.Content("~/_content/Neo.Bpms.UI.MVC/js/neo-theme.js")" asp-append-version="true"></script>

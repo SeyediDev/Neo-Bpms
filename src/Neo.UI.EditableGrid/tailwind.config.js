@@ -1,3 +1,4 @@
+const neoThemeColors = require('../Neo.UI.Shared/theme-colors.cjs');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,6 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        ...neoThemeColors,
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

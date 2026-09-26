@@ -107,7 +107,7 @@ export function LoginPage({
     <div
       className={clsx(
         'min-h-screen flex items-center justify-center',
-        'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
+        'bg-canvas',
         'px-4 py-8',
         className
       )}
@@ -122,7 +122,7 @@ export function LoginPage({
 
       {/* Login Card */}
       <div className="relative w-full max-w-md">
-        <div className="backdrop-blur-xl bg-white/10 rounded-3xl shadow-2xl border border-white/20 p-8">
+        <div className="backdrop-blur-xl bg-surface rounded-3xl shadow-2xl border border-border p-8">
           {/* Logo & Title */}
           <div className="text-center mb-8">
             {logo && (
@@ -134,13 +134,13 @@ export function LoginPage({
                 )}
               </div>
             )}
-            <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
-            <p className="text-gray-300">{subtitle}</p>
+            <h1 className="text-3xl font-bold text-text mb-2">{title}</h1>
+            <p className="text-subtle">{subtitle}</p>
           </div>
 
           {/* Error Alert */}
           {error && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-200 text-sm text-center backdrop-blur-sm">
+            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-700 dark:text-red-200 text-sm text-center backdrop-blur-sm">
               <svg className="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -152,7 +152,7 @@ export function LoginPage({
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username Field */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-200 mb-2">
+              <label htmlFor="username" className="block text-sm font-medium text-subtle mb-2">
                 نام کاربری
               </label>
               <div className="relative">
@@ -163,10 +163,10 @@ export function LoginPage({
                   onChange={(e) => setUsername(e.target.value)}
                   className={clsx(
                     'w-full px-4 py-3 pr-11',
-                    'bg-white/10 backdrop-blur-sm',
-                    'border border-white/20 rounded-xl',
-                    'text-white placeholder-gray-400',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
+                    'bg-surface backdrop-blur-sm',
+                    'border border-border rounded-xl',
+                    'text-text placeholder-muted',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent',
                     'transition-all duration-200'
                   )}
                   placeholder="نام کاربری یا ایمیل"
@@ -174,7 +174,7 @@ export function LoginPage({
                   disabled={isLoading}
                 />
                 <svg
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -186,7 +186,7 @@ export function LoginPage({
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-subtle mb-2">
                 رمز عبور
               </label>
               <div className="relative">
@@ -197,10 +197,10 @@ export function LoginPage({
                   onChange={(e) => setPassword(e.target.value)}
                   className={clsx(
                     'w-full px-4 py-3 pr-11 pl-11',
-                    'bg-white/10 backdrop-blur-sm',
-                    'border border-white/20 rounded-xl',
-                    'text-white placeholder-gray-400',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
+                    'bg-surface backdrop-blur-sm',
+                    'border border-border rounded-xl',
+                    'text-text placeholder-muted',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent',
                     'transition-all duration-200'
                   )}
                   placeholder="رمز عبور"
@@ -208,7 +208,7 @@ export function LoginPage({
                   disabled={isLoading}
                 />
                 <svg
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -218,7 +218,7 @@ export function LoginPage({
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -243,10 +243,10 @@ export function LoginPage({
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/30 bg-white/10 text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-border bg-surface text-accent focus:ring-accent focus:ring-offset-0"
                     disabled={isLoading}
                   />
-                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                  <span className="text-sm text-subtle group-hover:text-text transition-colors">
                     مرا به خاطر بسپار
                   </span>
                 </label>
@@ -255,7 +255,7 @@ export function LoginPage({
               {showForgotPassword && (
                 <a
                   href={forgotPasswordUrl}
-                  className="text-sm text-purple-300 hover:text-purple-200 transition-colors"
+                  className="text-sm text-accent hover:text-accent-hover transition-colors"
                 >
                   فراموشی رمز عبور؟
                 </a>
@@ -267,10 +267,10 @@ export function LoginPage({
               type="submit"
               disabled={isLoading}
               className={clsx(
-                'w-full py-3 px-4 rounded-xl font-medium text-white',
-                'bg-gradient-to-r from-purple-600 to-pink-600',
-                'hover:from-purple-500 hover:to-pink-500',
-                'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent',
+                'w-full py-3 px-4 rounded-xl font-medium text-on-accent',
+                'bg-gradient-to-r from-accent to-accent-hover',
+                'hover:from-accent-hover hover:to-accent',
+                'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-transparent',
                 'transition-all duration-200',
                 'shadow-lg shadow-purple-500/30',
                 isLoading && 'opacity-75 cursor-not-allowed'
@@ -292,14 +292,14 @@ export function LoginPage({
 
           {/* Footer */}
           {footer && (
-            <div className="mt-8 text-center text-sm text-gray-400">
+            <div className="mt-8 text-center text-sm text-muted">
               {footer}
             </div>
           )}
         </div>
 
         {/* Version / Copyright */}
-        <p className="mt-6 text-center text-xs text-gray-500">
+        <p className="mt-6 text-center text-xs text-muted">
           © {new Date().getFullYear()} Neo BPMS. تمام حقوق محفوظ است.
         </p>
       </div>

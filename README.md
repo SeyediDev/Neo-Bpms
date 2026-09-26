@@ -96,8 +96,29 @@ is shipped through the Razor library's `wwwroot` assets. See the
 
 The [UI and active-theme roadmap](docs/UI-THEME-PLAN.fa.md) records the source
 audit, shared theme contract proposal, phased rollout and acceptance checks across
-MVC, React, generated controls, overlays, charts and iframes. This is a plan;
-full theme alignment has not yet been implemented.
+MVC, React, generated controls, overlays, charts and iframes. The first implementation is included in this repository. Browser regression
+checks cover the shared controls; authenticated Hyper acceptance is recorded separately.
+See the [theme integration guide and validation status](docs/UI-THEME-IMPLEMENTATION.fa.md).
+
+The shared `NeoTheme` bridge maps the host palette to semantic CSS tokens used by
+MVC adapters and React surfaces. Same-origin embedded pages inherit the parent
+palette. Standalone pages support light, dark and system preferences using the
+existing `neo_theme` storage key. Host colors take precedence over local preferences.
+
+```javascript
+window.NeoTheme.set({ mode: 'system' }, true); // standalone preference
+window.addEventListener('neo:theme-changed', event => {
+  console.log(event.detail.mode);
+});
+```
+
+Run `npm run test:theme` in the existing frontend test directory after installing
+its dependencies. The Edge regression checks passed: 14 column-filter tests and 12 theme tests,
+including the shipped Bootstrap CSS. Two additional production-output tests
+validate asset loading, hydration and live iframe theme inheritance. These
+fixtures are not evidence of
+authenticated Hyper acceptance.
+The five Companion MCP tools retain their current contracts.
 
 ## Column-header filters
 

@@ -1,0 +1,120 @@
+/* Adapters for generated MVC surfaces and third-party popups.
+   Important is limited to slots where legacy bundles already use important. */
+html[data-neo-theme] :is(.mm-page, .body-content, #filterDiv, #DashboardFilter) {
+  background-color: var(--neo-canvas); color: var(--neo-text);
+}
+html[data-neo-theme] :is(.card, .panel, .modern-form, .modern-filter-wrapper,
+  .filter-tooltip-panel, .modern-filter-content, .filter-main-content,
+  .modal-content, .dropdown-menu, .neo-ux-toolbar, .neo-filter-toolbar) {
+  background-color: var(--neo-surface) !important;
+  color: var(--neo-text); border-color: var(--neo-border) !important;
+}
+html[data-neo-theme] :is(.neo-control, .modern-form, #filterDiv, #filterTooltipPanel, #DashboardFilter)
+  :is(.form-control, .custom-select, select, textarea, input:not([type=checkbox]):not([type=radio]):not([type=hidden])) {
+  background-color: var(--neo-input) !important; color: var(--neo-input-text) !important;
+  border-color: var(--neo-border) !important; border-radius: var(--neo-radius);
+}
+html[data-neo-theme] :is(.neo-control, .modern-form) :is(input, textarea)::placeholder {
+  color: var(--neo-subtle); opacity: 1;
+}
+html[data-neo-theme] :is(.neo-control, .modern-form) :is(input, select, textarea):focus {
+  border-color: var(--neo-accent) !important; box-shadow: 0 0 0 3px var(--neo-focus);
+}
+html[data-neo-theme] :is(.neo-control, .modern-form) :is(input, select, textarea):disabled {
+  background-color: var(--neo-hover) !important; color: var(--neo-muted) !important;
+  cursor: not-allowed;
+}
+html[data-neo-theme] :is(.neo-control, .modern-form) :is(label, .control-label, .form-label) {
+  color: var(--neo-text);
+}
+html[data-neo-theme] :is(.help-block, .form-text, .text-muted, .neo-filter-active-count) { color: var(--neo-muted) !important; }
+html[data-neo-theme] :is(.field-validation-error, .validation-summary-errors, .invalid-feedback) { color: var(--neo-danger); }
+html[data-neo-theme] :is(.neo-control, .modern-form) .input-validation-error { border-color: var(--neo-danger) !important; }
+html[data-neo-theme] :is(.btn-primary, .modern-btn-primary, .neo-filter-chip, .neo-filter-more-toggle) {
+  background: var(--neo-accent); border-color: var(--neo-accent); color: var(--neo-on-accent);
+}
+html[data-neo-theme] :is(.btn-primary, .modern-btn-primary):hover { background: var(--neo-accent-hover); }
+html[data-neo-theme] :is(.neo-column-filter, .btn-default, .btn-secondary) { color: var(--neo-text); }
+html[data-neo-theme] .neo-column-filter:is(:hover, :focus-visible, .is-active) {
+  background: var(--neo-selection); color: var(--neo-accent); border-color: var(--neo-accent);
+}
+html[data-neo-theme] .neo-column-filter:disabled { opacity: .45; cursor: default; }
+html[data-neo-theme] .neo-filter-focus { outline: 2px solid var(--neo-accent); outline-offset: 2px; }
+html[data-neo-theme] :is(.modern-multi-select-input, .modern-multi-select-dropdown,
+  .modern-multi-select-overflow-popover, .select2-dropdown, .select2-selection,
+  .datepicker-plot-area, .datepicker-container, .ui-datepicker) {
+  background: var(--neo-elevated) !important; color: var(--neo-text) !important;
+  border-color: var(--neo-border) !important;
+}
+html[data-neo-theme] :is(.modern-multi-select-option, .select2-results__option, .dropdown-item) { color: var(--neo-text); }
+html[data-neo-theme] :is(.modern-multi-select-option, .select2-results__option, .dropdown-item):hover,
+html[data-neo-theme] .select2-results__option--highlighted {
+  background: var(--neo-hover) !important; color: var(--neo-text) !important;
+}
+html[data-neo-theme] :is(.modern-multi-select-item, .select2-selection__choice) {
+  background: var(--neo-selection) !important; color: var(--neo-text) !important; border-color: var(--neo-border);
+}
+html[data-neo-theme] .datepicker-plot-area :is(.datepicker-day-view, .datepicker-month-view, .datepicker-year-view) {
+  background: var(--neo-elevated); color: var(--neo-text);
+}
+html[data-neo-theme] .datepicker-plot-area :is(td, th, .pwt-btn, .header-row-cell, .table-days td span) {
+  color: var(--neo-text); background-color: transparent;
+}
+html[data-neo-theme] .datepicker-plot-area .table-days td.selected span {
+  background: var(--neo-accent); color: var(--neo-on-accent);
+}
+html[data-neo-theme] :is(.body-content, .modal-content) :is(.table, .t-table, .tabulator) {
+  color: var(--neo-text); background: var(--neo-report-surface); border-color: var(--neo-border);
+}
+html[data-neo-theme] :is(.table, .t-table) thead th,
+html[data-neo-theme] :is(.tabulator-header, .tabulator-col) {
+  background: var(--neo-report-header) !important; color: var(--neo-text); border-color: var(--neo-border);
+}
+html[data-neo-theme] :is(.table, .t-table) :is(td, th) { border-color: var(--neo-border); }
+html[data-neo-theme] :is(.table-striped tbody tr:nth-of-type(odd), .tabulator-row:nth-child(odd)) {
+  background: var(--neo-report-alternate); color: var(--neo-text);
+}
+html[data-neo-theme] :is(.table-hover tbody tr:hover, .tabulator-row:hover, .list-group-item:hover) {
+  background: var(--neo-hover) !important; color: var(--neo-text);
+}
+html[data-neo-theme] :is(.tabulator-selected, .table tbody tr.selected) { background: var(--neo-selection) !important; }
+html[data-neo-theme] :is(.page-link, .list-group-item, .nav-tabs .nav-link) {
+  background-color: var(--neo-surface); color: var(--neo-muted); border-color: var(--neo-border);
+}
+html[data-neo-theme] :is(.page-item.active .page-link, .nav-tabs .nav-link.active) {
+  background-color: var(--neo-selection); color: var(--neo-accent); border-color: var(--neo-accent);
+}
+html[data-neo-theme] #neo-header { background: var(--neo-header-surface); color: var(--neo-header-text); }
+html[data-neo-theme] .mm-menu {
+  --mm-color-background: var(--neo-surface); --mm-color-text: var(--neo-text);
+  --mm-color-text-dimmed: var(--neo-muted); --mm-color-border: var(--neo-border);
+  --mm-color-background-emphasis: var(--neo-hover); --mm-color-background-highlight: var(--neo-selection);
+}
+html[data-neo-theme] :is(.chart-type-buttons-group, .calendar-chart-container, .calendar-grid-modern, .calendar-day, .summary-card) {
+  background: var(--neo-surface); color: var(--neo-text); border-color: var(--neo-border);
+}
+html[data-neo-theme] :is(.chart-type-btn, .calendar-month-title, .day-number, .summary-value, .item-value) { color: var(--neo-text); }
+html[data-neo-theme] :is(.chart-type-btn:hover:not(.active), .calendar-day:hover:not(.empty), .calendar-weekdays) { background: var(--neo-hover); }
+html[data-neo-theme] .chart-type-btn.active { background: var(--neo-accent); color: var(--neo-on-accent); }
+html[data-neo-theme] .calendar-day.empty { background: var(--neo-canvas); }
+html[data-neo-theme] :is(.djs-palette, .djs-context-pad, .bpp-properties-panel, .dmn-properties-panel) {
+  background: var(--neo-elevated); color: var(--neo-text); border-color: var(--neo-border);
+}
+html[data-neo-theme] :is(.modal-header, .modal-footer, .neo-filter-toolbar) { border-color: var(--neo-border); }
+html[data-neo-theme] :is(.modal-content, .card, .modern-filter-wrapper) { border-radius: var(--neo-radius); }
+@media (max-width: 767px) {
+  html[data-neo-theme] .neo-filter-toolbar { gap: .5rem; flex-wrap: wrap; }
+  html[data-neo-theme] :is(.neo-filter-active-summary, .neo-filter-chip) { max-width: 100%; overflow-wrap: anywhere; }
+}
+@media print {
+  html[data-neo-theme] :is(.card, .panel, .table, .t-table, .table th, .table td, .modern-form) {
+    background: white !important; color: black !important; box-shadow: none;
+  }
+}
+
+
+/* Highcharts renders SVG: recolor UI chrome without resetting series or zoom. */
+html[data-neo-theme] :is(.highcharts-axis-labels text, .highcharts-title, .highcharts-subtitle, .highcharts-legend-item text, .highcharts-tooltip text) { fill: var(--neo-chart-text) !important; }
+html[data-neo-theme] .highcharts-background { fill: var(--neo-chart-surface); }
+html[data-neo-theme] .highcharts-grid-line { stroke: var(--neo-chart-grid); }
+html[data-neo-theme] .highcharts-tooltip-box { fill: var(--neo-elevated); stroke: var(--neo-border); }

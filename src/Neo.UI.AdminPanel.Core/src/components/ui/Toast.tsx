@@ -230,8 +230,8 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     <div
       className={clsx(
         'flex items-start gap-3 p-4 rounded-xl shadow-lg',
-        'bg-white dark:bg-gray-800',
-        'border border-gray-200 dark:border-gray-700',
+        'bg-surface dark:bg-elevated',
+        'border border-border dark:border-border',
         'transform transition-all duration-200',
         isExiting ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'
       )}
@@ -243,9 +243,9 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-900 dark:text-white">{toast.title}</p>
+        <p className="font-medium text-text dark:text-text">{toast.title}</p>
         {toast.message && (
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{toast.message}</p>
+          <p className="mt-0.5 text-sm text-muted dark:text-muted">{toast.message}</p>
         )}
         {toast.action && (
           <button
@@ -260,7 +260,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       {/* Close button */}
       <button
         onClick={handleClose}
-        className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        className="flex-shrink-0 text-muted hover:text-muted dark:hover:text-subtle"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

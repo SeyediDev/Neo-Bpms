@@ -88,7 +88,7 @@ export function Avatar({
   const sizes = sizeClasses[size];
   const showImage = src && !imgError;
   const initials = name ? getInitials(name) : '?';
-  const bgColor = color || (name ? stringToColor(name) : 'bg-gray-400');
+  const bgColor = color || (name ? stringToColor(name) : 'bg-border');
 
   return (
     <div className={clsx('relative inline-flex flex-shrink-0', className)}>
@@ -118,9 +118,9 @@ export function Avatar({
       {online !== undefined && (
         <span
           className={clsx(
-            'absolute bottom-0 left-0 block rounded-full ring-2 ring-white dark:ring-gray-800',
+            'absolute bottom-0 left-0 block rounded-full ring-2 ring-white dark:ring-accent',
             sizes.indicator,
-            online ? 'bg-emerald-500' : 'bg-gray-400'
+            online ? 'bg-emerald-500' : 'bg-border'
           )}
         />
       )}
@@ -147,7 +147,7 @@ export function AvatarGroup({
       {visible.map((avatar, index) => (
         <div
           key={index}
-          className="ring-2 ring-white dark:ring-gray-800 rounded-full"
+          className="ring-2 ring-white dark:ring-accent rounded-full"
           style={{ zIndex: visible.length - index }}
         >
           {avatar}
@@ -158,9 +158,9 @@ export function AvatarGroup({
         <div
           className={clsx(
             'flex items-center justify-center rounded-full',
-            'bg-gray-200 dark:bg-gray-700',
-            'text-gray-600 dark:text-gray-300',
-            'ring-2 ring-white dark:ring-gray-800',
+            'bg-selection dark:bg-elevated',
+            'text-muted dark:text-subtle',
+            'ring-2 ring-white dark:ring-accent',
             sizes.container,
             sizes.text,
             'font-medium'

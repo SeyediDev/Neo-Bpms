@@ -1,14 +1,15 @@
+@import "../../../Neo.Bpms.UI.MVC/wwwroot/css/neo-theme.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --grid-border-color: #e5e7eb;
-  --grid-header-bg: #f9fafb;
-  --grid-cell-pending: #fef3c7;
-  --grid-cell-saving: #dbeafe;
-  --grid-cell-saved: #dcfce7;
-  --grid-cell-error: #fee2e2;
+  --grid-border-color: var(--neo-border);
+  --grid-header-bg: var(--neo-surface);
+  --grid-cell-pending: color-mix(in srgb, var(--neo-warning) 15%, var(--neo-surface));
+  --grid-cell-saving: var(--neo-selection);
+  --grid-cell-saved: color-mix(in srgb, var(--neo-success) 15%, var(--neo-surface));
+  --grid-cell-error: color-mix(in srgb, var(--neo-danger) 15%, var(--neo-surface));
 }
 
 body {
@@ -23,7 +24,7 @@ body {
 
 /* Grid Styles */
 .editable-grid {
-  direction: rtl;
+  direction: inherit;
   font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -37,12 +38,12 @@ body {
 }
 
 .grid-cell:hover {
-  background-color: #f9fafb;
+  background-color: var(--neo-hover);
 }
 
 .grid-cell.editing {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+  border-color: var(--neo-accent);
+  box-shadow: 0 0 0 2px var(--neo-focus);
 }
 
 .grid-cell.pending {
@@ -106,3 +107,10 @@ body {
   background: #555;
 }
 
+
+:root[data-neo-theme] :is(.cell-select__control, .cell-select__menu, .cell-select__menu-list, .react-datepicker, .react-datepicker__header) {
+  background: var(--neo-elevated); color: var(--neo-text); border-color: var(--neo-border);
+}
+:root[data-neo-theme] :is(.cell-select__single-value, .cell-select__input-container, .cell-select__option, .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__current-month) { color: var(--neo-text); }
+:root[data-neo-theme] :is(.cell-select__option--is-focused, .react-datepicker__day:hover) { background: var(--neo-hover); }
+:root[data-neo-theme] :is(.cell-select__option--is-selected, .react-datepicker__day--selected) { background: var(--neo-accent); color: var(--neo-on-accent); }

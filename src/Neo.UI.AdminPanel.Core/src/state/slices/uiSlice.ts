@@ -6,6 +6,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { ThemeConfig, Notification } from '../../types';
 import { STORAGE_KEYS } from '../../config/defaults';
+import { defaultTheme, loadTheme, applyTheme, normalizeTheme } from '../../theme';
 
 /**
  * UI State interface
@@ -23,27 +24,15 @@ export interface UiState {
 }
 
 /**
- * Default theme configuration
- */
-const defaultTheme: ThemeConfig = {
-  mode: 'light',
-  primaryColor: '#0ea5e9',
-  borderRadius: 'md',
-  fontFamily: 'Vazirmatn',
-  direction: 'rtl',
-};
-
-/**
  * Load persisted UI state
  */
 const loadPersistedUiState = (): Partial<UiState> => {
   try {
-    const theme = localStorage.getItem(STORAGE_KEYS.THEME);
     const language = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
     const sidebarCollapsed = localStorage.getItem(STORAGE_KEYS.SIDEBAR_COLLAPSED);
 
     return {
-      theme: theme ? JSON.parse(theme) : defaultTheme,
+      theme: loadTheme(),
       language: language || 'fa',
       sidebarCollapsed: sidebarCollapsed === 'true',
     };
@@ -69,20 +58,7 @@ const initialState: UiState = {
   ...persistedState,
 };
 
-// Apply initial theme to document
-if (typeof document !== 'undefined') {
-  const root = document.documentElement;
-  const theme = persistedState.theme || defaultTheme;
-  root.setAttribute('data-theme', theme.mode);
-  root.setAttribute('dir', theme.direction);
-  root.style.setProperty('--primary-color', theme.primaryColor);
-  // Add/remove 'dark' class for Tailwind dark mode
-  if (theme.mode === 'dark') {
-    root.classList.add('dark');
-  } else {
-    root.classList.remove('dark');
-  }
-}
+applyTheme(initialState.theme);
 
 /**
  * Generate unique notification ID
@@ -101,36 +77,17 @@ const uiSlice = createSlice({
      * Set theme
      */
     setTheme: (state, action: PayloadAction<Partial<ThemeConfig>>) => {
-      state.theme = { ...state.theme, ...action.payload };
-      localStorage.setItem(STORAGE_KEYS.THEME, JSON.stringify(state.theme));
-
-      // Apply theme to document
-      const root = document.documentElement;
-      root.setAttribute('data-theme', state.theme.mode);
-      root.setAttribute('dir', state.theme.direction);
-      root.style.setProperty('--primary-color', state.theme.primaryColor);
-      // Add/remove 'dark' class for Tailwind dark mode
-      if (state.theme.mode === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+      state.theme = normalizeTheme({ ...state.theme, ...action.payload });
+      applyTheme(state.theme, true);
     },
 
     /**
      * Toggle theme mode
      */
     toggleThemeMode: (state) => {
-      state.theme.mode = state.theme.mode === 'light' ? 'dark' : 'light';
-      localStorage.setItem(STORAGE_KEYS.THEME, JSON.stringify(state.theme));
-      const root = document.documentElement;
-      root.setAttribute('data-theme', state.theme.mode);
-      // Add/remove 'dark' class for Tailwind dark mode
-      if (state.theme.mode === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+      const resolvedMode = typeof window !== 'undefined' ? window.NeoTheme?.snapshot()?.mode : state.theme.mode;
+      state.theme.mode = resolvedMode === 'dark' ? 'light' : 'dark';
+      applyTheme(state.theme, true);
     },
 
     /**
@@ -138,13 +95,13 @@ const uiSlice = createSlice({
      */
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
-      localStorage.setItem(STORAGE_KEYS.LANGUAGE, action.payload);
+      try { localStorage.setItem(STORAGE_KEYS.LANGUAGE, action.payload); } catch { /* Storage may be disabled. */ }
 
       // Update direction based on language
       const isRtl = ['fa', 'ar', 'he'].includes(action.payload);
       state.theme.direction = isRtl ? 'rtl' : 'ltr';
-      document.documentElement.setAttribute('dir', state.theme.direction);
-      document.documentElement.setAttribute('lang', action.payload);
+      applyTheme(state.theme, true);
+      if (typeof document !== 'undefined') document.documentElement.setAttribute('lang', action.payload);
     },
 
     /**

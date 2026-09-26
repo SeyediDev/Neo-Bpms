@@ -61,25 +61,25 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   ];
 
   return (
-    <div className="filter-bar bg-white border-b border-gray-200 p-4 shadow-sm">
+    <div className="filter-bar bg-surface border-b border-border p-4 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">فیلترها</h3>
         <div className="flex gap-2">
           <button
             onClick={applyFilters}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-accent text-on-accent rounded hover:bg-accent-hover"
           >
             اعمال فیلتر
           </button>
           <button
             onClick={clearFilters}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            className="px-4 py-2 bg-selection text-text rounded hover:bg-hover"
           >
             پاک کردن
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 text-muted hover:text-text"
           >
             ✕
           </button>
@@ -88,11 +88,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       <div className="space-y-3">
         {localFilters.map((filter, index) => (
-          <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
+          <div key={index} className="flex items-center gap-3 p-3 bg-canvas rounded">
             <select
               value={filter.columnId}
               onChange={(e) => updateFilter(index, { columnId: e.target.value })}
-              className="px-3 py-2 border border-gray-300 rounded flex-1"
+              className="px-3 py-2 border border-border rounded flex-1"
             >
               {columns.map(col => (
                 <option key={col.id} value={col.id}>{col.name}</option>
@@ -102,7 +102,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <select
               value={filter.operator}
               onChange={(e) => updateFilter(index, { operator: e.target.value as any })}
-              className="px-3 py-2 border border-gray-300 rounded"
+              className="px-3 py-2 border border-border rounded"
             >
               {operators.map(op => (
                 <option key={op.value} value={op.value}>{op.label}</option>
@@ -114,7 +114,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               value={filter.value || ''}
               onChange={(e) => updateFilter(index, { value: e.target.value })}
               placeholder="مقدار فیلتر"
-              className="px-3 py-2 border border-gray-300 rounded flex-1"
+              className="px-3 py-2 border border-border rounded flex-1"
             />
 
             <button
@@ -128,7 +128,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
         <button
           onClick={addFilter}
-          className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded text-gray-600 hover:border-gray-400 hover:text-gray-800"
+          className="w-full px-4 py-2 border-2 border-dashed border-border rounded text-muted hover:border-border hover:text-text"
         >
           + افزودن فیلتر
         </button>

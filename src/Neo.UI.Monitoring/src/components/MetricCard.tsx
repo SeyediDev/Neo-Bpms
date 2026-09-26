@@ -29,7 +29,7 @@ export function MetricCard({
     healthy: 'text-status-healthy',
     warning: 'text-status-warning',
     critical: 'text-status-critical',
-    neutral: 'text-slate-400',
+    neutral: 'text-muted',
   };
 
   const statusBorders = {
@@ -69,7 +69,7 @@ export function MetricCard({
       )}
     >
       <div className="flex items-start justify-between mb-4">
-        <div className={clsx('p-2 rounded-lg bg-slate-800', statusColors[status])}>
+        <div className={clsx('p-2 rounded-lg bg-elevated', statusColors[status])}>
           {icon || (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -81,7 +81,7 @@ export function MetricCard({
             'flex items-center gap-1 text-sm',
             trend.direction === 'up' ? 'text-status-healthy' :
             trend.direction === 'down' ? 'text-status-critical' :
-            'text-slate-400'
+            'text-muted'
           )}>
             {trendIcons[trend.direction]}
             <span>{trend.percentage}%</span>
@@ -89,7 +89,7 @@ export function MetricCard({
         )}
       </div>
 
-      <h3 className="text-sm text-slate-400 mb-1">{title}</h3>
+      <h3 className="text-sm text-muted mb-1">{title}</h3>
       <motion.p
         key={String(value)}
         initial={{ opacity: 0, y: 5 }}
@@ -99,7 +99,7 @@ export function MetricCard({
         {value}
       </motion.p>
       {subtitle && (
-        <p className="text-sm text-slate-500 mt-2">{subtitle}</p>
+        <p className="text-sm text-muted mt-2">{subtitle}</p>
       )}
     </motion.div>
   );

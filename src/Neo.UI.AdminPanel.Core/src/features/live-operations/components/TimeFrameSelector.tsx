@@ -32,7 +32,7 @@ export const TimeFrameSelector: React.FC<TimeFrameSelectorProps> = ({
     <div
       className={clsx(
         'inline-flex rounded-xl p-1',
-        'bg-gray-100 dark:bg-gray-800',
+        'bg-hover dark:bg-elevated',
         className
       )}
     >
@@ -47,8 +47,8 @@ export const TimeFrameSelector: React.FC<TimeFrameSelectorProps> = ({
               'rounded-lg font-medium transition-all duration-200',
               sizeClasses[size],
               isSelected
-                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-surface dark:bg-elevated text-purple-600 dark:text-purple-300 shadow-sm'
+                : 'text-muted dark:text-muted hover:text-text dark:hover:text-white'
             )}
           >
             {showLabels ? option.label : option.labelEn}

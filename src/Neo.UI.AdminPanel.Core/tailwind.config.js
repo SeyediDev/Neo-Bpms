@@ -1,3 +1,4 @@
+import neoThemeColors from '../Neo.UI.Shared/theme-colors.cjs';
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,6 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        ...neoThemeColors,
         neo: {
           50: '#f0f9ff',
           100: '#e0f2fe',
