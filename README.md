@@ -168,3 +168,16 @@ need artificial changes. [Maintenance procedure](docs/COMPANION-MAINTENANCE.md).
 
 Proprietary — all rights reserved by Javad Seyedi. This repository and its Companion
 knowledge are private. Unauthorized copying, distribution or use is prohibited.
+
+## Document upload and storage audit
+
+The [document-flow audit](docs/DOCUMENT-FLOW-AUDIT.fa.md) follows generated file
+controls through ordinary and chunked upload, host persistence, download, preview
+and Object Storage. The current implementation has blocking defects: the opt-in
+acceptance audit reports **10 passed / 21 failed** across 31 scenarios. These are
+failed requirements, not a claim of readiness. Production code was not changed by
+the audit. The report documents linked-source tests, boundary doubles, source
+fingerprints and the real MinIO/SQL/browser checks that remain unverified.
+
+The Companion's existing `dynamic-form` recipe includes document-flow guidance;
+its five tool schemas remain unchanged. See the audit report for runnable commands.

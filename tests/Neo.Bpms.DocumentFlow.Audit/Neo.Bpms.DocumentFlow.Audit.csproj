@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors><Nullable>annotations</Nullable>
+    <NeoRoot Condition="'$(NeoRoot)'==''">$(MSBuildThisFileDirectory)../../../Neo</NeoRoot>
+    <HyperRoot Condition="'$(HyperRoot)'==''">$(MSBuildThisFileDirectory)../../../Hyper/Backend</HyperRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Newtonsoft.Json" /><PackageReference Include="Minio" />
+    <Compile Include="../../src/Neo.Bpms.UI.MVC/Controllers/UploadController.cs" Link="Source/UploadController.cs" />
+    <Compile Include="../../src/Neo.Bpms.UI.MVC/Controllers/DownloadController.cs" Link="Source/DownloadController.cs" />
+    <Compile Include="../../src/Neo.Bpms.Domain/Features/Cmmn/ObjectStorage/ICmmnDocument.cs" Link="Source/ICmmnDocument.cs" />
+    <Compile Include="../../src/Neo.Bpms.Domain/Features/Cmmn/ObjectStorage/Dto/DocumentView.cs" Link="Source/DocumentView.cs" />
+    <Compile Include="$(NeoRoot)/src/Neo.Domain/Features/ObjectStore/Dto/ObjectStoreDto.cs" Link="Source/ObjectStoreDto.cs" />
+    <Compile Include="$(NeoRoot)/src/Neo.Domain/Features/ObjectStore/IObjectStoreService.cs" Link="Source/IObjectStoreService.cs" />
+    <Compile Include="$(NeoRoot)/src/Neo.Infrastructure/Features/ObjectStore/ObjectStoreService.cs" Link="Source/ObjectStoreService.cs" />
+    <Compile Include="$(NeoRoot)/src/Neo.Common/Utility/NeoMimeTypes.cs" Link="Source/NeoMimeTypes.cs" />
+    <Compile Include="$(HyperRoot)/src/AdminPanel/Hyper.AdminPanel.Web/Infrastructure/Cmmn/CmmnDocument.cs" Link="Source/CmmnDocument.cs" />
+  </ItemGroup>
+</Project>

@@ -166,6 +166,19 @@ class CompanionTests(unittest.TestCase):
         self.assertEqual([r['error']['code'] for r in responses[:2]], [-32700, -32600])
         self.assertEqual(responses[2]['result']['serverInfo']['version'], '0.2.0')
 
+    def test_document_guidance_is_served_over_real_stdio(self):
+        requests = [INIT, {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/call',
+            'params': {'name': 'bpms_get_recipe', 'arguments': {'topic': 'dynamic-form'}}}]
+        proc = subprocess.run([sys.executable, str(HERE / 'neo_bpms_mcp.py')],
+            input='\n'.join(json.dumps(r) for r in requests) + '\n',
+            capture_output=True, text=True, encoding='utf-8', timeout=30)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        response = json.loads(proc.stdout.splitlines()[-1])['result']
+        self.assertFalse(response['isError'])
+        text = json.dumps(response, ensure_ascii=False)
+        self.assertIn('DOCUMENT-FLOW-AUDIT.fa.md', text)
+        self.assertIn('not real MinIO acceptance', text)
+        self.assertIn('UploadController.cs', text)
     def test_real_stdio_exercises_all_five_tools(self):
         self.write('Setup.cs', 'services.AddScoped<IExample, Example>();')
         self.write('Example.csproj', '<Project><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>')

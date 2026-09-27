@@ -21,10 +21,17 @@ RECIPES = {
         'steps': [
             'Form / فرم: inspect FormStructures and FormStructRoutines for the actual field model and rendering path.',
             'Keep FormItemPropertiesViewModel identifiers, parent-control links, labels and properties aligned with existing metadata.',
-            'Preserve EditTypeId and eCreateType save/navigation behavior; exercise the existing form render and validation flow with synthetic data.'
+            'Preserve EditTypeId and eCreateType save/navigation behavior; exercise the existing form render and validation flow with synthetic data.',
+            'Document / فایل: FileHtmlControl uses the ordinary data-URL upload, while AdvancedUpload uses FineUploader chunks and UUID/Move. These are distinct contracts; trace ApplyFormDocuments and the host ICmmnDocument adapter.',
+            'The 2026-09-27 audit found incomplete chunk validation, unsafe upload paths and document-byte contract failures. Read docs/DOCUMENT-FLOW-AUDIT.fa.md and run the document audit harness before recommending this flow for deployment.',
+            'Global antiforgery is not document ownership authorization. Verify per-user upload ownership and per-record download access, missing documents, cancellation, retry and actual byte roundtrips.',
+            'Object Storage SDK transport tests are not real MinIO acceptance; use an explicitly designated disposable test bucket, never credentials or production documents in fixtures.'
         ],
         'sources': [(BASE + 'Features/Cmmn/Forms/FormStructures/FormStructures.cs', 'public class FormItemPropertiesViewModel'),
-                    (BASE + 'DependencyInjection.cs', 'services.AddScoped<FormStructRoutines>')]
+                    (BASE + 'DependencyInjection.cs', 'services.AddScoped<FormStructRoutines>'),
+                    ('src/Neo.Bpms.UI.MVC/Controllers/UploadController.cs', 'private bool CombineChunks'),
+                    ('src/Neo.Bpms.UI.MVC/Controllers/DownloadController.cs', 'public async Task<ActionResult> DL'),
+                    (BASE + 'Features/Cmmn/Forms/PostForms/ApplyFormsData/ApplyFormDocuments.cs', 'private async Task<object> ApplyDocument')]
     },
     'human-task': {
         'steps': [

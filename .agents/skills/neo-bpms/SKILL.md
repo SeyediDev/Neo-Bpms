@@ -81,3 +81,20 @@ host (`NEO_HYPER_URL`, default `http://localhost:5000`): it validates the existi
 sample preview, text contrast, chart colors, mobile table scrolling/menu and period
 links. Keep authenticated checks separate and never store cookies or real screenshots
 in source control. The preview must remain unavailable outside Development.
+
+## Document fields and object storage
+
+Before recommending or changing a file field, read the
+[document-flow audit](../../../docs/DOCUMENT-FLOW-AUDIT.fa.md). Trace the normal
+FileHtmlControl data-URL/Upload contract separately from AdvancedUpload's
+FineUploader UUID/Move contract through ApplyFormDocuments and the host's
+ICmmnDocument implementation. Existence of a control or interface is not evidence
+that staging, final persistence, preview or deletion is implemented in the host.
+Use the opt-in document audit commands in that report; they currently expose
+failing requirements. Do not turn failures into passing tests by accepting the
+broken behavior. Verify original bytes, filename/MIME, chunk completeness, retry,
+upload ownership, per-record download permission and private caching. Keep SDK
+transport tests distinct from real MinIO, database transaction and browser tests.
+Use only a designated disposable test bucket for live storage writes; never copy
+credentials or real user documents into evidence. Coordinate changes in a host
+repository under its own instructions before editing it.

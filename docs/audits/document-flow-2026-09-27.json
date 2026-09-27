@@ -1,0 +1,144 @@
+{
+  "scope": "Linked production source with boundary doubles; no real database or MinIO server; expected requirements, failures are defects",
+  "passed": 6,
+  "failed": 18,
+  "results": [
+    {
+      "name": "Simple upload preserves bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "UUID traversal is rejected",
+      "status": "FAIL",
+      "error": "InvalidOperationException: UUID escaped upload root inside isolated audit directory"
+    },
+    {
+      "name": "Filename traversal is rejected",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Filename escaped upload root inside isolated audit directory"
+    },
+    {
+      "name": "Empty multipart request returns failure without exception",
+      "status": "FAIL",
+      "error": "ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')"
+    },
+    {
+      "name": "Out-of-order chunks combine in numeric order",
+      "status": "PASS"
+    },
+    {
+      "name": "Finalize rejects missing chunks",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Incomplete file finalized successfully"
+    },
+    {
+      "name": "Finalize rejects declared-size mismatch",
+      "status": "FAIL",
+      "error": "InvalidOperationException: One byte accepted as a 200-byte complete file"
+    },
+    {
+      "name": "Negative chunk index is rejected",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Negative chunk index accepted"
+    },
+    {
+      "name": "Huge declared size is rejected without allocating large file",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Unbounded declared size accepted"
+    },
+    {
+      "name": "Invalid chunk metadata returns failure without exception",
+      "status": "FAIL",
+      "error": "FormatException: The input string 'invalid' was not in a correct format."
+    },
+    {
+      "name": "Repeated finalization succeeds after lost success response",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Second completion fails after chunks were deleted"
+    },
+    {
+      "name": "Finalize invokes authentication boundary",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Finalize did not call GetUser"
+    },
+    {
+      "name": "Download of absent document returns 404",
+      "status": "FAIL",
+      "error": "NullReferenceException: Object reference not set to an instance of an object."
+    },
+    {
+      "name": "Private downloads are not indefinitely cached",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Download advertises client caching for int.MaxValue seconds"
+    },
+    {
+      "name": "Hyper temporary upload path is implemented",
+      "status": "FAIL",
+      "error": "NotImplementedException: The method or operation is not implemented."
+    },
+    {
+      "name": "Ordinary form data URL becomes original file bytes",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Data URL/filename stored as content instead of decoded bytes"
+    },
+    {
+      "name": "AttachmentDto preserves original bytes and MIME",
+      "status": "PASS"
+    },
+    {
+      "name": "Chunked Move uses staged file content instead of UUID",
+      "status": "FAIL",
+      "error": "InvalidOperationException: UUID itself was stored as document content"
+    },
+    {
+      "name": "Metadata-only form load honors loadData=false",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Adapter forced LoadData=true"
+    },
+    {
+      "name": "Binary document exposes valid Base64 for preview",
+      "status": "FAIL",
+      "error": "InvalidOperationException: Raw binary decoded as UTF-8 instead of Base64"
+    },
+    {
+      "name": "Missing host document propagates absence without exception",
+      "status": "FAIL",
+      "error": "ArgumentNullException: Value cannot be null. (Parameter 'bytes')"
+    },
+    {
+      "name": "Object store SDK transport roundtrip preserves binary and Persian metadata",
+      "status": "PASS"
+    },
+    {
+      "name": "Object store SDK stat returns existing checksum",
+      "status": "PASS"
+    },
+    {
+      "name": "Object store propagates transport outage",
+      "status": "PASS"
+    }
+  ],
+  "date": "2026-09-27",
+  "frontend": {
+    "passed": 4,
+    "failed": 3,
+    "failures": [
+      "empty file selection throws",
+      "forbidden extension calls nonexistent jQuery.value",
+      "filename is passed to jQuery.html without escaping"
+    ]
+  },
+  "repositories": {
+    "Neo-Bpms": "87c88673b55cb8a437112c0c1bdef7f0c20e0b1d",
+    "Neo": "b880497270a4639dab296b1487e5ae005f6fe815",
+    "Hyper": "7bfcfcdf9374da880aa5464b57237895099db7b7"
+  },
+  "sourceSha256": {
+    "src/Neo.Bpms.UI.MVC/Controllers/UploadController.cs": "7a5852abdec144d058ac0d17e79d291fe32694047db8ea9086549730421091dc",
+    "src/Neo.Bpms.UI.MVC/Controllers/DownloadController.cs": "b65fb0ca11ea42374e944cd76e7c301c78fb5959693f5c96fa072a5dc76f834f",
+    "src/Neo.Bpms.UI.MVC/CommonAssets/Scripts/Features/Form/Form.js": "0c323a84087d2706c22e946d8a0fbe6f1baa836ee504919a3906435e3cb17a9c",
+    "src/Neo.Bpms.UI.MVC/CommonAssets/Scripts/Features/Form/ControlsIO/FineUploaderIO.js": "bd1ee6cb0e177586a68a548c04e4a8d169e61ea3da9ed67cfdbd38652f8eaa4f",
+    "../Neo/src/Neo.Infrastructure/Features/ObjectStore/ObjectStoreService.cs": "ccbc1d63f167436c2442d43d1024fa48d56f2e05a8321c1757f6e95e5224f5b8",
+    "../Hyper/Backend/src/AdminPanel/Hyper.AdminPanel.Web/Infrastructure/Cmmn/CmmnDocument.cs": "f729647151a568657ce9ae3fbdbc9b279ddd8f2583fe6214b5e87443f264ef56"
+  }
+}

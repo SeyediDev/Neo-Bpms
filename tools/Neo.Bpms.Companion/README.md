@@ -52,3 +52,9 @@ and run tests before committing. See [VALIDATION.md](VALIDATION.md).
 
 Protocol references: [MCP tools](https://modelcontextprotocol.io/specification/2025-06-18/server/tools)
 and [stdio transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports).
+
+The `dynamic-form` recipe includes the reviewed document/file-flow audit. It
+separates ordinary data-URL upload from FineUploader UUID/Move and warns about
+currently failing acceptance requirements. See
+[the document audit](../../docs/DOCUMENT-FLOW-AUDIT.fa.md); SDK transport coverage
+must not be presented as real MinIO/database/browser acceptance.
