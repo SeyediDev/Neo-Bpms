@@ -151,6 +151,13 @@ filters, tabs, repeated refresh, dynamic controls, selection preservation and
 the absence of unintended sorting/submission. These are browser regression tests,
 not authenticated application or database end-to-end tests.
 
+Header-filter activation waits for panel layout before focusing existing controls,
+including the Report visibility transition. It preserves initialized widgets and values.
+Report filter popups are bounded to the viewport on desktop and small/short
+screens. Legacy bulk, command, custom and iframe forms use the same versioned
+controls-modern.css URL as Report. Rebuild the consuming host for these Razor changes.
+The column-filter suite also checks popup bounds at 390x650, 1366x768 and 640x360.
+
 The host must serve the updated ColumnFilter.js and filter CSS through its existing
 `/Content/common-assets-includes/` mapping. The test fixture reads files directly
 and cannot certify that deployment mapping or browser cache invalidation.

@@ -279,9 +279,25 @@
         if (!control) return;
         openPanel(control);
         var panel = control.closest(rootSelector);
+        // Report reveals its panel through a CSS visibility transition. At the
+        // opening event's first layout it can still be hidden, so wait for paint
+        // before choosing a focusable control (without reinitializing widgets).
+        var focusAfterLayout = function () {
+            var remainingFrames = 60;
+            var focusWhenVisible = function () {
+                if (!control.isConnected || !panel || window.getComputedStyle(panel).display === 'none') return;
+                if (panel.id === 'filterTooltipPanel' && !panel.classList.contains('show')) return;
+                if (window.getComputedStyle(control).visibility === 'hidden') {
+                    if (--remainingFrames > 0) window.requestAnimationFrame(focusWhenVisible);
+                    return;
+                }
+                focusControl(control);
+            };
+            window.requestAnimationFrame(focusWhenVisible);
+        };
         if (window.jQuery && panel) {
-            window.jQuery(panel).promise().done(function () { focusControl(control); });
-        } else focusControl(control);
+            window.jQuery(panel).promise().done(focusAfterLayout);
+        } else focusAfterLayout();
     }
 
     function clearControl(control) {

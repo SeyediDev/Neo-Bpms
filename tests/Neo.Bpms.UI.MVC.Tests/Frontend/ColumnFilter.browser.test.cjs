@@ -16,6 +16,7 @@ before(async () => {
 });
 after(async () => {
     // Stop only the browser process owned by this suite (including on assertion failure).
+    if (browser) await browser.close();
     if (browserServer) await browserServer.kill();
 });
 const field = (name, extra = '') => '<div class="neo-control" data-id="' + name + '"><label>' + name +
@@ -213,3 +214,13 @@ test('actual form toggle preserves form association and stays open', async t => 
     assert.deepEqual(await page.evaluate(() => [window.submits, window.sorts]), [0, 0]);
 });
 
+
+for (const viewport of [{width:390,height:650},{width:1366,height:768},{width:640,height:360}]) {
+ test(`report popup remains in viewport ${viewport.width}x${viewport.height}`, async t => {
+  const page = await fixture(t, { root: 'filterTooltipPanel' });
+  await page.setViewportSize(viewport);
+  await clickAndFocus(page);
+  const box = await page.locator('#filterTooltipPanel').boundingBox();
+  assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height, JSON.stringify(box));
+ });
+}

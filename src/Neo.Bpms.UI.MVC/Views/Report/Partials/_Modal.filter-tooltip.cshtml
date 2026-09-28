@@ -119,12 +119,12 @@
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
           padding: 24px !important; /* Increased by 20%: 20px * 1.2 = 24px */
           z-index: 1050 !important;
-          min-width: 2160px !important; /* Increased by 20%: 1800px * 1.2 = 2160px */
-          max-width: 98vw !important;
-          /* Fixed height: Header (~60px) + 6 rows (~420px) + Buttons (~70px) + Padding (~40px) = ~590px, increased by 20% = 708px, then increased by 20% again = 850px */
-          height: 850px !important; /* Increased by 20%: 708px * 1.2 = 849.6px ≈ 850px */
-          max-height: 850px !important; /* Increased by 20%: 708px * 1.2 = 850px */
-          min-height: 850px !important; /* Increased by 20%: 708px * 1.2 = 850px */
+          box-sizing: border-box !important;
+          min-width: 0 !important;
+          max-width: calc(100vw - 24px) !important;
+          height: min(590px, calc(100vh - 24px)) !important;
+          max-height: calc(100vh - 24px) !important;
+          min-height: 0 !important;
           /* width set dynamically by JavaScript to avoid conflicts with position: fixed */
           backdrop-filter: blur(10px) !important;
           display: flex !important;
