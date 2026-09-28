@@ -157,6 +157,12 @@ Report filter popups are bounded to the viewport on desktop and small/short
 screens. Legacy bulk, command, custom and iframe forms use the same versioned
 controls-modern.css URL as Report. Rebuild the consuming host for these Razor changes.
 The column-filter suite also checks popup bounds at 390x650, 1366x768 and 640x360.
+The Report panel also repositions when the viewport changes. Escape and the close
+button restore focus to the opening control; outside clicks keep focus on the
+clicked target. Closing consistently clears inline visibility and toolbar state.
+Open combo/calendar popups receive Escape first, and interacting with their
+body-mounted popup does not dismiss the filter. Closing never clears filter values.
+
 
 The host must serve the updated ColumnFilter.js and filter CSS through its existing
 `/Content/common-assets-includes/` mapping. The test fixture reads files directly

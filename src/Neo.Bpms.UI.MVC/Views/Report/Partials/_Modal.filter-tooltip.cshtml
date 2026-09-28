@@ -1,4 +1,4 @@
-﻿@using Neo.Bpms.UI.MVC.PartialModels.Report
+@using Neo.Bpms.UI.MVC.PartialModels.Report
 @using Neo.Bpms.UI.MVC.PartialModels.Filter
 @inject IControlsRenderer controlsRenderer;
 @model ReportData
@@ -1472,20 +1472,8 @@
             // Comment out this alert in production - it's for debugging only
             // alert(debugLog.join('\n'));
             
-            // Hide the filter tooltip panel
-            if (filterPanel) {
-                if (filterPanel.classList.contains('show')) {
-                    filterPanel.classList.remove('show');
-                    console.log('Filter Panel: Hidden');
-                }
-                
-                // Also hide the toggle button's active state
-                const toggle = document.querySelector('[onclick*="toggleFilterTooltip"]');
-                if (toggle && toggle.classList.contains('active')) {
-                    toggle.classList.remove('active');
-                }
-            }
-            
+            window.closeReportFilter(false);
+
             // Submit the form
             console.log('Filter Panel: Submitting form with all collected values...');
             filterForm.submit();

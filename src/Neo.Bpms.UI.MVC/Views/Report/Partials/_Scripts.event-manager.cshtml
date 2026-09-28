@@ -119,7 +119,16 @@
          * Handle keyboard events (Escape key for closing modals)
          */
         handleKeydown: function(event) {
-            if (event.key === 'Escape') {
+            if (event.key === 'Escape' && !event.defaultPrevented) {
+                const filter = document.getElementById('filterTooltipPanel');
+                if (filter?.classList.contains('show') && !document.querySelector('.report-modal.show, .modal.show')) {
+                    // Let an open widget consume Escape first, including body-mounted popups.
+                    const widgets = document.querySelectorAll('.modern-multi-select.open, .modern-multi-select-control.open, .select2-container--open, .datepicker-container:not(.pwt-hide), .ui-datepicker');
+                    if (Array.from(widgets).some(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden')) return;
+                    window.closeReportFilter();
+                    event.preventDefault();
+                    return;
+                }
                 // Close modals
                 const openModals = document.querySelectorAll('.report-modal.show, .modal.show');
                 openModals.forEach(function(modal) {
@@ -473,13 +482,9 @@
         
         // Hide filter tooltip
         if (!e.target.closest('#filterTooltipPanel')) {
-            const panel = document.getElementById('filterTooltipPanel');
-            const toggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
-            if (panel && panel.classList.contains('show')) {
-                panel.classList.remove('show');
-                if (toggle) {
-                    toggle.classList.remove('active');
-                }
+            // Body-mounted picker/menu interactions belong to the filter too.
+            if (!e.target.closest('.select2-container, .datepicker-container, .ui-datepicker, .modern-multi-select-dropdown, .modern-multi-select-overflow-popover')) {
+                window.closeReportFilter(false);
             }
         }
         

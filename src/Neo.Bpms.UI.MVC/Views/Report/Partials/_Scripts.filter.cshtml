@@ -209,15 +209,7 @@ function submitReportFilterFromTooltip() {
     // Collect all filter values and ensure they're properly associated
     collectReportFilterValues();
 
-    // Hide the tooltip first
-    const panel = document.getElementById('filterTooltipPanel');
-    const toggle = document.querySelector('[data-action="toggle-filter-tooltip"]');
-    if (panel && panel.classList.contains('show')) {
-        panel.classList.remove('show');
-        if (toggle) {
-            toggle.classList.remove('active');
-        }
-    }
+    window.closeReportFilter(false);
 
     // Submit the form
     const form = document.getElementById('filter-form');

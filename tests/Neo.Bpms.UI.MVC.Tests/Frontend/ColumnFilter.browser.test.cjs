@@ -52,8 +52,8 @@ async function fixture(t, { root = 'filterDiv', content = field('City'), column 
     if (root === 'filterTooltipPanel') {
         // Execute the real report toggle, extracted between its source-level function boundaries.
         const source = fs.readFileSync(path.join(mvc, 'Views/Report/Partials/_Scripts.toggles.cshtml'), 'utf8');
-        const start = source.indexOf('window.toggleFilterTooltip = function');
-        const end = source.indexOf('\n};', start) + 3;
+        const start = source.indexOf('// Report filter lifecycle:');
+        const end = source.indexOf('\n};', source.indexOf('window.toggleFilterTooltip = function')) + 3;
         assert.ok(start >= 0 && end > start);
         await page.addScriptTag({ content: source.slice(start, end) });
         // Real outside-click listener, independent of script load order.
@@ -224,3 +224,60 @@ for (const viewport of [{width:390,height:650},{width:1366,height:768},{width:64
   assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height, JSON.stringify(box));
  });
 }
+
+async function reportLifecycle(t) {
+    const page = await fixture(t, { root: 'filterTooltipPanel', content: field('City', 'value="Tehran"') });
+    await page.addStyleTag({ content: '#filterTooltipPanel:not(.show){visibility:hidden} #filterTooltipPanel.show{visibility:visible}' });
+    const source = fs.readFileSync(path.join(mvc, 'Views/Report/Partials/_Scripts.event-manager.cshtml'), 'utf8');
+    const start = source.indexOf('    const ReportEventManager = {');
+    const end = source.indexOf('    // Make it globally accessible', start);
+    await page.addScriptTag({content: source.slice(start, end) + "document.body.addEventListener('keydown', ReportEventManager.handleKeydown);"});
+    return page;
+}
+test('report Escape closes the panel, preserves values and returns focus to the header', async t => {
+    const page = await reportLifecycle(t);
+    await clickAndFocus(page);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#filterTooltipPanel').isVisible(), false);
+    assert.equal(await page.locator('[data-action="toggle-filter-tooltip"]').getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.evaluate(() => document.activeElement.classList.contains('neo-column-filter')), true);
+    await page.keyboard.press('Space');
+    await page.waitForFunction(() => document.activeElement.id === 'field-City');
+    assert.equal(await page.locator('#field-City').inputValue(), 'Tehran');
+});
+test('outside click actually hides inline-visible report panel without stealing focus', async t => {
+    const page = await reportLifecycle(t);
+    await page.evaluate(() => {
+        const button = document.createElement('button'); button.id='outside'; button.textContent='Other action';
+        button.style.cssText='position:fixed;top:0;left:0;z-index:2000'; document.body.appendChild(button);
+    });
+    await clickAndFocus(page);
+    await page.locator('#outside').click();
+    assert.equal(await page.locator('#filterTooltipPanel').isVisible(), false);
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'outside');
+    assert.equal(await page.locator('#field-City').inputValue(), 'Tehran');
+});
+test('open report stays in bounds when desktop shrinks to portrait then landscape', async t => {
+    const page = await reportLifecycle(t);
+    await clickAndFocus(page);
+    for (const viewport of [{width:390,height:650},{width:640,height:360},{width:1366,height:768}]) {
+        await page.setViewportSize(viewport);
+        await page.waitForFunction(({width,height})=>{
+            const b=document.querySelector('#filterTooltipPanel').getBoundingClientRect();
+            return b.x>=0 && b.y>=0 && b.right<=width && b.bottom<=height;
+        },viewport);
+        assert.equal(await page.locator('#field-City').inputValue(), 'Tehran');
+        assert.equal(await page.evaluate(()=>document.activeElement.id),'field-City');
+    }
+});
+test('Escape and outside clicks leave the filter open for a body-mounted picker', async t => {
+    const page = await reportLifecycle(t);
+    await clickAndFocus(page);
+    await page.evaluate(()=>{const el=document.createElement('button');el.className='datepicker-container';el.id='picker';el.textContent='Day';el.style.cssText='position:fixed;top:0;left:0;z-index:2000';document.body.appendChild(el);});
+    await page.locator('#picker').click();
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#filterTooltipPanel').isVisible(), true);
+    await page.locator('#picker').evaluate(el=>el.remove());
+    await page.locator('#field-City').focus();await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#filterTooltipPanel').isVisible(), false);
+});
